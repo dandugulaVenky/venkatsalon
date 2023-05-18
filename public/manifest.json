@@ -1,0 +1,21 @@
+{
+  "short_name": "EasyTym",
+  "name": "EasyTym App",
+  "icons": [
+    {
+      "src": "/images/mainLogo.jpeg",
+      "type": "image/jpeg",
+      "sizes": "500x500",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/maskable_icon.png",
+      "type": "image/png",
+      "sizes": "360x360"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000"
+}

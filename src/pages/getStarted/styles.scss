@@ -1,0 +1,9 @@
+#wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../images/barber1.jpg");
+  background-size: cover;
+  background-position: center;
+  transform: translateX(var(--x)) translateY(var(--y)) scale(var(--scale));
+  transition: ease-out 0.7s;
+}

@@ -1,0 +1,379 @@
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import moment from "moment";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
+import useFetch from "../hooks/useFetch";
+
+const CustomerDetails = ({ item, setOpen }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {}, [setOpen]);
+
+  const { user } = useContext(AuthContext);
+
+  const { date, time, bookId } = item;
+
+  let seats = [];
+
+  let [acceptIds, setAcceptIds] = useState([]);
+
+  const { data } = useFetch(`/api/hotels/room/${item.shopId}`);
+
+  const { data: data1 } = useFetch(`/api/users/getBookings/${item.user}`);
+
+  const { data: shopData } = useFetch(`/api/hotels/find/${item.shopId}`);
+
+  function compareTimeDiff(time) {
+    let time1 = time;
+    let currentDate = new Date();
+    let time1Date = new Date(time1);
+
+    // Compare the year, month, and day components
+    if (
+      time1Date.getFullYear() === currentDate.getFullYear() &&
+      time1Date.getMonth() === currentDate.getMonth() &&
+      time1Date.getDate() === currentDate.getDate()
+    ) {
+      // Compare the time components
+      if (
+        time1Date.getHours() === currentDate.getHours() &&
+        time1Date.getMinutes() === currentDate.getMinutes()
+      ) {
+        return 0; // Time is the same
+      } else if (time1Date > currentDate) {
+        return 1; // Time is in the future
+      } else {
+        return -1; // Time is in the past
+      }
+    } else if (time1Date > currentDate) {
+      return 1; // Date is in the future
+    } else {
+      return -1; // Date is in the past
+    }
+  }
+
+  function convertToMilliseconds(time) {
+    var date = new Date();
+    var timeArray = time.split(":");
+    var hours = parseInt(timeArray[0]) % 12;
+    var minutes = parseInt(timeArray[1]);
+    var ampm = timeArray[1].split("")[3];
+
+    if (ampm === "P" && hours !== 12) {
+      hours += 12;
+    }
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(0);
+    return date.getTime();
+  }
+
+  data[0]?.roomNumbers?.map((seat, i) => {
+    if (seat._id === item.selectedSeats[i]?.id) {
+      seats.push(seat.number);
+    } else if (seat._id === item.selectedSeats[i]?.id) {
+      seats.push(seat.number);
+    }
+  });
+
+  //This is to send request with unailvalabledateId to backend for updating
+  const isAvailable = (data, date, time, bookId) => {
+    // console.log(`data mak ${k}`, data);
+    const isFound = data.unavailableDates.map((item, i) => {
+      if (item?.date.includes(date)) {
+        if (item?.time.includes(time)) {
+          if (item.bookId === bookId) {
+            acceptIds.push({
+              unavailableDateId: item._id,
+              seat: data.number,
+              seatId: data._id,
+            });
+          }
+        }
+      }
+    });
+  };
+
+  const handleCancel = async (user) => {
+    let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
+    let result = datetime.valueOf();
+    let result2 = compareTimeDiff(result);
+    console.log(result2);
+    if (result2 === -1) {
+      return toast("Cannot approve past times!");
+    }
+    setOpen(false);
+    try {
+      await Promise.all(
+        uniqueArr.map((item) => {
+          axios.put(
+            `/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
+            {
+              isAccepted: "cancelled",
+            }
+          );
+        })
+      );
+    } catch (err) {
+      toast(err.response.data.message);
+    }
+
+    try {
+      await Promise.all(
+        uniqueArr1.map((item) => {
+          axios.put(`/api/users/updateUserApprovalStatus/${item}`, {
+            isDone: "cancelled",
+          });
+        })
+      );
+    } catch (err) {
+      toast(err);
+    }
+    try {
+      await Promise(
+        axios.put(`/api/hotels/updateOwnerApprovalStatus/${item._id}`, {
+          isDone: "cancelled",
+        })
+      );
+    } catch (err) {
+      toast(err);
+    }
+
+    try {
+      const { email, phone } = user;
+      const mail = await axios.post("/api/sendmail", {
+        email: item.email,
+        userNumber: item.phone,
+
+        type: "cancel",
+        shopName: shopData.name,
+        ownerEmail: email,
+        ownerNumber: phone,
+        link: "https://main--profound-babka-e67f58.netlify.app/history",
+      });
+    } catch (err) {
+      toast(err.response.data.message);
+    }
+
+    toast("Rejected Successfully");
+
+    window.location.reload();
+  };
+
+  const handleClick = async (uniqueArr, uniqueArr1) => {
+    // console.log("I am clicked", { uniqueArr, uniqueArr1 });
+
+    let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
+    let result = datetime.valueOf();
+    let result2 = compareTimeDiff(result);
+    console.log(result2);
+    if (result2 === -1) {
+      return toast("Cannot approve past times!");
+    }
+    setOpen(false);
+    try {
+      await Promise.all(
+        uniqueArr.map((item) => {
+          axios.put(
+            `/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
+            {
+              isAccepted: "true",
+            }
+          );
+        })
+      );
+      try {
+        await Promise.all(
+          uniqueArr1.map((item) => {
+            axios.put(`/api/users/updateUserApprovalStatus/${item}`, {
+              isDone: "true",
+            });
+          })
+        );
+      } catch (err) {
+        toast(err);
+      }
+      try {
+        await Promise(
+          axios.put(`/api/hotels/updateOwnerApprovalStatus/${item._id}`, {
+            isDone: "true",
+          })
+        );
+      } catch (err) {
+        toast(err);
+      }
+
+      try {
+        const { email, phone } = user;
+        const mail = await axios.post("/api/sendmail", {
+          email: item.email,
+          userNumber: item.phone,
+          //shopName we are using already in backend
+          shopName: shopData.name,
+          ownerEmail: email,
+          ownerNumber: phone,
+          link: "https://main--profound-babka-e67f58.netlify.app/history",
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      toast("Done Successfully");
+
+      navigate("/admin");
+    } catch (err) {
+      toast(err);
+    }
+  };
+
+  const mapData = data[0];
+  // console.log("seats", seats);
+  for (let i = 0; i < mapData?.roomNumbers.length; i++) {
+    if (date && time) {
+      isAvailable(mapData?.roomNumbers[i], date, time, bookId);
+    }
+  }
+
+  const [userBookingIds, setUserBookingsIds] = useState([]);
+
+  const mapUserBookingIds = (data1) => {
+    data1.map((booking) => {
+      if (booking.bookId === item.bookId) {
+        userBookingIds.push(booking._id);
+        // console.log(`Foundroooooo ${k}`, booking.bookId);
+      }
+    });
+  };
+
+  if (data1) {
+    mapUserBookingIds(data1);
+  }
+
+  const uniqueArr = Array.from(
+    new Set(acceptIds.map((item) => JSON.stringify(item)))
+  ).map((item) => JSON.parse(item));
+
+  const uniqueArr1 = Array.from(new Set(userBookingIds));
+
+  return (
+    <div className="reserve px-4">
+      <div className="rContainer1">
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          className="rClose"
+          onClick={() => setOpen(false)}
+        />
+        <span>
+          {item.referenceNumber && (
+            <span className=" text-[20px] ">
+              Reference No:{item.referenceNumber}
+            </span>
+          )}
+        </span>
+        <div className="">
+          <div className="space-y-1.5">
+            <div className="flex space-x-2">
+              <img
+                src="https://picsum.photos/800/600?random=2"
+                alt=""
+                className="siImg"
+              />
+
+              <div className="flex flex-col md:space-y-2 space-y-1 ">
+                <h1 className=" text-[13px] md:text-[15px] ">
+                  {" "}
+                  BookedDate : {item.date}
+                </h1>
+                <span className="text-[13px] md:text-[15px]">
+                  BookedTime : {item.time}
+                </span>
+                {/* <span className="text-[13px] md:text-sm">
+                  Seat Numbers :{" "}
+                  {seats.map((seat, i) => {
+                    return (
+                      <span className="text-[13px] md:text-[15px]" key={i}>
+                        {seat}&nbsp;
+                      </span>
+                    );
+                  })}
+                </span> */}
+                <span className="flex md:space-x-1 flex-wrap md:space-y-0 space-y-1">
+                  {item.selectedSeats.map((seat, i) => {
+                    return (
+                      <span
+                        className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white"
+                        key={i}
+                      >
+                        {seat.options.map((option) => {
+                          return <span className="ml-1">{option}</span>;
+                        })}
+                        &nbsp;- seat {seats[i]}
+                      </span>
+                    );
+                  })}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col space-y-1 ">
+              <div>
+                <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
+                  Paid status : {item.isPaid === true ? "paid" : "Not paid"}
+                </span>
+                <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
+                  Amount : {item.totalAmount}
+                </span>
+              </div>
+              <div>
+                <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
+                  {item.email}
+                </span>
+                <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
+                  {item.phone}
+                </span>
+              </div>
+            </div>
+            <div className="space-x-3">
+              <button
+                className={
+                  item.isDone === "true" || item.isDone === "cancelled"
+                    ? "siCheckButton bg-blue-400 px-4"
+                    : "primary-button"
+                }
+                onClick={() => {
+                  item.isDone === "false" && handleClick(uniqueArr, uniqueArr1);
+                }}
+                disabled={
+                  item.isDone === "true" || item.isDone === "cancelled"
+                    ? true
+                    : false
+                }
+              >
+                {item.isDone === "true" ? "Accepted" : "Mark Done"}
+              </button>
+              <button
+                className={
+                  item.isDone === "true" || item.isDone === "cancelled"
+                    ? "siCheckButton bg-red-400 px-4"
+                    : "danger-button"
+                }
+                onClick={() => item.isDone === "false" && handleCancel(user)}
+                disabled={
+                  item.isDone === "true" || item.isDone === "cancelled"
+                    ? true
+                    : false
+                }
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CustomerDetails;
