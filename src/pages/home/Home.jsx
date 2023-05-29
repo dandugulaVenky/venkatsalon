@@ -17,7 +17,7 @@ import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
 
 import BestSaloons from "../carousels/BestSaloons";
-import secureLocalStorage from "react-secure-storage";
+
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
 import { useEffect } from "react";
