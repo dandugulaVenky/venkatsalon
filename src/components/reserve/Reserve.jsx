@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useMemo } from "react";
-import secureLocalStorage from "react-secure-storage";
+
 const Reserve = (props) => {
   const {
     setOpen,

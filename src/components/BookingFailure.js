@@ -9,7 +9,7 @@ import Greeting from "./navbar/Greeting";
 import Layout from "./navbar/Layout";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import secureLocalStorage from "react-secure-storage";
+
 import useEffectOnce from "../utils/UseEffectOnce";
 
 const BookingFailure = () => {
@@ -62,7 +62,6 @@ const BookingFailure = () => {
       }
     } catch (err) {
       toast.error(err.response.data.message);
-      secureLocalStorage.removeItem("session");
 
       return null;
     }
