@@ -128,7 +128,7 @@ const Home = () => {
   const [reference, setReference] = useState(location?.state?.referenceNum);
 
   const handleToast = () => {
-    toast("Reserved successfully");
+    toast("Reserved successfully🎉");
 
     navigate("/", { state: null });
     return null;
