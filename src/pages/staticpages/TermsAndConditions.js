@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Footer from "../../components/footer/Footer";
 import Greeting from "../../components/navbar/Greeting";
 import Layout from "../../components/navbar/Layout";
-import MobileNav from "../../components/navbar/MobileNav";
+
 import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";

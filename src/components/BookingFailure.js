@@ -1,7 +1,6 @@
 import axios from "axios";
 import React from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,7 +16,6 @@ const BookingFailure = () => {
   const location = useLocation();
   const { user: mainUser } = useContext(AuthContext);
   const [reference, setReference] = useState(location?.state?.referenceNum);
-  const navigate = useNavigate();
 
   const handleToast = () => {
     toast("Sorry for the inconvenience!");
@@ -98,7 +96,7 @@ const BookingFailure = () => {
               ago!. The reference Number and other details were mailed to you.
               We will refund your amount with in short time!
             </p>
-            <Link to="/get-started" className="primary-button mt-1">
+            <Link to="/" className="primary-button mt-1">
               Home
             </Link>
           </div>

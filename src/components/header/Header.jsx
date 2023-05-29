@@ -359,10 +359,7 @@ import React, { useContext } from "react";
 import "./header.css";
 import AutoComplete from "../AutoComplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleXmark,
-  faLocationDot,
-} from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const Header = ({ setHeader, setAddress, dispatch, type, city, register }) => {
   return (

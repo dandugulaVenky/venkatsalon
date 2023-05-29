@@ -8,7 +8,7 @@ import Profile from "./pages/Profile";
 import BookingHistory from "./pages/BookingHistory";
 import Admin from "./pages/admin/Admin";
 import Register from "./pages/registration/Register";
-import GetStarted from "./pages/getStarted/GetStarted";
+
 import { PaymentSuccess } from "./pages/PaymentSuccess";
 import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
 import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
@@ -35,8 +35,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<GetStarted />} />
-        <Route path="/get-started" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        {/* <Route path="/get-started" element={<Home />} /> */}
         <Route path="/hotels" element={<List />} />
         <Route path="/hotels/:id" element={<Hotel />} />
         <Route path="/login" element={<Login />} />

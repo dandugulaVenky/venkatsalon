@@ -37,7 +37,7 @@ export default class AutoComplete extends React.Component {
       setHeader(false);
       if (!register) {
         setTimeout(() => {
-          window.scrollTo(0, 1000);
+          window.scrollTo(0, 1200);
         }, 1000);
       }
     };

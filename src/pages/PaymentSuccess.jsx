@@ -134,7 +134,7 @@ export const PaymentSuccess = () => {
         link: "https://main--profound-babka-e67f58.netlify.app/history",
       });
 
-      navigate("/get-started", {
+      navigate("/", {
         state: { referenceNum: referenceNum },
       });
     } catch (err) {

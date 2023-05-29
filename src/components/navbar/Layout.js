@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,20 +24,22 @@ const shortenString = (inputString) => {
 const Layout = () => {
   const { user, dispatch } = useContext(AuthContext);
 
+  const { pathname } = useLocation();
+
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const getAdmin = async () => {
-    let isAdmin = await axios.get(`/api/users/${user?._id}`);
-
-    setIsAdmin(isAdmin.data);
-  };
-
   useEffect(() => {
+    const getAdmin = async () => {
+      let isAdmin = await axios.get(`/api/users/${user?._id}`);
+
+      setIsAdmin(isAdmin.data);
+    };
+
     getAdmin(user?._id);
-  }, []);
+  }, [user?._id]);
 
   const navigate = useNavigate();
 
@@ -60,7 +62,7 @@ const Layout = () => {
 
       <header className="py-2">
         <nav className="flex items-center px-4 justify-between bg-transparent ">
-          <Link to="/get-started">
+          <Link to="/">
             <div className="flex items-center justify-center ">
               <img
                 src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1681883826/et_yyy_tjzm20-removebg-preview_1_wwzmks.png"
@@ -75,12 +77,14 @@ const Layout = () => {
                 <p className="text-sm">
                   {city ? shortenString(city).toUpperCase() : "loading"}
                 </p>
-                <FontAwesomeIcon
-                  icon={faChevronCircleDown}
-                  size="lg"
-                  color="#00ccbb"
-                  onClick={handleLocation}
-                />
+                {pathname === "/" && (
+                  <FontAwesomeIcon
+                    icon={faChevronCircleDown}
+                    size="lg"
+                    color="#00ccbb"
+                    onClick={handleLocation}
+                  />
+                )}
               </div>
             </div>
           </Link>

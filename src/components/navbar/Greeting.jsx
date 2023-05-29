@@ -1,8 +1,6 @@
 import {
   faChevronCircleDown,
-  faCog,
   faLocation,
-  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -38,10 +36,7 @@ const Greeting = () => {
   }, []);
 
   const handleLocation = () => {
-    console.log(pathname);
-    if (pathname.split("/")[1] === "get-started") {
-      setHeader(!header);
-    }
+    setHeader(!header);
   };
 
   return (
@@ -61,12 +56,14 @@ const Greeting = () => {
           <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
           <p className="text-xs w-full flex items-center justify-center space-x-2.5 ">
             <span> {city ? shortenString(city).toUpperCase() : "Loading"}</span>
-            <FontAwesomeIcon
-              icon={faChevronCircleDown}
-              size="lg"
-              color="#00ccbb"
-              onClick={handleLocation}
-            />
+            {pathname === "/" && (
+              <FontAwesomeIcon
+                icon={faChevronCircleDown}
+                size="lg"
+                color="#00ccbb"
+                onClick={handleLocation}
+              />
+            )}
           </p>
         </div>
 

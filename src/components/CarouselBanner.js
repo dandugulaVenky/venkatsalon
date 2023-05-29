@@ -38,9 +38,7 @@ const CarouselBanner = () => {
         renderBottomCenterControls={renderPaginationDots}
         // renderCenterLeftControls={null} // Hide the default controls
         // renderCenterRightControls={null}
-        currentSlide={1}
-        slideCount={3}
-        pagingDotsIndices={3}
+
         autoplayInterval={3000}
       >
         {images.map((banner, i) => {

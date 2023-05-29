@@ -955,23 +955,32 @@ const Hotel = () => {
             </>
           )}
           <div className="hotelWrapper mt-2">
-            <Link to="/get-started">
+            <Link to="/">
               <p className="bg-blue-900 max-w-[130px] px-4 py-2 text-white rounded">
                 Go to Home
               </p>
             </Link>
-            <h1 className="hotelTitle">{data.name}</h1>
-            <div className="hotelAddress">
-              <FontAwesomeIcon icon={faLocationDot} />
-              <span>{data.address}</span>
+            <div className="md:flex space-y-4 items-center justify-between">
+              <div className="hotelWrapper">
+                <h1 className="hotelTitle">{data.name}</h1>
+                <div className="hotelAddress">
+                  <FontAwesomeIcon icon={faLocationDot} />
+                  <span>{data.address}</span>
+                </div>
+                <span className="hotelDistance">
+                  Excellent location – {data.distance}m from center
+                </span>
+                <span className="hotelPriceHighlight">
+                  Book over Rs.{data.cheapestPrice} at this shop and get a free
+                  Shaving.
+                </span>
+              </div>
+              <img
+                src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1679746627/716z0eWdZjL._SL1500__t4foon.webp"
+                alt={data?.title}
+                className="opacity-70 sm:h-auto sm:w-auto md:h-36 md:w-36 "
+              ></img>
             </div>
-            <span className="hotelDistance">
-              Excellent location – {data.distance}m from center
-            </span>
-            <span className="hotelPriceHighlight">
-              Book over Rs.{data.cheapestPrice} at this shop and get a free
-              Shaving.
-            </span>
             <div className="hotelImages">
               {data.photos?.map((photo, i) => (
                 <div className="hotelImgWrapper" key={i}>
@@ -985,13 +994,13 @@ const Hotel = () => {
               ))}
             </div>
             <div className="hotelDetails mb-8 mt-4 flex flex-col">
-              <div className="hotelDetailsTexts">
+              {/* <div className="hotelDetailsTexts">
                 <h1 className="hotelTitle">{data.title}</h1>
                 <p className="hotelDesc">{data.desc}</p>
-              </div>
+              </div> */}
               <div
                 id="reviews"
-                className="mt-5 space-y-3 p-5 bg-gray-200 shadow-md"
+                className="mt-5 space-y-3 p-5 bg-gray-100 shadow-md"
               >
                 <h2 className="font-semibold text-xl mb-3">Customer Reviews</h2>
                 {reviews?.length === 0 && "No Reviews"}

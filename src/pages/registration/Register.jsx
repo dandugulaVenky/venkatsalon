@@ -61,18 +61,12 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const {
-    user,
-    loading,
-    error: errorContext,
-    dispatch,
-  } = useContext(AuthContext);
+  const { loading, error: errorContext, dispatch } = useContext(AuthContext);
 
   const {
     handleSubmit,
     register,
-    getValues,
-    setValue,
+
     formState: { errors },
   } = useForm();
 

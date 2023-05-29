@@ -4,7 +4,7 @@ import Carousel from "react-grid-carousel";
 import { SearchContext } from "../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 
-const Services = () => {
+const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
   const [active, setActive] = useState(type ? type : "saloon");
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const Services = () => {
   };
 
   return (
-    <div className=" px-1 pt-5 md:mb-0  text-black ">
+    <div className=" px-1 pt-5 md:mb-0  text-black " ref={refer}>
       <h1 className="px-4 text-xl font-semibold py-5">Select A Service</h1>
       <Carousel cols={3} rows={1} gap={10}>
         <Carousel.Item>

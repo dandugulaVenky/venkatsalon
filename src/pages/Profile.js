@@ -15,7 +15,7 @@ import { SearchContext } from "../context/SearchContext";
 
 export default function Profile() {
   //   const { data: session } = useSession();
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const {

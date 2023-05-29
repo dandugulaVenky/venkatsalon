@@ -20,6 +20,7 @@ import BestSaloons from "../carousels/BestSaloons";
 import secureLocalStorage from "react-secure-storage";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
+import { useEffect } from "react";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -30,7 +31,7 @@ const siteMetadata = {
 
 const Home = () => {
   const { open, city, dispatch } = useContext(SearchContext);
-
+  const [homeImg, setHomeImg] = useState(false);
   const promptEnableLocation = () => {
     if ("geolocation" in navigator) {
       if (navigator.permissions && navigator.permissions.query) {
@@ -57,6 +58,8 @@ const Home = () => {
               },
               {
                 enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 10000,
               }
             );
           } else if (result.state === "granted") {
@@ -114,9 +117,7 @@ const Home = () => {
         // Handle any error occurred during geolocation
         console.log("Error occurred during geolocation:", error);
       },
-      {
-        enableHighAccuracy: true,
-      }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   };
 
@@ -147,6 +148,16 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHomeImg((prevHomeImg) => !prevHomeImg);
+    }, 6000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     promptEnableLocation();
@@ -161,7 +172,7 @@ const Home = () => {
       {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
 
-      <div className="home-img mb-5">
+      <div className={` ${homeImg ? "home-img1" : "home-img2"} mb-5`}>
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">

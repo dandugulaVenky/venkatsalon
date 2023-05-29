@@ -9,10 +9,29 @@
 .slider-control-centerright {
   margin-right: 2.5px;
 }
-.home-img {
-  background-image: url("../images//main.jpeg");
+.home-img1 {
+  background-image: url("../images/main.jpeg");
   height: 100vh;
   width: 100%;
   background-position: center;
   background-size: cover;
+  background-attachment: fixed;
+  transition: 0.6s;
+}
+
+.home-img2 {
+  background-image: url("https://images.pexels.com/photos/5877662/pexels-photo-5877662.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  height: 100vh;
+  width: 100%;
+  background-position: right 0rem;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: 0.6s;
+}
+
+@media screen and (max-width: 768px) {
+  .home-img2 {
+    background-position: bottom left 29%;
+  }
 }

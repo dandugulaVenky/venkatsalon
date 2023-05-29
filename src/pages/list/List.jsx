@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 
 import SearchItem from "../../components/searchItem/SearchItem";
@@ -20,13 +20,13 @@ const List = () => {
   // const [time, setTime] = useState(location.state.value);
   // const [openDate, setOpenDate] = useState(false);
 
-  const [min, setMin] = useState(undefined);
-  const [max, setMax] = useState(undefined);
+  const min = useState(0);
+  const max = useState(999);
   const w = window.innerWidth;
 
   city = city.toLowerCase().trim();
 
-  const { data, loading, error, reFetch } = useFetch(
+  const { data, loading } = useFetch(
     `/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${max || 999}`
   );
   const [loaded, setLoaded] = useState(false);

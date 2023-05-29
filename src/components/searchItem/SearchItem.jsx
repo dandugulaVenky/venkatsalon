@@ -52,11 +52,8 @@ const SearchItem = ({ item }) => {
 
   // console.log("data from SearchItem", data);
   return (
-    <div className="searchItem list ">
-      <div className="siDesc">
-        {/* <h1 id="report" className="text-red-500 text-xs">
-          .
-        </h1> */}
+    <div className="searchItem list anim ">
+      <div className="siDesc ">
         <div className="flex space-x-2">
           <img src={item.photos[0]} alt="" className="siImg" />
 
@@ -108,6 +105,10 @@ const SearchItem = ({ item }) => {
           </Link>
         </div>
       </div>
+      <span className="top"></span>
+      <span className="right"></span>
+      <span className="bottom"></span>
+      <span className="left"></span>
     </div>
   );
 };

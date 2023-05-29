@@ -11,7 +11,7 @@ body {
   /* font-family: Verdana, Geneva, Tahoma, sans-serif */
   scroll-behavior: smooth;
   color: #000000;
-  background: #f3f4f6;
+  background: #e4e5e8b5;
   height: max-content;
 }
 
@@ -23,7 +23,7 @@ body {
   @apply mb-5  block   rounded-lg border border-gray-300 bg-gray-200 shadow-md;
 }
 .list {
-  @apply mb-2 rounded-lg border border-gray-300 bg-gray-200  shadow-md;
+  @apply mb-2 rounded-lg bg-gray-100  shadow-md;
 }
 
 .default-button {

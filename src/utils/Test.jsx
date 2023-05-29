@@ -1,4 +1,4 @@
-import { faClock, faMoneyBill } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Carousel from "react-grid-carousel";
@@ -6,7 +6,7 @@ import Carousel from "react-grid-carousel";
 const Test = ({ services }) => {
   return (
     <div className="  md:py-10 px-1 py-5 md:mb-0  text-black ">
-      <Carousel cols={7} rows={1} gap={8} loop autoplay={8000}>
+      <Carousel cols={7} rows={1} gap={8}>
         {services?.map((item, i) => {
           return (
             <Carousel.Item key={i}>
