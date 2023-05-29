@@ -3,8 +3,8 @@
   "name": "EasyTym App",
   "icons": [
     {
-      "src": "/images/mainLogo.jpeg",
-      "type": "image/jpeg",
+      "src": "/images/mainLogo.png",
+      "type": "image/png",
       "sizes": "500x500",
       "purpose": "any maskable"
     },

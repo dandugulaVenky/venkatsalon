@@ -119,7 +119,6 @@ const Reserve = (props) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
         if (event.target.checked) {
-          console.log(event.target.checked);
           seat.options.push(event.target.name);
         } else {
           seat.options = seat.options.filter(
@@ -452,14 +451,26 @@ const Reserve = (props) => {
   }, [allKeys, filteredKeys]);
 
   const durations = getDurations();
+
+  const getTotalTime = useCallback(
+    (total) => {
+      const hours = Math.floor(total / 60);
+      const remainingMinutes = total % 60;
+      if (total >= 60) {
+        return `${hours} h, ${remainingMinutes} min`;
+      } else {
+        return ` ${remainingMinutes} min`;
+      }
+    },
+    [durationBySeat]
+  );
+
   const checkoutHandler = async (amount, e) => {
     e.preventDefault();
-    secureLocalStorage.removeItem("session");
+
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
-
-    // console.log(filteredKeys);
 
     const getReturn = (item1, item2) => {
       const minutes = item1;
@@ -561,7 +572,7 @@ const Reserve = (props) => {
           toast("Token expired! Please login");
           setButtonLoad(false);
           setTimeout(() => {
-            navigate("/login", { state: { destination: `/hotels/${shopId}` } });
+            navigate("/login", { state: { destination: `/shops/${shopId}` } });
           }, 3000);
         }
       } else {
@@ -570,7 +581,7 @@ const Reserve = (props) => {
     } catch (err) {
       toast("Token expired! Please login");
       setTimeout(() => {
-        navigate("/login", { state: { destination: `/hotels/${shopId}` } });
+        navigate("/login", { state: { destination: `/shops/${shopId}` } });
       }, 3000);
     }
   };
@@ -598,6 +609,12 @@ const Reserve = (props) => {
             seats?.map((seat, i) => (
               <div key={seat.id} className="rContainer">
                 <h3 className="text-xl">Seat {i + 1}</h3>
+                <h3 className="font-extrabold">
+                  {durationBySeat.length > 0 &&
+                  seat.id === durationBySeat[i]?.id
+                    ? getTotalTime(durationBySeat[i]?.value)
+                    : "0 min"}
+                </h3>
                 <div className="flex flex-col items-start mt-3 space-y-2">
                   {data[0]?.services?.map((service, j) => {
                     return (

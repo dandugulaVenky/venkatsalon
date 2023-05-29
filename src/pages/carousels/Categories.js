@@ -35,7 +35,7 @@ const Categories = ({ type }) => {
       type: "NEW_SEARCH",
       payload: { type: type1, destination },
     });
-    navigate("/hotels", { state: { destination } });
+    navigate("/shops", { state: { destination } });
   };
 
   return (

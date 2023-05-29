@@ -38,7 +38,7 @@ const Layout = () => {
       setIsAdmin(isAdmin.data);
     };
 
-    getAdmin(user?._id);
+    user?._id && getAdmin(user?._id);
   }, [user?._id]);
 
   const navigate = useNavigate();
@@ -65,13 +65,13 @@ const Layout = () => {
           <Link to="/">
             <div className="flex items-center justify-center ">
               <img
-                src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1681883826/et_yyy_tjzm20-removebg-preview_1_wwzmks.png"
+                src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
                 alt="logo"
-                height={80}
-                width={80}
+                height={100}
+                width={100}
                 className="rounded-lg"
               ></img>
-              <p className="text-3xl text-[#00ccbb] font-bold ml-1">EasyTym</p>
+
               <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
                 <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
                 <p className="text-sm">

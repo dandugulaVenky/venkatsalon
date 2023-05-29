@@ -160,7 +160,7 @@ const Hotel = () => {
     if (user) {
       setOpenModal(true);
     } else {
-      navigate("/login");
+      navigate("/login", { state: { destination: `/shops/${id}` } });
     }
   };
 
@@ -1059,8 +1059,10 @@ const Hotel = () => {
                 ) : (
                   <h1 className="font-semibold text-xl">
                     Please{" "}
-                    <Link to={`/login?redirect=/hotels/${id}`}>login</Link> to
-                    write a review
+                    <Link to={`/login?redirect=/shops/${id}`}>
+                      <span className="text-blue-500">login</span>
+                    </Link>{" "}
+                    to write a review
                   </h1>
                 )}
               </div>

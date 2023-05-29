@@ -91,7 +91,7 @@ const SearchItem = ({ item }) => {
         <div className="siDetailTexts">
           <span className="md:text-lg text-sm">Rs.{item.cheapestPrice}</span>
           <span className="siTaxOp">Includes taxes and fees</span>
-          <Link to={`/hotels/${item._id}`}>
+          <Link to={`/shops/${item._id}`}>
             <button
               className={
                 disable

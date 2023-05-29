@@ -42,7 +42,7 @@ const BestSaloons = () => {
   }, [type1, city]);
   const navigate = useNavigate();
   const gotoHotel = (hotel) => {
-    navigate(`/hotels/${hotel}`);
+    navigate(`/shops/${hotel}`);
   };
 
   return (
