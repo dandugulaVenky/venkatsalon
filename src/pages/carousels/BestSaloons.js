@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-
+import "./styles.scss";
 const BestSaloons = () => {
   const { type: type1, dispatch, city } = useContext(SearchContext);
   const [loading, setLoading] = useState(false);
@@ -60,7 +60,7 @@ const BestSaloons = () => {
             return (
               <Carousel.Item key={i}>
                 <div
-                  className="relative  h-52 w-full cursor-pointer rounded-md"
+                  className="relative  h-52 w-full cursor-pointer rounded-md slide-in-left"
                   id="section-id"
                   onClick={() => gotoHotel(item._id)}
                 >

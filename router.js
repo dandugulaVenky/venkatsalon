@@ -4,7 +4,6 @@ import { Routes, Route } from "react-router-dom";
 export default (
   <Routes>
     <Route path="/" />
-    <Route path="/get-started" />
     <Route path="/hotels" />
     <Route path="/hotels/:id" />
     <Route path="/login" />
