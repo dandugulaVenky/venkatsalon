@@ -13,7 +13,7 @@ import Layout from "../components/navbar/Layout";
 import Sidebar from "../components/navbar/SIdebar";
 
 import { SearchContext } from "../context/SearchContext";
-import secureLocalStorage from "react-secure-storage";
+
 import { AuthContext } from "../context/AuthContext";
 
 const useEffectOnce = (effect) => {
@@ -67,7 +67,7 @@ export const PaymentSuccess = () => {
       }
     } catch (err) {
       toast.error(err.response.data.message);
-      localStorage.removeItem("count");
+
       return null;
     }
   };
@@ -139,7 +139,6 @@ export const PaymentSuccess = () => {
       });
     } catch (err) {
       toast.error(err.response?.data?.message);
-      secureLocalStorage.removeItem("session");
     }
   };
 

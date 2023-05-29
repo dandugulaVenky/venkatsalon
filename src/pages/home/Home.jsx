@@ -130,8 +130,8 @@ const Home = () => {
   const handleToast = () => {
     toast("Reserved successfully");
 
-    navigate("/get-started", { state: null });
-    return secureLocalStorage.removeItem("bookingDetails");
+    navigate("/", { state: null });
+    return null;
   };
 
   const handleButton = async () => {
