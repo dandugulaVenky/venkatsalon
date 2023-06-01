@@ -18,6 +18,7 @@ import Sidebar from "../../components/navbar/SIdebar";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import DatePicker from "react-date-picker";
+import baseUrl from "../../utils/client";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -50,7 +51,9 @@ const Admin = () => {
   }
   useEffect(() => {
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`/api/users/${user?._id}`);
+      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
+        withCredentials: true,
+      });
 
       setIsAdmin(isAdmin.data);
     };
@@ -61,9 +64,13 @@ const Admin = () => {
     const requests = async () => {
       setLoading(true);
       await axios
-        .post(`/api/hotels/getShopRequests/${shopId}`, {
-          date: allOrders ? "all" : moment(value).format("MMM Do YY"),
-        })
+        .post(
+          `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
+          {
+            date: allOrders ? "all" : moment(value).format("MMM Do YY"),
+          },
+          { withCredentials: true }
+        )
         .then((res) => {
           setData(res.data);
 

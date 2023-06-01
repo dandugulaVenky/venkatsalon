@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useMemo } from "react";
+import baseUrl from "../../utils/client";
 
 const Reserve = (props) => {
   const {
@@ -66,14 +67,15 @@ const Reserve = (props) => {
 
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const { data } = useFetch(`/api/hotels/room/${shopId}`);
+  const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
 
   const { date: dater, time } = useContext(SearchContext);
 
   const { user } = useContext(AuthContext);
 
   const { data: shopOwnerData } = useFetch(
-    `/api/users/getOwnerDetails/${shopOwner}`
+    `${baseUrl}/api/users/getOwnerDetails/${shopOwner}`,
+    { credentials: true }
   );
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
@@ -95,7 +97,7 @@ const Reserve = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`/api/hotels/room/${shopId}`);
+      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
       // console.log(data[0].roomNumbers);
 
       const res =
@@ -509,7 +511,8 @@ const Reserve = (props) => {
 
     try {
       const { status } = await axios.post(
-        `/api/users/finalBookingDetails/${user._id}`,
+        `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
+
         {
           selectedSeats: seats,
           totalAmount,
@@ -523,19 +526,24 @@ const Reserve = (props) => {
           user,
           link: "https://main--profound-babka-e67f58.netlify.app/history",
           dates,
-        }
+        },
+        { withCredentials: true }
       );
       if (status === 201) {
         const {
           data: { key },
-        } = await axios.get("/api/getkey");
+        } = await axios.get(`${baseUrl}/api/getkey`);
 
         try {
           const {
             data: { order },
-          } = await axios.post("/api/payments/checkout", {
-            amount,
-          });
+          } = await axios.post(
+            `${baseUrl}/api/payments/checkout`,
+            {
+              amount,
+            },
+            { withCredentials: true }
+          );
           setOpen(false);
           const options = {
             key,
@@ -545,7 +553,7 @@ const Reserve = (props) => {
             description: "SALOONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
-            callback_url: "/api/payments/paymentverification",
+            callback_url: `${baseUrl}/api/payments/paymentverification`,
             prefill: {
               name: "Test Team",
               email: "test.test@example.com",

@@ -8,6 +8,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
+import baseUrl from "../../utils/client";
 const BestSaloons = () => {
   const { type: type1, dispatch, city } = useContext(SearchContext);
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ const BestSaloons = () => {
     try {
       const getSaloons = async () => {
         const { data, status } = await axios.get(
-          `/api/hotels?type=${type1}&city=${city}`
+          `${baseUrl}/api/hotels?type=${type1}&city=${city}`
         );
 
         if (data) {

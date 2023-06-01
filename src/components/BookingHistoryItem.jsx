@@ -1,9 +1,12 @@
 import moment from "moment";
 import React from "react";
 import useFetch from "../hooks/useFetch";
+import baseUrl from "../utils/client";
 
 const BookingHistoryItem = ({ item, k }) => {
-  const { data, loading, error } = useFetch(`/api/hotels/room/${item.shopId}`);
+  const { data, loading, error } = useFetch(
+    `${baseUrl}/api/hotels/room/${item.shopId}`
+  );
 
   //   console.log(`frpm item ${k}`, data);
   let seats = [];

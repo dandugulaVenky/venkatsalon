@@ -19,13 +19,15 @@ import Layout from "../components/navbar/Layout";
 import { SearchContext } from "../context/SearchContext";
 import Sidebar from "../components/navbar/SIdebar";
 import Greeting from "../components/navbar/Greeting";
+import baseUrl from "../utils/client";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const { data, loading, error } = useFetch(
-    `/api/users/getBookings/${user._id}`
+    `${baseUrl}/api/users/getBookings/${user._id}`,
+    { credentials: true }
   );
 
   // if (error === false) {

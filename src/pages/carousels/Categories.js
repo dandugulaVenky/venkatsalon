@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuilding } from "@fortawesome/free-solid-svg-icons";
+import baseUrl from "../../utils/client";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
@@ -16,7 +17,7 @@ const Categories = ({ type }) => {
     try {
       const getCount = async () => {
         const { data } = await axios.get(
-          `/api/hotels/countByCity?cities=shadnagar,kothur,thimmapur,shamshabad&&type=${type1}`
+          `${baseUrl}/api/hotels/countByCity?cities=shadnagar,kothur,thimmapur,shamshabad&&type=${type1}`
         );
 
         setData(data);

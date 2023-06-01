@@ -15,6 +15,7 @@ import Sidebar from "../components/navbar/SIdebar";
 import { SearchContext } from "../context/SearchContext";
 
 import { AuthContext } from "../context/AuthContext";
+import baseUrl from "../utils/client";
 
 const useEffectOnce = (effect) => {
   const destroyFunc = useRef();
@@ -58,7 +59,8 @@ export const PaymentSuccess = () => {
   const getFinalBookingDetails = async () => {
     try {
       const { data, status } = await axios.get(
-        `/api/users/getFinalBookingDetails/${mainUser?._id}`
+        `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
+        { withCredentials: true }
       );
       if (status === 201) {
         return data[0];
@@ -91,7 +93,7 @@ export const PaymentSuccess = () => {
 
     try {
       await axios.post(
-        `/api/hotels/updateRequests/${finalBookingDetails?.shopId}`,
+        `${baseUrl}/api/hotels/updateRequests/${finalBookingDetails?.shopId}`,
         {
           dates: finalBookingDetails.dates,
           user: finalBookingDetails?.user,
@@ -103,36 +105,51 @@ export const PaymentSuccess = () => {
           isPaid: true,
           isDone: "false",
           referenceNumber: referenceNum,
+        },
+        { withCredentials: true }
+      );
+
+      await axios.post(
+        `${baseUrl}/api/users/bookings/${finalBookingDetails?.user._id}`,
+        {
+          dates: finalBookingDetails.dates,
+          shopId: finalBookingDetails?.shopId,
+          shopName: finalBookingDetails?.shopName,
+          bookId: finalBookingDetails?.bookId,
+          selectedSeats: selectedSeats1,
+          totalAmount: finalBookingDetails?.totalAmount,
+          isPaid: true,
+          isDone: "false",
+          referenceNumber: referenceNum,
+        },
+        { withCredentials: true }
+      );
+
+      await axios.post(
+        `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser._id}`,
+        null,
+        {
+          withCredentials: true,
         }
       );
 
-      await axios.post(`/api/users/bookings/${finalBookingDetails?.user._id}`, {
-        dates: finalBookingDetails.dates,
-        shopId: finalBookingDetails?.shopId,
-        shopName: finalBookingDetails?.shopName,
-        bookId: finalBookingDetails?.bookId,
-        selectedSeats: selectedSeats1,
-        totalAmount: finalBookingDetails?.totalAmount,
-        isPaid: true,
-        isDone: "false",
-        referenceNumber: referenceNum,
-      });
-
-      await axios.post(`/api/users/clearfinalBookingDetails/${mainUser._id}`);
-
-      await axios.post("/api/sendmail", {
-        email: finalBookingDetails?.user.email,
-        userName: finalBookingDetails?.user.username,
-        userNumber: finalBookingDetails?.user.phone,
-        dates: finalBookingDetails?.dates,
-        shopName: finalBookingDetails?.shopName,
-        ownerEmail: finalBookingDetails?.ownerEmail,
-        ownerNumber: finalBookingDetails?.ownerEmail,
-        totalAmount: finalBookingDetails?.totalAmount,
-        selectedSeats: selectedSeats1,
-        referenceNumber: referenceNum,
-        link: "https://main--profound-babka-e67f58.netlify.app/history",
-      });
+      await axios.post(
+        `${baseUrl}/api/sendmail`,
+        {
+          email: finalBookingDetails?.user.email,
+          userName: finalBookingDetails?.user.username,
+          userNumber: finalBookingDetails?.user.phone,
+          dates: finalBookingDetails?.dates,
+          shopName: finalBookingDetails?.shopName,
+          ownerEmail: finalBookingDetails?.ownerEmail,
+          ownerNumber: finalBookingDetails?.ownerEmail,
+          totalAmount: finalBookingDetails?.totalAmount,
+          selectedSeats: selectedSeats1,
+          referenceNumber: referenceNum,
+          link: "https://main--profound-babka-e67f58.netlify.app/history",
+        },
+        { withCredentials: true }
+      );
 
       navigate("/", {
         state: { referenceNum: referenceNum },
@@ -153,9 +170,13 @@ export const PaymentSuccess = () => {
         return (
           room.options.length > 0 &&
           axios
-            .put(`/api/rooms/availability/${room.id}`, {
-              dates: correctDate,
-            })
+            .put(
+              `${baseUrl}/api/rooms/availability/${room.id}`,
+              {
+                dates: correctDate,
+              },
+              { withCredentials: true }
+            )
             .then((res) => {
               if (
                 (!isExecuted && finalBookingDetails !== null) ||

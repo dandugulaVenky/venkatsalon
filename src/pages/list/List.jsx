@@ -13,6 +13,7 @@ import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
+import baseUrl from "../../utils/client";
 
 const List = () => {
   let { city, type } = useContext(SearchContext);
@@ -27,7 +28,9 @@ const List = () => {
   city = city.toLowerCase().trim();
 
   const { data, loading } = useFetch(
-    `/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${max || 999}`
+    `${baseUrl}/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${
+      max || 999
+    }`
   );
   const [loaded, setLoaded] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +40,7 @@ const List = () => {
   const [colonies, setColonies] = useState([]);
 
   const getAllColonies = async () => {
-    const colonies = await axios.post("/api/hotels/allColonies", {
+    const colonies = await axios.post(`${baseUrl}/api/hotels/allColonies`, {
       destination: city,
     });
 
@@ -65,7 +68,7 @@ const List = () => {
   }, []);
 
   const getColonyWiseShops = async (colony) => {
-    const shops = await axios.post("/api/hotels/getColonyWiseShops", {
+    const shops = await axios.post(`${baseUrl}/api/hotels/getColonyWiseShops`, {
       colony,
       type,
     });

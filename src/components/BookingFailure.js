@@ -11,6 +11,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 import useEffectOnce from "../utils/UseEffectOnce";
+import baseUrl from "../utils/client";
 
 const BookingFailure = () => {
   const location = useLocation();
@@ -24,36 +25,41 @@ const BookingFailure = () => {
 
   const sendMail = async (finalBookingDetails) => {
     try {
-      await axios.post("/api/sendmail/failure", {
-        email: finalBookingDetails?.user.email,
-        userName: finalBookingDetails?.user.username,
-        userNumber: finalBookingDetails?.user.phone,
-        dates: finalBookingDetails?.dates,
-        shopName: finalBookingDetails?.shopName,
-        ownerEmail: finalBookingDetails?.ownerEmail,
-        ownerNumber: finalBookingDetails?.ownerNumber,
-        totalAmount: finalBookingDetails?.totalAmount,
-        selectedSeats: finalBookingDetails?.selectedSeats,
+      await axios.post(
+        `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser._id}`,
+        null,
+        { withCredentials: true }
+      );
 
-        referenceNumber: reference,
+      await axios.post(
+        `${baseUrl}/api/sendmail/failure`,
+        {
+          email: finalBookingDetails?.user.email,
+          userName: finalBookingDetails?.user.username,
+          userNumber: finalBookingDetails?.user.phone,
+          dates: finalBookingDetails?.dates,
+          shopName: finalBookingDetails?.shopName,
+          ownerEmail: finalBookingDetails?.ownerEmail,
+          ownerNumber: finalBookingDetails?.ownerNumber,
+          totalAmount: finalBookingDetails?.totalAmount,
+          selectedSeats: finalBookingDetails?.selectedSeats,
 
-        link: "https://main--profound-babka-e67f58.netlify.app/history",
-      });
+          referenceNumber: reference,
 
-      try {
-        await axios.post(`/api/users/clearfinalBookingDetails/${mainUser._id}`);
-      } catch (err) {
-        toast.error(err?.response?.data?.message);
-      }
+          link: "https://easytym.com/history",
+        },
+        { withCredentials: true }
+      );
     } catch (err) {
-      console.log(err);
+      toast(err.response.data.message);
     }
   };
 
   const getFinalBookingDetails = async () => {
     try {
       const { data, status } = await axios.get(
-        `/api/users/getFinalBookingDetails/${mainUser?._id}`
+        `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
+        { withCredentials: true }
       );
       if (status === 201) {
         return data[0];

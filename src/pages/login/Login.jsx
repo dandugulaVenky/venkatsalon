@@ -51,10 +51,13 @@ export default function Login() {
 
   const saveToken = async (id, token) => {
     try {
-      const response = await axios.post("/api/firebase/tokens", {
-        userId: id,
-        token,
-      });
+      const response = await axios.post(
+        "http://localhost:8800/api/firebase/tokens",
+        {
+          userId: id,
+          token,
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -75,10 +78,14 @@ export default function Login() {
       dispatch({ type: "LOGIN_START" });
 
       try {
-        const res = await axios.post("/api/auth/login", {
-          phone: number,
-          password,
-        });
+        const res = await axios.post(
+          "http://localhost:8800/api/auth/login",
+          {
+            phone: number,
+            password,
+          },
+          { withCredentials: true }
+        );
 
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
 

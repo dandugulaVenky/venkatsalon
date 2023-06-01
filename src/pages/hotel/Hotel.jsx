@@ -31,6 +31,7 @@ import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
 import options from "../../utils/time";
 import Test from "../../utils/Test";
+import baseUrl from "../../utils/client";
 
 const Hotel = () => {
   const location = useLocation();
@@ -57,10 +58,10 @@ const Hotel = () => {
 
   const [minutesValues, setMinutesvalues] = useState([]);
 
-  const { data, loading } = useFetch(`/api/hotels/find/${id}`);
+  const { data, loading } = useFetch(`${baseUrl}/api/hotels/find/${id}`);
   const fetchReviews = async () => {
     return await axios
-      .get(`/api/hotels/getReviews/${id}`)
+      .get(`${baseUrl}/api/hotels/getReviews/${id}`)
       .then((res) => {
         // console.log("reviewsfromdb", res.data);
         setReviews(res.data);
@@ -74,7 +75,7 @@ const Hotel = () => {
         : window.scrollTo(0, 0);
     };
     const fetchData = async () => {
-      const { data } = await axios.get(`/api/hotels/room/${id}`);
+      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
       setServices(data[0]?.services);
 
       const res =
@@ -172,12 +173,16 @@ const Hotel = () => {
     }
     setLoadingg(true);
     await axios
-      .post(`/api/hotels/createReview/${id}`, {
-        user: user._id,
-        name: user.username,
-        rating,
-        comment,
-      })
+      .post(
+        `${baseUrl}/api/hotels/createReview/${id}`,
+        {
+          user: user._id,
+          name: user.username,
+          rating,
+          comment,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
         toast(res.data.message);
         setLoadingg(false);

@@ -21,6 +21,7 @@ import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
 import { useEffect } from "react";
+import baseUrl from "../../utils/client";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -136,12 +137,16 @@ const Home = () => {
 
   const handleButton = async () => {
     try {
-      const res = await axios.post(`/api/firebase/send-mobile-notifications`, {
-        title: "Hi Easytymers",
-        body: "How are you all?",
-        imageUrl:
-          "https://chat.openai.com/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAGNmyxbquFAyuzcXRZWjLWbOTVvv0xXp89vl4wRbKuDGOlU%3Ds96-c&w=32&q=75",
-      });
+      const res = await axios.post(
+        `${baseUrl}/api/firebase/send-mobile-notifications`,
+        {
+          title: "Hi Easytymers",
+          body: "How are you all?",
+          imageUrl:
+            "https://chat.openai.com/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAGNmyxbquFAyuzcXRZWjLWbOTVvv0xXp89vl4wRbKuDGOlU%3Ds96-c&w=32&q=75",
+        },
+        { withCredentials: true }
+      );
       console.log(res);
     } catch (err) {
       console.log(err);

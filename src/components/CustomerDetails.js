@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
 import useFetch from "../hooks/useFetch";
+import baseUrl from "../utils/client";
 
 const CustomerDetails = ({ item, setOpen }) => {
   const navigate = useNavigate();
@@ -21,11 +22,16 @@ const CustomerDetails = ({ item, setOpen }) => {
 
   let [acceptIds, setAcceptIds] = useState([]);
 
-  const { data } = useFetch(`/api/hotels/room/${item.shopId}`);
+  const { data } = useFetch(`${baseUrl}/api/hotels/room/${item.shopId}`);
 
-  const { data: data1 } = useFetch(`/api/users/getBookings/${item.user}`);
+  const { data: data1 } = useFetch(
+    `${baseUrl}/api/users/getBookings/${item.user}`,
+    { credentials: true }
+  );
 
-  const { data: shopData } = useFetch(`/api/hotels/find/${item.shopId}`);
+  const { data: shopData } = useFetch(
+    `${baseUrl}/api/hotels/find/${item.shopId}`
+  );
 
   function compareTimeDiff(time) {
     let time1 = time;
@@ -54,22 +60,6 @@ const CustomerDetails = ({ item, setOpen }) => {
     } else {
       return -1; // Date is in the past
     }
-  }
-
-  function convertToMilliseconds(time) {
-    var date = new Date();
-    var timeArray = time.split(":");
-    var hours = parseInt(timeArray[0]) % 12;
-    var minutes = parseInt(timeArray[1]);
-    var ampm = timeArray[1].split("")[3];
-
-    if (ampm === "P" && hours !== 12) {
-      hours += 12;
-    }
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(0);
-    return date.getTime();
   }
 
   data[0]?.roomNumbers?.map((seat, i) => {
@@ -111,10 +101,11 @@ const CustomerDetails = ({ item, setOpen }) => {
       await Promise.all(
         uniqueArr.map((item) => {
           axios.put(
-            `/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
+            `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
             {
               isAccepted: "cancelled",
-            }
+            },
+            { withCredentials: true }
           );
         })
       );
@@ -125,9 +116,13 @@ const CustomerDetails = ({ item, setOpen }) => {
     try {
       await Promise.all(
         uniqueArr1.map((item) => {
-          axios.put(`/api/users/updateUserApprovalStatus/${item}`, {
-            isDone: "cancelled",
-          });
+          axios.put(
+            `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
+            {
+              isDone: "cancelled",
+            },
+            { withCredentials: true }
+          );
         })
       );
     } catch (err) {
@@ -135,9 +130,13 @@ const CustomerDetails = ({ item, setOpen }) => {
     }
     try {
       await Promise(
-        axios.put(`/api/hotels/updateOwnerApprovalStatus/${item._id}`, {
-          isDone: "cancelled",
-        })
+        axios.put(
+          `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
+          {
+            isDone: "cancelled",
+          },
+          { withCredentials: true }
+        )
       );
     } catch (err) {
       toast(err);
@@ -145,23 +144,27 @@ const CustomerDetails = ({ item, setOpen }) => {
 
     try {
       const { email, phone } = user;
-      const mail = await axios.post("/api/sendmail", {
-        email: item.email,
-        userNumber: item.phone,
+      const mail = await axios.post(
+        `${baseUrl}/api/sendmail`,
+        {
+          email: item.email,
+          userNumber: item.phone,
 
-        type: "cancel",
-        shopName: shopData.name,
-        ownerEmail: email,
-        ownerNumber: phone,
-        link: "https://main--profound-babka-e67f58.netlify.app/history",
-      });
+          type: "cancel",
+          shopName: shopData.name,
+          ownerEmail: email,
+          ownerNumber: phone,
+          link: "https://main--profound-babka-e67f58.netlify.app/history",
+        },
+        { withCredentials: true }
+      );
     } catch (err) {
       toast(err.response.data.message);
     }
 
     toast("Rejected Successfully");
 
-    window.location.reload();
+    window.location.replace("/admin");
   };
 
   const handleClick = async (uniqueArr, uniqueArr1) => {
@@ -175,57 +178,74 @@ const CustomerDetails = ({ item, setOpen }) => {
       return toast("Cannot approve past times!");
     }
     setOpen(false);
-    try {
-      await Promise.all(
-        uniqueArr.map((item) => {
-          axios.put(
-            `/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
-            {
-              isAccepted: "true",
-            }
-          );
-        })
-      );
+    if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
       try {
         await Promise.all(
-          uniqueArr1.map((item) => {
-            axios.put(`/api/users/updateUserApprovalStatus/${item}`, {
-              isDone: "true",
-            });
+          uniqueArr.map((item) => {
+            axios.put(
+              `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
+              {
+                isAccepted: "true",
+              },
+              { withCredentials: true }
+            );
           })
         );
+        try {
+          await Promise.all(
+            uniqueArr1.map((item) => {
+              axios.put(
+                `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
+                {
+                  isDone: "true",
+                },
+                { withCredentials: true }
+              );
+            })
+          );
+        } catch (err) {
+          toast(err);
+        }
+        try {
+          await Promise(
+            axios.put(
+              `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
+              {
+                isDone: "true",
+              },
+              { withCredentials: true }
+            )
+          );
+        } catch (err) {
+          toast(err);
+        }
+
+        try {
+          const { email, phone } = user;
+          const mail = await axios.post(
+            `${baseUrl}/api/sendmail`,
+            {
+              email: item.email,
+              userNumber: item.phone,
+              //shopName we are using already in backend
+              shopName: shopData.name,
+              ownerEmail: email,
+              ownerNumber: phone,
+              link: "https://easytym.com/history",
+            },
+            { withCredentials: true }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+        toast("Done Successfully");
+
+        window.location.replace("/admin");
       } catch (err) {
         toast(err);
       }
-      try {
-        await Promise(
-          axios.put(`/api/hotels/updateOwnerApprovalStatus/${item._id}`, {
-            isDone: "true",
-          })
-        );
-      } catch (err) {
-        toast(err);
-      }
-
-      try {
-        const { email, phone } = user;
-        const mail = await axios.post("/api/sendmail", {
-          email: item.email,
-          userNumber: item.phone,
-          //shopName we are using already in backend
-          shopName: shopData.name,
-          ownerEmail: email,
-          ownerNumber: phone,
-          link: "https://main--profound-babka-e67f58.netlify.app/history",
-        });
-      } catch (err) {
-        console.log(err);
-      }
-      toast("Done Successfully");
-
-      navigate("/admin");
-    } catch (err) {
-      toast(err);
+    } else {
+      toast("Something wrong!");
     }
   };
 
@@ -247,16 +267,17 @@ const CustomerDetails = ({ item, setOpen }) => {
       }
     });
   };
+  let uniqueArr = [];
+  let uniqueArr1 = [];
 
   if (data1) {
     mapUserBookingIds(data1);
+    uniqueArr = Array.from(
+      new Set(acceptIds.map((item) => JSON.stringify(item)))
+    ).map((item) => JSON.parse(item));
+
+    uniqueArr1 = Array.from(new Set(userBookingIds));
   }
-
-  const uniqueArr = Array.from(
-    new Set(acceptIds.map((item) => JSON.stringify(item)))
-  ).map((item) => JSON.parse(item));
-
-  const uniqueArr1 = Array.from(new Set(userBookingIds));
 
   return (
     <div className="reserve px-4">

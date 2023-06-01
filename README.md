@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-"proxy": "https://booking-server-nn24.onrender.com/api",
+"baseURL": "https://booking-server-nn24.onrender.com",
 
 In the project directory, you can run:
 

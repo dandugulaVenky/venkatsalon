@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
+import baseUrl from "../../utils/client";
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
     return inputString.substr(0, 30) + "...";
@@ -33,7 +34,9 @@ const Layout = () => {
 
   useEffect(() => {
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`/api/users/${user?._id}`);
+      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
+        withCredentials: true,
+      });
 
       setIsAdmin(isAdmin.data);
     };

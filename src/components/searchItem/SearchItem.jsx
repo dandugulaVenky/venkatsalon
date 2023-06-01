@@ -11,12 +11,15 @@ import {
   faCheckCircle,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
+import baseUrl from "../../utils/client";
 
 const SearchItem = ({ item }) => {
   let disable = false;
   const { date, time, city } = useContext(SearchContext);
   const dater = moment(date).format("MMM Do YY");
-  const { data, loading, error } = useFetch(`/api/hotels/room/${item._id}`);
+  const { data, loading, error } = useFetch(
+    `${baseUrl}/api/hotels/room/${item._id}`
+  );
 
   // let htms = "";
   let count = 0;
