@@ -2,22 +2,17 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import Carousel from "react-grid-carousel";
-
+import image from "../pages/images/barber.jpg";
+import "./styles.scss";
 const Test = ({ services }) => {
   return (
-    <div className="  md:py-10 px-1 py-5 md:mb-0  text-black ">
+    <div className="  md:py-10 px-1 py-5 md:mb-0  text-white ">
       <Carousel cols={7} rows={1} gap={8}>
         {services?.map((item, i) => {
           return (
             <Carousel.Item key={i}>
               <div className="relative md:h-28 md:w-52 h-44 w-full">
-                <img
-                  src={`https://picsum.photos/800/600?random=${Math.random(
-                    Math.ceil(i + 1 * 0.4)
-                  )}`}
-                  alt="images"
-                  className="rounded-md"
-                />
+                <img src={image} alt="images" className="rounded-md img" />
                 <p className="absolute bottom-4 left-4 text-white font-bold  text-lg ">
                   {item?.service}
                 </p>
