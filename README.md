@@ -4,7 +4,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-"baseURL": "https://booking-server-nn24.onrender.com",
+"baseUrl": "https://booking-server-nn24.onrender.com",
+
+This is used when we use proxy in netlify
+
+[[redirects]]
+from = "/api/\*"
+to = "https://booking-server-nn24.onrender.com/api/:splat"
+status = 200
 
 In the project directory, you can run:
 

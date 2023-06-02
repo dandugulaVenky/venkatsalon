@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/navbar/SIdebar";
 import Greeting from "../components/navbar/Greeting";
 import { SearchContext } from "../context/SearchContext";
+import baseUrl from "../utils/client";
 
 export default function Profile() {
   //   const { data: session } = useSession();
@@ -36,7 +37,7 @@ export default function Profile() {
       return toast("Enter full details!");
     }
     try {
-      let res = await axios.put(`/api/users/${user._id}`, {
+      let res = await axios.put(`${baseUrl}/api/users/${user._id}`, {
         username: name.toLowerCase(),
 
         password,
@@ -51,7 +52,7 @@ export default function Profile() {
 
       dispatch({ type: "LOGIN_START" });
       try {
-        const res = await axios.post("/api/auth/login", {
+        const res = await axios.post(`${baseUrl}/api/auth/login`, {
           username: name,
           password,
         });
