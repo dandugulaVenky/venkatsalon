@@ -28,7 +28,7 @@ const SearchReducer = (state, action) => {
       // console.log("payload", action.payload);
       localStorage.setItem(
         "bookingDetails",
-        JSON.stringify({ city: action.payload.destination, date, time, type })
+        JSON.stringify({ city, date, time, type })
       );
       return { ...state, date, city, time, type };
     case "RESET_SEARCH":

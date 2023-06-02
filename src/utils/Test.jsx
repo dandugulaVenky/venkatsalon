@@ -4,7 +4,10 @@ import React from "react";
 import Carousel from "react-grid-carousel";
 import image from "../pages/images/barber.jpg";
 import "./styles.scss";
+import { useContext } from "react";
+import { SearchContext } from "../context/SearchContext";
 const Test = ({ services }) => {
+  const { type } = useContext(SearchContext);
   return (
     <div className="  md:py-10 px-1 py-5 md:mb-0  text-white ">
       <Carousel cols={7} rows={1} gap={8}>
@@ -12,7 +15,15 @@ const Test = ({ services }) => {
           return (
             <Carousel.Item key={i}>
               <div className="relative md:h-28 md:w-52 h-44 w-full">
-                <img src={image} alt="images" className="rounded-md img" />
+                <img
+                  src={
+                    type === "saloon"
+                      ? image
+                      : "https://img.freepik.com/premium-psd/top-view-beauty-salon-concept_23-2148600664.jpg?w=2000"
+                  }
+                  alt="images"
+                  className="rounded-md img"
+                />
                 <p className="absolute bottom-4 left-4 text-white font-bold  text-lg ">
                   {item?.service}
                 </p>

@@ -66,7 +66,7 @@ const Home = () => {
           } else if (result.state === "granted") {
             // Geolocation permission already granted
             console.log("Geolocation permission already granted.");
-            getCurrentPosition();
+            // getCurrentPosition();
           } else if (result.state === "denied") {
             // Geolocation permission blocked by the user
             if (city === "No Location!") {
@@ -96,14 +96,14 @@ const Home = () => {
         geocoder.geocode({ location: latlng }, (results, status) => {
           if (status === "OK") {
             if (results[0]) {
-              const city = results[2]?.formatted_address.trim().toLowerCase();
+              const city1 = results[2]?.formatted_address.trim().toLowerCase();
 
               // Dispatch the necessary information
               dispatch({
                 type: "NEW_SEARCH",
                 payload: {
                   type: "saloon",
-                  destination: city,
+                  destination: city1,
                 },
               });
             } else {
