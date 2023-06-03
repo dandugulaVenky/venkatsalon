@@ -19,6 +19,7 @@ const OtpVerification = ({
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
+  const [disable, setDisable] = useState(false);
 
   function setUpRecaptha(number) {
     const recaptchaVerifier = new RecaptchaVerifier(
@@ -34,11 +35,19 @@ const OtpVerification = ({
     e.preventDefault();
     if (!number) return toast("Please enter your number");
     try {
+      setDisable(true);
       const response = await setUpRecaptha(number);
       setResult(response);
       setFlag(true);
+      setDisable(false);
     } catch (err) {
       toast(err.message);
+      setFlag(false);
+
+      setDisable(false);
+      setTimeout(() => {
+        window.location.replace("/register");
+      }, 3000);
     }
   };
 
@@ -46,11 +55,15 @@ const OtpVerification = ({
     e.preventDefault();
 
     if (otp === "" || otp === null) return;
+    setDisable(true);
+
     try {
       await result.confirm(otp);
       setVerified(true);
+      setDisable(false);
     } catch (err) {
       toast(err.message);
+      setDisable(false);
     }
   };
   return (
@@ -69,7 +82,11 @@ const OtpVerification = ({
             placeholder="Enter Phone Number"
           />
           <div id="recaptcha-container"></div>
-          <button className="primary-button " onClick={getOtp}>
+          <button
+            className="primary-button "
+            onClick={getOtp}
+            disabled={disable}
+          >
             Get Otp
           </button>
         </div>
@@ -86,7 +103,11 @@ const OtpVerification = ({
           />
 
           <div id="recaptcha-container"></div>
-          <button className="primary-button " onClick={verifyOtp}>
+          <button
+            className="primary-button "
+            onClick={verifyOtp}
+            disabled={disable}
+          >
             Verify Otp
           </button>
         </div>
