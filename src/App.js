@@ -20,6 +20,10 @@ import { AuthContext } from "./context/AuthContext";
 import BookingFailure from "./components/BookingFailure";
 
 import Ironing from "./pages/ironing/Ironing";
+import Slug from "./pages/ironing/iron-pages/Slug";
+import Cart from "./pages/ironing/iron-pages/Cart";
+import Shipping from "./pages/ironing/iron-pages/Shipping";
+import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -79,6 +83,10 @@ function App() {
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/failure" element={<BookingFailure />} />
         <Route path="/iron" element={<Ironing />} />
+        <Route path="/iron/product/:slug" element={<Slug />} />
+        <Route path="/iron/cart" element={<Cart />} />
+        <Route path="/iron/shipping" element={<Shipping />} />
+        <Route path="/iron/place-order" element={<PlaceOrder />} />
       </Routes>
     </BrowserRouter>
   );

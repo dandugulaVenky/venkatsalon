@@ -11,6 +11,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import Header from "../header/Header";
+import { Store } from "../../pages/ironing/ironing-utils/Store";
 const shortenString = (inputString) => {
   if (inputString.length > 20) {
     return inputString.substr(0, 20) + "..";
@@ -19,10 +20,32 @@ const shortenString = (inputString) => {
   }
 };
 const Greeting = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 500) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const [greet, setGreet] = useState("");
   const { user } = useContext(AuthContext);
   const { pathname } = useLocation();
+  const [cartItemsCount, setCartItemsCount] = useState(0);
 
+  const { state } = useContext(Store);
+  const { cart } = state;
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
@@ -39,6 +62,10 @@ const Greeting = () => {
     setHeader(!header);
   };
 
+  useEffect(() => {
+    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  }, [cart.cartItems]);
+
   return (
     <div>
       {header ? (
@@ -50,7 +77,12 @@ const Greeting = () => {
           city={city}
         />
       ) : null}
-      <div className="h-10 pt-8 pb-8 px-4 flex items-center justify-between w-full font-bold text-lg">
+      <div
+        className={`h-10 pt-8 pb-8 px-4 flex items-center justify-between w-full font-bold text-lg transition-all  ease-out ${
+          isScrolled &&
+          "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
+        }`}
+      >
         <p className="w-32 text-sm"> {greet}</p>
         <div className="pl-2 text-xs mt-1 font-semibold flex items-center justify-center space-x-3">
           <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
@@ -66,6 +98,19 @@ const Greeting = () => {
             )}
           </p>
         </div>
+
+        {pathname.includes("iron") && (
+          <Link to="/iron/cart">
+            <a className=" font-semibold md:text-lg text-xs">
+              CART
+              {cartItemsCount > 0 && (
+                <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                  {cartItemsCount}
+                </span>
+              )}
+            </a>
+          </Link>
+        )}
 
         {user ? (
           ""

@@ -15,6 +15,7 @@ import {
 import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
+import { Store } from "../../pages/ironing/ironing-utils/Store";
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
     return inputString.substr(0, 30) + "...";
@@ -23,8 +24,30 @@ const shortenString = (inputString) => {
   }
 };
 const Layout = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 400) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const { user, dispatch } = useContext(AuthContext);
 
+  const { state, dispatch: dispatch2 } = useContext(Store);
+  const { cart } = state;
+  const [cartItemsCount, setCartItemsCount] = useState(0);
   const { pathname } = useLocation();
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
@@ -50,9 +73,13 @@ const Layout = () => {
     setHeader(!header);
   };
 
+  useEffect(() => {
+    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  }, [cart.cartItems]);
+
   return (
     <>
-      <ToastContainer position="top-right" />
+      <ToastContainer position="top-left" />
       {header ? (
         <Header
           setHeader={setHeader}
@@ -64,7 +91,12 @@ const Layout = () => {
       ) : null}
 
       <header className="py-2">
-        <nav className="flex items-center px-4 justify-between bg-transparent ">
+        <nav
+          className={`flex items-center px-4 justify-between bg-transparent transition-all  ease-out ${
+            isScrolled &&
+            "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
+          }`}
+        >
           <Link to="/">
             <div className="flex items-center justify-center ">
               <img
@@ -101,7 +133,18 @@ const Layout = () => {
                 <Link to="/contact-us">
                   <h1 className=" font-semibold md:text-lg text-xs">Contact</h1>
                 </Link>
-
+                {pathname.includes("iron") && (
+                  <Link to="/iron/cart">
+                    <a className=" font-semibold md:text-lg text-xs">
+                      Cart
+                      {cartItemsCount > 0 && (
+                        <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                          {cartItemsCount}
+                        </span>
+                      )}
+                    </a>
+                  </Link>
+                )}
                 <Menu as="div" className="relative inline-block  z-10 -mt-0.5">
                   <Menu.Button className=" font-semibold capitalize mr-1">
                     <h1 className="md:text-lg text-xs "> {user.username}</h1>
