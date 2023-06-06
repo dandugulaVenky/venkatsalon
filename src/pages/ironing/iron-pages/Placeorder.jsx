@@ -85,7 +85,7 @@ export default function PlaceOrder() {
           Cart is empty. <Link href="/">Go shopping</Link>
         </div>
       ) : (
-        <div className="grid md:grid-cols-4 md:gap-5  h-auto  px-10 pb-20">
+        <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-20">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Shipping Address</h2>
@@ -93,7 +93,7 @@ export default function PlaceOrder() {
                 {shippingAddress.fullName}, {shippingAddress.address},{" "}
                 {shippingAddress.city}
               </div>
-              <div>
+              <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
                 <Link to="/iron/shipping">Edit</Link>
               </div>
             </div>
@@ -135,7 +135,7 @@ export default function PlaceOrder() {
                   ))}
                 </tbody>
               </table>
-              <div>
+              <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
                 <Link to="/iron/cart">Edit</Link>
               </div>
             </div>

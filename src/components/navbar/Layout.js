@@ -29,7 +29,7 @@ const Layout = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY > 400) {
+      if (scrollY >= 300) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -38,11 +38,11 @@ const Layout = () => {
 
     window.addEventListener("scroll", handleScroll);
 
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isScrolled]);
+
   const { user, dispatch } = useContext(AuthContext);
 
   const { state, dispatch: dispatch2 } = useContext(Store);
@@ -92,9 +92,9 @@ const Layout = () => {
 
       <header className="py-2">
         <nav
-          className={`flex items-center px-4 justify-between bg-transparent transition-all  ease-out ${
+          className={`flex items-center px-4 justify-between bg-transparent  ${
             isScrolled &&
-            "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
+            "fixed top-0 left-0 right-0 z-50 bg-[#ffffff] transition-all delay-400 ease-linear"
           }`}
         >
           <Link to="/">

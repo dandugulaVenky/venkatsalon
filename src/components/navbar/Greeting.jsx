@@ -1,4 +1,5 @@
 import {
+  faCartShopping,
   faChevronCircleDown,
   faLocation,
 } from "@fortawesome/free-solid-svg-icons";
@@ -38,7 +39,7 @@ const Greeting = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isScrolled]);
   const [greet, setGreet] = useState("");
   const { user } = useContext(AuthContext);
   const { pathname } = useLocation();
@@ -83,7 +84,7 @@ const Greeting = () => {
           "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
         }`}
       >
-        <p className="w-32 text-sm"> {greet}</p>
+        <p className="w-auto text-sm"> {greet}</p>
         <div className="pl-2 text-xs mt-1 font-semibold flex items-center justify-center space-x-3">
           <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
           <p className="text-xs w-full flex items-center justify-center space-x-2.5 ">
@@ -101,8 +102,8 @@ const Greeting = () => {
 
         {pathname.includes("iron") && (
           <Link to="/iron/cart">
-            <a className=" font-semibold md:text-lg text-xs">
-              CART
+            <a className=" font-semibold md:text-lg text-xs ">
+              <FontAwesomeIcon icon={faCartShopping} color="black" />
               {cartItemsCount > 0 && (
                 <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
                   {cartItemsCount}

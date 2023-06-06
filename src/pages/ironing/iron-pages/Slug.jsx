@@ -68,7 +68,7 @@ export default function Slug() {
       <div className="py-2 px-12">
         <Link href="/">back to Ironing🫡</Link>
       </div>
-      <div className="grid md:grid-cols-4 md:gap-3 px-12">
+      <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12">
         <div className="md:col-span-2">
           <img
             src={product.image}
