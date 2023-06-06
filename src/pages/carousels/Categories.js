@@ -47,141 +47,143 @@ const Categories = ({ type }) => {
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
           : "loading"}
       </h1>
-      <Carousel cols={4} rows={1} gap={7} loop autoplay={8000}>
-        <Carousel.Item>
-          <div
-            className="relative  h-52 w-full cursor-pointer rounded-md"
-            id="section-id"
-            onClick={() => {
-              handleSearch("shadnagar");
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src="https://picsum.photos/800/600?random=5"
-              alt="images"
-              style={{
-                width: 800,
-                height: 200,
-                filter: "brightness(70%)",
-                objectFit: "cover",
-                objectPosition: "right bottom",
-                borderRadius: 8,
+      <div className="px-2">
+        <Carousel cols={4} rows={1} gap={7} loop autoplay={8000}>
+          <Carousel.Item>
+            <div
+              className="relative  h-52 w-full cursor-pointer rounded-md"
+              id="section-id"
+              onClick={() => {
+                handleSearch("shadnagar");
               }}
-            />
-            <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-              Shadnagar
-            </p>
-            <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-              <FontAwesomeIcon icon={faBuilding} size="lg" />
-              <span className="font-semibold">
-                {data?.length > 0 ? data[0] : "Loading"} Shops
-              </span>
-            </p>
-          </div>
-        </Carousel.Item>
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src="https://picsum.photos/800/600?random=5"
+                alt="images"
+                style={{
+                  width: 800,
+                  height: 200,
+                  filter: "brightness(70%)",
+                  objectFit: "cover",
+                  objectPosition: "right bottom",
+                  borderRadius: 8,
+                }}
+              />
+              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                Shadnagar
+              </p>
+              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <FontAwesomeIcon icon={faBuilding} size="lg" />
+                <span className="font-semibold">
+                  {data?.length > 0 ? data[0] : "Loading"} Shops
+                </span>
+              </p>
+            </div>
+          </Carousel.Item>
 
-        {/* ... */}
+          {/* ... */}
 
-        <Carousel.Item>
-          <div
-            className="relative  h-52 w-full cursor-pointer rounded-md"
-            id="section-id"
-            onClick={() => {
-              handleSearch("kothur");
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src="https://picsum.photos/800/600?random=4"
-              alt="images"
-              style={{
-                width: 800,
-                height: 200,
-                filter: "brightness(70%)",
-                objectFit: "cover",
-                objectPosition: "right bottom",
-                borderRadius: 8,
+          <Carousel.Item>
+            <div
+              className="relative  h-52 w-full cursor-pointer rounded-md"
+              id="section-id"
+              onClick={() => {
+                handleSearch("kothur");
               }}
-            />
-            <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-              Kothur
-            </p>
-            <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-              <FontAwesomeIcon icon={faBuilding} size="lg" />
-              <span className="font-semibold">
-                {data?.length > 0 ? data[1] : "Loading"} Shops
-              </span>
-            </p>
-          </div>
-        </Carousel.Item>
-        <Carousel.Item>
-          <div
-            className="relative  h-52 w-full cursor-pointer rounded-md"
-            id="section-id"
-            onClick={() => {
-              handleSearch("thimmapur");
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src="https://picsum.photos/800/600?random=3"
-              alt="images"
-              style={{
-                width: 800,
-                height: 200,
-                filter: "brightness(70%)",
-                objectFit: "cover",
-                objectPosition: "right bottom",
-                borderRadius: 8,
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src="https://picsum.photos/800/600?random=4"
+                alt="images"
+                style={{
+                  width: 800,
+                  height: 200,
+                  filter: "brightness(70%)",
+                  objectFit: "cover",
+                  objectPosition: "right bottom",
+                  borderRadius: 8,
+                }}
+              />
+              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                Kothur
+              </p>
+              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <FontAwesomeIcon icon={faBuilding} size="lg" />
+                <span className="font-semibold">
+                  {data?.length > 0 ? data[1] : "Loading"} Shops
+                </span>
+              </p>
+            </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <div
+              className="relative  h-52 w-full cursor-pointer rounded-md"
+              id="section-id"
+              onClick={() => {
+                handleSearch("thimmapur");
               }}
-            />
-            <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-              Thimmapur
-            </p>
-            <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-              <FontAwesomeIcon icon={faBuilding} size="lg" />
-              <span className="font-semibold">
-                {data?.length > 0 ? data[2] : "Loading"} Shops
-              </span>
-            </p>
-          </div>
-        </Carousel.Item>
-        <Carousel.Item>
-          <div
-            className="relative  h-52 w-full cursor-pointer rounded-md"
-            id="section-id"
-            onClick={() => {
-              handleSearch("shamshabad");
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <img
-              src="https://picsum.photos/800/600?random=2"
-              alt="images"
-              style={{
-                width: 800,
-                height: 200,
-                filter: "brightness(70%)",
-                objectFit: "cover",
-                objectPosition: "right bottom",
-                borderRadius: 8,
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src="https://picsum.photos/800/600?random=3"
+                alt="images"
+                style={{
+                  width: 800,
+                  height: 200,
+                  filter: "brightness(70%)",
+                  objectFit: "cover",
+                  objectPosition: "right bottom",
+                  borderRadius: 8,
+                }}
+              />
+              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                Thimmapur
+              </p>
+              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <FontAwesomeIcon icon={faBuilding} size="lg" />
+                <span className="font-semibold">
+                  {data?.length > 0 ? data[2] : "Loading"} Shops
+                </span>
+              </p>
+            </div>
+          </Carousel.Item>
+          <Carousel.Item>
+            <div
+              className="relative  h-52 w-full cursor-pointer rounded-md"
+              id="section-id"
+              onClick={() => {
+                handleSearch("shamshabad");
               }}
-            />
-            <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-              Shamshabad
-            </p>
-            <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-              <FontAwesomeIcon icon={faBuilding} size="lg" />
-              <span className="font-semibold">
-                {data?.length > 0 ? data[3] : "Loading"} Shops
-              </span>
-            </p>
-          </div>
-        </Carousel.Item>
+              style={{ cursor: "pointer" }}
+            >
+              <img
+                src="https://picsum.photos/800/600?random=2"
+                alt="images"
+                style={{
+                  width: 800,
+                  height: 200,
+                  filter: "brightness(70%)",
+                  objectFit: "cover",
+                  objectPosition: "right bottom",
+                  borderRadius: 8,
+                }}
+              />
+              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                Shamshabad
+              </p>
+              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <FontAwesomeIcon icon={faBuilding} size="lg" />
+                <span className="font-semibold">
+                  {data?.length > 0 ? data[3] : "Loading"} Shops
+                </span>
+              </p>
+            </div>
+          </Carousel.Item>
 
-        {/* ... */}
-      </Carousel>
+          {/* ... */}
+        </Carousel>
+      </div>
     </div>
   );
 };

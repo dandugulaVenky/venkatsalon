@@ -48,7 +48,7 @@ const BestSaloons = () => {
 
   return (
     <div className=" md:mb-0  text-black ">
-      <h1 className="px-4 text-xl font-semibold pb-8">
+      <h1 className=" px-4 text-xl font-semibold pb-8">
         {type1
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
           : "loading"}
@@ -56,43 +56,45 @@ const BestSaloons = () => {
       {loading ? (
         <p className="text-gray-500 text-center">Loading</p>
       ) : status === 200 && data?.length > 0 ? (
-        <Carousel cols={4} rows={1} gap={10}>
-          {data?.map((item, i) => {
-            return (
-              <Carousel.Item key={i}>
-                <div
-                  className="relative  h-52 w-full cursor-pointer rounded-md slide-in-left"
-                  id="section-id"
-                  onClick={() => gotoHotel(item._id)}
-                >
-                  <img
-                    src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
-                    alt="images"
-                    style={{
-                      width: 800,
-                      height: 200,
-                      filter: "brightness(70%)",
-                      objectFit: "cover",
-                      objectPosition: "right bottom",
-                      borderRadius: 8,
-                    }}
-                  />
-                  <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-                    {item.name}
-                  </p>
-                  <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                    <FontAwesomeIcon icon={faStar} size="lg" />
-                    <span className="font-semibold">
-                      {Math.ceil(item.rating)}{" "}
-                    </span>
-                  </p>
-                </div>
-              </Carousel.Item>
-            );
-          })}
+        <div className="px-1.5">
+          <Carousel cols={4} rows={1} gap={10}>
+            {data?.map((item, i) => {
+              return (
+                <Carousel.Item key={i}>
+                  <div
+                    className="relative  h-52 w-full cursor-pointer rounded-md slide-in-left"
+                    id="section-id"
+                    onClick={() => gotoHotel(item._id)}
+                  >
+                    <img
+                      src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
+                      alt="images"
+                      style={{
+                        width: 800,
+                        height: 200,
+                        filter: "brightness(70%)",
+                        objectFit: "cover",
+                        objectPosition: "right bottom",
+                        borderRadius: 8,
+                      }}
+                    />
+                    <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                      {item.name}
+                    </p>
+                    <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                      <FontAwesomeIcon icon={faStar} size="lg" />
+                      <span className="font-semibold">
+                        {Math.ceil(item.rating)}{" "}
+                      </span>
+                    </p>
+                  </div>
+                </Carousel.Item>
+              );
+            })}
 
-          {/* ... */}
-        </Carousel>
+            {/* ... */}
+          </Carousel>
+        </div>
       ) : (
         <div className="flex items-center justify-center md:space-x-5 space-x-3">
           <img
