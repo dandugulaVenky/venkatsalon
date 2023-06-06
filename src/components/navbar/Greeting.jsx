@@ -71,61 +71,6 @@ const Greeting = () => {
   }, [cart.cartItems]);
 
   return (
-    // <div>
-    //   {header ? (
-    //     <Header
-    //       setHeader={setHeader}
-    //       setAddress={setAddress}
-    //       dispatch={dispatch1}
-    //       type={type}
-    //       city={city}
-    //     />
-    //   ) : null}
-    //   <div
-    //     className={`h-10 pt-8 pb-8 px-4 flex items-center justify-between w-full font-bold text-lg transition-all  ease-out ${
-    //       isScrolled &&
-    //       "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
-    //     }`}
-    //   >
-    //     <p className="w-auto text-sm"> {greet}</p>
-    //     <div className="pl-2 text-xs mt-1 font-semibold flex items-center justify-center space-x-3">
-    //       <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
-    //       <p className="text-xs w-full flex items-center justify-center space-x-2.5 ">
-    //         <span> {city ? shortenString(city).toUpperCase() : "Loading"}</span>
-    //         {pathname === "/" && (
-    //           <FontAwesomeIcon
-    //             icon={faChevronCircleDown}
-    //             size="lg"
-    //             color="#00ccbb"
-    //             onClick={handleLocation}
-    //           />
-    //         )}
-    //       </p>
-    //     </div>
-
-    //     {pathname.includes("iron") && (
-    //       <Link to="/iron/cart">
-    //         <a className=" font-semibold md:text-lg text-xs ">
-    //           <FontAwesomeIcon icon={faCartShopping} color="black" />
-    //           {cartItemsCount > 0 && (
-    //             <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
-    //               {cartItemsCount}
-    //             </span>
-    //           )}
-    //         </a>
-    //       </Link>
-    //     )}
-
-    //     {user ? (
-    //       ""
-    //     ) : (
-    //       <Link to="/login" className="ml-5">
-    //         Login
-    //       </Link>
-    //     )}
-    //   </div>
-    // </div>
-
     <>
       <ToastContainer position="bottom-center" />
       {header ? (
@@ -138,10 +83,10 @@ const Greeting = () => {
         />
       ) : null}
 
-      <div className="h-20 ">
+      <div className="h-20">
         <div className="greetingHead  ">
           <div
-            className={`flex items-center justify-between px-4 p-1 ${
+            className={`flex items-center justify-between px-4 p-2 ${
               isScrolled ? "greetinghead1" : "greetinghead2"
             }`}
           >
@@ -158,13 +103,13 @@ const Greeting = () => {
             </div>
             <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
               <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
-              <p className="text-sm">
+              <p className="text-xs">
                 {city ? shortenString(city).toUpperCase() : "loading"}
               </p>
               {pathname === "/" && (
                 <FontAwesomeIcon
                   icon={faChevronCircleDown}
-                  size="lg"
+                  size="sm"
                   color="#00ccbb"
                   onClick={handleLocation}
                 />
@@ -185,7 +130,7 @@ const Greeting = () => {
             {user ? (
               ""
             ) : (
-              <Link to="/login" className="ml-5">
+              <Link to="/login" className="ml-5 text-sm font-bold">
                 Login
               </Link>
             )}
