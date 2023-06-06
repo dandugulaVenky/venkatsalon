@@ -7,6 +7,8 @@ import Greeting from "../../../components/navbar/Greeting";
 import Seo from "../../../utils/Seo";
 import { SearchContext } from "../../../context/SearchContext";
 import Layout from "../../../components/navbar/Layout";
+import useEffectOnce from "../../../utils/UseEffectOnce";
+import Footer from "../../../components/footer/Footer";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -16,6 +18,10 @@ const siteMetadata = {
 };
 
 export default function Slug() {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const products = [
     {
       _id: 0,
@@ -65,10 +71,8 @@ export default function Slug() {
       {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
       <div className=" px-4">{w >= 768 && <Layout />}</div>
-      <div className="py-2 px-12">
-        <Link href="/">back to Ironing🫡</Link>
-      </div>
-      <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12">
+
+      <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12 mt-2 mb-10">
         <div className="md:col-span-2">
           <img
             src={product.image}
@@ -101,19 +105,20 @@ export default function Slug() {
               <div>Price</div>
               <div>${product.price}</div>
             </div>
-            <div className="mb-2 flex justify-between">
-              <div>Status</div>
-              <div>{product.countInStock > 0 ? "In stock" : "Unavailable"}</div>
-            </div>
+
             <button
               className="primary-button w-full"
               onClick={addToCartHandler}
             >
               Add to cart
             </button>
+            <div className="default-button text-center  my-2">
+              <Link href="/">back to Ironing🫡</Link>
+            </div>
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

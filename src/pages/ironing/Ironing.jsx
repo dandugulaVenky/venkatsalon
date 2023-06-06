@@ -12,6 +12,7 @@ import { useEffect, useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { Store } from "./ironing-utils/Store";
 import ProductItem from "./ironing-utils/ProductItem";
+import useEffectOnce from "../../utils/UseEffectOnce";
 
 const siteMetadata = {
   title: "Ironing | Effortless Ironing With Easytym",
@@ -27,7 +28,9 @@ export default function Ironing() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
 
-  console.log(cart);
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const addToCartHandler = async (product) => {
     const existItem = cart.cartItems.find((x) => x.slug === product.slug);

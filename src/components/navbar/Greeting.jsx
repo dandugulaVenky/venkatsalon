@@ -13,6 +13,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
+import { ToastContainer } from "react-toastify";
+import "./greeting.scss";
 const shortenString = (inputString) => {
   if (inputString.length > 20) {
     return inputString.substr(0, 20) + "..";
@@ -22,11 +24,11 @@ const shortenString = (inputString) => {
 };
 const Greeting = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-
+  const { pathname } = useLocation();
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY > 500) {
+      if (scrollY >= 1) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -39,10 +41,11 @@ const Greeting = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isScrolled]);
+  }, []);
+
   const [greet, setGreet] = useState("");
   const { user } = useContext(AuthContext);
-  const { pathname } = useLocation();
+
   const [cartItemsCount, setCartItemsCount] = useState(0);
 
   const { state } = useContext(Store);
@@ -68,7 +71,63 @@ const Greeting = () => {
   }, [cart.cartItems]);
 
   return (
-    <div>
+    // <div>
+    //   {header ? (
+    //     <Header
+    //       setHeader={setHeader}
+    //       setAddress={setAddress}
+    //       dispatch={dispatch1}
+    //       type={type}
+    //       city={city}
+    //     />
+    //   ) : null}
+    //   <div
+    //     className={`h-10 pt-8 pb-8 px-4 flex items-center justify-between w-full font-bold text-lg transition-all  ease-out ${
+    //       isScrolled &&
+    //       "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
+    //     }`}
+    //   >
+    //     <p className="w-auto text-sm"> {greet}</p>
+    //     <div className="pl-2 text-xs mt-1 font-semibold flex items-center justify-center space-x-3">
+    //       <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
+    //       <p className="text-xs w-full flex items-center justify-center space-x-2.5 ">
+    //         <span> {city ? shortenString(city).toUpperCase() : "Loading"}</span>
+    //         {pathname === "/" && (
+    //           <FontAwesomeIcon
+    //             icon={faChevronCircleDown}
+    //             size="lg"
+    //             color="#00ccbb"
+    //             onClick={handleLocation}
+    //           />
+    //         )}
+    //       </p>
+    //     </div>
+
+    //     {pathname.includes("iron") && (
+    //       <Link to="/iron/cart">
+    //         <a className=" font-semibold md:text-lg text-xs ">
+    //           <FontAwesomeIcon icon={faCartShopping} color="black" />
+    //           {cartItemsCount > 0 && (
+    //             <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+    //               {cartItemsCount}
+    //             </span>
+    //           )}
+    //         </a>
+    //       </Link>
+    //     )}
+
+    //     {user ? (
+    //       ""
+    //     ) : (
+    //       <Link to="/login" className="ml-5">
+    //         Login
+    //       </Link>
+    //     )}
+    //   </div>
+    // </div>
+
+    <>
+      <ToastContainer position="bottom-center" />
       {header ? (
         <Header
           setHeader={setHeader}
@@ -78,50 +137,62 @@ const Greeting = () => {
           city={city}
         />
       ) : null}
-      <div
-        className={`h-10 pt-8 pb-8 px-4 flex items-center justify-between w-full font-bold text-lg transition-all  ease-out ${
-          isScrolled &&
-          "fixed top-0 left-0 right-0 z-50 bg-white transition-all delay-300 ease-out"
-        }`}
-      >
-        <p className="w-auto text-sm"> {greet}</p>
-        <div className="pl-2 text-xs mt-1 font-semibold flex items-center justify-center space-x-3">
-          <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
-          <p className="text-xs w-full flex items-center justify-center space-x-2.5 ">
-            <span> {city ? shortenString(city).toUpperCase() : "Loading"}</span>
-            {pathname === "/" && (
-              <FontAwesomeIcon
-                icon={faChevronCircleDown}
-                size="lg"
-                color="#00ccbb"
-                onClick={handleLocation}
-              />
-            )}
-          </p>
-        </div>
 
-        {pathname.includes("iron") && (
-          <Link to="/iron/cart">
-            <a className=" font-semibold md:text-lg text-xs ">
-              <FontAwesomeIcon icon={faCartShopping} color="black" />
-              {cartItemsCount > 0 && (
-                <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
-                  {cartItemsCount}
-                </span>
+      <div className="h-20 ">
+        <div className="greetingHead  ">
+          <div
+            className={`flex items-center justify-between px-4 p-1 ${
+              isScrolled ? "greetinghead1" : "greetinghead2"
+            }`}
+          >
+            <div className="flex items-center justify-center">
+              <Link to="/">
+                <img
+                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  alt="logo"
+                  className={`${
+                    isScrolled ? "greetingimgs1" : "greetingimgs2"
+                  }`}
+                />
+              </Link>
+            </div>
+            <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
+              <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
+              <p className="text-sm">
+                {city ? shortenString(city).toUpperCase() : "loading"}
+              </p>
+              {pathname === "/" && (
+                <FontAwesomeIcon
+                  icon={faChevronCircleDown}
+                  size="lg"
+                  color="#00ccbb"
+                  onClick={handleLocation}
+                />
               )}
-            </a>
-          </Link>
-        )}
-
-        {user ? (
-          ""
-        ) : (
-          <Link to="/login" className="ml-5">
-            Login
-          </Link>
-        )}
+            </div>
+            {pathname.includes("iron") && (
+              <Link to="/iron/cart">
+                <a className=" font-semibold md:text-lg text-xs ">
+                  <FontAwesomeIcon icon={faCartShopping} color="black" />
+                  {cartItemsCount > 0 && (
+                    <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                      {cartItemsCount}
+                    </span>
+                  )}
+                </a>
+              </Link>
+            )}
+            {user ? (
+              ""
+            ) : (
+              <Link to="/login" className="ml-5">
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

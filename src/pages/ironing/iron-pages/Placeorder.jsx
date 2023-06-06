@@ -11,6 +11,7 @@ import Seo from "../../../utils/Seo";
 import Layout from "../../../components/navbar/Layout";
 import { SearchContext } from "../../../context/SearchContext";
 import Footer from "../../../components/footer/Footer";
+import useEffectOnce from "../../../utils/UseEffectOnce";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -20,6 +21,10 @@ const siteMetadata = {
 };
 
 export default function PlaceOrder() {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { state, dispatch } = useContext(Store);
   const { open } = useContext(SearchContext);
   let w = window.innerWidth;
@@ -79,13 +84,13 @@ export default function PlaceOrder() {
       <Seo props={siteMetadata} />
       <div className=" px-4">{w >= 768 && <Layout />}</div>
       <CheckoutWizard activeStep={2} />
-      <h1 className="mb-4 text-xl px-10 pt-10">Place Order</h1>
+      <h1 className="mb-4 text-xl px-10 pt-5">Place Order</h1>
       {cartItems.length === 0 ? (
-        <div>
+        <div className="px-10 pt-10">
           Cart is empty. <Link href="/">Go shopping</Link>
         </div>
       ) : (
-        <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-20">
+        <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Shipping Address</h2>

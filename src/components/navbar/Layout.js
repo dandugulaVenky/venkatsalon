@@ -5,13 +5,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
 import DropdownLink from "../DropdownLink";
-
+import "./navbar.scss";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronCircleDown,
   faLocation,
 } from "@fortawesome/free-solid-svg-icons";
+
 import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
@@ -24,28 +25,9 @@ const shortenString = (inputString) => {
   }
 };
 const Layout = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      if (scrollY >= 300) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isScrolled]);
-
   const { user, dispatch } = useContext(AuthContext);
 
-  const { state, dispatch: dispatch2 } = useContext(Store);
+  const { state } = useContext(Store);
   const { cart } = state;
   const [cartItemsCount, setCartItemsCount] = useState(0);
   const { pathname } = useLocation();
@@ -54,6 +36,26 @@ const Layout = () => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >= 1) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const getAdmin = async () => {
@@ -90,23 +92,21 @@ const Layout = () => {
         />
       ) : null}
 
-      <header className="py-2">
-        <nav
-          className={`flex items-center px-4 justify-between bg-transparent  ${
-            isScrolled &&
-            "fixed top-0 left-0 right-0 z-50 bg-[#ffffff] transition-all delay-400 ease-linear"
-          }`}
-        >
-          <Link to="/">
-            <div className="flex items-center justify-center ">
-              <img
-                src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
-                alt="logo"
-                height={100}
-                width={100}
-                className="rounded-lg"
-              ></img>
-
+      <div className="h-28">
+        <div className="mainHead ">
+          <div
+            className={`flex items-center justify-between px-10 py-2 ${
+              isScrolled ? "head1" : "head2"
+            }`}
+          >
+            <div className="flex items-center justify-center">
+              <Link to="/">
+                <img
+                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  alt="logo"
+                  className={`${isScrolled ? "imgs1" : "imgs2"}`}
+                />
+              </Link>
               <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
                 <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
                 <p className="text-sm">
@@ -122,74 +122,83 @@ const Layout = () => {
                 )}
               </div>
             </div>
-          </Link>
-
-          <div className="flex items-center justify-between ">
-            {user ? (
-              <div className="flex items-center justify-center md:space-x-8 space-x-3">
-                <Link to="/about-us">
-                  <h1 className=" font-semibold md:text-lg text-xs">About</h1>
-                </Link>
-                <Link to="/contact-us">
-                  <h1 className=" font-semibold md:text-lg text-xs">Contact</h1>
-                </Link>
-                {pathname.includes("iron") && (
-                  <Link to="/iron/cart">
-                    <a className=" font-semibold md:text-lg text-xs">
-                      Cart
-                      {cartItemsCount > 0 && (
-                        <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
-                          {cartItemsCount}
-                        </span>
-                      )}
-                    </a>
+            <div className="flex items-center justify-between ">
+              {user ? (
+                <div className="flex items-center justify-center md:space-x-8 space-x-3">
+                  <Link to="/about-us">
+                    <h1 className=" font-semibold md:text-lg text-xs">About</h1>
                   </Link>
-                )}
-                <Menu as="div" className="relative inline-block  z-10 -mt-0.5">
-                  <Menu.Button className=" font-semibold capitalize mr-1">
-                    <h1 className="md:text-lg text-xs "> {user.username}</h1>
-                  </Menu.Button>
-                  <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link p-1 mt-2">
-                        <Link to="/profile">Profile</Link>
-                      </DropdownLink>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <DropdownLink className="dropdown-link p-1">
-                        <Link to="/history">Booking History</Link>
-                      </DropdownLink>
-                    </Menu.Item>
-                    {isAdmin && (
+                  <Link to="/contact-us">
+                    <h1 className=" font-semibold md:text-lg text-xs">
+                      Contact
+                    </h1>
+                  </Link>
+                  {pathname.includes("iron") && (
+                    <Link to="/iron/cart">
+                      <a className=" font-semibold md:text-lg text-xs">
+                        Cart
+                        {cartItemsCount > 0 && (
+                          <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                            {cartItemsCount}
+                          </span>
+                        )}
+                      </a>
+                    </Link>
+                  )}
+                  <Menu
+                    as="div"
+                    className="relative inline-block  z-10 -mt-0.4"
+                  >
+                    <Menu.Button className="flex items-center space-x-2 justify-center font-semibold capitalize mr-1">
+                      <h1 className="md:text-lg text-xs "> {user.username}</h1>
+                      <FontAwesomeIcon
+                        icon={faChevronCircleDown}
+                        size="lg"
+                        color="black"
+                      />
+                    </Menu.Button>
+                    <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
                       <Menu.Item>
-                        <DropdownLink className="dropdown-link p-1">
-                          <Link to="/admin"> Admin Dashboard</Link>
+                        <DropdownLink className="dropdown-link p-1 mt-2">
+                          <Link to="/profile">Profile</Link>
                         </DropdownLink>
                       </Menu.Item>
-                    )}
-                    <Menu.Item>
-                      <a
-                        className="dropdown-link p-1 mb-2"
-                        href="#"
-                        onClick={() => {
-                          dispatch({ type: "LOGOUT" });
-                          navigate("/login");
-                        }}
-                      >
-                        Logout
-                      </a>
-                    </Menu.Item>
-                  </Menu.Items>
-                </Menu>
-              </div>
-            ) : (
-              <Link to="/login">
-                <a className="p-2">Login</a>
-              </Link>
-            )}
+                      <Menu.Item>
+                        <DropdownLink className="dropdown-link p-1">
+                          <Link to="/history">Booking History</Link>
+                        </DropdownLink>
+                      </Menu.Item>
+                      {isAdmin && (
+                        <Menu.Item>
+                          <DropdownLink className="dropdown-link p-1">
+                            <Link to="/admin"> Admin Dashboard</Link>
+                          </DropdownLink>
+                        </Menu.Item>
+                      )}
+                      <Menu.Item>
+                        <Link
+                          className="dropdown-link p-1 mb-2"
+                          to="#"
+                          onClick={() => {
+                            dispatch({ type: "LOGOUT" });
+                            navigate("/login");
+                          }}
+                        >
+                          Logout
+                        </Link>
+                      </Menu.Item>
+                    </Menu.Items>
+                  </Menu>
+                </div>
+              ) : (
+                <Link to="/login">
+                  <p className="p-2">Login</p>
+                </Link>
+              )}
+            </div>
           </div>
-        </nav>
-      </header>
+        </div>
+      </div>
     </>
   );
 };

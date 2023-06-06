@@ -363,7 +363,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const Header = ({ setHeader, setAddress, dispatch, type, city, register }) => {
   return (
-    <div className="header slide-right">
+    <div className="header slide-right z-20">
       <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
         <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
         <span>{city}</span>

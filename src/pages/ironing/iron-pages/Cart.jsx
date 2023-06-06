@@ -11,6 +11,7 @@ import Greeting from "../../../components/navbar/Greeting";
 import Seo from "../../../utils/Seo";
 import Layout from "../../../components/navbar/Layout";
 import Footer from "../../../components/footer/Footer";
+import useEffectOnce from "../../../utils/UseEffectOnce";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -20,6 +21,10 @@ const siteMetadata = {
 };
 
 function Cart() {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const navigate = useNavigate();
   const { state, dispatch } = useContext(Store);
   const { open } = useContext(SearchContext);
@@ -43,10 +48,10 @@ function Cart() {
       {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
       <div className=" px-4">{w >= 768 && <Layout />}</div>
-      <div className="bg-gray-200 h-[100vh] md:px-14 px-4 py-10">
+      <div className="bg-gray-200 h-[100vh] md:px-14 px-5 py-10">
         <h1 className="mb-4 text-xl">Shopping Cart</h1>
         {cartItems.length === 0 ? (
-          <div>
+          <div className="px-5">
             Cart is empty. <Link to="/iron">Go adding items</Link>
           </div>
         ) : (

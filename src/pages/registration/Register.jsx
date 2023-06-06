@@ -60,6 +60,7 @@ const Register = () => {
 
   useEffect(() => {
     // Req user for notification permission
+    window.scrollTo(0, 0);
     requestPermission();
   }, []);
 

@@ -1,0 +1,34 @@
+.imgs1 {
+  max-height: 80px;
+  width: auto;
+  background-size: cover;
+  transition: max-height 0.3s ease;
+}
+
+.imgs2 {
+  max-height: 100px;
+  width: auto;
+  background-size: cover;
+  transition: max-height 0.3s ease;
+}
+
+.head1 {
+  background-color: white;
+  max-height: 130px;
+  transition: max-height 0.3s ease;
+}
+
+.head2 {
+  background-color: transparent;
+  max-height: 200px;
+  transition: max-height 0.3s ease;
+}
+
+.mainHead {
+  height: 190px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 19;
+}

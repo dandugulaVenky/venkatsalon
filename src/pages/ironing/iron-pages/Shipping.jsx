@@ -11,6 +11,7 @@ import Seo from "../../../utils/Seo";
 import Layout from "../../../components/navbar/Layout";
 import { SearchContext } from "../../../context/SearchContext";
 import Footer from "../../../components/footer/Footer";
+import useEffectOnce from "../../../utils/UseEffectOnce";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -20,6 +21,10 @@ const siteMetadata = {
 };
 
 export default function Shipping() {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const {
     handleSubmit,
     register,
@@ -75,7 +80,7 @@ export default function Shipping() {
         <CheckoutWizard activeStep={1} />
       </div>
       <form
-        className="mx-auto max-w-screen-md py-12 px-12 h-[90vh]"
+        className="mx-auto max-w-screen-md py-12 md:px-12 px-7 h-[90vh]"
         onSubmit={handleSubmit(submitHandler)}
       >
         <h1 className="mb-4 text-xl">Shipping Address</h1>
