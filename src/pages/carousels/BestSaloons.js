@@ -56,8 +56,8 @@ const BestSaloons = () => {
       {loading ? (
         <p className="text-gray-500 text-center">Loading</p>
       ) : status === 200 && data?.length > 0 ? (
-        <div className="px-1.5">
-          <Carousel cols={4} rows={1} gap={10}>
+        <div>
+          <Carousel cols={4} rows={1} gap={15}>
             {data?.map((item, i) => {
               return (
                 <Carousel.Item key={i}>

@@ -40,15 +40,15 @@ const Categories = ({ type }) => {
   };
 
   return (
-    <div className="    md:mb-0 mb-10 text-black ">
+    <div className=" md:mb-0 mb-10 text-black ">
       <h1 className="px-4 text-xl font-semibold pb-8">
         Browse Area Wise{" "}
         {type1
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
           : "loading"}
       </h1>
-      <div className="px-2">
-        <Carousel cols={4} rows={1} gap={7} loop autoplay={8000}>
+      <div className="">
+        <Carousel cols={4} rows={1} gap={15} loop autoplay={10000}>
           <Carousel.Item>
             <div
               className="relative  h-52 w-full cursor-pointer rounded-md"
