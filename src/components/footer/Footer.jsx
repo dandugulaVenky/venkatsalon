@@ -1,7 +1,13 @@
-import { faCog, faHistory, faHome } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowCircleLeft,
+  faCog,
+  faHistory,
+  faHome,
+  faShirt,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
@@ -9,6 +15,11 @@ import { SearchContext } from "../../context/SearchContext";
 const Footer = () => {
   let w = window.innerWidth;
   const { open, dispatch } = useContext(SearchContext);
+  const navigate = useNavigate();
+
+  function goBack() {
+    navigate(-1); // Navigates back to the previous page
+  }
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -72,8 +83,14 @@ const Footer = () => {
           <Link to="/">
             <FontAwesomeIcon icon={faHome} size="xl" />
           </Link>
+          <Link onClick={goBack}>
+            <FontAwesomeIcon icon={faArrowCircleLeft} size="xl" />
+          </Link>
           <Link to="/history">
             <FontAwesomeIcon icon={faHistory} size="xl" />
+          </Link>
+          <Link to="/iron-orders">
+            <FontAwesomeIcon icon={faShirt} size="xl" />
           </Link>
 
           <FontAwesomeIcon

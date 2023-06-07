@@ -24,6 +24,9 @@ import Slug from "./pages/ironing/iron-pages/Slug";
 import Cart from "./pages/ironing/iron-pages/Cart";
 import Shipping from "./pages/ironing/iron-pages/Shipping";
 import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
+import Orders from "./pages/ironing/iron-pages/Orders";
+import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
+import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -87,6 +90,12 @@ function App() {
         <Route path="/iron/cart" element={<Cart />} />
         <Route path="/iron/shipping" element={<Shipping />} />
         <Route path="/iron/place-order" element={<PlaceOrder />} />
+        <Route path="/iron-orders" element={<Orders />} />
+        <Route path="/iron/order/:orderid" element={<OrderDetails />} />
+        <Route
+          path="/iron/iron-payment-success"
+          element={<IronPaymentSuccess />}
+        />
       </Routes>
     </BrowserRouter>
   );

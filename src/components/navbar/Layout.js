@@ -163,9 +163,15 @@ const Layout = () => {
                           <Link to="/profile">Profile</Link>
                         </DropdownLink>
                       </Menu.Item>
+
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1">
                           <Link to="/history">Booking History</Link>
+                        </DropdownLink>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <DropdownLink className="dropdown-link p-1">
+                          <Link to="/iron-orders">Iron Orders</Link>
                         </DropdownLink>
                       </Menu.Item>
                       {isAdmin && (

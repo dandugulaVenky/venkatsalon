@@ -20,7 +20,7 @@ body {
 }
 
 .card {
-  @apply mb-5  block   rounded-lg border border-gray-300 bg-gray-200 shadow-md;
+  @apply mb-5  block   rounded-lg border border-white bg-gray-50 shadow-md;
 }
 .list {
   @apply mb-2 rounded-lg bg-gray-100  shadow-md;
@@ -91,6 +91,10 @@ input::placeholder {
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
+}
+
+.primary-button:hover {
+  background-color: #4545a5;
 }
 .booked {
   color: #ef3515 !important;

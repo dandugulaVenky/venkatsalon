@@ -51,8 +51,11 @@ function Cart() {
       <div className="bg-gray-200 h-[100vh] md:px-14 px-5 py-10">
         <h1 className="mb-4 text-xl">Shopping Cart</h1>
         {cartItems.length === 0 ? (
-          <div className="px-5">
-            Cart is empty. <Link to="/iron">Go adding items</Link>
+          <div className="font-bold py-2">
+            Cart is empty.{" "}
+            <Link to="/iron" className="primary-button">
+              Go adding items
+            </Link>
           </div>
         ) : (
           <div className="grid lg:grid-cols-4 lg:gap-5  ">
@@ -126,7 +129,7 @@ function Cart() {
                 </li>
                 <li>
                   <button
-                    onClick={() => navigate("/iron")}
+                    onClick={() => navigate(-1)}
                     className="default-button  border-2 border-red-200 w-full my-2"
                   >
                     Go Back

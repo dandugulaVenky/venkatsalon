@@ -73,13 +73,14 @@ const Reserve = (props) => {
 
   const { user } = useContext(AuthContext);
 
-  const { data: shopOwnerData } = useFetch(
+  const { data: shopOwnerData, error } = useFetch(
     `${baseUrl}/api/users/getOwnerDetails/${shopOwner}`,
     { credentials: true }
   );
 
-  const { ownerEmail, ownerNumber } = shopOwnerData;
   const navigate = useNavigate();
+
+  const { ownerEmail, ownerNumber } = shopOwnerData;
 
   //generating random string for bookingID
   const generateRandomString = useCallback((length) => {
@@ -466,6 +467,10 @@ const Reserve = (props) => {
     },
     [durationBySeat]
   );
+
+  if (error) {
+    return navigate("/login", { state: { destination: `/shops/${shopId}` } });
+  }
 
   const checkoutHandler = async (amount, e) => {
     e.preventDefault();

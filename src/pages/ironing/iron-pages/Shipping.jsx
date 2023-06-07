@@ -44,14 +44,13 @@ export default function Shipping() {
     setValue("fullName", shippingAddress.fullName);
     setValue("address", shippingAddress.address);
     setValue("city", shippingAddress.city);
-    setValue("postalCode", shippingAddress.postalCode);
-    setValue("country", shippingAddress.country);
+    setValue("phone", shippingAddress.phone);
   }, [setValue, shippingAddress]);
 
-  const submitHandler = ({ fullName, address, city, postalCode, country }) => {
+  const submitHandler = ({ fullName, address, city, phone }) => {
     dispatch({
       type: "SAVE_SHIPPING_ADDRESS",
-      payload: { fullName, address, city, postalCode, country },
+      payload: { fullName, address, city, phone },
     });
     Cookies.set(
       "iron-cart",
@@ -61,8 +60,7 @@ export default function Shipping() {
           fullName,
           address,
           city,
-          postalCode,
-          country,
+          phone,
         },
       })
     );
@@ -128,19 +126,20 @@ export default function Shipping() {
             <div className="text-red-500 ">{errors.city.message}</div>
           )}
         </div>
-        {/* <div className="mb-4">
-          <label htmlFor="postalCode">Postal Code</label>
+        <div className="mb-4">
+          <label htmlFor="phone">Current Phone Number</label>
           <input
             className="w-full"
-            id="postalCode"
-            {...register("postalCode", {
-              required: "Please enter postal code",
+            type="number"
+            id="phone"
+            {...register("phone", {
+              required: "Please enter phone numbere",
             })}
           />
-          {errors.postalCode && (
-            <div className="text-red-500 ">{errors.postalCode.message}</div>
+          {errors.phone && (
+            <div className="text-red-500 ">{errors.phone.message}</div>
           )}
-        </div> */}
+        </div>
         {/* <div className="mb-4">
           <label htmlFor="country">Country</label>
           <input

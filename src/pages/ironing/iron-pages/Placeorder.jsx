@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { Store } from "../ironing-utils/Store";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +12,8 @@ import Layout from "../../../components/navbar/Layout";
 import { SearchContext } from "../../../context/SearchContext";
 import Footer from "../../../components/footer/Footer";
 import useEffectOnce from "../../../utils/UseEffectOnce";
+import { AuthContext } from "../../../context/AuthContext";
+import baseUrl from "../../../utils/client";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -25,11 +27,13 @@ export default function PlaceOrder() {
     window.scrollTo(0, 0);
   }, []);
 
-  const { state, dispatch } = useContext(Store);
+  const { user } = useContext(AuthContext);
+  const [buttonLoad, setButtonLoad] = useState(false);
   const { open } = useContext(SearchContext);
   let w = window.innerWidth;
+  const { state, dispatch } = useContext(Store);
   const { cart } = state;
-  const { cartItems, shippingAddress, paymentMethod } = cart;
+  const { cartItems, shippingAddress } = cart;
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100;
 
@@ -46,34 +50,68 @@ export default function PlaceOrder() {
   const [loading, setLoading] = useState(false);
 
   const placeOrderHandler = async () => {
-    try {
-      setLoading(true);
-      // const { data } = await axios.post("/api/orders", {
-      //   orderItems: cartItems,
-      //   shippingAddress,
-      //   paymentMethod,
-      //   itemsPrice,
-      //   shippingPrice,
-      //   taxPrice,
-      //   totalPrice,
-      // });
-      setLoading(false);
-      dispatch({ type: "CART_CLEAR_ITEMS" });
-      Cookies.set(
-        "cart",
-        JSON.stringify({
-          ...cart,
-          cartItems: [],
-        })
-      );
-      // navigate(`/order/${data._id}`);
-      toast("Ordered Successfully");
-      setTimeout(() => {
-        navigate("/iron");
-      }, 3000);
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.response.data.message);
+    setLoading(true);
+    const userId = user?._id;
+
+    if (userId !== undefined) {
+      const {
+        data: { key },
+      } = await axios.get(`${baseUrl}/api/getkey`);
+
+      try {
+        const {
+          data: { order },
+        } = await axios.post(
+          `${baseUrl}/api/payments/checkout`,
+          {
+            amount: 200,
+          },
+          { withCredentials: true }
+        );
+
+        const options = {
+          key,
+          amount: order.amount,
+          currency: "INR",
+          name: "EASYTYM ",
+          description: "Ironing",
+          image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+          order_id: order.id,
+          callback_url: `${baseUrl}/api/payments/iron/paymentverification`,
+          prefill: {
+            name: "Test Team",
+            email: "test.test@example.com",
+            contact: "9999999999",
+          },
+          notes: {
+            address: "EasyTym Corporate Office",
+          },
+          theme: {
+            color: "#121212",
+          },
+          modal: {
+            ondismiss: function () {},
+          },
+        };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+        setButtonLoad(false);
+        setLoading(false);
+      } catch (err) {
+        toast("Token expired! Please login");
+        setButtonLoad(false);
+        setLoading(false);
+        setTimeout(() => {
+          return navigate("/login", {
+            state: { destination: `/iron/place-order` },
+          });
+        }, 3000);
+      }
+    } else {
+      return navigate("/login", {
+        state: { destination: `/iron/place-order` },
+      });
     }
   };
 
@@ -116,7 +154,7 @@ export default function PlaceOrder() {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item._id} className="border-b-2 border-white">
+                    <tr key={item.id} className="border-b-2 border-white">
                       <td>
                         <Link to={`/iron/product/${item.slug}`}>
                           <a className="flex items-center">
@@ -152,25 +190,25 @@ export default function PlaceOrder() {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Items</div>
-                    <div>${itemsPrice}</div>
+                    <div>Rs.{itemsPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Tax</div>
-                    <div>${taxPrice}</div>
+                    <div>Rs.{taxPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Shipping</div>
-                    <div>${shippingPrice}</div>
+                    <div>Rs.{shippingPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>Total</div>
-                    <div>${totalPrice}</div>
+                    <div>Rs.{totalPrice}</div>
                   </div>
                 </li>
                 <li>
@@ -179,7 +217,13 @@ export default function PlaceOrder() {
                     onClick={placeOrderHandler}
                     className="primary-button w-full"
                   >
-                    {loading ? "Loading..." : "Place Order"}
+                    {loading ? (
+                      "Loading..."
+                    ) : buttonLoad ? (
+                      <span className="buttonloader"></span>
+                    ) : (
+                      "Place Order"
+                    )}
                   </button>
                 </li>
               </ul>
