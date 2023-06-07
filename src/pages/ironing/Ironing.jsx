@@ -38,6 +38,8 @@ export default function Ironing() {
     navigate("/iron", { state: null });
     return null;
   };
+
+  console.log("hii");
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     reference !== undefined && reference !== null && handleToast();
