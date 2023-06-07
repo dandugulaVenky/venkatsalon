@@ -99,6 +99,7 @@ export const IronPaymentSuccess = () => {
             taxPrice,
             totalPrice,
             orderId: id,
+            isPaid: true,
           },
           { withCredentials: true }
         );

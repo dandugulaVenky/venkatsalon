@@ -1,2 +1,2 @@
-const baseUrl = "http://localhost:8800";
+const baseUrl = "http://booking-server-nn24.onrender.com";
 export default baseUrl;
