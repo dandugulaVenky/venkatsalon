@@ -48,7 +48,7 @@ const Categories = ({ type }) => {
           : "loading"}
       </h1>
       <div className="">
-        <Carousel cols={4} rows={1} gap={15} loop autoplay={10000}>
+        <Carousel cols={4} rows={1} gap={15} loop autoplay={15000}>
           <Carousel.Item>
             <div
               className="relative  h-52 w-full cursor-pointer rounded-md"

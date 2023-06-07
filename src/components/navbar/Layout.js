@@ -95,7 +95,7 @@ const Layout = () => {
       <div className="h-28">
         <div className="mainHead ">
           <div
-            className={`flex items-center justify-between px-10 py-2 ${
+            className={`flex items-center justify-between px-10  ${
               isScrolled ? "head1" : "head2"
             }`}
           >
