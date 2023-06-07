@@ -106,7 +106,7 @@ export default function Ironing() {
             Our company provides convenient and reliable salon booking services,
             connecting customers with top-quality beauty parlours and
             professional ironing services. With our user-friendly platform,
-            customers can easily book appointments at their favourite saloons or
+            customers can easily book appointments at their favourite salons or
             parlours and schedule an at-home pickup and delivery ironing
             service, saving your time and hassle.
           </h1>
