@@ -8,7 +8,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
 
@@ -77,7 +76,6 @@ const Footer = () => {
     </div>
   ) : (
     <div>
-      <ToastContainer position="top-right" />
       <div className="h-14  flex items-center justify-center   fixed bottom-0 left-0 right-0  ">
         <div className="bg-gray-200 flex items-center justify-between px-10 py-3  rounded-full w-11/12">
           <Link to="/">
