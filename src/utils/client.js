@@ -1,2 +1,2 @@
-const baseUrl = "http://booking-server-nn24.onrender.com";
+const baseUrl = "https://booking-server-nn24.onrender.com";
 export default baseUrl;
