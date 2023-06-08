@@ -30,11 +30,11 @@ const Orders = () => {
 
       <div className=" px-4">{w >= 768 && <Layout />}</div>
       {loading ? (
-        <div className="h-[90vh] flex items-center justify-center">
+        <div className="min-h-[90vh] flex items-center justify-center">
           <p> loading...</p>
         </div>
       ) : (
-        <div className="h-[90vh] md:mx-10 mx-5  ">
+        <div className="min-h-[90vh] md:mx-10 mx-5  ">
           <p className="py-4 font-bold">My Iron Orders</p>
           <div className="grid grid-cols-1 md:gap-4 md:grid-cols-2 lg:grid-cols-4 pb-20">
             {data?.map((order) => (

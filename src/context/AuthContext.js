@@ -2,7 +2,7 @@ import { createContext, useEffect, useReducer } from "react";
 import secureLocalStorage from "react-secure-storage";
 
 const INITIAL_STATE = {
-  user: secureLocalStorage.getItem("user") || null,
+  user: secureLocalStorage.getItem("easytym-user") || null,
   loading: false,
 
   error: null,
@@ -34,7 +34,7 @@ const AuthReducer = (state, action) => {
         error: action.payload,
       };
     case "LOGOUT":
-      localStorage.removeItem("user");
+      localStorage.removeItem("easytym-user");
 
       return {
         user: null,
@@ -50,7 +50,7 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
 
   useEffect(() => {
-    secureLocalStorage.setItem("user", state.user);
+    secureLocalStorage.setItem("easytym-user", state.user);
     // localStorage.setItem("user", JSON.stringify(state.user));
   }, [state.user]);
 
