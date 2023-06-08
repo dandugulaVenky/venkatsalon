@@ -54,7 +54,7 @@ const useEffectOnce = (effect) => {
 export const IronPaymentSuccess = () => {
   let w = window.innerWidth;
   const seachQuery = useSearchParams()[0];
-  const { user: mainUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { open } = useContext(SearchContext);
   const referenceNum = seachQuery.get("reference");
   const navigate = useNavigate();
@@ -89,11 +89,11 @@ export const IronPaymentSuccess = () => {
     if (id) {
       try {
         const { data } = await axios.post(
-          `${baseUrl}/api/users/iron/updateIronOrders/${mainUser?._id}`,
+          `${baseUrl}/api/users/iron/updateIronOrders/${user?._id}`,
           {
             orderItems: cartItems,
             shippingAddress,
-            user: mainUser?._id,
+            user: user?._id,
             itemsPrice,
             shippingPrice,
             taxPrice,

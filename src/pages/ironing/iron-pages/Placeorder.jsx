@@ -62,7 +62,7 @@ export default function PlaceOrder() {
         const {
           data: { order },
         } = await axios.post(
-          `${baseUrl}/api/payments/checkout`,
+          `${baseUrl}/api/payments/iron/checkout`,
           {
             amount: 200,
           },
@@ -125,7 +125,10 @@ export default function PlaceOrder() {
       <h1 className="mb-4 text-xl px-10 pt-5">Place Order</h1>
       {cartItems.length === 0 ? (
         <div className="px-10 pt-10">
-          Cart is empty. <Link href="/">Go shopping</Link>
+          Cart is empty.{" "}
+          <Link to="/iron" className="primary-button ">
+            Go shopping
+          </Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
