@@ -17,6 +17,7 @@ import Sidebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
 import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
+import secureLocalStorage from "react-secure-storage";
 
 export default function Login() {
   const location = useLocation();
@@ -44,6 +45,7 @@ export default function Login() {
   let w = window.innerWidth;
   useEffect(() => {
     // Req user for notification permission
+    secureLocalStorage.clear();
     w <= 768
       ? window.scrollTo(0, document.body.scrollHeight)
       : window.scrollTo(0, 0);
