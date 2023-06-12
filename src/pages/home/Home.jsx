@@ -81,7 +81,7 @@ const Home = () => {
             navigator.geolocation.getCurrentPosition(
               () => {
                 console.log("Geolocation permission granted.");
-                getCurrentPosition(dispatch);
+                getCurrentPosition();
               },
               () => {
                 dispatch({

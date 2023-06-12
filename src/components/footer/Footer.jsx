@@ -68,6 +68,9 @@ const Footer = () => {
           </li>
           <li className="">Careers</li>
           <li className="">Join Us</li>
+          <Link>
+            <li className="/test">Test</li>
+          </Link>
         </ul>
       </div>
       <div className="text-center h-16 text-white bg-[#00ccbb] flex items-center justify-center space-x-2">

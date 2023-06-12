@@ -27,6 +27,7 @@ import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
 import Orders from "./pages/ironing/iron-pages/Orders";
 import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
+import Test from "./pages/Test";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -45,6 +46,8 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* <Route path="/get-started" element={<Home />} /> */}
         <Route path="/shops" element={<List />} />
+        <Route path="/test" element={<Test />} />
+
         <Route path="/shops/:id" element={<Hotel />} />
         <Route path="/login" element={<Login />} />
         <Route
