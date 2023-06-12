@@ -15,7 +15,6 @@ import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { ToastContainer } from "react-toastify";
 import "./greeting.scss";
-import { memo } from "react";
 const shortenString = (inputString) => {
   if (inputString.length > 20) {
     return inputString.substr(0, 20) + "..";
@@ -51,8 +50,7 @@ const Greeting = () => {
 
   const { state } = useContext(Store);
   const { cart } = state;
-  let { dispatch: dispatch1, city, type, colony } = useContext(SearchContext);
-
+  let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
 
@@ -106,7 +104,7 @@ const Greeting = () => {
             <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
               <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
               <p className="text-xs">
-                {colony ? shortenString(colony).toUpperCase() : "loading"}
+                {city ? shortenString(city).toUpperCase() : "loading"}
               </p>
               {pathname === "/" && (
                 <FontAwesomeIcon
@@ -143,4 +141,4 @@ const Greeting = () => {
   );
 };
 
-export default memo(Greeting);
+export default Greeting;
