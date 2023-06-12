@@ -106,7 +106,7 @@ const Greeting = () => {
             <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
               <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
               <p className="text-xs">
-                {colony ? shortenString(colony).toUpperCase() : "loading"}
+                {city ? shortenString(city).toUpperCase() : "loading"}
               </p>
               {pathname === "/" && (
                 <FontAwesomeIcon
