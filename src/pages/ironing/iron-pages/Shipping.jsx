@@ -78,7 +78,7 @@ export default function Shipping() {
         <CheckoutWizard activeStep={1} />
       </div>
       <form
-        className="mx-auto max-w-screen-md py-12 md:px-12 px-7 h-[90vh]"
+        className="card mx-auto max-w-screen-md py-12 md:px-12 px-7 h-[90vh]"
         onSubmit={handleSubmit(submitHandler)}
       >
         <h1 className="mb-4 text-xl">Shipping Address</h1>

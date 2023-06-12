@@ -190,7 +190,7 @@ const Hotel = () => {
         setComment("");
         fetchReviews();
 
-        navigate(`/hotels/${id}`);
+        navigate(`/shops/${id}`);
       })
       .catch((err) => {
         setLoadingg(false);

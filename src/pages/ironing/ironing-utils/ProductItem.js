@@ -1,7 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../context/AuthContext";
 
 export default function ProductItem({ product, addToCartHandler }) {
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleCart = () => {
+    if (!user) {
+      return navigate("/login", { state: { destination: `/iron` } });
+    }
+
+    addToCartHandler(product);
+  };
+
   return (
     <div className="card ">
       <Link to={`/iron/product/${product.slug}`}>
@@ -17,11 +30,7 @@ export default function ProductItem({ product, addToCartHandler }) {
         </Link>
 
         <p>Rs.{product.price}</p>
-        <button
-          className="primary-button"
-          type="button"
-          onClick={() => addToCartHandler(product)}
-        >
+        <button className="primary-button" type="button" onClick={handleCart}>
           Add to cart
         </button>
       </div>

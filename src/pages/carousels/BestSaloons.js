@@ -53,9 +53,7 @@ const BestSaloons = () => {
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
           : "loading"}
       </h1>
-      {loading ? (
-        <p className="text-gray-500 text-center">Loading</p>
-      ) : status === 200 && data?.length > 0 ? (
+      {status === 200 && data?.length > 0 ? (
         <div>
           <Carousel cols={4} rows={1} gap={15}>
             {data?.map((item, i) => {

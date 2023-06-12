@@ -8,6 +8,7 @@ import useFetch from "../../../hooks/useFetch";
 import baseUrl from "../../../utils/client";
 import { AuthContext } from "../../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import moment from "moment/moment";
 
 const Orders = () => {
   const { open } = useContext(SearchContext);
@@ -38,7 +39,7 @@ const Orders = () => {
           <p className="py-4 font-bold">My Iron Orders</p>
           <div className="grid grid-cols-1 md:gap-4 md:grid-cols-2 lg:grid-cols-4 pb-20">
             {data?.map((order) => (
-              <div className="card  overflow-scroll ">
+              <div className="card  overflow-auto ">
                 <div className="flex flex-col items-start justify-center p-5 ">
                   <Link to={`/iron-orders`}>
                     <h2 className="text-lg text-[#00ccbb]">
@@ -53,6 +54,7 @@ const Orders = () => {
                   <p className="font-bold">
                     Delivered: {order?.isDelivered ? "Yes" : "No"}
                   </p>
+                  <p>Date: {moment(order?.createdAt).format("MMM Do YYYY")}</p>
                   <Link to={`/iron/order/${order?.orderId}`}>
                     <p className="font-bold text-blue-600">
                       Click for more details

@@ -3,26 +3,19 @@ import Footer from "../../components/footer/Footer";
 import "./home.css";
 import Layout from "../../components/navbar/Layout";
 import Categories from "../carousels/Categories";
-
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
-
 import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
-import axios from "axios";
 import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
-
 import BestSaloons from "../carousels/BestSaloons";
-
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
 import { useEffect } from "react";
-import baseUrl from "../../utils/client";
-import promptEnableLocation from "../../utils/promptEnableLocation";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -77,9 +70,97 @@ const Home = () => {
     };
   }, []);
 
+  //prompting user to retrive location if not enabled
+
+  const promptEnableLocation = () => {
+    if ("geolocation" in navigator) {
+      if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "prompt") {
+            // Prompt user to allow or block geolocation permission
+            navigator.geolocation.getCurrentPosition(
+              () => {
+                console.log("Geolocation permission granted.");
+                getCurrentPosition(dispatch);
+              },
+              () => {
+                dispatch({
+                  type: "NEW_SEARCH",
+                  payload: {
+                    type: "saloon",
+                    destination: "No Location!",
+                  },
+                });
+                alert(
+                  "Please enable location services to get personalized suggestions!"
+                );
+              },
+              {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 10000,
+              }
+            );
+          } else if (result.state === "granted") {
+            console.log("Geolocation permission already granted.");
+            !city && getCurrentPosition();
+          } else if (result.state === "denied") {
+            if (city === "No Location!") {
+              alert(
+                "Please enable location services to get personalized suggestions!"
+              );
+            }
+          }
+        });
+      } else {
+        console.log("Permission API is not supported by your browser.");
+      }
+    } else {
+      console.log("Geolocation is not supported by your browser.");
+    }
+  };
+
+  //setting users current location
+
+  const getCurrentPosition = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const geocoder = new window.google.maps.Geocoder();
+        const latlng = { lat: latitude, lng: longitude };
+
+        geocoder.geocode({ location: latlng }, (results, status) => {
+          if (status === "OK") {
+            if (results[0]) {
+              const city1 = results[2]?.formatted_address.trim().toLowerCase();
+
+              // Dispatch the necessary information
+              dispatch({
+                type: "NEW_SEARCH",
+                payload: {
+                  type: "saloon",
+                  destination: city1,
+                },
+              });
+            } else {
+              console.log("No results found");
+            }
+          } else {
+            console.log("Geocoder failed due to: " + status);
+          }
+        });
+      },
+      (error) => {
+        // Handle any error occurred during geolocation
+        console.log("Error occurred during geolocation:", error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  };
+
   useEffectOnce(() => {
     window.scrollTo(0, 0);
-    promptEnableLocation(dispatch, city);
+    promptEnableLocation();
     reference !== undefined && reference !== null && handleToast();
     return () => console.log("my effect is destroying");
   }, []);
