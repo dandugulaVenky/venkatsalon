@@ -14,6 +14,10 @@ const INITIAL_STATE = {
   type: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).type
     : "saloon",
+
+  colony: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).colony.long_name
+    : "no location",
 };
 
 export const SearchContext = createContext(INITIAL_STATE);
@@ -25,12 +29,13 @@ const SearchReducer = (state, action) => {
       const date = action.payload.value;
       const time = action.payload.time;
       const type = action.payload.type;
+      const colony = action.payload.colony;
       // console.log("payload", action.payload);
       localStorage.setItem(
         "bookingDetails",
-        JSON.stringify({ city, date, time, type })
+        JSON.stringify({ city, date, time, type, colony })
       );
-      return { ...state, date, city, time, type };
+      return { ...state, date, city, time, type, colony };
     case "RESET_SEARCH":
       return INITIAL_STATE;
     case "SIDEBAR_OPEN":
@@ -51,6 +56,7 @@ export const SearchContextProvider = ({ children }) => {
         time: state.time,
         open: state.open,
         type: state.type,
+        colony: state.colony,
         dispatch,
       }}
     >

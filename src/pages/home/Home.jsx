@@ -130,6 +130,17 @@ const Home = () => {
         const latlng = { lat: latitude, lng: longitude };
 
         geocoder.geocode({ location: latlng }, (results, status) => {
+          const addressComponents = results[0].address_components;
+          // Find the colony or locality name
+          const colony = addressComponents.find(
+            (component) =>
+              component.types.includes("sublocality") ||
+              component.types.includes("locality")
+          );
+          if (colony) {
+            console.log(colony.long_name);
+          }
+          console.log(results);
           if (status === "OK") {
             if (results[0]) {
               const city1 = results[2]?.formatted_address.trim().toLowerCase();
@@ -140,6 +151,7 @@ const Home = () => {
                 payload: {
                   type: "saloon",
                   destination: city1,
+                  colony,
                 },
               });
             } else {
