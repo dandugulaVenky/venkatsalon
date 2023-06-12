@@ -2,7 +2,11 @@ import React from "react";
 import Layout from "../components/navbar/Layout";
 import Footer from "../components/footer/Footer";
 
-const test = () => {
+import useEffectOnce from "../utils/UseEffectOnce";
+import { useState, useEffect } from "react";
+
+const Test = () => {
+  const [location, setLocation] = useState();
   const getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -21,7 +25,7 @@ const test = () => {
                   component.types.includes("locality")
               );
               if (colony) {
-                console.log(colony.long_name);
+                alert(colony.long_name);
                 return colony;
               }
             } else {
@@ -39,15 +43,19 @@ const test = () => {
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   };
-  let location = getCurrentPosition();
+  useEffect(() => {
+    getCurrentPosition();
+  }, []);
 
-  console.log(location, "hiiiiiiiiiiiiiiiiiiiiii");
   return (
     <>
       <Layout />
+      {location?.length > 0 && (
+        <div className="h-[60vh] text-black">{location}</div>
+      )}
       <Footer />
     </>
   );
 };
 
-export default test;
+export default Test;
