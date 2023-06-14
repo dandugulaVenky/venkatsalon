@@ -47,7 +47,7 @@ const Hotel = () => {
   const [openModal, setOpenModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { city, date, time } = useContext(SearchContext);
-  const [value, onChange] = useState(date ? date : new Date());
+  const [value, setValue] = useState(date ? date : new Date());
   const [timeReserve, setTimeReserve] = useState(time ? time : "");
   const [datra, setDatra] = useState([]);
   const { type, dispatch } = useContext(SearchContext);
@@ -68,6 +68,27 @@ const Hotel = () => {
       })
       .catch((err) => toast.error(err));
   };
+
+  const handleChange = (date) => {
+    if (date === null) {
+      setValue(null);
+    }
+    if (isTuesday(date)) {
+      // Handle the case where Tuesday is selected
+      return;
+    }
+    setValue(date);
+    // Perform additional logic or actions based on the selected date
+  };
+
+  const isTuesday = (date) => {
+    return date?.getDay() === 2; // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+  };
+
+  function tileClassName({ date, view }) {
+    return isTuesday(date) ? "disabled-tuesday" : null;
+  }
+
   useEffect(() => {
     const scroll = () => {
       w > 800
@@ -793,14 +814,6 @@ const Hotel = () => {
 
   // this is to mark tuesdays in red colors
 
-  function tileClassName({ date, view }) {
-    // Add logic to check if it's Tuesday
-    if (view === "month" && date.getDay() === 2) {
-      return "red-tuesday";
-    }
-    return null;
-  }
-
   return (
     <div>
       {sidebar && <Sidebar />}
@@ -840,7 +853,7 @@ const Hotel = () => {
             <div>
               <div className="-mt-1">
                 <DatePicker
-                  onChange={onChange}
+                  onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}

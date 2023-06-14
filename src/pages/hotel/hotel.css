@@ -170,3 +170,9 @@
 .red-tuesday {
   color: red !important;
 }
+
+.disabled-tuesday {
+  opacity: 0.5; /* Adjust the styling as per your requirements */
+
+  cursor: no-drop !important  ;
+}
