@@ -72,6 +72,7 @@ const Hotel = () => {
   const handleChange = (date) => {
     if (date === null) {
       setValue(null);
+      return;
     }
     if (isTuesday(date)) {
       // Handle the case where Tuesday is selected
@@ -92,7 +93,7 @@ const Hotel = () => {
   useEffect(() => {
     const scroll = () => {
       w > 800
-        ? window.scrollTo(0, window.innerHeight / 2)
+        ? window.scrollTo(0, window.innerHeight / 2.2)
         : window.scrollTo(0, 0);
     };
     const fetchData = async () => {

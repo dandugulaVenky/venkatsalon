@@ -174,57 +174,88 @@
 .disabled-tuesday {
   opacity: 0.5; /* Adjust the styling as per your requirements */
   cursor: no-drop !important  ;
-  color:lightgray !important;
+  color: lightgray !important;
 }
-.react-date-picker__calendar-button__icon{
+.react-date-picker__calendar-button__icon {
   stroke-width: 1.25;
 }
-.react-date-picker__clear-button__icon{
+.react-date-picker__clear-button__icon {
   stroke-width: 1.5;
 }
-.react-date-picker__wrapper{
+.react-date-picker__wrapper {
   border: none !important;
 }
-.react-date-picker__inputGroup{
-  color:black;
+.react-date-picker__inputGroup {
+  color: black;
 }
-.react-calendar{
+.react-calendar {
   border: none !important;
   box-shadow: 0 2px 4px lightgray;
 }
-.react-calendar__navigation{
-  color:black;
-  border-bottom :thin solid #dee2e5;
+.react-calendar__navigation {
+  color: black;
+  border-bottom: thin solid #dee2e5;
 }
-.react-calendar__navigation button:disabled{
+.react-calendar__navigation button:disabled {
   background-color: white !important;
-  color:lightgray;
+  color: lightgray;
 }
-.react-calendar__month-view__weekdays{
+.react-calendar__month-view__weekdays {
   /*color:black;*/
 }
-.react-calendar__month-view__weekdays__weekday abbr{
-  color:black;
+.react-calendar__month-view__weekdays__weekday abbr {
+  color: black;
   text-decoration: none;
 }
 .react-calendar__tile:disabled {
   background-color: white;
 }
-.react-calendar__month-view__days{
-  color:black;
+.react-calendar__month-view__days {
+  color: black;
   font-size: small;
   background-color: white !important;
 }
-.react-calendar__tile:disabled{
+.react-calendar__tile:disabled {
   background-color: white !important;
-  color:lightgray;
+  color: lightgray;
 }
-.react-calendar__month-view__days__day--weekend:enabled{
-  color:black !important;
+.react-calendar__month-view__days__day--weekend:enabled {
+  color: black !important;
 }
-.react-calendar__month-view__days__day--weekend:disabled{
-  color:lightgray !important;
+.react-calendar__month-view__days__day--weekend:disabled {
+  color: lightgray !important;
 }
-.react-calendar__tile:enabled{
-  color:black
+.react-calendar__tile:enabled {
+  color: black;
+}
+.react-calendar__tile--active {
+  background: #00ccbb !important;
+  color: white !important ;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.custom-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 8px 30px 8px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 16px;
+  width: 200px;
+}
+
+.dropdown-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.dropdown-icon > svg {
+  margin-left: 5px;
 }
