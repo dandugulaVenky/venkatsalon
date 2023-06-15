@@ -858,7 +858,7 @@ const Hotel = () => {
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded-md md:w-[14.3rem] w-[14.3rem] z-10 mt-3"
+                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[14.3rem] w-[14.3rem] z-10 mt-3"
                 />
               </div>
             </div>
@@ -873,7 +873,7 @@ const Hotel = () => {
                       );
                       setselectValue(selectedOption.id);
                     }}
-                    className="md:p-3 p-2.5 bg-slate-100 md:w-[14rem] w-[6.8rem] md:-ml-5 lg:-ml-0"
+                    className="md:p-3 p-2.5 bg-slate-100 md:w-[14rem] w-[6.8rem] md:-ml-5 lg:-ml-0 border-slate-100"
                     value={timeReserve}
                   >
                     <option value="" selected disabled>
