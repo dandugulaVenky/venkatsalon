@@ -27,8 +27,6 @@ const siteMetadata = {
 const Home = () => {
   const { open, city, dispatch } = useContext(SearchContext);
 
-  const [homeImg, setHomeImg] = useState(false);
-
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -59,16 +57,6 @@ const Home = () => {
   //     console.log(err);
   //   }
   // };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setHomeImg((prevHomeImg) => !prevHomeImg);
-    }, 6000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   //prompting user to retrive location if not enabled
 
@@ -186,7 +174,7 @@ const Home = () => {
       {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
 
-      <div className={` home-img1 mb-5`}>
+      <div className="home-img1 mb-5">
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <div className="text-container">

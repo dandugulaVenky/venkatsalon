@@ -76,24 +76,24 @@ const Hotel = () => {
       .catch((err) => toast.error(err));
   };
 
-  const handleChange = (date) => {
-    if (date === null) {
+  const handleChange = (value) => {
+    if (value === null) {
       setValue(null);
       return;
     }
-    if (isTuesday(date)) {
+    if (isTuesday(value)) {
       // Handle the case where Tuesday is selected
       return;
     }
-    setValue(date);
+    setValue(value);
     // Perform additional logic or actions based on the selected date
   };
 
-  const isTuesday = (date) => {
+  const isTuesday = (value) => {
     return date?.getDay() === 2; // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
   };
 
-  function tileClassName({ date, view }) {
+  function tileClassName({ value, view }) {
     return isTuesday(date) ? "disabled-tuesday" : null;
   }
 
@@ -175,10 +175,10 @@ const Hotel = () => {
     if (new Date(value).getDay() === 2) {
       return toast("Tuesdays are holidays !");
     }
-
-    if (!date) {
-      return toast("Please select a date !");
-    }
+    console.log(value);
+    // if (!date) {
+    //   return toast("Please select a date !");
+    // }
     let result = convertToMilliseconds(timeReserve);
     let result2 = compareTimeDiff(result);
 
@@ -825,8 +825,6 @@ const Hotel = () => {
   }
 
   const matchedArrays = findMatchingArrays(mergedReady);
-
-  const [clock, setClock] = useState(" Time");
 
   const handleTime = (item) => {
     setTimeReserve(item.value);
