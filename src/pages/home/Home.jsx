@@ -186,13 +186,15 @@ const Home = () => {
       {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
 
-      <div className={` ${homeImg ? "home-img1" : "home-img2"} mb-5`}>
+      <div className={` home-img1 mb-5`}>
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
-          <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-            Hi Welcome To Easytym
-          </h1>
-          <h1 className="text-gray-700 md:px-64 px-4 text-md font-bold text-center py-5">
+          <div className="text-container">
+            <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
+              Hi, Welcome To Easytym
+            </h1>
+          </div>
+          <h1 className="text-gray-700 lg:px-64 md:px-10 px-4 text-md font-bold text-center py-5">
             Our company provides convenient and reliable salon booking services,
             connecting customers with top-quality beauty parlours and
             professional ironing services. With our user-friendly platform,

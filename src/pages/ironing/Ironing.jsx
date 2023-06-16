@@ -100,7 +100,7 @@ export default function Ironing() {
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-            Hi Welcome To Easytym Ironing🫡
+            Hi, Welcome To Easytym Ironing🫡
           </h1>
           <h1 className="text-white md:px-64 px-4 text-md font-bold text-center py-5">
             Our company provides convenient and reliable salon booking services,

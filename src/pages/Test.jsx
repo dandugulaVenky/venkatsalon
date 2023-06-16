@@ -50,9 +50,9 @@ const Test = () => {
   return (
     <>
       <Layout />
-      {location?.length > 0 && (
-        <div className="h-[60vh] text-black">{location}</div>
-      )}
+      <div class="text-container">
+        <h1>Easytym</h1>
+      </div>
       <Footer />
     </>
   );

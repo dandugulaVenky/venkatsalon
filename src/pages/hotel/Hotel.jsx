@@ -3,15 +3,17 @@ import "./hotel.css";
 import Footer from "../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircle,
   faCircleArrowLeft,
   faCircleArrowRight,
   faCircleArrowUp,
   faCircleXmark,
+  faIdBadge,
   faLocationDot,
   faScissors,
   faSpa,
 } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState, useCallback, Fragment } from "react";
 import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
@@ -32,6 +34,11 @@ import Sidebar from "../../components/navbar/SIdebar";
 import options from "../../utils/time";
 import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
+import { Menu, Transition } from "@headlessui/react";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 const Hotel = () => {
   const location = useLocation();
@@ -91,11 +98,6 @@ const Hotel = () => {
   }
 
   useEffect(() => {
-    const scroll = () => {
-      w > 800
-        ? window.scrollTo(0, window.innerHeight / 2.2)
-        : window.scrollTo(0, 0);
-    };
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
       setServices(data[0]?.services);
@@ -114,10 +116,17 @@ const Hotel = () => {
 
       setDatra(res);
     };
-    scroll();
+
     fetchData();
     fetchReviews();
-  }, [value, w]);
+  }, [value]);
+
+  useEffect(() => {
+    const scroll = () => {
+      window.scrollTo(0, 0);
+    };
+    scroll();
+  }, []);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -165,6 +174,10 @@ const Hotel = () => {
   const handleClick = () => {
     if (new Date(value).getDay() === 2) {
       return toast("Tuesdays are holidays !");
+    }
+
+    if (!date) {
+      return toast("Please select a date !");
     }
     let result = convertToMilliseconds(timeReserve);
     let result2 = compareTimeDiff(result);
@@ -813,7 +826,15 @@ const Hotel = () => {
 
   const matchedArrays = findMatchingArrays(mergedReady);
 
-  // this is to mark tuesdays in red colors
+  const [clock, setClock] = useState(" Time");
+
+  const handleTime = (item) => {
+    setTimeReserve(item.value);
+    const selectedOption = options.find(
+      (option) => option.value === item.value
+    );
+    setselectValue(selectedOption.id);
+  };
 
   return (
     <div>
@@ -852,76 +873,123 @@ const Hotel = () => {
 
           <div className="pt-5 pb-5 space-y-2 flex md:flex-row flex-col md:space-x-2 md:-ml-0 -ml-3">
             <div>
-              <div className="-mt-1">
+              <div className="-mt-1 ">
                 <DatePicker
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[14.3rem] w-[14.3rem] z-10 mt-3"
+                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[14.3rem] w-[14.3rem]  mt-3  "
                 />
               </div>
             </div>
             <div className="flex md:flex-row px-4  items-center space-x-2">
-              {
-                <div className="">
-                  <select
-                    onChange={(e) => {
-                      setTimeReserve(e.target.value);
-                      const selectedOption = options.find(
-                        (option) => option.value === e.target.value
-                      );
-                      setselectValue(selectedOption.id);
-                    }}
-                    className="md:p-3 p-2.5 bg-slate-100 md:w-[14rem] w-[6.8rem] md:-ml-5 lg:-ml-0 border-slate-100"
-                    value={timeReserve}
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <Menu.Button
+                    onFocus={() => w > 820 && window.scrollTo(0, 400)}
+                    className="inline-flex justify-center w-28 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 md:w-[14rem]"
                   >
-                    <option value="" selected disabled>
-                      select time
-                    </option>
-                    {matchedArrays?.length > 0 &&
-                      options?.map((option, i) => {
-                        const isbooked = matchedArrays?.map((item) =>
-                          // console.log(item?.includes(i))
-                          item?.includes(i)
-                        );
-                        const finalBooked = isbooked.includes(false);
-                        const falseIndexes = [];
-
-                        for (let i = 0; i < isbooked.length; i++) {
-                          if (!isbooked[i]) {
-                            falseIndexes.push(i);
-                          }
-                        }
-
-                        return (
-                          <option
-                            key={i}
-                            value={option.value}
-                            id={option.id}
-                            className={!finalBooked && ` text-red-500 `}
-                          >
-                            <span className="flex space-x-20">
-                              <span> {option.value}</span>
-                              <span>
-                                &nbsp;&nbsp;&nbsp;{" "}
-                                {isbooked.includes(true) &&
-                                  falseIndexes.map((item) => {
-                                    return (
-                                      <span>
-                                        S{item + 1}&nbsp;✓ &nbsp;&nbsp;
-                                      </span>
-                                    );
-                                  })}
-                              </span>
-                            </span>
-                          </option>
-                        );
-                      })}
-                  </select>
+                    <span className="md:text-md ">
+                      {timeReserve ? timeReserve : "Select Time"}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5 ml-2 -mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </Menu.Button>
                 </div>
-              }
+
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="h-96 overflow-auto absolute z-50 md:right-0 -right-10 w-[14rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <p
+                            className={classNames(
+                              `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
+                            )}
+                          >
+                            Select Time
+                          </p>
+                        )}
+                      </Menu.Item>
+
+                      {matchedArrays?.length > 0 &&
+                        options?.map((option, i) => {
+                          const isbooked = matchedArrays?.map((item) =>
+                            // console.log(item?.includes(i))
+                            item?.includes(i)
+                          );
+                          const finalBooked = isbooked.includes(false);
+                          const falseIndexes = [];
+
+                          for (let i = 0; i < isbooked.length; i++) {
+                            if (!isbooked[i]) {
+                              falseIndexes.push(i);
+                            }
+                          }
+
+                          return (
+                            <Menu.Item key={i} id={option.id}>
+                              {({ active }) => (
+                                <p
+                                  onClick={() => handleTime(option)}
+                                  className={classNames(
+                                    active
+                                      ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer"
+                                      : "text-gray-700",
+                                    `block px-4 py-0.5 text-md font-bold cursor-pointer ${
+                                      !finalBooked && ` text-red-500 `
+                                    }`
+                                  )}
+                                >
+                                  {option.value}
+                                  <span>
+                                    &nbsp;{" "}
+                                    {isbooked.includes(true) &&
+                                      falseIndexes.map((item) => {
+                                        return (
+                                          <span>
+                                            S{item + 1}&nbsp;
+                                            <FontAwesomeIcon
+                                              icon={faCircle}
+                                              color="green "
+                                              size="sm"
+                                            />{" "}
+                                            &nbsp;
+                                          </span>
+                                        );
+                                      })}
+                                  </span>
+                                </p>
+                              )}
+                            </Menu.Item>
+                          );
+                        })}
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
 
               <div className="">
                 <button
@@ -974,11 +1042,11 @@ const Hotel = () => {
             </>
           )}
           <div className="hotelWrapper mt-2">
-            <Link to="/">
+            {/* <Link to="/">
               <p className="bg-blue-900 max-w-[130px] px-4 py-2 text-white rounded">
                 Go to Home
               </p>
-            </Link>
+            </Link> */}
             <div className="md:flex space-y-4 items-center justify-between">
               <div className="hotelWrapper">
                 <h1 className="hotelTitle">{data.name}</h1>

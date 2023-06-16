@@ -81,7 +81,7 @@ const Layout = () => {
 
   return (
     <>
-      <ToastContainer position="top-left" />
+      <ToastContainer position="top-center" />
       {header ? (
         <Header
           setHeader={setHeader}
