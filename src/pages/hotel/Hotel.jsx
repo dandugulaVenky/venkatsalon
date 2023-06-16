@@ -8,7 +8,6 @@ import {
   faCircleArrowRight,
   faCircleArrowUp,
   faCircleXmark,
-  faIdBadge,
   faLocationDot,
   faScissors,
   faSpa,
@@ -47,6 +46,7 @@ const Hotel = () => {
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [loadingg, setLoadingg] = useState(false);
+  const [timeOptions, setTimeOptions] = useState([]);
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
@@ -85,18 +85,38 @@ const Hotel = () => {
       // Handle the case where Tuesday is selected
       return;
     }
+
     setValue(value);
     // Perform additional logic or actions based on the selected date
   };
 
   const isTuesday = (value) => {
-    return date?.getDay() === 2; // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+    return value?.getDay() === 2; // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
   };
 
   function tileClassName({ value, view }) {
-    return isTuesday(date) ? "disabled-tuesday" : null;
+    return isTuesday(value) ? "disabled-tuesday" : null;
   }
+  const filterOptions = () => {
+    const date = new Date();
+    const formattedTime = date.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
 
+    const values = options.filter((option) => {
+      return formattedTime.split(":")[0].includes(option.value.split(":")[0])
+        ? option
+        : null;
+    });
+    const filteredOptions1 = options.filter((option) => {
+      return values[0].id <= option.id;
+    });
+    setTimeOptions(
+      date?.getDate() === value?.getDate() ? filteredOptions1 : options
+    );
+  };
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
@@ -116,7 +136,7 @@ const Hotel = () => {
 
       setDatra(res);
     };
-
+    filterOptions();
     fetchData();
     fetchReviews();
   }, [value]);
@@ -172,13 +192,6 @@ const Hotel = () => {
   }
 
   const handleClick = () => {
-    if (new Date(value).getDay() === 2) {
-      return toast("Tuesdays are holidays !");
-    }
-    console.log(value);
-    // if (!date) {
-    //   return toast("Please select a date !");
-    // }
     let result = convertToMilliseconds(timeReserve);
     let result2 = compareTimeDiff(result);
 
@@ -882,12 +895,16 @@ const Hotel = () => {
                 />
               </div>
             </div>
-            <div className="flex md:flex-row px-4  items-center space-x-2">
+            <div className="flex md:flex-row flex-col md:space-y-0 md:space-x-2 space-y-2  items-center">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button
-                    onFocus={() => w > 820 && window.scrollTo(0, 400)}
-                    className="inline-flex justify-center w-28 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 md:w-[14rem]"
+                    onFocus={() =>
+                      w > 820
+                        ? window.scrollTo(0, 400)
+                        : window.scrollTo(0, 250)
+                    }
+                    className="inline-flex justify-center  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[14rem]"
                   >
                     <span className="md:text-md ">
                       {timeReserve ? timeReserve : "Select Time"}
@@ -918,7 +935,7 @@ const Hotel = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="h-96 overflow-auto absolute z-50 md:right-0 -right-10 w-[14rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="h-96 overflow-auto absolute z-50 md:right-0  w-[14rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (
@@ -933,7 +950,7 @@ const Hotel = () => {
                       </Menu.Item>
 
                       {matchedArrays?.length > 0 &&
-                        options?.map((option, i) => {
+                        timeOptions?.map((option, i) => {
                           const isbooked = matchedArrays?.map((item) =>
                             // console.log(item?.includes(i))
                             item?.includes(i)
@@ -996,7 +1013,7 @@ const Hotel = () => {
                     handleClick();
                   }}
                 >
-                  Reserve
+                  Check Services
                 </button>
               </div>
             </div>
