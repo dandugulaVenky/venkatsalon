@@ -160,7 +160,7 @@ const Home = () => {
 
   useEffectOnce(() => {
     window.scrollTo(0, 0);
-    localStorage.removeItem("bookingDetails");
+
     promptEnableLocation();
 
     reference !== undefined && reference !== null && handleToast();

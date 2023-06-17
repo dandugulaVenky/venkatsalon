@@ -82,12 +82,10 @@ const Hotel = () => {
       return;
     }
     if (isTuesday(value)) {
-      // Handle the case where Tuesday is selected
       return;
     }
 
     setValue(value);
-    // Perform additional logic or actions based on the selected date
   };
 
   const isTuesday = (value) => {
@@ -154,6 +152,7 @@ const Hotel = () => {
     const scroll = () => {
       window.scrollTo(0, 0);
     };
+    localStorage.removeItem("bookingDetails");
     scroll();
   }, []);
 

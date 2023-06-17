@@ -633,7 +633,7 @@ const Reserve = (props) => {
                 <div className="flex flex-col items-start mt-3 space-y-2">
                   <div class="relative overflow-x-auto md:w-auto w-[85vw]">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-800">
+                      <thead class="text-xs  uppercase bg-[#00ccbb] text-gray-800">
                         <tr>
                           <th scope="col" class="px-6 py-3">
                             Name
