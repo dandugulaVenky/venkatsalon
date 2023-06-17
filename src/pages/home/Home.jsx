@@ -179,7 +179,7 @@ const Home = () => {
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-              Hi, Welcome To Easytym
+              Welcome To Easytym
             </h1>
           </div>
           <h1 className="text-gray-700 lg:px-64 md:px-10 px-4 text-md font-bold text-center py-5">

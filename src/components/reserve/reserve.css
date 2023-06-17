@@ -14,13 +14,23 @@
 .rContainer {
   background-color: #dfe1e6;
   border-radius: 5px;
-  padding: 20px;
+  padding: 0px;
   position: relative;
 }
 .over {
   height: 100%;
-  max-height: 500px;
+  max-height: 550px;
   overflow-y: auto;
+}
+
+.scrollable-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.scrollable-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 .rContainer:nth-child(odd) {
   border-bottom: rgb(29, 9, 9) 1px solid;

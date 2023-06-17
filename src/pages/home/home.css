@@ -37,7 +37,7 @@
 } */
 
 .text-container {
-  height: 50vh;
+  height: 15vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -46,7 +46,7 @@
 
 .text-container h1 {
   margin: 0;
-  font-size: 150px;
+  font-size: 80px;
   color: rgba(225, 225, 225, 0.01);
   background-image: url("https://res.cloudinary.com/dqupmzcrb/image/upload/v1686915869/Untitled-design_odwobp.webp");
   background-repeat: repeat;
@@ -54,7 +54,7 @@
   animation: animate 15s ease-in-out infinite;
   text-align: center;
   text-transform: uppercase;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 @media screen and (max-width: 767px) {

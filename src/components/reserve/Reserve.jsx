@@ -617,38 +617,77 @@ const Reserve = (props) => {
           {" "}
           Amount : &#8377; {totalAmount}
         </p>
-        <div className="flex  flex-col over ">
+        <div className="flex  flex-col over scrollable-container ">
           {loading &&
             seats?.map((seat, i) => (
               <div key={seat.id} className="rContainer">
-                <h3 className="text-xl">Seat {i + 1}</h3>
-                <h3 className="font-extrabold">
-                  {durationBySeat.length > 0 &&
-                  seat.id === durationBySeat[i]?.id
-                    ? getTotalTime(durationBySeat[i]?.value)
-                    : "0 min"}
-                </h3>
+                <span className="py-2">
+                  <h3 className="text-md font-bold px-5 pt-2">Seat {i + 1}</h3>
+                  <h3 className="font-extrabold px-5">
+                    {durationBySeat.length > 0 &&
+                    seat.id === durationBySeat[i]?.id
+                      ? getTotalTime(durationBySeat[i]?.value)
+                      : "0 min"}
+                  </h3>
+                </span>
                 <div className="flex flex-col items-start mt-3 space-y-2">
-                  {data[0]?.services?.map((service, j) => {
-                    return (
-                      <span className="space-x-2 flex items-center " key={j}>
-                        <input
-                          type="checkbox"
-                          name={service?.service}
-                          checked={seat.options.includes(service?.service)}
-                          className="h-6 w-6"
-                          onChange={(event) =>
-                            handleOptionChange(event, seat.id, service)
-                          }
-                          disabled={isAvailable(seat, i, service?.service)}
-                        />
-                        <label>
-                          {service?.service} - {service?.duration} &nbsp;
-                          <FontAwesomeIcon icon={faClock} />{" "}
-                        </label>
-                      </span>
-                    );
-                  })}
+                  <div class="relative overflow-x-auto md:w-auto w-[85vw]">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 dark:text-gray-800">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            Name
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Price
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Duration
+                          </th>
+                        </tr>
+                      </thead>
+
+                      {data[0]?.services?.map((service, j) => {
+                        return (
+                          <tbody>
+                            <tr class="bg-white border-b dark:bg-gray-300 dark:border-gray-800">
+                              <th
+                                scope="row"
+                                class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white flex items-center justify-start space-x-2"
+                              >
+                                <input
+                                  type="checkbox"
+                                  name={service?.service}
+                                  checked={seat.options.includes(
+                                    service?.service
+                                  )}
+                                  className="h-6 w-6"
+                                  onChange={(event) =>
+                                    handleOptionChange(event, seat.id, service)
+                                  }
+                                  disabled={isAvailable(
+                                    seat,
+                                    i,
+                                    service?.service
+                                  )}
+                                />
+                                <label className="text-gray-900">
+                                  {service?.service}
+                                </label>
+                              </th>
+                              <td class="px-6 py-4 text-gray-900">
+                                Rs.{service?.price}{" "}
+                              </td>
+                              <td class="px-6 py-4 text-gray-900">
+                                {service?.duration}{" "}
+                                <FontAwesomeIcon icon={faClock} />
+                              </td>
+                            </tr>
+                          </tbody>
+                        );
+                      })}
+                    </table>
+                  </div>
                 </div>
               </div>
             ))}
@@ -669,3 +708,20 @@ const Reserve = (props) => {
 };
 
 export default Reserve;
+
+// <span className="space-x-2 flex items-center " key={j}>
+// <input
+//   type="checkbox"
+//   name={service?.service}
+//   checked={seat.options.includes(service?.service)}
+//   className="h-6 w-6"
+//   onChange={(event) =>
+//     handleOptionChange(event, seat.id, service)
+//   }
+//   disabled={isAvailable(seat, i, service?.service)}
+// />
+// <label>
+//   {service?.service} - {service?.duration} &nbsp;
+//   <FontAwesomeIcon icon={faClock} />{" "}
+// </label>
+// </span>

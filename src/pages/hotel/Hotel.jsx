@@ -106,17 +106,26 @@ const Hotel = () => {
     });
 
     const values = options.filter((option) => {
-      return formattedTime.split(":")[0].includes(option.value.split(":")[0])
+      return formattedTime.split(":")[0] === option.value.split(":")[0] &&
+        formattedTime.split(":")[1].split(" ")[1] ===
+          option.value.split(":")[1].split(" ")[1]
         ? option
         : null;
     });
+
+    if (values[0]?.id === 72) {
+      return setTimeOptions(null);
+    }
     const filteredOptions1 = options.filter((option) => {
       return values[0].id <= option.id;
     });
     setTimeOptions(
-      date?.getDate() === value?.getDate() ? filteredOptions1 : options
+      moment(value).format("Do MM") === moment(date).format("Do MM")
+        ? filteredOptions1
+        : options
     );
   };
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
@@ -886,12 +895,13 @@ const Hotel = () => {
             <div>
               <div className="-mt-1 ">
                 <DatePicker
+                  onClick={() => w > 820 && window.scrollTo(0, 200)}
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[14.3rem] w-[14.3rem]  mt-3  "
+                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[12.3rem] w-[14.3rem]  mt-3  "
                 />
               </div>
             </div>
@@ -899,30 +909,32 @@ const Hotel = () => {
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button
-                    onFocus={() =>
+                    onClick={() =>
                       w > 820
                         ? window.scrollTo(0, 400)
-                        : window.scrollTo(0, 250)
+                        : window.scrollTo(0, 200)
                     }
-                    className="inline-flex justify-center  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[14rem]"
+                    className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]"
                   >
-                    <span className="md:text-md ">
-                      {timeReserve ? timeReserve : "Select Time"}
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5 ml-2 -mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <div className="w-full flex items-center justify-between">
+                      <span className="md:text-md ">
+                        {timeReserve ? timeReserve : "Select Time"}
+                      </span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-5 h-5 ml-2 -mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
                   </Menu.Button>
                 </div>
 
@@ -967,36 +979,32 @@ const Hotel = () => {
                           return (
                             <Menu.Item key={i} id={option.id}>
                               {({ active }) => (
-                                <p
+                                <div
                                   onClick={() => handleTime(option)}
                                   className={classNames(
                                     active
-                                      ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer"
+                                      ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
                                       : "text-gray-700",
-                                    `block px-4 py-0.5 text-md font-bold cursor-pointer ${
+                                    ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 ${
                                       !finalBooked && ` text-red-500 `
                                     }`
                                   )}
                                 >
-                                  {option.value}
+                                  <span>{option.value}</span>
                                   <span>
-                                    &nbsp;{" "}
                                     {isbooked.includes(true) &&
                                       falseIndexes.map((item) => {
-                                        return (
-                                          <span>
-                                            S{item + 1}&nbsp;
-                                            <FontAwesomeIcon
-                                              icon={faCircle}
-                                              color="green "
-                                              size="sm"
-                                            />{" "}
-                                            &nbsp;
-                                          </span>
-                                        );
+                                        return <span>S{item + 1}&nbsp;</span>;
                                       })}
+                                    {isbooked.includes(true) && (
+                                      <FontAwesomeIcon
+                                        icon={faCircle}
+                                        color="green "
+                                        size="sm"
+                                      />
+                                    )}
                                   </span>
-                                </p>
+                                </div>
                               )}
                             </Menu.Item>
                           );
