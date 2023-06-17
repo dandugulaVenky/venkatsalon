@@ -46,7 +46,7 @@ const Hotel = () => {
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [loadingg, setLoadingg] = useState(false);
-  const [timeOptions, setTimeOptions] = useState([]);
+  // const [options, setoptions] = useState([]);
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
@@ -97,34 +97,34 @@ const Hotel = () => {
   function tileClassName({ value, view }) {
     return isTuesday(value) ? "disabled-tuesday" : null;
   }
-  const filterOptions = () => {
-    const date = new Date();
-    const formattedTime = date.toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
+  // const filterOptions = () => {
+  //   const date = new Date();
+  //   const formattedTime = date.toLocaleString("en-US", {
+  //     hour: "numeric",
+  //     minute: "numeric",
+  //     hour12: true,
+  //   });
 
-    const values = options.filter((option) => {
-      return formattedTime.split(":")[0] === option.value.split(":")[0] &&
-        formattedTime.split(":")[1].split(" ")[1] ===
-          option.value.split(":")[1].split(" ")[1]
-        ? option
-        : null;
-    });
+  //   const values = options.filter((option) => {
+  //     return formattedTime.split(":")[0] === option.value.split(":")[0] &&
+  //       formattedTime.split(":")[1].split(" ")[1] ===
+  //         option.value.split(":")[1].split(" ")[1]
+  //       ? option
+  //       : null;
+  //   });
 
-    if (values[0]?.id === 72) {
-      return setTimeOptions(null);
-    }
-    const filteredOptions1 = options.filter((option) => {
-      return values[0].id <= option.id;
-    });
-    setTimeOptions(
-      moment(value).format("Do MM") === moment(date).format("Do MM")
-        ? filteredOptions1
-        : options
-    );
-  };
+  //   if (values[0]?.id === 72) {
+  //     return setoptions(null);
+  //   }
+  //   const filteredOptions1 = options.filter((option) => {
+  //     return values[0].id <= option.id;
+  //   });
+  //   setoptions(
+  //     moment(value).format("Do MM") === moment(date).format("Do MM")
+  //       ? filteredOptions1
+  //       : options
+  //   );
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,7 +145,7 @@ const Hotel = () => {
 
       setDatra(res);
     };
-    filterOptions();
+    // filterOptions();
     fetchData();
     fetchReviews();
   }, [value]);
@@ -962,7 +962,7 @@ const Hotel = () => {
                       </Menu.Item>
 
                       {matchedArrays?.length > 0 &&
-                        timeOptions?.map((option, i) => {
+                        options?.map((option, i) => {
                           const isbooked = matchedArrays?.map((item) =>
                             // console.log(item?.includes(i))
                             item?.includes(i)
