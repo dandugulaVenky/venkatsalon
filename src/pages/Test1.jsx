@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import Greeting from "../components/navbar/Greeting";
 import SIdebar from "../components/navbar/SIdebar";
 
-const Test = () => {
+const Test1 = () => {
   // const [location, setLocation] = useState();
   // const getCurrentPosition = () => {
   //   navigator.geolocation.getCurrentPosition(
@@ -141,4 +141,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default Test1;
