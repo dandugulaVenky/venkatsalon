@@ -27,7 +27,7 @@ import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
 import Orders from "./pages/ironing/iron-pages/Orders";
 import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
-import Test from "./pages/Test";
+import Test from "./pages/Test1";
 
 function App() {
   const ProtectedRoute = ({ children }) => {

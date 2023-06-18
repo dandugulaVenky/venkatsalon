@@ -11,12 +11,36 @@
   z-index: 999;
 }
 
+.reserve1 {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.682);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  overflow: auto;
+}
+
 .rContainer {
   background-color: #dfe1e6;
   border-radius: 5px;
   padding: 0px;
   position: relative;
 }
+
+.rContainer2 {
+  border-radius: 5px;
+
+  position: relative;
+  height: 100%;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
 .over {
   height: 100%;
   max-height: 550px;

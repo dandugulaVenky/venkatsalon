@@ -51,24 +51,25 @@ const Test = () => {
 
   const seats = [1, 2, 3];
 
+  const handleChange = (e) => {
+    const result = categories.filter((category, i) =>
+      category.category === e.target.value ? category.services : null
+    );
+    setCategoriesOptions(result[0].services);
+  };
+
   useEffect(() => {
     // getCurrentPosition();
   }, []);
-  let w = window.innerWidth;
+
   return (
     <>
-      {w < 768 && <Greeting />}
-
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
-      <div className="h-auto pb-20 bg-gray-200 w-full flex flex-col items-start  justify-center space-y-5 md:-mt-10">
-        <div className="md:flex md:mx-auto">
+      <div className="reserve1 flex flex-col items-start  justify-center space-y-5 ">
+        <div className="md:flex md:mx-auto ">
           <div className="px-2 ">
-            <p className="py-3 text-xl font-semibold">Categories</p>
+            <p className="py-3 text-xl text-white font-semibold">Categories</p>
 
-            <select
-              className="w-52"
-              onChange={(e) => setCategoriesOptions(categories[e.target.value])}
-            >
+            <select className="w-52" onChange={handleChange}>
               <option selected>Select a category</option>
               {parlourServices.map((service, i) => {
                 return <option key={i}>{service}</option>;
@@ -77,8 +78,10 @@ const Test = () => {
           </div>{" "}
         </div>
 
-        <div className="  h-auto md:w-[70vw] w-[98vw] mx-auto">
-          <p className="py-3 text-xl font-semibold">Select Services</p>
+        <div className="  md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
+          <p className="py-3 text-xl font-semibold text-white">
+            Select Services
+          </p>
           <strong className="pb-2 font-semibold text-sm text-red-500">
             Note* You can select multiple seats at a time
           </strong>
@@ -134,8 +137,6 @@ const Test = () => {
           })}
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

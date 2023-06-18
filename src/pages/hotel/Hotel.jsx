@@ -34,6 +34,7 @@ import options from "../../utils/time";
 import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 import { Menu, Transition } from "@headlessui/react";
+import Test1 from "../Test1";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -1201,49 +1202,92 @@ const Hotel = () => {
       )}
       <Footer />
 
-      {openModal && (
-        <Reserve
-          setOpen={setOpenModal}
-          open={open}
-          shopId={id}
-          shopName={data.name}
-          shopOwner={data.shopOwnerId}
-          setOpacity={setOpacity}
-          min10={minutesValues.min10}
-          min20={minutesValues.min20}
-          min30={minutesValues.min30}
-          min40={minutesValues.min40}
-          min50={minutesValues.min50}
-          min60={minutesValues.min60}
-          min70={minutesValues.min70}
-          min80={minutesValues.min80}
-          min90={minutesValues.min90}
-          min100={minutesValues.min100}
-          min110={minutesValues.min110}
-          min120={minutesValues.min120}
-          min130={minutesValues.min130}
-          min140={minutesValues.min140}
-          min150={minutesValues.min150}
-          min160={minutesValues.min160}
-          min170={minutesValues.min170}
-          min180={minutesValues.min180}
-          min190={minutesValues.min190}
-          min200={minutesValues.min200}
-          min210={minutesValues.min210}
-          min220={minutesValues.min220}
-          min230={minutesValues.min230}
-          min240={minutesValues.min240}
-          min250={minutesValues.min250}
-          min260={minutesValues.min260}
-          min270={minutesValues.min270}
-          min280={minutesValues.min280}
-          min290={minutesValues.min290}
-          min300={minutesValues.min300}
-          selectedValue={selectValue}
-          value={value}
-          options={options}
-        />
-      )}
+      {openModal &&
+        (type === "saloon" ? (
+          <Reserve
+            setOpen={setOpenModal}
+            open={open}
+            shopId={id}
+            shopName={data.name}
+            shopOwner={data.shopOwnerId}
+            setOpacity={setOpacity}
+            min10={minutesValues.min10}
+            min20={minutesValues.min20}
+            min30={minutesValues.min30}
+            min40={minutesValues.min40}
+            min50={minutesValues.min50}
+            min60={minutesValues.min60}
+            min70={minutesValues.min70}
+            min80={minutesValues.min80}
+            min90={minutesValues.min90}
+            min100={minutesValues.min100}
+            min110={minutesValues.min110}
+            min120={minutesValues.min120}
+            min130={minutesValues.min130}
+            min140={minutesValues.min140}
+            min150={minutesValues.min150}
+            min160={minutesValues.min160}
+            min170={minutesValues.min170}
+            min180={minutesValues.min180}
+            min190={minutesValues.min190}
+            min200={minutesValues.min200}
+            min210={minutesValues.min210}
+            min220={minutesValues.min220}
+            min230={minutesValues.min230}
+            min240={minutesValues.min240}
+            min250={minutesValues.min250}
+            min260={minutesValues.min260}
+            min270={minutesValues.min270}
+            min280={minutesValues.min280}
+            min290={minutesValues.min290}
+            min300={minutesValues.min300}
+            selectedValue={selectValue}
+            value={value}
+            options={options}
+          />
+        ) : (
+          <Test1
+            setOpen={setOpenModal}
+            open={open}
+            shopId={id}
+            shopName={data.name}
+            shopOwner={data.shopOwnerId}
+            setOpacity={setOpacity}
+            min10={minutesValues.min10}
+            min20={minutesValues.min20}
+            min30={minutesValues.min30}
+            min40={minutesValues.min40}
+            min50={minutesValues.min50}
+            min60={minutesValues.min60}
+            min70={minutesValues.min70}
+            min80={minutesValues.min80}
+            min90={minutesValues.min90}
+            min100={minutesValues.min100}
+            min110={minutesValues.min110}
+            min120={minutesValues.min120}
+            min130={minutesValues.min130}
+            min140={minutesValues.min140}
+            min150={minutesValues.min150}
+            min160={minutesValues.min160}
+            min170={minutesValues.min170}
+            min180={minutesValues.min180}
+            min190={minutesValues.min190}
+            min200={minutesValues.min200}
+            min210={minutesValues.min210}
+            min220={minutesValues.min220}
+            min230={minutesValues.min230}
+            min240={minutesValues.min240}
+            min250={minutesValues.min250}
+            min260={minutesValues.min260}
+            min270={minutesValues.min270}
+            min280={minutesValues.min280}
+            min290={minutesValues.min290}
+            min300={minutesValues.min300}
+            selectedValue={selectValue}
+            value={value}
+            options={options}
+          />
+        ))}
     </div>
   );
 };
