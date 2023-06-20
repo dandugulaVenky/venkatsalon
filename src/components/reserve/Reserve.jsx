@@ -474,6 +474,7 @@ const Reserve = (props) => {
 
   const checkoutHandler = async (amount, e) => {
     e.preventDefault();
+    console.log(seats);
 
     if (amount < 10) {
       return alert("Please select atleast an option!");
