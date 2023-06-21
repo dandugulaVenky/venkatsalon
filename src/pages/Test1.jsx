@@ -512,7 +512,6 @@ const Test1 = (props) => {
         ? { seatNo: duration.seatNo, isReachedEnd: true }
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
-    console.log(check, "checks");
 
     if (check) {
       const showEnd = check.map((item) => {
@@ -533,7 +532,6 @@ const Test1 = (props) => {
       if (showEnd.includes(true)) {
         return null; // Stop execution of the whole function
       } else {
-        console.log("I am going");
         const getReturn = (item1, item2) => {
           console.log({ item1, item2 }, "maks");
           const minutes = item1;
@@ -565,28 +563,26 @@ const Test1 = (props) => {
         });
         const mergedArr = [].concat(...error);
 
-        console.log(mergedArr, "mergedArr");
-
         if (mergedArr.includes(0)) {
           return;
         }
-        // navigate(`/shops/${shopId}/parlour-preview`, {
-        //   state: {
-        //     selectedSeats: seats,
-        //     totalAmount,
-        //     roomId: data[0]?._id,
-        //     shopOwner,
-        //     shopId,
-        //     shopName,
-        //     ownerEmail,
-        //     ownerNumber,
-        //     bookId: id,
-        //     user,
-        //     link: "https://easytym.com/history",
-        //     dates,
-        //     previewServices,
-        //   },
-        // });
+        navigate(`/shops/${shopId}/parlour-preview`, {
+          state: {
+            selectedSeats: seats,
+            totalAmount,
+            roomId: data[0]?._id,
+            shopOwner,
+            shopId,
+            shopName,
+            ownerEmail,
+            ownerNumber,
+            bookId: id,
+            user,
+            link: "https://easytym.com/history",
+            dates,
+            previewServices,
+          },
+        });
       }
     }
   };
