@@ -533,7 +533,6 @@ const Test1 = (props) => {
         return null; // Stop execution of the whole function
       } else {
         const getReturn = (item1, item2) => {
-          console.log({ item1, item2 }, "maks");
           const minutes = item1;
           const hours = Math.floor(minutes / 60);
           const remainingMinutes = minutes % 60;
