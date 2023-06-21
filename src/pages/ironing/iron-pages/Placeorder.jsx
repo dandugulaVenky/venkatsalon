@@ -28,9 +28,9 @@ export default function PlaceOrder() {
   }, []);
 
   const { user } = useContext(AuthContext);
-  const [buttonLoad, setButtonLoad] = useState(false);
   const { open } = useContext(SearchContext);
   let w = window.innerWidth;
+  const [buttonLoad, setButtonLoad] = useState(false);
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const { cartItems, shippingAddress } = cart;

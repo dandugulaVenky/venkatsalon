@@ -28,6 +28,7 @@ import Orders from "./pages/ironing/iron-pages/Orders";
 import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 import Test from "./pages/Test1";
+import ParlourPreview from "./pages/parlourPreview";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -49,6 +50,8 @@ function App() {
         <Route path="/test" element={<Test />} />
 
         <Route path="/shops/:id" element={<Hotel />} />
+        <Route path="/shops/:id/parlour-preview" element={<ParlourPreview />} />
+
         <Route path="/login" element={<Login />} />
         <Route
           path="/profile"

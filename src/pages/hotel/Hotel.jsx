@@ -990,19 +990,35 @@ const Hotel = () => {
                                     }`
                                   )}
                                 >
-                                  <span>{option.value}</span>
+                                  <span
+                                    className={`${
+                                      !finalBooked && " text-red-500"
+                                    }`}
+                                  >
+                                    {option.value}
+                                  </span>
                                   <span>
                                     {isbooked.includes(true) &&
                                       falseIndexes.map((item) => {
-                                        return <span>S{item + 1}&nbsp;</span>;
+                                        return (
+                                          <span>
+                                            S{item + 1}&nbsp;
+                                            <FontAwesomeIcon
+                                              icon={faCircle}
+                                              color="green "
+                                              size="sm"
+                                            />
+                                            &nbsp;&nbsp;
+                                          </span>
+                                        );
                                       })}
-                                    {isbooked.includes(true) && (
+                                    {/* {isbooked.includes(true) && (
                                       <FontAwesomeIcon
                                         icon={faCircle}
                                         color="green "
                                         size="sm"
                                       />
-                                    )}
+                                    )} */}
                                   </span>
                                 </div>
                               )}

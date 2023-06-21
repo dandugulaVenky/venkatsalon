@@ -63,6 +63,8 @@ const Test1 = (props) => {
   const [loading, setLoading] = useState(false);
   const [buttonLoad, setButtonLoad] = useState(false);
 
+  const [previewServices, setPreviewServices] = useState();
+
   const [seats, setSeats] = useState();
 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -109,6 +111,8 @@ const Test1 = (props) => {
         });
 
       setSeats(res);
+      setPreviewServices(data[0]?.parlourServices);
+
       const parlourServices = (data[0]?.parlourServices || []).reduce(
         (arr, item) => {
           arr.push(item.category);
@@ -128,7 +132,7 @@ const Test1 = (props) => {
 
   //update the options with ids corrospondingly with inputs
 
-  const handleOptionChange = (event, seatId, service) => {
+  const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
         if (event.target.checked) {
@@ -179,6 +183,7 @@ const Test1 = (props) => {
               id: seatId,
               value: newDuration,
               block: getBlocks(),
+              seatNo: seatIndex,
             };
           } else {
             return d;
@@ -192,6 +197,7 @@ const Test1 = (props) => {
           id: seatId,
           value: newDuration,
           block: getBlocks(),
+          seatNo: seatIndex,
         },
       ]);
     }
@@ -318,7 +324,7 @@ const Test1 = (props) => {
   //check if the room is available to book or not
 
   const isAvailable = useCallback(
-    (seat, i, service) => {
+    (i) => {
       const array = data[0]?.roomNumbers[i];
 
       const compareDate = moment(value).format("MMM Do YY");
@@ -488,141 +494,395 @@ const Test1 = (props) => {
     return navigate("/login", { state: { destination: `/shops/${shopId}` } });
   }
 
-  const checkoutHandler = async (amount, e) => {
+  const previewHandler = async (amount, e) => {
     e.preventDefault();
-    console.log(seats);
 
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
 
-    const getReturn = (item1, item2) => {
-      const minutes = item1;
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      item1 > 60
-        ? alert(
-            `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
-              item2 + 1
-            } `
-          )
-        : alert(
-            `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${
-              item2 + 1
+    //getting end value from optiond and checking wetherr user is booking beyond the time limit given by owner
+    const num1 = Number(options[options.length - 1].id);
+    const num2 = Number(
+      options.filter((option) => option.id === selectedValue)[0].id
+    );
+
+    const check = durationBySeat.map((duration) =>
+      duration.value > (num1 - num2) * 10
+        ? { seatNo: duration.seatNo, isReachedEnd: true }
+        : { seatNo: duration.seatNo, isReachedEnd: false }
+    );
+    console.log(check, "checks");
+
+    if (check) {
+      const showEnd = check.map((item) => {
+        if (item.isReachedEnd) {
+          alert(
+            `You can only book until ${
+              options[options.length - 1].value
+            }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
+              item.seatNo + 1
             } `
           );
-
-      return 0;
-    };
-    const error = seats?.map((item) => {
-      const output = durationBySeat?.map((item1) => {
-        return item?.id === item1?.id
-          ? item1?.value > durations[item?.index]
-            ? getReturn(durations[item?.index], item?.index)
-            : null
-          : null;
-      });
-      return output;
-    });
-    const mergedArr = [].concat(...error);
-
-    if (mergedArr.includes(0)) {
-      return;
-    }
-    setButtonLoad(true);
-
-    try {
-      const { status } = await axios.post(
-        `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
-
-        {
-          selectedSeats: seats,
-          totalAmount,
-          roomId: data[0]?._id,
-          shopOwner,
-          shopId,
-          shopName,
-          ownerEmail,
-          ownerNumber,
-          bookId: id,
-          user,
-          link: "https://main--profound-babka-e67f58.netlify.app/history",
-          dates,
-        },
-        { withCredentials: true }
-      );
-      if (status === 201) {
-        const {
-          data: { key },
-        } = await axios.get(`${baseUrl}/api/getkey`);
-
-        try {
-          const {
-            data: { order },
-          } = await axios.post(
-            `${baseUrl}/api/payments/checkout`,
-            {
-              amount,
-            },
-            { withCredentials: true }
-          );
-          setOpen(false);
-          const options = {
-            key,
-            amount: order.amount,
-            currency: "INR",
-            name: "EASYTYM",
-            description: "SALOONS",
-            image: "https://avatars.githubusercontent.com/u/25058652?v=4",
-            order_id: order.id,
-            callback_url: `${baseUrl}/api/payments/paymentverification`,
-            prefill: {
-              name: "Test Team",
-              email: "test.test@example.com",
-              contact: "9999999999",
-            },
-            notes: {
-              address: "EasyTym Corporate Office",
-            },
-            theme: {
-              color: "#121212",
-            },
-            modal: {
-              ondismiss: function () {
-                setOpacity(false);
-              },
-            },
-          };
-
-          const razor = new window.Razorpay(options);
-          razor.open();
-          setButtonLoad(false);
-          setOpacity(true);
-        } catch (err) {
-          toast("Token expired! Please login");
-          setButtonLoad(false);
-          setTimeout(() => {
-            navigate("/login", { state: { destination: `/shops/${shopId}` } });
-          }, 3000);
+          return true;
+        } else {
+          return false;
         }
+      });
+
+      if (showEnd.includes(true)) {
+        return null; // Stop execution of the whole function
       } else {
-        toast("something went wrong!");
+        console.log("I am going");
+        const getReturn = (item1, item2) => {
+          console.log({ item1, item2 }, "maks");
+          const minutes = item1;
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          item1 > 60
+            ? alert(
+                `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+                  item2 + 1
+                } `
+              )
+            : alert(
+                `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${
+                  item2 + 1
+                } `
+              );
+
+          return 0;
+        };
+        const error = seats?.map((item) => {
+          const output = durationBySeat?.map((item1) => {
+            return item?.id === item1?.id
+              ? item1?.value > durations[item?.index]
+                ? getReturn(durations[item?.index], item?.index)
+                : null
+              : null;
+          });
+          return output;
+        });
+        const mergedArr = [].concat(...error);
+
+        console.log(mergedArr, "mergedArr");
+
+        if (mergedArr.includes(0)) {
+          return;
+        }
+        // navigate(`/shops/${shopId}/parlour-preview`, {
+        //   state: {
+        //     selectedSeats: seats,
+        //     totalAmount,
+        //     roomId: data[0]?._id,
+        //     shopOwner,
+        //     shopId,
+        //     shopName,
+        //     ownerEmail,
+        //     ownerNumber,
+        //     bookId: id,
+        //     user,
+        //     link: "https://easytym.com/history",
+        //     dates,
+        //     previewServices,
+        //   },
+        // });
       }
-    } catch (err) {
-      toast("Token expired! Please login");
-      setTimeout(() => {
-        navigate("/login", { state: { destination: `/shops/${shopId}` } });
-      }, 3000);
-      console.log(err);
     }
   };
 
+  // return (
+  //   <>
+  //     {!preview ? (
+  //       <div className="reserve1 flex flex-col items-start  justify-center space-y-5 ">
+  //         <div className="md:flex md:mx-auto ">
+  //           <div className="px-2 ">
+  //             <p className="py-3 text-xl text-white font-semibold">
+  //               Categories
+  //             </p>
+
+  //             <select className="w-52" onChange={handleChange}>
+  //               <option selected>Select a category</option>
+  //               {parlourServices?.map((service, i) => {
+  //                 return <option key={i}>{service}</option>;
+  //               })}
+  //             </select>
+  //           </div>{" "}
+  //         </div>
+
+  //         <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
+  //           <FontAwesomeIcon
+  //             icon={faCircleXmark}
+  //             className="absolute top-0 right-0 text-white "
+  //             onClick={() => setOpen(false)}
+  //           />
+  //           <p className="py-3 text-xl font-semibold text-white">
+  //             Select Services
+  //           </p>
+  //           <strong className="pb-2 font-semibold text-sm text-red-500">
+  //             Note* You can select multiple seats at a time
+  //           </strong>
+
+  //           <p className="text-center mb-1 text-white py-2">
+  //             {" "}
+  //             Amount : &#8377; {totalAmount}
+  //           </p>
+
+  //           {seats?.map((seat, i) => {
+  //             return (
+  //               <div class="relative overflow-x-auto rounded-md py-3">
+  //                 <span className="py-2">
+  //                   <h3 className="text-md font-bold px-5 pt-2 text-white">
+  //                     Seat {i + 1}
+  //                   </h3>
+  //                   <h3 className="font-extrabold px-5 text-white">
+  //                     {durationBySeat.length > 0 &&
+  //                     seat.id === durationBySeat[i]?.id
+  //                       ? getTotalTime(durationBySeat[i]?.value)
+  //                       : "0 min"}
+  //                   </h3>
+  //                 </span>
+  //                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+  //                   <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  //                     <tr>
+  //                       <th scope="col" class="px-6 py-3">
+  //                         Product name
+  //                       </th>
+  //                       <th scope="col" class="px-6 py-3">
+  //                         Price
+  //                       </th>
+  //                       <th scope="col" class="px-6 py-3">
+  //                         Category
+  //                       </th>
+  //                       <th scope="col" class="px-6 py-3">
+  //                         Duration
+  //                       </th>
+  //                     </tr>
+  //                   </thead>
+  //                   <tbody>
+  //                     {categoriesOptions?.map((option, j) => {
+  //                       return (
+  //                         <tr
+  //                           key={j}
+  //                           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+  //                         >
+  //                           <th
+  //                             scope="row"
+  //                             class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
+  //                           >
+  //                             <input
+  //                               type="checkbox"
+  //                               name={option?.service}
+  //                               checked={seat.options.includes(option?.service)}
+  //                               className="h-6 w-6"
+  //                               onChange={(event) =>
+  //                                 handleOptionChange(event, seat.id, option)
+  //                               }
+  //                               disabled={isAvailable(i)}
+  //                             />
+  //                             <label className="text-white">
+  //                               {option?.service}
+  //                             </label>
+  //                           </th>
+  //                           <td class="px-6 py-4">{option.price}</td>
+  //                           <td class="px-6 py-4">{option.category}</td>
+  //                           <td class="px-6 py-4">{option.duration}</td>
+  //                         </tr>
+  //                       );
+  //                     })}
+  //                   </tbody>
+  //                 </table>
+  //               </div>
+  //             );
+  //           })}
+  //           <button
+  //             onClick={(e) => {
+  //               previewHandler(totalAmount, e);
+  //             }}
+  //             className="primary-button flex items-center justify-evenly"
+  //           >
+  //             Preview&nbsp;
+  //             {buttonLoad && <span className="buttonloader"></span>}
+  //           </button>
+  //         </div>
+  //       </div>
+  //     ) : (
+  //       <div className="reserve1  flex md:flex-row flex-col items-center justify-center space-x-5 ">
+  //         <div className=" border-2 border-white">
+  //           {showPreviewServices.map((seat, i) => {
+  //             return (
+  //               <>
+  //                 <div class="relative overflow-x-auto my-4">
+  //                   <span className="py-2">
+  //                     <h3 className="text-md font-bold px-5 pt-2 text-white">
+  //                       Seat {i + 1}
+  //                     </h3>
+  //                     {/* <h3 className="font-extrabold px-5 text-white">
+  //                     {durationBySeat.length > 0 &&
+  //                     seat.id === durationBySeat[i]?.id
+  //                       ? getTotalTime(durationBySeat[i]?.value)
+  //                       : "0 min"}
+  //                   </h3> */}
+  //                   </span>
+  //                   <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+  //                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  //                       <tr>
+  //                         <th scope="col" class="px-6 py-3">
+  //                           Service name
+  //                         </th>
+  //                         <th scope="col" class="px-6 py-3">
+  //                           Price
+  //                         </th>
+  //                         <th scope="col" class="px-6 py-3">
+  //                           Category
+  //                         </th>
+  //                         <th scope="col" class="px-6 py-3">
+  //                           Duration
+  //                         </th>
+  //                       </tr>
+  //                     </thead>
+  //                     <tbody>
+  //                       {seat.show.map((show, i) => {
+  //                         return (
+  //                           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+  //                             <th
+  //                               scope="row"
+  //                               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+  //                             >
+  //                               {show.service}
+  //                             </th>
+  //                             <td class="px-6 py-4">{show.price}</td>
+  //                             <td class="px-6 py-4">{show.category}</td>
+  //                             <td class="px-6 py-4">{show.duration}</td>
+  //                           </tr>
+  //                         );
+  //                       })}
+  //                     </tbody>
+  //                   </table>
+  //                 </div>
+  //               </>
+  //             );
+  //           })}
+  //           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+  //             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  //               <tr>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Service name
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Price
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Category
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Duration
+  //                 </th>
+  //               </tr>
+  //             </thead>
+  //             <tbody>
+  //               {[0, 1, 2].map((show, i) => {
+  //                 return (
+  //                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+  //                     <th
+  //                       scope="row"
+  //                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+  //                     >
+  //                       {show.service}
+  //                     </th>
+  //                     <td class="px-6 py-4">iuuu</td>
+  //                     <td class="px-6 py-4">uiojhgg</td>
+  //                     <td class="px-6 py-4">kooiiii</td>
+  //                   </tr>
+  //                 );
+  //               })}
+  //             </tbody>
+  //           </table>
+  //           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+  //             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  //               <tr>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Service name
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Price
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Category
+  //                 </th>
+  //                 <th scope="col" class="px-6 py-3">
+  //                   Duration
+  //                 </th>
+  //               </tr>
+  //             </thead>
+  //             <tbody>
+  //               {[0, 1, 2].map((show, i) => {
+  //                 return (
+  //                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+  //                     <th
+  //                       scope="row"
+  //                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+  //                     >
+  //                       {show.service}
+  //                     </th>
+  //                     <td class="px-6 py-4">iuuu</td>
+  //                     <td class="px-6 py-4">uiojhgg</td>
+  //                     <td class="px-6 py-4">kooiiii</td>
+  //                   </tr>
+  //                 );
+  //               })}
+  //             </tbody>
+  //           </table>
+  //         </div>
+  //         <div className="card  p-5">
+  //           <h2 className="mb-2 text-lg">Order Summary</h2>
+  //           <ul>
+  //             <li>
+  //               <div className="mb-2 flex justify-between">
+  //                 <div>Items</div>
+  //                 <div>Rs.20</div>
+  //               </div>
+  //             </li>
+  //             <li>
+  //               <div className="mb-2 flex justify-between">
+  //                 <div>Tax</div>
+  //                 <div>Rs.20</div>
+  //               </div>
+  //             </li>
+  //             <li>
+  //               <div className="mb-2 flex justify-between">
+  //                 <div>Shipping</div>
+  //                 <div>Rs 20</div>
+  //               </div>
+  //             </li>
+  //             <li>
+  //               <div className="mb-2 flex justify-between">
+  //                 <div>Total</div>
+  //                 <div>Rs.30</div>
+  //               </div>
+  //             </li>
+  //             <li>
+  //               <button
+  //                 disabled={loading}
+  //                 // onClick={placeOrderHandler}
+  //                 className="primary-button w-full"
+  //               >
+  //                 Place Order
+  //               </button>
+  //             </li>
+  //           </ul>
+  //         </div>
+  //       </div>
+  //     )}
+  //   </>
+  // );
+
   return (
-    <>
-      <div className="reserve1 flex flex-col items-start  justify-center space-y-5 ">
-        <div className="md:flex md:mx-auto ">
+    <div className="reserve1   ">
+      <div className="flex flex-col items-center  justify-center space-y-5 border-2 border-white rounded-md p-3">
+        <div className="md:flex md:mx-auto bo">
           <div className="px-2 ">
-            <p className="py-3 text-xl text-white font-semibold">Categories</p>
+            <p className="py-2 text-md text-white font-semibold">Categories</p>
 
             <select className="w-52" onChange={handleChange}>
               <option selected>Select a category</option>
@@ -633,102 +893,112 @@ const Test1 = (props) => {
           </div>{" "}
         </div>
 
-        <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
-          <FontAwesomeIcon
-            icon={faCircleXmark}
-            className="absolute top-0 right-0 text-white "
-            // onClick={() => setOpen(false)}
-          />
-          <p className="py-3 text-xl font-semibold text-white">
-            Select Services
-          </p>
-          <strong className="pb-2 font-semibold text-sm text-red-500">
-            Note* You can select multiple seats at a time
-          </strong>
+        {categoriesOptions?.length > 0 ? (
+          <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              className="absolute top-0 right-0 text-white "
+              onClick={() => setOpen(false)}
+            />
+            <p className="py-3 text-xl font-semibold text-white">
+              Select Services
+            </p>
+            <strong className="pb-2 font-semibold text-sm text-white">
+              Note* You can select multiple seats at a time
+            </strong>
 
-          <p className="text-center mb-1 text-white py-2">
-            {" "}
-            Amount : &#8377; {totalAmount}
-          </p>
+            <p className="text-center mb-1 text-white py-2">
+              {" "}
+              Amount : &#8377; {totalAmount}
+            </p>
 
-          {seats?.map((seat, i) => {
-            return (
-              <div class="relative overflow-x-auto rounded-md py-3">
-                <span className="py-2">
-                  <h3 className="text-md font-bold px-5 pt-2 text-white">
-                    Seat {i + 1}
-                  </h3>
-                  <h3 className="font-extrabold px-5 text-white">
-                    {durationBySeat.length > 0 &&
-                    seat.id === durationBySeat[i]?.id
-                      ? getTotalTime(durationBySeat[i]?.value)
-                      : "0 min"}
-                  </h3>
-                </span>
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" class="px-6 py-3">
-                        Product name
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        Price
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        Category
-                      </th>
-                      <th scope="col" class="px-6 py-3">
-                        Duration
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categoriesOptions?.map((option, i) => {
-                      return (
-                        <tr
-                          key={i}
-                          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        >
-                          <th
-                            scope="row"
-                            class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
+            {seats?.map((seat, i) => {
+              return (
+                <div class="relative overflow-x-auto rounded-md py-3">
+                  <span>
+                    <h3 className="text-md font-bold px-5 pt-2 pb-2 text-white">
+                      Seat {i + 1}
+                    </h3>
+                    <h3 className="font-extrabold px-5 text-white pb-2">
+                      {durationBySeat.length > 0 &&
+                      seat.id === durationBySeat[i]?.id
+                        ? getTotalTime(durationBySeat[i]?.value)
+                        : "0 min"}
+                    </h3>
+                  </span>
+                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th scope="col" class="px-6 py-3">
+                          Product name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Price
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Category
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                          Duration
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {categoriesOptions?.map((option, j) => {
+                        return (
+                          <tr
+                            key={j}
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                           >
-                            <input
-                              type="checkbox"
-                              name={option?.service}
-                              checked={seat.options.includes(option?.service)}
-                              className="h-6 w-6"
-                              onChange={(event) =>
-                                handleOptionChange(event, seat.id, option)
-                              }
-                              disabled={isAvailable(seat, i, option?.service)}
-                            />
-                            <label className="text-white">
-                              {option?.service}
-                            </label>
-                          </th>
-                          <td class="px-6 py-4">{option.price}</td>
-                          <td class="px-6 py-4">{option.category}</td>
-                          <td class="px-6 py-4">{option.duration}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            );
-          })}
-          <button
-            onClick={(e) => {
-              checkoutHandler(totalAmount, e);
-            }}
-            className="primary-button flex items-center justify-evenly"
-          >
-            Reserve&nbsp;{buttonLoad && <span className="buttonloader"></span>}
-          </button>
-        </div>
+                            <th
+                              scope="row"
+                              class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
+                            >
+                              <input
+                                type="checkbox"
+                                name={option?.service}
+                                checked={seat.options.includes(option?.service)}
+                                className="h-6 w-6"
+                                onChange={(event) =>
+                                  handleOptionChange(
+                                    event,
+                                    seat.id,
+                                    option,
+                                    seat.index
+                                  )
+                                }
+                                disabled={isAvailable(i)}
+                              />
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </th>
+                            <td class="px-6 py-4">{option.price}</td>
+                            <td class="px-6 py-4">{option.category}</td>
+                            <td class="px-6 py-4">{option.duration}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })}
+            <button
+              onClick={(e) => {
+                previewHandler(totalAmount, e);
+              }}
+              className="primary-button flex items-center justify-evenly"
+            >
+              Preview&nbsp;
+              {buttonLoad && <span className="buttonloader"></span>}
+            </button>
+          </div>
+        ) : (
+          "Nothing"
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
