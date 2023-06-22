@@ -82,6 +82,8 @@ const Reserve = (props) => {
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
 
+  const [previewServices, setPreviewServices] = useState();
+
   //generating random string for bookingID
   const generateRandomString = useCallback((length) => {
     var result = "";
@@ -99,7 +101,7 @@ const Reserve = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
-      // console.log(data[0].roomNumbers);
+      setPreviewServices(data[0].services);
 
       const res =
         data &&
@@ -118,7 +120,7 @@ const Reserve = (props) => {
 
   //update the options with ids corrospondingly with inputs
 
-  const handleOptionChange = (event, seatId, service) => {
+  const handleOptionChange = (event, seatId, service ,seatIndex) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
         if (event.target.checked) {
@@ -169,6 +171,7 @@ const Reserve = (props) => {
               id: seatId,
               value: newDuration,
               block: getBlocks(),
+              seatNo: seatIndex,
             };
           } else {
             return d;
@@ -182,6 +185,7 @@ const Reserve = (props) => {
           id: seatId,
           value: newDuration,
           block: getBlocks(),
+          seatNo: seatIndex,
         },
       ]);
     }
@@ -472,133 +476,224 @@ const Reserve = (props) => {
     return navigate("/login", { state: { destination: `/shops/${shopId}` } });
   }
 
-  const checkoutHandler = async (amount, e) => {
+  const previewHandler = async (amount, e) => {
     e.preventDefault();
-    console.log(seats);
-
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
 
-    const getReturn = (item1, item2) => {
-      const minutes = item1;
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      item1 > 60
-        ? alert(
-            `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
-              item2 + 1
-            } `
-          )
-        : alert(
-            `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${
-              item2 + 1
-            } `
+    //getting end value from optiond and checking wetherr user is booking beyond the time limit given by owner
+    const num1 = Number(options[options.length - 1].id);
+    const num2 = Number(
+        options.filter((option) => option.id === selectedValue)[0].id
+    );
+    console.log(durationBySeat, "durationBySeat");
+    const check = durationBySeat.map((duration) =>
+        duration.value > (num1 - num2) * 10
+            ? { seatNo: duration.seatNo, isReachedEnd: true }
+            : { seatNo: duration.seatNo, isReachedEnd: false }
+    );
+
+    if (check) {
+      const showEnd = check.map((item) => {
+        if (item.isReachedEnd) {
+          alert(
+              `You can only book until ${
+                  options[options.length - 1].value
+              }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
+                  item.seatNo + 1
+              } `
           );
-
-      return 0;
-    };
-    const error = seats?.map((item) => {
-      const output = durationBySeat?.map((item1) => {
-        return item?.id === item1?.id
-          ? item1?.value > durations[item?.index]
-            ? getReturn(durations[item?.index], item?.index)
-            : null
-          : null;
-      });
-      return output;
-    });
-    const mergedArr = [].concat(...error);
-
-    if (mergedArr.includes(0)) {
-      return;
-    }
-    setButtonLoad(true);
-
-    try {
-      const { status } = await axios.post(
-        `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
-
-        {
-          selectedSeats: seats,
-          totalAmount,
-          roomId: data[0]?._id,
-          shopOwner,
-          shopId,
-          shopName,
-          ownerEmail,
-          ownerNumber,
-          bookId: id,
-          user,
-          link: "https://main--profound-babka-e67f58.netlify.app/history",
-          dates,
-        },
-        { withCredentials: true }
-      );
-      if (status === 201) {
-        const {
-          data: { key },
-        } = await axios.get(`${baseUrl}/api/getkey`);
-
-        try {
-          const {
-            data: { order },
-          } = await axios.post(
-            `${baseUrl}/api/payments/checkout`,
-            {
-              amount,
-            },
-            { withCredentials: true }
-          );
-          setOpen(false);
-          const options = {
-            key,
-            amount: order.amount,
-            currency: "INR",
-            name: "EASYTYM",
-            description: "SALOONS",
-            image: "https://avatars.githubusercontent.com/u/25058652?v=4",
-            order_id: order.id,
-            callback_url: `${baseUrl}/api/payments/paymentverification`,
-            prefill: {
-              name: "Test Team",
-              email: "test.test@example.com",
-              contact: "9999999999",
-            },
-            notes: {
-              address: "EasyTym Corporate Office",
-            },
-            theme: {
-              color: "#121212",
-            },
-            modal: {
-              ondismiss: function () {
-                setOpacity(false);
-              },
-            },
-          };
-
-          const razor = new window.Razorpay(options);
-          razor.open();
-          setButtonLoad(false);
-          setOpacity(true);
-        } catch (err) {
-          toast("Token expired! Please login");
-          setButtonLoad(false);
-          setTimeout(() => {
-            navigate("/login", { state: { destination: `/shops/${shopId}` } });
-          }, 3000);
+          return true;
+        } else {
+          return false;
         }
+      });
+
+      if (showEnd.includes(true)) {
+        return null; // Stop execution of the whole function
       } else {
-        toast("something went wrong!");
+        const getReturn = (item1, item2) => {
+          const minutes = item1;
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          item1 > 60
+              ? alert(
+                  `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+                      item2 + 1
+                  } `
+              )
+              : alert(
+                  `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${
+                      item2 + 1
+                  } `
+              );
+
+          return 0;
+        };
+        const error = seats?.map((item) => {
+          const output = durationBySeat?.map((item1) => {
+            return item?.id === item1?.id
+                ? item1?.value > durations[item?.index]
+                    ? getReturn(durations[item?.index], item?.index)
+                    : null
+                : null;
+          });
+          return output;
+        });
+        const mergedArr = [].concat(...error);
+
+        if (mergedArr.includes(0)) {
+          return;
+        }
+        navigate(`/shops/${shopId}/salon-preview`, {
+          state: {
+            selectedSeats: seats,
+            totalAmount,
+            roomId: data[0]?._id,
+            shopOwner,
+            shopId,
+            shopName,
+            ownerEmail,
+            ownerNumber,
+            bookId: id,
+            user,
+            link: "https://easytym.com/history",
+            dates,
+            previewServices,
+          },
+        });
       }
-    } catch (err) {
-      toast("Token expired! Please login");
-      setTimeout(() => {
-        navigate("/login", { state: { destination: `/shops/${shopId}` } });
-      }, 3000);
     }
   };
+
+  {/*const checkoutHandler = async (amount, e) => {*/}
+  {/*  e.preventDefault();*/}
+  {/*  console.log(seats);*/}
+
+  //   if (amount < 10) {
+  {/*    return alert("Please select atleast an option!");*/}
+  {/*  }*/}
+
+  {/*  const getReturn = (item1, item2) => {*/}
+  {/*    const minutes = item1;*/}
+  {/*    const hours = Math.floor(minutes / 60);*/}
+  {/*    const remainingMinutes = minutes % 60;*/}
+  {/*    item1 > 60*/}
+  //       ? alert(
+  //           `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+  //             item2 + 1
+  {/*          } `*/}
+  {/*        )*/}
+  {/*      : alert(*/}
+  {/*          `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${*/}
+  //             item2 + 1
+  //           } `
+  //         );
+  //
+  //     return 0;
+  {/*  };*/}
+  //   const error = seats?.map((item) => {
+  //     const output = durationBySeat?.map((item1) => {
+  //       return item?.id === item1?.id
+  //         ? item1?.value > durations[item?.index]
+  {/*          ? getReturn(durations[item?.index], item?.index)*/}
+  {/*          : null*/}
+  {/*        : null;*/}
+  {/*    });*/}
+  {/*    return output;*/}
+  {/*  });*/}
+  {/*  const mergedArr = [].concat(...error);*/}
+  //
+  //   if (mergedArr.includes(0)) {
+  //     return;
+  //   }
+  //   setButtonLoad(true);
+  //
+  //   try {
+  //     const { status } = await axios.post(
+  //       `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
+  //
+  //       {
+  //         selectedSeats: seats,
+  //         totalAmount,
+  //         roomId: data[0]?._id,
+  //         shopOwner,
+  {/*        shopId,*/}
+  {/*        shopName,*/}
+  {/*        ownerEmail,*/}
+  {/*        ownerNumber,*/}
+  {/*        bookId: id,*/}
+  {/*        user,*/}
+  //         link: "https://main--profound-babka-e67f58.netlify.app/history",
+  //         dates,
+  //       },
+  //       { withCredentials: true }
+  //     );
+  //     if (status === 201) {
+  //       const {
+  //         data: { key },
+  //       } = await axios.get(`${baseUrl}/api/getkey`);
+  //
+  //       try {
+  //         const {
+  //           data: { order },
+  //         } = await axios.post(
+  //           `${baseUrl}/api/payments/checkout`,
+  //           {
+  //             amount,
+  //           },
+  //           { withCredentials: true }
+  //         );
+  //         setOpen(false);
+  //         const options = {
+  //           key,
+  //           amount: order.amount,
+  //           currency: "INR",
+  //           name: "EASYTYM",
+  {/*          description: "SALOONS",*/}
+  {/*          image: "https://avatars.githubusercontent.com/u/25058652?v=4",*/}
+  {/*          order_id: order.id,*/}
+  {/*          callback_url: `${baseUrl}/api/payments/paymentverification`,*/}
+  {/*          prefill: {*/}
+  {/*            name: "Test Team",*/}
+  {/*            email: "test.test@example.com",*/}
+  {/*            contact: "9999999999",*/}
+  {/*          },*/}
+  {/*          notes: {*/}
+  {/*            address: "EasyTym Corporate Office",*/}
+  {/*          },*/}
+  {/*          theme: {*/}
+  {/*            color: "#121212",*/}
+  {/*          },*/}
+  {/*          modal: {*/}
+  {/*            ondismiss: function () {*/}
+  {/*              setOpacity(false);*/}
+  {/*            },*/}
+  {/*          },*/}
+  //         };
+  //
+  {/*        const razor = new window.Razorpay(options);*/}
+  {/*        razor.open();*/}
+  {/*        setButtonLoad(false);*/}
+  {/*        setOpacity(true);*/}
+  {/*      } catch (err) {*/}
+  {/*        toast("Token expired! Please login");*/}
+  {/*        setButtonLoad(false);*/}
+  {/*        setTimeout(() => {*/}
+  //           navigate("/login", { state: { destination: `/shops/${shopId}` } });
+  //         }, 3000);
+  //       }
+  {/*    } else {*/}
+  //       toast("something went wrong!");
+  //     }
+  //   } catch (err) {
+  //     toast("Token expired! Please login");
+  //     setTimeout(() => {
+  //       navigate("/login", { state: { destination: `/shops/${shopId}` } });
+  //     }, 3000);
+  //   }
+  // };
 
   return (
     <form className="reserve flex flex-col space-y-2">
@@ -664,7 +759,7 @@ const Reserve = (props) => {
                                   )}
                                   className="h-6 w-6"
                                   onChange={(event) =>
-                                    handleOptionChange(event, seat.id, service)
+                                    handleOptionChange(event, seat.id, service, seat.index)
                                   }
                                   disabled={isAvailable(
                                     seat,
@@ -696,12 +791,13 @@ const Reserve = (props) => {
         </div>
       </div>
       <button
-        onClick={(e) => {
-          checkoutHandler(totalAmount, e);
-        }}
-        className="primary-button flex items-center justify-evenly"
+          onClick={(e) => {
+            previewHandler(totalAmount, e);
+          }}
+          className="primary-button flex items-center justify-evenly"
       >
-        Reserve&nbsp;{buttonLoad && <span className="buttonloader"></span>}
+        Preview&nbsp;
+        {buttonLoad && <span className="buttonloader"></span>}
       </button>
     </form>
     // <>ji</>

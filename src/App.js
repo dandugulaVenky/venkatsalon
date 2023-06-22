@@ -29,6 +29,7 @@ import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 import Test from "./pages/Test1";
 import ParlourPreview from "./pages/parlourPreview";
+import SalonPreview from "./pages/salonPreview";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -101,6 +102,10 @@ function App() {
         <Route
           path="/iron/iron-payment-success"
           element={<IronPaymentSuccess />}
+        />
+        <Route
+            path="/shops/:id/salon-preview"
+            element={<SalonPreview />}
         />
       </Routes>
     </BrowserRouter>
