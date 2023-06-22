@@ -67,15 +67,6 @@ const Hotel = () => {
   const [minutesValues, setMinutesvalues] = useState([]);
 
   const { data, loading } = useFetch(`${baseUrl}/api/hotels/find/${id}`);
-  const fetchReviews = async () => {
-    return await axios
-      .get(`${baseUrl}/api/hotels/getReviews/${id}`)
-      .then((res) => {
-        // console.log("reviewsfromdb", res.data);
-        setReviews(res.data);
-      })
-      .catch((err) => toast.error(err));
-  };
 
   const handleChange = (value) => {
     if (value === null) {
@@ -145,15 +136,24 @@ const Hotel = () => {
       setDatra(res);
     };
     // filterOptions();
+    const fetchReviews = async () => {
+      return await axios
+        .get(`${baseUrl}/api/hotels/getReviews/${id}`)
+        .then((res) => {
+          // console.log("reviewsfromdb", res.data);
+          setReviews(res.data);
+        })
+        .catch((err) => toast.error(err));
+    };
     fetchData();
     fetchReviews();
-  }, [value]);
+  }, [id, value]);
 
   useEffect(() => {
     const scroll = () => {
       window.scrollTo(0, 0);
     };
-
+    localStorage.clear();
     scroll();
   }, []);
 
@@ -807,6 +807,7 @@ const Hotel = () => {
       min300,
     };
   }, [timeReserve]);
+
   useEffect(() => {
     const minValues1 = minValues();
 
