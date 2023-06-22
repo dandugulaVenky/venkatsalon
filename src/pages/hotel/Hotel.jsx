@@ -947,7 +947,7 @@ const Hotel = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  w-[20rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (
@@ -1081,11 +1081,6 @@ const Hotel = () => {
             </>
           )}
           <div className="hotelWrapper mt-2">
-            {/* <Link to="/">
-              <p className="bg-blue-900 max-w-[130px] px-4 py-2 text-white rounded">
-                Go to Home
-              </p>
-            </Link> */}
             <div className="md:flex space-y-4 items-center justify-between">
               <div className="hotelWrapper">
                 <h1 className="hotelTitle">{data.name}</h1>
