@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 const ParlourPreview = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -76,6 +77,7 @@ const ParlourPreview = () => {
   // console.log(userSelectedCategories);
 
   const placeOrderHandler = async () => {
+    setLoading(true);
     const {
       selectedSeats,
       totalAmount,
@@ -153,8 +155,10 @@ const ParlourPreview = () => {
 
           const razor = new window.Razorpay(options);
           razor.open();
+          setLoading(false);
         } catch (err) {
           toast("Token expired! Please login");
+          setLoading(false);
           console.log(err);
           //   setTimeout(() => {
           //     navigate("/login", { state: { destination: `/shops/${shopId}` } });
@@ -162,9 +166,11 @@ const ParlourPreview = () => {
         }
       } else {
         toast("something went wrong!");
+        setLoading(false);
       }
     } catch (err) {
       toast("Token expired! Please login");
+      setLoading(false);
       console.log(err);
       setTimeout(() => {
         navigate("/login", { state: { destination: `/shops/${shopId}` } });
@@ -260,13 +266,21 @@ const ParlourPreview = () => {
                 </li>
 
                 <li>
-                  <button
-                    // disabled={loading}
-                    onClick={placeOrderHandler}
-                    className="primary-button w-full"
-                  >
-                    Place Order
-                  </button>
+                  {!loading ? (
+                    <button
+                      disabled={loading}
+                      onClick={placeOrderHandler}
+                      className="primary-button flex items-center justify-center  w-full"
+                    >
+                      <>Place Order</>
+                    </button>
+                  ) : (
+                    <button className="primary-button flex items-center justify-center  w-full">
+                      {" "}
+                      Place Order{" "}
+                      {loading && <span className="buttonloader ml-2"></span>}
+                    </button>
+                  )}
                 </li>
                 <li>
                   <button

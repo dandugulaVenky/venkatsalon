@@ -947,7 +947,7 @@ const Hotel = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="h-96 overflow-auto absolute z-50 md:right-0  w-[14rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  w-[20rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (
@@ -997,7 +997,7 @@ const Hotel = () => {
                                   >
                                     {option.value}
                                   </span>
-                                  <span>
+                                  <span className="w-auto overflow-x-auto">
                                     {isbooked.includes(true) &&
                                       falseIndexes.map((item) => {
                                         return (
