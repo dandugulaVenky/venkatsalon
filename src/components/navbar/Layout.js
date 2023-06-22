@@ -125,6 +125,11 @@ const Layout = () => {
             <div className="flex items-center justify-between ">
               {user ? (
                 <div className="flex items-center justify-center md:space-x-8 space-x-3">
+                  {(pathname.includes("/cart") || pathname.includes("/shipping") || pathname.includes("/place-order")) &&
+                    <Link to="/iron">
+                    <h1 className=" font-semibold md:text-lg text-xs">Iron Home</h1>
+                    </Link>
+                  }
                   <Link to="/about-us">
                     <h1 className=" font-semibold md:text-lg text-xs">About</h1>
                   </Link>
