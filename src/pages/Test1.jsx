@@ -62,11 +62,15 @@ const Test1 = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [buttonLoad, setButtonLoad] = useState(false);
+  const [durationBySeat, setDurationBySeat] = useState([]);
+  const [duration, setDuration] = useState(0);
+  const [show, setShow] = useState(false);
+  const [durations, setDurations] = useState([]);
 
   const [previewServices, setPreviewServices] = useState();
 
   const [seats, setSeats] = useState();
-
+  const [parlourServices, setParlourServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
   const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
@@ -84,21 +88,6 @@ const Test1 = (props) => {
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
 
-  //generating random string for bookingID
-  const generateRandomString = useCallback((length) => {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }, []);
-
-  const id = generateRandomString(10);
-
-  const [parlourServices, setParlourServices] = useState();
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
@@ -121,16 +110,197 @@ const Test1 = (props) => {
         []
       );
       setParlourServices(parlourServices);
-      setCategories(data[0].parlourServices);
+      setCategories(data[0]?.parlourServices);
       setLoading(true);
     };
     !loading && fetchData();
   }, [loading, shopId]);
 
-  const [durationBySeat, setDurationBySeat] = useState([]);
-  const [duration, setDuration] = useState(0);
+  useEffect(() => {
+    const findDurationsToBlock = () => {
+      const filteredUnavailableDates = () => {
+        const compareDate = moment(value).format("MMM Do YY");
+        const unavailableDates = [];
+
+        for (let i = 0; i < data[0]?.roomNumbers.length; i++) {
+          const array = data[0]?.roomNumbers[i];
+
+          // console.log(array, 'mak');
+
+          const roomUnavailableDates = array?.unavailableDates?.filter(
+            (item) => {
+              return compareDate === item.date;
+            }
+          );
+
+          if (roomUnavailableDates.length > 0) {
+            unavailableDates.push({
+              room: array.number,
+              unavailableDates: roomUnavailableDates,
+            });
+          }
+        }
+
+        return unavailableDates;
+      };
+
+      const ioo = filteredUnavailableDates();
+
+      // console.log(ioo);
+
+      const arrays = ioo;
+
+      const minFound = []; // declare an array to store objects
+
+      //here we are storing all the varaibles with the true or false vaiables based on wether the block values found from the unavailableDates
+
+      arrays?.forEach((array, i) => {
+        const matchedIndexes = [];
+        array?.unavailableDates?.forEach((item, j) => {
+          const conditions = [
+            options[selectedValue + 1],
+            options[selectedValue + 2],
+            options[selectedValue + 3],
+            options[selectedValue + 4],
+            options[selectedValue + 5],
+            options[selectedValue + 6],
+            options[selectedValue + 7],
+            options[selectedValue + 8],
+            options[selectedValue + 9],
+            options[selectedValue + 10],
+            options[selectedValue + 11],
+            options[selectedValue + 12],
+            options[selectedValue + 13],
+            options[selectedValue + 14],
+            options[selectedValue + 15],
+            options[selectedValue + 16],
+            options[selectedValue + 17],
+            options[selectedValue + 18],
+            options[selectedValue + 19],
+            options[selectedValue + 20],
+            options[selectedValue + 21],
+            options[selectedValue + 22],
+            options[selectedValue + 23],
+            options[selectedValue + 24],
+            options[selectedValue + 25],
+            options[selectedValue + 26],
+            options[selectedValue + 27],
+            options[selectedValue + 28],
+            options[selectedValue + 29],
+            options[selectedValue + 30],
+          ];
+
+          conditions?.some((condition, index) => {
+            if (condition?.value === item.time) {
+              matchedIndexes.push(index + 1);
+              return true; // break out of loop
+            }
+          });
+        });
+
+        // console.log({ matchedIndexes, i }, "matchedIndexes");
+
+        //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
+        //  finding smallest number because if 10min found from options[selectedValue + 1]
+
+        const smallestNumber = Math.min(...matchedIndexes);
+
+        // console.log(smallestNumber, "smallestNumber");
+
+        // dynamically declare and assign boolean variables
+        minFound[i] = {};
+        minFound[i][`min10found${i + 1}`] = smallestNumber === 1;
+        minFound[i][`min20found${i + 1}`] = smallestNumber === 2;
+        minFound[i][`min30found${i + 1}`] = smallestNumber === 3;
+        minFound[i][`min40found${i + 1}`] = smallestNumber === 4;
+        minFound[i][`min50found${i + 1}`] = smallestNumber === 5;
+        minFound[i][`min60found${i + 1}`] = smallestNumber === 6;
+        minFound[i][`min70found${i + 1}`] = smallestNumber === 7;
+        minFound[i][`min80found${i + 1}`] = smallestNumber === 8;
+        minFound[i][`min90found${i + 1}`] = smallestNumber === 9;
+        minFound[i][`min100found${i + 1}`] = smallestNumber === 10;
+        minFound[i][`min110found${i + 1}`] = smallestNumber === 11;
+        minFound[i][`min120found${i + 1}`] = smallestNumber === 12;
+        minFound[i][`min130found${i + 1}`] = smallestNumber === 13;
+        minFound[i][`min140found${i + 1}`] = smallestNumber === 14;
+        minFound[i][`min150found${i + 1}`] = smallestNumber === 15;
+        minFound[i][`min160found${i + 1}`] = smallestNumber === 16;
+        minFound[i][`min170found${i + 1}`] = smallestNumber === 17;
+        minFound[i][`min180found${i + 1}`] = smallestNumber === 18;
+        minFound[i][`min190found${i + 1}`] = smallestNumber === 19;
+        minFound[i][`min200found${i + 1}`] = smallestNumber === 20;
+        minFound[i][`min210found${i + 1}`] = smallestNumber === 21;
+        minFound[i][`min220found${i + 1}`] = smallestNumber === 22;
+        minFound[i][`min230found${i + 1}`] = smallestNumber === 23;
+        minFound[i][`min240found${i + 1}`] = smallestNumber === 24;
+        minFound[i][`min250found${i + 1}`] = smallestNumber === 25;
+        minFound[i][`min260found${i + 1}`] = smallestNumber === 26;
+        minFound[i][`min270found${i + 1}`] = smallestNumber === 27;
+        minFound[i][`min280found${i + 1}`] = smallestNumber === 28;
+        minFound[i][`min290found${i + 1}`] = smallestNumber === 29;
+        minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
+      });
+
+      // console.log(minFound, "minFound");
+
+      const allKeys = [];
+
+      for (let i = 0; i < minFound?.length; i++) {
+        const keys = Object.keys(minFound[i]);
+        allKeys.push(...keys);
+      }
+      // console.log(allKeys, "allKeys");
+
+      const getFilteredKeys = () => {
+        return minFound
+          .map((obj) => Object.keys(obj).filter((key) => obj[key]))
+          .flat();
+      };
+
+      const filteredKeys = getFilteredKeys();
+      // console.log(filteredKeys, "filteredKeys");
+
+      const getDurations = () => {
+        return filteredKeys
+          .filter((key) => allKeys?.includes(key))
+          .map((key) => parseInt(key.match(/\d+/)[0]));
+      };
+
+      const durations = getDurations();
+
+      setDurations(durations);
+      setShow(true);
+
+      // console.log(durations, "durations");
+    };
+    data && data[0]?.roomNumbers && findDurationsToBlock();
+  }, [data, options, selectedValue, value]);
+
+  //check if the room is available to book or not
+
+  const isAvailable = useCallback(
+    (i) => {
+      const array = data[0]?.roomNumbers[i];
+
+      const compareDate = moment(value).format("MMM Do YY");
+
+      const found = array?.unavailableDates.map((item) => {
+        return compareDate === item.date && item.values.includes(selectedValue);
+      });
+
+      return found?.includes(true);
+    },
+    [data, selectedValue, value]
+  );
 
   //update the options with ids corrospondingly with inputs
+
+  const handleChange = (e) => {
+    const result = categories.filter((category, i) =>
+      category.category === e.target.value ? category.services : null
+    );
+    setCategoriesOptions(result[0].services);
+  };
 
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
@@ -205,15 +375,6 @@ const Test1 = (props) => {
     setDuration(newDuration);
     setSeats(updatedSeats);
   };
-
-  const handleChange = (e) => {
-    const result = categories.filter((category, i) =>
-      category.category === e.target.value ? category.services : null
-    );
-    setCategoriesOptions(result[0].services);
-  };
-
-  // console.log(durationBySeat); // log durationBySeat object to see duration for each seat
 
   // //update the values option in dates accoridng to the duration selected by the user from the respective seats from durationBySeat array
 
@@ -293,6 +454,20 @@ const Test1 = (props) => {
 
   const updatedDurationBySeat = generateUpdatedDurationBySeat();
 
+  //generating Id for common id for whole booking process
+  const generateRandomString = useCallback((length) => {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }, []);
+
+  const id = generateRandomString(10);
+
   // updates dates with all the options to send to room unavilableDates with all the options
 
   const generateDates = useCallback(() => {
@@ -320,165 +495,6 @@ const Test1 = (props) => {
     return dates;
   }, [updatedDurationBySeat, time, dater, id, seats, durationBySeat]);
   const dates = generateDates();
-
-  //check if the room is available to book or not
-
-  const isAvailable = useCallback(
-    (i) => {
-      const array = data[0]?.roomNumbers[i];
-
-      const compareDate = moment(value).format("MMM Do YY");
-
-      const found = array?.unavailableDates.map((item) => {
-        return compareDate === item.date && item.values.includes(selectedValue);
-      });
-
-      return found?.includes(true);
-    },
-    [data, selectedValue, value]
-  );
-
-  //here we are only getting the unvaialble dates of the selected date
-
-  const filteredUnavailableDates = useCallback(() => {
-    const compareDate = moment(value).format("MMM Do YY");
-    const unavailableDates = [];
-
-    for (let i = 0; i < data[0]?.roomNumbers.length; i++) {
-      const array = data[0]?.roomNumbers[i];
-
-      // console.log(array, 'mak');
-
-      const roomUnavailableDates = array?.unavailableDates.filter((item) => {
-        return compareDate === item.date;
-      });
-
-      if (roomUnavailableDates.length > 0) {
-        unavailableDates.push({
-          room: array.number,
-          unavailableDates: roomUnavailableDates,
-        });
-      }
-    }
-
-    return unavailableDates;
-  }, [data, value]);
-
-  const ioo = filteredUnavailableDates();
-
-  const arrays = ioo;
-
-  const minFound = useMemo(() => [], []); // declare an array to store objects
-
-  //here we are storing all the varaibles with the true or false vaiables based on wether the block values found from the unavailableDates
-
-  arrays?.forEach((array, i) => {
-    const matchedIndexes = [];
-    array?.unavailableDates?.forEach((item, j) => {
-      const conditions = [
-        options[selectedValue + 1],
-        options[selectedValue + 2],
-        options[selectedValue + 3],
-        options[selectedValue + 4],
-        options[selectedValue + 5],
-        options[selectedValue + 6],
-        options[selectedValue + 7],
-        options[selectedValue + 8],
-        options[selectedValue + 9],
-        options[selectedValue + 10],
-        options[selectedValue + 11],
-        options[selectedValue + 12],
-        options[selectedValue + 13],
-        options[selectedValue + 14],
-        options[selectedValue + 15],
-        options[selectedValue + 16],
-        options[selectedValue + 17],
-        options[selectedValue + 18],
-        options[selectedValue + 19],
-        options[selectedValue + 20],
-        options[selectedValue + 21],
-        options[selectedValue + 22],
-        options[selectedValue + 23],
-        options[selectedValue + 24],
-        options[selectedValue + 25],
-        options[selectedValue + 26],
-        options[selectedValue + 27],
-        options[selectedValue + 28],
-        options[selectedValue + 29],
-        options[selectedValue + 30],
-      ];
-      conditions?.some((condition, index) => {
-        if (condition?.value === item.time) {
-          matchedIndexes.push(index + 1);
-          return true; // break out of loop
-        }
-      });
-    });
-
-    // console.log(matchedIndexes, i);
-
-    //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
-    //  finding smallest number because if 10min found from options[selectedValue + 1]
-
-    const smallestNumber = Math.min(...matchedIndexes);
-
-    // dynamically declare and assign boolean variables
-    minFound[i] = {};
-    minFound[i][`min10found${i + 1}`] = smallestNumber === 1;
-    minFound[i][`min20found${i + 1}`] = smallestNumber === 2;
-    minFound[i][`min30found${i + 1}`] = smallestNumber === 3;
-    minFound[i][`min40found${i + 1}`] = smallestNumber === 4;
-    minFound[i][`min50found${i + 1}`] = smallestNumber === 5;
-    minFound[i][`min60found${i + 1}`] = smallestNumber === 6;
-    minFound[i][`min70found${i + 1}`] = smallestNumber === 7;
-    minFound[i][`min80found${i + 1}`] = smallestNumber === 8;
-    minFound[i][`min90found${i + 1}`] = smallestNumber === 9;
-    minFound[i][`min100found${i + 1}`] = smallestNumber === 10;
-    minFound[i][`min110found${i + 1}`] = smallestNumber === 11;
-    minFound[i][`min120found${i + 1}`] = smallestNumber === 12;
-    minFound[i][`min130found${i + 1}`] = smallestNumber === 13;
-    minFound[i][`min140found${i + 1}`] = smallestNumber === 14;
-    minFound[i][`min150found${i + 1}`] = smallestNumber === 15;
-    minFound[i][`min160found${i + 1}`] = smallestNumber === 16;
-    minFound[i][`min170found${i + 1}`] = smallestNumber === 17;
-    minFound[i][`min180found${i + 1}`] = smallestNumber === 18;
-    minFound[i][`min190found${i + 1}`] = smallestNumber === 19;
-    minFound[i][`min200found${i + 1}`] = smallestNumber === 20;
-    minFound[i][`min210found${i + 1}`] = smallestNumber === 21;
-    minFound[i][`min220found${i + 1}`] = smallestNumber === 22;
-    minFound[i][`min230found${i + 1}`] = smallestNumber === 23;
-    minFound[i][`min240found${i + 1}`] = smallestNumber === 24;
-    minFound[i][`min250found${i + 1}`] = smallestNumber === 25;
-    minFound[i][`min260found${i + 1}`] = smallestNumber === 26;
-    minFound[i][`min270found${i + 1}`] = smallestNumber === 27;
-    minFound[i][`min280found${i + 1}`] = smallestNumber === 28;
-    minFound[i][`min290found${i + 1}`] = smallestNumber === 29;
-    minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
-  });
-
-  const allKeys = useMemo(() => [], []);
-
-  for (let i = 0; i < minFound?.length; i++) {
-    const keys = Object.keys(minFound[i]);
-    allKeys.push(...keys);
-  }
-  // console.log(allKeys);
-  const getFilteredKeys = useCallback(() => {
-    return minFound
-      .map((obj) => Object.keys(obj).filter((key) => obj[key]))
-      .flat();
-  }, [minFound]);
-
-  const filteredKeys = getFilteredKeys();
-  // console.log(filteredKeys);
-
-  const getDurations = useCallback(() => {
-    return filteredKeys
-      .filter((key) => allKeys?.includes(key))
-      .map((key) => parseInt(key.match(/\d+/)[0]));
-  }, [allKeys, filteredKeys]);
-
-  const durations = getDurations();
 
   const getTotalTime = useCallback((total) => {
     const hours = Math.floor(total / 60);
@@ -586,294 +602,8 @@ const Test1 = (props) => {
     }
   };
 
-  // return (
-  //   <>
-  //     {!preview ? (
-  //       <div className="reserve1 flex flex-col items-start  justify-center space-y-5 ">
-  //         <div className="md:flex md:mx-auto ">
-  //           <div className="px-2 ">
-  //             <p className="py-3 text-xl text-white font-semibold">
-  //               Categories
-  //             </p>
-
-  //             <select className="w-52" onChange={handleChange}>
-  //               <option selected>Select a category</option>
-  //               {parlourServices?.map((service, i) => {
-  //                 return <option key={i}>{service}</option>;
-  //               })}
-  //             </select>
-  //           </div>{" "}
-  //         </div>
-
-  //         <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
-  //           <FontAwesomeIcon
-  //             icon={faCircleXmark}
-  //             className="absolute top-0 right-0 text-white "
-  //             onClick={() => setOpen(false)}
-  //           />
-  //           <p className="py-3 text-xl font-semibold text-white">
-  //             Select Services
-  //           </p>
-  //           <strong className="pb-2 font-semibold text-sm text-red-500">
-  //             Note* You can select multiple seats at a time
-  //           </strong>
-
-  //           <p className="text-center mb-1 text-white py-2">
-  //             {" "}
-  //             Amount : &#8377; {totalAmount}
-  //           </p>
-
-  //           {seats?.map((seat, i) => {
-  //             return (
-  //               <div class="relative overflow-x-auto rounded-md py-3">
-  //                 <span className="py-2">
-  //                   <h3 className="text-md font-bold px-5 pt-2 text-white">
-  //                     Seat {i + 1}
-  //                   </h3>
-  //                   <h3 className="font-extrabold px-5 text-white">
-  //                     {durationBySeat.length > 0 &&
-  //                     seat.id === durationBySeat[i]?.id
-  //                       ? getTotalTime(durationBySeat[i]?.value)
-  //                       : "0 min"}
-  //                   </h3>
-  //                 </span>
-  //                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-  //                   <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-  //                     <tr>
-  //                       <th scope="col" class="px-6 py-3">
-  //                         Product name
-  //                       </th>
-  //                       <th scope="col" class="px-6 py-3">
-  //                         Price
-  //                       </th>
-  //                       <th scope="col" class="px-6 py-3">
-  //                         Category
-  //                       </th>
-  //                       <th scope="col" class="px-6 py-3">
-  //                         Duration
-  //                       </th>
-  //                     </tr>
-  //                   </thead>
-  //                   <tbody>
-  //                     {categoriesOptions?.map((option, j) => {
-  //                       return (
-  //                         <tr
-  //                           key={j}
-  //                           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-  //                         >
-  //                           <th
-  //                             scope="row"
-  //                             class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
-  //                           >
-  //                             <input
-  //                               type="checkbox"
-  //                               name={option?.service}
-  //                               checked={seat.options.includes(option?.service)}
-  //                               className="h-6 w-6"
-  //                               onChange={(event) =>
-  //                                 handleOptionChange(event, seat.id, option)
-  //                               }
-  //                               disabled={isAvailable(i)}
-  //                             />
-  //                             <label className="text-white">
-  //                               {option?.service}
-  //                             </label>
-  //                           </th>
-  //                           <td class="px-6 py-4">{option.price}</td>
-  //                           <td class="px-6 py-4">{option.category}</td>
-  //                           <td class="px-6 py-4">{option.duration}</td>
-  //                         </tr>
-  //                       );
-  //                     })}
-  //                   </tbody>
-  //                 </table>
-  //               </div>
-  //             );
-  //           })}
-  //           <button
-  //             onClick={(e) => {
-  //               previewHandler(totalAmount, e);
-  //             }}
-  //             className="primary-button flex items-center justify-evenly"
-  //           >
-  //             Preview&nbsp;
-  //             {buttonLoad && <span className="buttonloader"></span>}
-  //           </button>
-  //         </div>
-  //       </div>
-  //     ) : (
-  //       <div className="reserve1  flex md:flex-row flex-col items-center justify-center space-x-5 ">
-  //         <div className=" border-2 border-white">
-  //           {showPreviewServices.map((seat, i) => {
-  //             return (
-  //               <>
-  //                 <div class="relative overflow-x-auto my-4">
-  //                   <span className="py-2">
-  //                     <h3 className="text-md font-bold px-5 pt-2 text-white">
-  //                       Seat {i + 1}
-  //                     </h3>
-  //                     {/* <h3 className="font-extrabold px-5 text-white">
-  //                     {durationBySeat.length > 0 &&
-  //                     seat.id === durationBySeat[i]?.id
-  //                       ? getTotalTime(durationBySeat[i]?.value)
-  //                       : "0 min"}
-  //                   </h3> */}
-  //                   </span>
-  //                   <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-  //                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-  //                       <tr>
-  //                         <th scope="col" class="px-6 py-3">
-  //                           Service name
-  //                         </th>
-  //                         <th scope="col" class="px-6 py-3">
-  //                           Price
-  //                         </th>
-  //                         <th scope="col" class="px-6 py-3">
-  //                           Category
-  //                         </th>
-  //                         <th scope="col" class="px-6 py-3">
-  //                           Duration
-  //                         </th>
-  //                       </tr>
-  //                     </thead>
-  //                     <tbody>
-  //                       {seat.show.map((show, i) => {
-  //                         return (
-  //                           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  //                             <th
-  //                               scope="row"
-  //                               class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-  //                             >
-  //                               {show.service}
-  //                             </th>
-  //                             <td class="px-6 py-4">{show.price}</td>
-  //                             <td class="px-6 py-4">{show.category}</td>
-  //                             <td class="px-6 py-4">{show.duration}</td>
-  //                           </tr>
-  //                         );
-  //                       })}
-  //                     </tbody>
-  //                   </table>
-  //                 </div>
-  //               </>
-  //             );
-  //           })}
-  //           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-  //             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-  //               <tr>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Service name
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Price
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Category
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Duration
-  //                 </th>
-  //               </tr>
-  //             </thead>
-  //             <tbody>
-  //               {[0, 1, 2].map((show, i) => {
-  //                 return (
-  //                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  //                     <th
-  //                       scope="row"
-  //                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-  //                     >
-  //                       {show.service}
-  //                     </th>
-  //                     <td class="px-6 py-4">iuuu</td>
-  //                     <td class="px-6 py-4">uiojhgg</td>
-  //                     <td class="px-6 py-4">kooiiii</td>
-  //                   </tr>
-  //                 );
-  //               })}
-  //             </tbody>
-  //           </table>
-  //           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-  //             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-  //               <tr>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Service name
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Price
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Category
-  //                 </th>
-  //                 <th scope="col" class="px-6 py-3">
-  //                   Duration
-  //                 </th>
-  //               </tr>
-  //             </thead>
-  //             <tbody>
-  //               {[0, 1, 2].map((show, i) => {
-  //                 return (
-  //                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-  //                     <th
-  //                       scope="row"
-  //                       class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-  //                     >
-  //                       {show.service}
-  //                     </th>
-  //                     <td class="px-6 py-4">iuuu</td>
-  //                     <td class="px-6 py-4">uiojhgg</td>
-  //                     <td class="px-6 py-4">kooiiii</td>
-  //                   </tr>
-  //                 );
-  //               })}
-  //             </tbody>
-  //           </table>
-  //         </div>
-  //         <div className="card  p-5">
-  //           <h2 className="mb-2 text-lg">Order Summary</h2>
-  //           <ul>
-  //             <li>
-  //               <div className="mb-2 flex justify-between">
-  //                 <div>Items</div>
-  //                 <div>Rs.20</div>
-  //               </div>
-  //             </li>
-  //             <li>
-  //               <div className="mb-2 flex justify-between">
-  //                 <div>Tax</div>
-  //                 <div>Rs.20</div>
-  //               </div>
-  //             </li>
-  //             <li>
-  //               <div className="mb-2 flex justify-between">
-  //                 <div>Shipping</div>
-  //                 <div>Rs 20</div>
-  //               </div>
-  //             </li>
-  //             <li>
-  //               <div className="mb-2 flex justify-between">
-  //                 <div>Total</div>
-  //                 <div>Rs.30</div>
-  //               </div>
-  //             </li>
-  //             <li>
-  //               <button
-  //                 disabled={loading}
-  //                 // onClick={placeOrderHandler}
-  //                 className="primary-button w-full"
-  //               >
-  //                 Place Order
-  //               </button>
-  //             </li>
-  //           </ul>
-  //         </div>
-  //       </div>
-  //     )}
-  //   </>
-  // );
-
   return (
-    <div className="reserve1   ">
+    <div className="reserve1">
       <div className="flex flex-col items-center  justify-center space-y-5 border-2 border-white rounded-md p-3">
         <div className="md:flex md:mx-auto bo">
           <div className="px-2 ">
@@ -888,7 +618,7 @@ const Test1 = (props) => {
           </div>{" "}
         </div>
 
-        {categoriesOptions?.length > 0 ? (
+        {show && categoriesOptions?.length > 0 ? (
           <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
             <FontAwesomeIcon
               icon={faCircleXmark}
@@ -939,41 +669,44 @@ const Test1 = (props) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {categoriesOptions?.map((option, j) => {
-                        return (
-                          <tr
-                            key={j}
-                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                          >
-                            <th
-                              scope="row"
-                              class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
+                      {show &&
+                        categoriesOptions?.map((option, j) => {
+                          return (
+                            <tr
+                              key={j}
+                              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                             >
-                              <input
-                                type="checkbox"
-                                name={option?.service}
-                                checked={seat.options.includes(option?.service)}
-                                className="h-6 w-6"
-                                onChange={(event) =>
-                                  handleOptionChange(
-                                    event,
-                                    seat.id,
-                                    option,
-                                    seat.index
-                                  )
-                                }
-                                disabled={isAvailable(i)}
-                              />
-                              <label className="text-white">
-                                {option?.service}
-                              </label>
-                            </th>
-                            <td class="px-6 py-4">{option.price}</td>
-                            <td class="px-6 py-4">{option.category}</td>
-                            <td class="px-6 py-4">{option.duration}</td>
-                          </tr>
-                        );
-                      })}
+                              <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
+                              >
+                                <input
+                                  type="checkbox"
+                                  name={option?.service}
+                                  checked={seat.options.includes(
+                                    option?.service
+                                  )}
+                                  className="h-6 w-6"
+                                  onChange={(event) =>
+                                    handleOptionChange(
+                                      event,
+                                      seat.id,
+                                      option,
+                                      seat.index
+                                    )
+                                  }
+                                  disabled={isAvailable(i)}
+                                />
+                                <label className="text-white">
+                                  {option?.service}
+                                </label>
+                              </th>
+                              <td class="px-6 py-4">{option.price}</td>
+                              <td class="px-6 py-4">{option.category}</td>
+                              <td class="px-6 py-4">{option.duration}</td>
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </table>
                 </div>
