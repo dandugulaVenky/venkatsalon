@@ -86,10 +86,18 @@ const Reserve = (props) => {
   const [durationBySeat, setDurationBySeat] = useState([]);
   const [duration, setDuration] = useState(0);
 
+  const [totalTime, setTotalTime] = useState(0);
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
-      setPreviewServices(data[0].services);
+      setPreviewServices(data[0]?.services);
+
+      const totalTimeOfServices = data[0]?.services.reduce((acc, service) => {
+        return (acc += service.duration);
+      }, 0);
+
+      setTotalTime(totalTimeOfServices);
 
       const res =
         data &&
@@ -140,45 +148,51 @@ const Reserve = (props) => {
       const arrays = ioo;
 
       const minFound = []; // declare an array to store objects
+      const minMaxFound = []; // declare an array to store objects
 
       //here we are storing all the varaibles with the true or false vaiables based on wether the block values found from the unavailableDates
 
       arrays?.forEach((array, i) => {
         const matchedIndexes = [];
         array?.unavailableDates?.forEach((item, j) => {
-          const conditions = [
-            options[selectedValue + 1],
-            options[selectedValue + 2],
-            options[selectedValue + 3],
-            options[selectedValue + 4],
-            options[selectedValue + 5],
-            options[selectedValue + 6],
-            options[selectedValue + 7],
-            options[selectedValue + 8],
-            options[selectedValue + 9],
-            options[selectedValue + 10],
-            options[selectedValue + 11],
-            options[selectedValue + 12],
-            options[selectedValue + 13],
-            options[selectedValue + 14],
-            options[selectedValue + 15],
-            options[selectedValue + 16],
-            options[selectedValue + 17],
-            options[selectedValue + 18],
-            options[selectedValue + 19],
-            options[selectedValue + 20],
-            options[selectedValue + 21],
-            options[selectedValue + 22],
-            options[selectedValue + 23],
-            options[selectedValue + 24],
-            options[selectedValue + 25],
-            options[selectedValue + 26],
-            options[selectedValue + 27],
-            options[selectedValue + 28],
-            options[selectedValue + 29],
-            options[selectedValue + 30],
-          ];
+          let conditions = [];
+          for (let k = 1; k < totalTime / 10; k++) {
+            conditions.push(options[selectedValue + k]);
+          }
 
+          // const conditions = [
+          //   options[selectedValue + 1],
+          //   options[selectedValue + 2],
+          //   options[selectedValue + 3],
+          //   options[selectedValue + 4],
+          //   options[selectedValue + 5],
+          //   options[selectedValue + 6],
+          //   options[selectedValue + 7],
+          //   options[selectedValue + 8],
+          //   options[selectedValue + 9],
+          //   options[selectedValue + 10],
+          //   options[selectedValue + 11],
+          //   options[selectedValue + 12],
+          //   options[selectedValue + 13],
+          //   options[selectedValue + 14],
+          //   options[selectedValue + 15],
+          //   options[selectedValue + 16],
+          //   options[selectedValue + 17],
+          //   options[selectedValue + 18],
+          //   options[selectedValue + 19],
+          //   options[selectedValue + 20],
+          //   options[selectedValue + 21],
+          //   options[selectedValue + 22],
+          //   options[selectedValue + 23],
+          //   options[selectedValue + 24],
+          //   options[selectedValue + 25],
+          //   options[selectedValue + 26],
+          //   options[selectedValue + 27],
+          //   options[selectedValue + 28],
+          //   options[selectedValue + 29],
+          //   options[selectedValue + 30],
+          // ];
+          // console.log(conditions);
           conditions?.some((condition, index) => {
             if (condition?.value === item.time) {
               matchedIndexes.push(index + 1);
@@ -197,40 +211,48 @@ const Reserve = (props) => {
         // console.log(smallestNumber, "smallestNumber");
 
         // dynamically declare and assign boolean variables
+
         minFound[i] = {};
-        minFound[i][`min10found${i + 1}`] = smallestNumber === 1;
-        minFound[i][`min20found${i + 1}`] = smallestNumber === 2;
-        minFound[i][`min30found${i + 1}`] = smallestNumber === 3;
-        minFound[i][`min40found${i + 1}`] = smallestNumber === 4;
-        minFound[i][`min50found${i + 1}`] = smallestNumber === 5;
-        minFound[i][`min60found${i + 1}`] = smallestNumber === 6;
-        minFound[i][`min70found${i + 1}`] = smallestNumber === 7;
-        minFound[i][`min80found${i + 1}`] = smallestNumber === 8;
-        minFound[i][`min90found${i + 1}`] = smallestNumber === 9;
-        minFound[i][`min100found${i + 1}`] = smallestNumber === 10;
-        minFound[i][`min110found${i + 1}`] = smallestNumber === 11;
-        minFound[i][`min120found${i + 1}`] = smallestNumber === 12;
-        minFound[i][`min130found${i + 1}`] = smallestNumber === 13;
-        minFound[i][`min140found${i + 1}`] = smallestNumber === 14;
-        minFound[i][`min150found${i + 1}`] = smallestNumber === 15;
-        minFound[i][`min160found${i + 1}`] = smallestNumber === 16;
-        minFound[i][`min170found${i + 1}`] = smallestNumber === 17;
-        minFound[i][`min180found${i + 1}`] = smallestNumber === 18;
-        minFound[i][`min190found${i + 1}`] = smallestNumber === 19;
-        minFound[i][`min200found${i + 1}`] = smallestNumber === 20;
-        minFound[i][`min210found${i + 1}`] = smallestNumber === 21;
-        minFound[i][`min220found${i + 1}`] = smallestNumber === 22;
-        minFound[i][`min230found${i + 1}`] = smallestNumber === 23;
-        minFound[i][`min240found${i + 1}`] = smallestNumber === 24;
-        minFound[i][`min250found${i + 1}`] = smallestNumber === 25;
-        minFound[i][`min260found${i + 1}`] = smallestNumber === 26;
-        minFound[i][`min270found${i + 1}`] = smallestNumber === 27;
-        minFound[i][`min280found${i + 1}`] = smallestNumber === 28;
-        minFound[i][`min290found${i + 1}`] = smallestNumber === 29;
-        minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
+        // minMaxFound[i] = {};
+
+        for (let l = 1; l < totalTime / 10; l++) {
+          minFound[i][`min${l * 10}found${i + 1}`] = smallestNumber === l;
+        }
+
+        //   minFound[i][`min10found${i + 1}`] = smallestNumber === 1;
+        //   minFound[i][`min20found${i + 1}`] = smallestNumber === 2;
+        //   minFound[i][`min30found${i + 1}`] = smallestNumber === 3;
+        //   minFound[i][`min40found${i + 1}`] = smallestNumber === 4;
+        //   minFound[i][`min50found${i + 1}`] = smallestNumber === 5;
+        //   minFound[i][`min60found${i + 1}`] = smallestNumber === 6;
+        //   minFound[i][`min70found${i + 1}`] = smallestNumber === 7;
+        //   minFound[i][`min80found${i + 1}`] = smallestNumber === 8;
+        //   minFound[i][`min90found${i + 1}`] = smallestNumber === 9;
+        //   minFound[i][`min100found${i + 1}`] = smallestNumber === 10;
+        //   minFound[i][`min110found${i + 1}`] = smallestNumber === 11;
+        //   minFound[i][`min120found${i + 1}`] = smallestNumber === 12;
+        //   minFound[i][`min130found${i + 1}`] = smallestNumber === 13;
+        //   minFound[i][`min140found${i + 1}`] = smallestNumber === 14;
+        //   minFound[i][`min150found${i + 1}`] = smallestNumber === 15;
+        //   minFound[i][`min160found${i + 1}`] = smallestNumber === 16;
+        //   minFound[i][`min170found${i + 1}`] = smallestNumber === 17;
+        //   minFound[i][`min180found${i + 1}`] = smallestNumber === 18;
+        //   minFound[i][`min190found${i + 1}`] = smallestNumber === 19;
+        //   minFound[i][`min200found${i + 1}`] = smallestNumber === 20;
+        //   minFound[i][`min210found${i + 1}`] = smallestNumber === 21;
+        //   minFound[i][`min220found${i + 1}`] = smallestNumber === 22;
+        //   minFound[i][`min230found${i + 1}`] = smallestNumber === 23;
+        //   minFound[i][`min240found${i + 1}`] = smallestNumber === 24;
+        //   minFound[i][`min250found${i + 1}`] = smallestNumber === 25;
+        //   minFound[i][`min260found${i + 1}`] = smallestNumber === 26;
+        //   minFound[i][`min270found${i + 1}`] = smallestNumber === 27;
+        //   minFound[i][`min280found${i + 1}`] = smallestNumber === 28;
+        //   minFound[i][`min290found${i + 1}`] = smallestNumber === 29;
+        //   minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
       });
 
-      // console.log(minFound, "minFound");
+      console.log(minFound, "minFound");
+      // console.log(minMaxFound, "minMaxFound");
 
       const allKeys = [];
 
@@ -262,8 +284,8 @@ const Reserve = (props) => {
 
       // console.log(durations, "durations");
     };
-    data && data[0]?.roomNumbers && findDurationsToBlock();
-  }, [data, options, selectedValue, value]);
+    data && data[0]?.roomNumbers && totalTime && findDurationsToBlock();
+  }, [data, options, selectedValue, totalTime, value]);
 
   //starting here checking availability of options, if not disable the select boxes accordingly
 
