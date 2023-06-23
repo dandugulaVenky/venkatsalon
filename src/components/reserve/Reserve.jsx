@@ -420,7 +420,7 @@ const Reserve = (props) => {
     const updatedDurationBySeat = durationBySeat.map((item) => {
       const minValue = minLookup[item.value];
 
-      console.log(minValue);
+      // console.log(minValue);
       return minValue ? { ...item, value: minValue } : item;
     });
 
