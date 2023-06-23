@@ -671,6 +671,7 @@ const Test1 = (props) => {
                     <tbody>
                       {show &&
                         categoriesOptions?.map((option, j) => {
+                          const selectedOptions = new Set(seat.options);
                           return (
                             <tr
                               key={j}
@@ -682,10 +683,8 @@ const Test1 = (props) => {
                               >
                                 <input
                                   type="checkbox"
-                                  name={option?.service}
-                                  checked={seat.options.includes(
-                                    option?.service
-                                  )}
+                                  name={option.service}
+                                  checked={selectedOptions.has(option.service)}
                                   className="h-6 w-6"
                                   onChange={(event) =>
                                     handleOptionChange(
@@ -698,7 +697,7 @@ const Test1 = (props) => {
                                   disabled={isAvailable(i)}
                                 />
                                 <label className="text-white">
-                                  {option?.service}
+                                  {option.service}
                                 </label>
                               </th>
                               <td class="px-6 py-4">{option.price}</td>

@@ -657,10 +657,10 @@ const Reserve = (props) => {
                           </th>
                         </tr>
                       </thead>
-
-                      {data[0]?.services?.map((service, j) => {
-                        return (
-                          <tbody>
+                      <tbody>
+                        {data[0]?.services?.map((service, j) => {
+                          const selectedOptions = new Set(seat.options);
+                          return (
                             <tr class="bg-white border-b dark:bg-gray-300 dark:border-gray-800">
                               <th
                                 scope="row"
@@ -668,11 +668,10 @@ const Reserve = (props) => {
                               >
                                 <input
                                   type="checkbox"
-                                  name={service?.service}
-                                  checked={seat.options.includes(
-                                    service?.service
-                                  )}
+                                  name={service.service}
+                                  checked={selectedOptions.has(service.service)}
                                   className="h-6 w-6"
+                                  id={service.service}
                                   onChange={(event) =>
                                     handleOptionChange(
                                       event,
@@ -684,24 +683,27 @@ const Reserve = (props) => {
                                   disabled={isAvailable(
                                     seat,
                                     i,
-                                    service?.service
+                                    service.service
                                   )}
                                 />
-                                <label className="text-gray-900">
-                                  {service?.service}
+                                <label
+                                  className="text-gray-900"
+                                  htmlFor={service.service}
+                                >
+                                  {service.service}
                                 </label>
                               </th>
                               <td class="px-6 py-4 text-gray-900">
-                                Rs.{service?.price}{" "}
+                                Rs.{service.price}{" "}
                               </td>
                               <td class="px-6 py-4 text-gray-900">
-                                {service?.duration}{" "}
+                                {service.duration}{" "}
                                 <FontAwesomeIcon icon={faClock} />
                               </td>
                             </tr>
-                          </tbody>
-                        );
-                      })}
+                          );
+                        })}
+                      </tbody>
                     </table>
                   </div>
                 </div>
