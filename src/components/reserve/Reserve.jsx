@@ -148,7 +148,6 @@ const Reserve = (props) => {
       const arrays = ioo;
 
       const minFound = []; // declare an array to store objects
-      const minMaxFound = []; // declare an array to store objects
 
       //here we are storing all the varaibles with the true or false vaiables based on wether the block values found from the unavailableDates
 
@@ -251,7 +250,6 @@ const Reserve = (props) => {
         //   minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
       });
 
-      console.log(minFound, "minFound");
       // console.log(minMaxFound, "minMaxFound");
 
       const allKeys = [];
@@ -421,6 +419,8 @@ const Reserve = (props) => {
     };
     const updatedDurationBySeat = durationBySeat.map((item) => {
       const minValue = minLookup[item.value];
+
+      console.log(minValue);
       return minValue ? { ...item, value: minValue } : item;
     });
 

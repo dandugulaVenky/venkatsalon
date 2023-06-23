@@ -116,6 +116,16 @@ const Hotel = () => {
   //   );
   // };
 
+  const fetchReviews = useCallback(async () => {
+    return await axios
+      .get(`${baseUrl}/api/hotels/getReviews/${id}`)
+      .then((res) => {
+        // console.log("reviewsfromdb", res.data);
+        setReviews(res.data);
+      })
+      .catch((err) => toast.error(err));
+  }, [id]);
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
@@ -136,24 +146,16 @@ const Hotel = () => {
       setDatra(res);
     };
     // filterOptions();
-    const fetchReviews = async () => {
-      return await axios
-        .get(`${baseUrl}/api/hotels/getReviews/${id}`)
-        .then((res) => {
-          // console.log("reviewsfromdb", res.data);
-          setReviews(res.data);
-        })
-        .catch((err) => toast.error(err));
-    };
-    fetchData();
+
     fetchReviews();
-  }, [id, value]);
+    fetchData();
+  }, [fetchReviews, id, value]);
 
   useEffect(() => {
     const scroll = () => {
       window.scrollTo(0, 0);
     };
-    localStorage.clear();
+
     scroll();
   }, []);
 
