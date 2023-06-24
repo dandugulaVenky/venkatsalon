@@ -187,7 +187,7 @@ const ParlourPreview = (props) => {
         Order Preview
       </h2>
 
-      <div className="grid md:grid-cols-4 md:gap-5   w-[90vw]">
+      <div className="grid md:grid-cols-4 md:gap-5   md:w-[90vw] w-[95.5vw]">
         <div className="overflow-x-auto md:col-span-3">
           {showPreviewServices?.map((seat, i) => {
             return (
