@@ -196,13 +196,15 @@ const ParlourPreview = (props) => {
                   <h2 className="mb-2 text-lg">
                     Selected Items - Seat {seat.index + 1}
                   </h2>
-                  <table className="min-w-full">
-                    <thead className="border-b">
+                  <table className="min-w-full ">
+                    <thead className="border-b bg-gray-300 ">
                       <tr className="border-b-2 border-gray-200">
-                        <th className="text-left">Service Name</th>
-                        <th className=" p-5 text-right">Price</th>
-                        <th className="  p-5 text-right">Category</th>
-                        <th className="p-5 text-right">Duration</th>
+                        <th className="text-left md:text-md text-sm md:p-5 p-4">
+                          Service Name
+                        </th>
+                        <th className=" md:p-5 p-4 text-right">Price</th>
+                        <th className="  md:p-5 p-4 text-right">Category</th>
+                        <th className="md:p-5 p-4 text-right">Duration</th>
                       </tr>
                     </thead>
                     <tbody>
