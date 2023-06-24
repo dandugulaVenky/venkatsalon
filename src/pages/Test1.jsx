@@ -12,10 +12,14 @@ import axios from "axios";
 import baseUrl from "../utils/client";
 import { toast } from "react-toastify";
 import useFetch from "../hooks/useFetch";
+import ParlourPreview from "./parlourPreview";
 
 const Test1 = (props) => {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
+  const [reserveState, setReserveState] = useState(null);
+  const [parlourPreview, setParlourPreview] = useState(false);
+
   const {
     setOpen,
     minValuesObj,
@@ -442,23 +446,39 @@ const Test1 = (props) => {
         });
 
         if (dates) {
-          navigate(`/shops/${shopId}/parlour-preview`, {
-            state: {
-              selectedSeats: seats,
-              totalAmount,
-              roomId: data[0]?._id,
-              shopOwner,
-              shopId,
-              shopName,
-              ownerEmail,
-              ownerNumber,
-              bookId: id,
-              user,
-              link: "https://easytym.com/history",
-              dates,
-              previewServices,
-            },
+          // navigate(`/shops/${shopId}/salon-preview`, {
+          // state: {
+          //   selectedSeats: seats,
+          //   totalAmount,
+          //   roomId: data[0]?._id,
+          //   shopOwner,
+          //   shopId,
+          //   shopName,
+          //   ownerEmail,
+          //   ownerNumber,
+          //   bookId: id,
+          //   user,
+          //   link: "https://easytym.com/history",
+          //   dates,
+          //   previewServices,
+          // },
+          // });
+          setReserveState({
+            selectedSeats: seats,
+            totalAmount,
+            roomId: data[0]?._id,
+            shopOwner,
+            shopId,
+            shopName,
+            ownerEmail,
+            ownerNumber,
+            bookId: id,
+            user,
+            link: "https://easytym.com/history",
+            dates,
+            previewServices,
           });
+          setParlourPreview(true);
         } else {
           toast("something wrong!");
           return;
@@ -467,12 +487,26 @@ const Test1 = (props) => {
     }
   };
 
-  return (
-    <div className="reserve1">
-      <div className="flex flex-col items-center  justify-center space-y-5 border-2 border-white rounded-md p-3">
+  return parlourPreview && reserveState !== null ? (
+    <div className="reserve-preview">
+      <div className="preview-container scrollable-container">
+        <ParlourPreview
+          state={reserveState}
+          setParlourPreview={setParlourPreview}
+        />
+      </div>
+    </div>
+  ) : (
+    <div className="parlour-reserve">
+      <div className="flex flex-col items-center  justify-center space-y-5 border-2 border-white rounded-md p-3 relative">
+        <FontAwesomeIcon
+          icon={faCircleXmark}
+          className="absolute top-0 right-0 text-white "
+          onClick={() => setOpen(false)}
+        />
         <div className="md:flex md:mx-auto bo">
           <div className="px-2 ">
-            <p className="py-2 text-md text-white font-semibold">Categories</p>
+            <p className="py-1 text-md text-white font-semibold">Categories</p>
 
             <select className="w-52" onChange={handleChange}>
               <option selected>Select a category</option>
@@ -484,12 +518,7 @@ const Test1 = (props) => {
         </div>
 
         {show && categoriesOptions?.length > 0 ? (
-          <div className="md:w-[70vw]  rContainer2 scrollable-container mx-auto w-[98vw]">
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              className="absolute top-0 right-0 text-white "
-              onClick={() => setOpen(false)}
-            />
+          <div className="md:w-[70vw]  parlour-container scrollable-container mx-auto w-[98vw]">
             <p className="py-3 text-xl font-semibold text-white">
               Select Services
             </p>

@@ -14,8 +14,9 @@ import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 
-const SalonPreview = () => {
-  const { state } = useLocation();
+const SalonPreview = (props) => {
+  // const { state } = useLocation();
+  const { state, setSalonPreview } = props;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -172,15 +173,15 @@ const SalonPreview = () => {
 
   return (
     <div>
-      {open && <SIdebar />}
+      {/* {open && <SIdebar />}
       {w < 768 && <Greeting />}
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
-      <div className="min-h-screen">
-        <h2 className="mb-2 text-lg font-bold py-5 text-left px-10">
+      <div className=" px-4">{w >= 768 && <Layout />}</div> */}
+      <div>
+        <h2 className=" text-lg font-bold py-5 text-left text-white">
           Order Preview
         </h2>
 
-        <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
+        <div className="grid md:grid-cols-4 md:gap-5  w-[90vw]  ">
           <div className="overflow-x-auto md:col-span-3">
             {showPreviewServices?.map((seat, i) => {
               return (
@@ -275,7 +276,7 @@ const SalonPreview = () => {
                 <li>
                   <button
                     // disabled={loading}
-                    onClick={() => navigate(-1)}
+                    onClick={() => setSalonPreview(false)}
                     className="primary-button w-full my-2"
                   >
                     Forgot Something?
@@ -286,7 +287,7 @@ const SalonPreview = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

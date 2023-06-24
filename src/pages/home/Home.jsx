@@ -182,7 +182,7 @@ const Home = () => {
               Welcome To Easytym
             </h1>
           </div>
-          <h1 className="text-gray-700 lg:px-64 md:px-10 px-4 text-md font-bold text-center py-5">
+          <h1 className="text-gray-700  md:px-0 w-[70vw] px-4 text-md font-bold text-center py-5">
             Our company provides convenient and reliable salon booking services,
             connecting customers with top-quality beauty parlours and
             professional ironing services. With our user-friendly platform,

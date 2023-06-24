@@ -14,8 +14,11 @@ import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 
-const ParlourPreview = () => {
-  const { state } = useLocation();
+const ParlourPreview = (props) => {
+  // const { state } = useLocation();
+
+  const { state, setParlourPreview } = props;
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -180,123 +183,117 @@ const ParlourPreview = () => {
 
   return (
     <div>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
-      <div className="min-h-screen">
-        <h2 className="mb-2 text-lg font-bold py-5 text-left px-10">
-          Order Preview
-        </h2>
+      <h2 className="mb-2 text-lg font-bold py-5 text-left text-white">
+        Order Preview
+      </h2>
 
-        <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
-          <div className="overflow-x-auto md:col-span-3">
-            {showPreviewServices?.map((seat, i) => {
-              return (
-                seat.show.length > 0 && (
-                  <div className="card overflow-x-auto p-5">
-                    <h2 className="mb-2 text-lg">
-                      Selected Items - Seat {seat.index + 1}
-                    </h2>
-                    <table className="min-w-full">
-                      <thead className="border-b">
-                        <tr className="border-b-2 border-gray-200">
-                          <th className="text-left">Service Name</th>
-                          <th className=" p-5 text-right">Price</th>
-                          <th className="  p-5 text-right">Category</th>
-                          <th className="p-5 text-right">Duration</th>
+      <div className="grid md:grid-cols-4 md:gap-5   w-[90vw]">
+        <div className="overflow-x-auto md:col-span-3">
+          {showPreviewServices?.map((seat, i) => {
+            return (
+              seat.show.length > 0 && (
+                <div className="card overflow-x-auto p-5">
+                  <h2 className="mb-2 text-lg">
+                    Selected Items - Seat {seat.index + 1}
+                  </h2>
+                  <table className="min-w-full">
+                    <thead className="border-b">
+                      <tr className="border-b-2 border-gray-200">
+                        <th className="text-left">Service Name</th>
+                        <th className=" p-5 text-right">Price</th>
+                        <th className="  p-5 text-right">Category</th>
+                        <th className="p-5 text-right">Duration</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {seat.show.map((item) => (
+                        <tr
+                          key={item.id}
+                          className="border-b-2 border-gray-200"
+                        >
+                          <td>{item.service}</td>
+                          <td className="p-5 text-right">
+                            &#8377; {item.price}
+                          </td>
+                          <td className=" p-5 text-right">{item.category}</td>
+                          <td className="p-5 text-right">
+                            {item.duration} min
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {seat.show.map((item) => (
-                          <tr
-                            key={item.id}
-                            className="border-b-2 border-gray-200"
-                          >
-                            <td>{item.service}</td>
-                            <td className="p-5 text-right">
-                              &#8377; {item.price}
-                            </td>
-                            <td className=" p-5 text-right">{item.category}</td>
-                            <td className="p-5 text-right">
-                              {item.duration} min
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )
-              );
-            })}
-          </div>
-          <div>
-            <div className="card  p-5">
-              <h2 className="mb-2 text-lg">Order Summary</h2>
-              <ul>
-                <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Date</div>
-                    <div>{state?.dates[0]?.date}</div>
-                  </div>
-                </li>
-                <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Time</div>
-                    <div>{state?.dates[0]?.time}</div>
-                  </div>
-                </li>
-                <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Total Amount</div>
-                    <div>&#8377; {state?.totalAmount}</div>
-                  </div>
-                </li>
-                <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Tax</div>
-                    <div>&#8377; 30</div>
-                  </div>
-                </li>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
+            );
+          })}
+        </div>
+        <div>
+          <div className="card  p-5">
+            <h2 className="mb-2 text-lg">Order Summary</h2>
+            <ul>
+              <li>
+                <div className="mb-2 flex justify-between">
+                  <div>Date</div>
+                  <div>{state?.dates[0]?.date}</div>
+                </div>
+              </li>
+              <li>
+                <div className="mb-2 flex justify-between">
+                  <div>Time</div>
+                  <div>{state?.dates[0]?.time}</div>
+                </div>
+              </li>
+              <li>
+                <div className="mb-2 flex justify-between">
+                  <div>Total Amount</div>
+                  <div>&#8377; {state?.totalAmount}</div>
+                </div>
+              </li>
+              <li>
+                <div className="mb-2 flex justify-between">
+                  <div>Tax</div>
+                  <div>&#8377; 30</div>
+                </div>
+              </li>
 
-                <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Total</div>
-                    <div>&#8377; 700</div>
-                  </div>
-                </li>
+              <li>
+                <div className="mb-2 flex justify-between">
+                  <div>Total</div>
+                  <div>&#8377; 700</div>
+                </div>
+              </li>
 
-                <li>
-                  {!loading ? (
-                    <button
-                      disabled={loading}
-                      onClick={placeOrderHandler}
-                      className="primary-button flex items-center justify-center  w-full"
-                    >
-                      <>Place Order</>
-                    </button>
-                  ) : (
-                    <button className="primary-button flex items-center justify-center  w-full">
-                      {" "}
-                      Place Order{" "}
-                      {loading && <span className="buttonloader ml-2"></span>}
-                    </button>
-                  )}
-                </li>
-                <li>
+              <li>
+                {!loading ? (
                   <button
-                    // disabled={loading}
-                    onClick={() => navigate(-1)}
-                    className="primary-button w-full my-2"
+                    disabled={loading}
+                    onClick={placeOrderHandler}
+                    className="primary-button flex items-center justify-center  w-full"
                   >
-                    Forgot Something?
+                    <>Place Order</>
                   </button>
-                </li>
-              </ul>
-            </div>
+                ) : (
+                  <button className="primary-button flex items-center justify-center  w-full">
+                    {" "}
+                    Place Order{" "}
+                    {loading && <span className="buttonloader ml-2"></span>}
+                  </button>
+                )}
+              </li>
+              <li>
+                <button
+                  // disabled={loading}
+                  onClick={() => setParlourPreview(false)}
+                  className="primary-button w-full my-2"
+                >
+                  Forgot Something?
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { useCallback } from "react";
 import { useMemo } from "react";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
+import SalonPreview from "../../pages/salonPreview";
 
 const Reserve = (props) => {
   const {
@@ -29,6 +30,9 @@ const Reserve = (props) => {
   const [loading, setLoading] = useState(false);
   const [buttonLoad, setButtonLoad] = useState(false);
 
+  const [reserveState, setReserveState] = useState(null);
+
+  const [salonPreview, setSalonPreview] = useState(false);
   const [seats, setSeats] = useState();
   const [durations, setDurations] = useState([]);
   const [show, setShow] = useState(false);
@@ -411,23 +415,39 @@ const Reserve = (props) => {
         });
 
         if (dates) {
-          navigate(`/shops/${shopId}/salon-preview`, {
-            state: {
-              selectedSeats: seats,
-              totalAmount,
-              roomId: data[0]?._id,
-              shopOwner,
-              shopId,
-              shopName,
-              ownerEmail,
-              ownerNumber,
-              bookId: id,
-              user,
-              link: "https://easytym.com/history",
-              dates,
-              previewServices,
-            },
+          // navigate(`/shops/${shopId}/salon-preview`, {
+          // state: {
+          //   selectedSeats: seats,
+          //   totalAmount,
+          //   roomId: data[0]?._id,
+          //   shopOwner,
+          //   shopId,
+          //   shopName,
+          //   ownerEmail,
+          //   ownerNumber,
+          //   bookId: id,
+          //   user,
+          //   link: "https://easytym.com/history",
+          //   dates,
+          //   previewServices,
+          // },
+          // });
+          setReserveState({
+            selectedSeats: seats,
+            totalAmount,
+            roomId: data[0]?._id,
+            shopOwner,
+            shopId,
+            shopName,
+            ownerEmail,
+            ownerNumber,
+            bookId: id,
+            user,
+            link: "https://easytym.com/history",
+            dates,
+            previewServices,
           });
+          setSalonPreview(true);
         } else {
           toast("something wrong!");
           return;
@@ -436,7 +456,13 @@ const Reserve = (props) => {
     }
   };
 
-  return (
+  return salonPreview && reserveState !== null ? (
+    <div className="reserve-preview">
+      <div className="preview-container scrollable-container">
+        <SalonPreview state={reserveState} setSalonPreview={setSalonPreview} />
+      </div>
+    </div>
+  ) : (
     <form className="reserve flex flex-col space-y-2">
       <span className="text-[12px] text-white font-bold">
         Note : You can select 1 or 2 seats at a time!
@@ -550,8 +576,8 @@ const Reserve = (props) => {
         {buttonLoad && <span className="buttonloader"></span>}
       </button>
     </form>
-    // <>ji</>
   );
+  // <>ji</>
 };
 
 export default Reserve;

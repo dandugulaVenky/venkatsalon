@@ -918,7 +918,7 @@ const Hotel = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
       <CarouselBanner />
-      <div className="px-4 ">
+      <div className="px-4 scrollable-container ">
         <div className="w-full bg-[#00ccbb] rounded-md  p-5 flex items-center justify-center flex-col mt-4 ">
           <div className="flex items-center justify-center space-x-5 pt-5 md:-ml-0 -ml-2.5 text-white ">
             <div
