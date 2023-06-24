@@ -202,9 +202,15 @@ const ParlourPreview = (props) => {
                         <th className="text-left md:text-md text-sm md:p-5 p-4">
                           Service Name
                         </th>
-                        <th className=" md:p-5 p-4 text-right">Price</th>
-                        <th className="  md:p-5 p-4 text-right">Category</th>
-                        <th className="md:p-5 p-4 text-right">Duration</th>
+                        <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                          Price
+                        </th>
+                        <th className="  md:p-5 p-4 md:text-md text-sm text-right">
+                          Category
+                        </th>
+                        <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                          Duration
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -213,12 +219,14 @@ const ParlourPreview = (props) => {
                           key={item.id}
                           className="border-b-2 border-gray-200"
                         >
-                          <td>{item.service}</td>
-                          <td className="p-5 text-right">
+                          <td className="md:text-md text-sm">{item.service}</td>
+                          <td className="p-5 text-right md:text-md text-sm">
                             &#8377; {item.price}
                           </td>
-                          <td className=" p-5 text-right">{item.category}</td>
-                          <td className="p-5 text-right">
+                          <td className=" p-5 text-right md:text-md text-sm">
+                            {item.category}
+                          </td>
+                          <td className="p-5 text-right md:text-md text-sm">
                             {item.duration} min
                           </td>
                         </tr>
