@@ -504,7 +504,7 @@ const Test1 = (props) => {
           className="absolute top-0 right-0 text-white "
           onClick={() => setOpen(false)}
         />
-        <div className="md:flex md:mx-auto bo">
+        <div className="md:flex md:mx-auto ">
           <div className="px-2 ">
             <p className="py-1 text-md text-white font-semibold">Categories</p>
 

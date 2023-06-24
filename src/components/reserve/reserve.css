@@ -49,6 +49,7 @@
   justify-content: center;
   z-index: 999;
 }
+
 .preview-container {
   border-radius: 5px;
   padding-top: 20px;
@@ -72,6 +73,12 @@
   .parlour-container {
     max-width: 88vw;
     padding: 2px;
+    max-height: 590px;
+  }
+}
+@media screen and (max-width: 376px) {
+  .parlour-container {
+    max-height: 450px;
   }
 }
 .scrollable-container::-webkit-scrollbar {
