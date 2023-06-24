@@ -42,12 +42,12 @@ function classNames(...classes) {
 
 const Hotel = () => {
   const location = useLocation();
-  const id = location.pathname.split("/")[2];
+  const shopIdLocation = location.pathname.split("/")[2];
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [loadingg, setLoadingg] = useState(false);
-  // const [options, setoptions] = useState([]);
+  const [totalTime, setTotalTime] = useState(0);
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
@@ -66,7 +66,9 @@ const Hotel = () => {
 
   const [minutesValues, setMinutesvalues] = useState([]);
 
-  const { data, loading } = useFetch(`${baseUrl}/api/hotels/find/${id}`);
+  const { data, loading } = useFetch(
+    `${baseUrl}/api/hotels/find/${shopIdLocation}`
+  );
 
   const handleChange = (value) => {
     if (value === null) {
@@ -118,18 +120,47 @@ const Hotel = () => {
 
   const fetchReviews = useCallback(async () => {
     return await axios
-      .get(`${baseUrl}/api/hotels/getReviews/${id}`)
+      .get(`${baseUrl}/api/hotels/getReviews/${shopIdLocation}`)
       .then((res) => {
         // console.log("reviewsfromdb", res.data);
         setReviews(res.data);
       })
       .catch((err) => toast.error(err));
-  }, [id]);
+  }, [shopIdLocation]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${id}`);
+      const { data } = await axios.get(
+        `${baseUrl}/api/hotels/room/${shopIdLocation}`
+      );
       setServices(data[0]?.services);
+
+      if (type === "saloon") {
+        const totalTimeOfServices = data[0]?.services.reduce((acc, service) => {
+          return (acc += service.duration);
+        }, 0);
+
+        setTotalTime(totalTimeOfServices);
+      } else if (type === "parlour") {
+        const mergedPreviewServices = data[0]?.parlourServices
+          ?.reduce((arr, item) => {
+            arr.push(item.services);
+            return arr;
+          }, [])
+          .reduce((arr, item) => {
+            return arr.concat(item);
+          }, []);
+
+        const totalTimeOfServices = mergedPreviewServices.reduce(
+          (acc, service) => {
+            return (acc += service.duration);
+          },
+          0
+        );
+        setTotalTime(totalTimeOfServices);
+      } else {
+        navigate("/");
+      }
 
       const res =
         data &&
@@ -149,7 +180,7 @@ const Hotel = () => {
 
     fetchReviews();
     fetchData();
-  }, [fetchReviews, id, value]);
+  }, [fetchReviews, navigate, shopIdLocation, type, value]);
 
   useEffect(() => {
     const scroll = () => {
@@ -220,7 +251,9 @@ const Hotel = () => {
     if (user) {
       setOpenModal(true);
     } else {
-      navigate("/login", { state: { destination: `/shops/${id}` } });
+      navigate("/login", {
+        state: { destination: `/shops/${shopIdLocation}` },
+      });
     }
   };
 
@@ -233,7 +266,7 @@ const Hotel = () => {
     setLoadingg(true);
     await axios
       .post(
-        `${baseUrl}/api/hotels/createReview/${id}`,
+        `${baseUrl}/api/hotels/createReview/${shopIdLocation}`,
         {
           user: user._id,
           name: user.username,
@@ -249,7 +282,7 @@ const Hotel = () => {
         setComment("");
         fetchReviews();
 
-        navigate(`/shops/${id}`);
+        navigate(`/shops/${shopIdLocation}`);
       })
       .catch((err) => {
         setLoadingg(false);
@@ -258,557 +291,577 @@ const Hotel = () => {
   };
 
   const minValues = useCallback(() => {
-    let min10 = [];
-    let min20 = [];
-    let min30 = [];
-    let min40 = [];
-    let min50 = [];
-    let min60 = [];
-    let min70 = [];
-    let min80 = [];
-    let min90 = [];
-    let min100 = [];
-    let min110 = [];
-    let min120 = [];
-    let min130 = [];
-    let min140 = [];
-    let min150 = [];
-    let min160 = [];
-    let min170 = [];
-    let min180 = [];
-    let min190 = [];
-    let min200 = [];
-    let min210 = [];
-    let min220 = [];
-    let min230 = [];
-    let min240 = [];
-    let min250 = [];
-    let min260 = [];
-    let min270 = [];
-    let min280 = [];
-    let min290 = [];
-    let min300 = [];
+    // let min10 = [];
+    // let min20 = [];
+    // let min30 = [];
+    // let min40 = [];
+    // let min50 = [];
+    // let min60 = [];
+    // let min70 = [];
+    // let min80 = [];
+    // let min90 = [];
+    // let min100 = [];
+    // let min110 = [];
+    // let min120 = [];
+    // let min130 = [];
+    // let min140 = [];
+    // let min150 = [];
+    // let min160 = [];
+    // let min170 = [];
+    // let min180 = [];
+    // let min190 = [];
+    // let min200 = [];
+    // let min210 = [];
+    // let min220 = [];
+    // let min230 = [];
+    // let min240 = [];
+    // let min250 = [];
+    // let min260 = [];
+    // let min270 = [];
+    // let min280 = [];
+    // let min290 = [];
+    // let min300 = [];
+    // for (let i = 0; i < options.length; i++) {
+    //   if (timeReserve === options[i].value && options[i].id === i) {
+    //     min10 = [i];
+    //     min20 = [i, i + 1];
+    //     min30 = [i, i + 1, i + 2];
+    //     min40 = [i, i + 1, i + 2, i + 3];
+    //     min50 = [i, i + 1, i + 2, i + 3, i + 4];
+    //     min60 = [i, i + 1, i + 2, i + 3, i + 4, i + 5];
+    //     min70 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6];
+    //     min80 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7];
+    //     min90 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8];
+    //     min100 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //     ];
+    //     min110 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //     ];
+    //     min120 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //     ];
+    //     min130 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //     ];
+    //     min140 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //     ];
+    //     min150 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //     ];
+    //     min160 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //     ];
+    //     min170 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //     ];
+    //     min180 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //     ];
+    //     min190 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //     ];
+    //     min200 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //     ];
+    //     min210 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //     ];
+
+    //     min220 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //     ];
+
+    //     min230 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //     ];
+
+    //     min240 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+    //     ];
+
+    //     min250 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+    //       i + 24,
+    //     ];
+
+    //     min260 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+    //       i + 24,
+    //       i + 25,
+    //     ];
+
+    //     min270 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+
+    //       i + 24,
+    //       i + 25,
+    //       i + 26,
+    //     ];
+
+    //     min280 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+
+    //       i + 24,
+    //       i + 25,
+    //       i + 26,
+    //       i + 27,
+    //     ];
+
+    //     min290 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+
+    //       i + 24,
+    //       i + 25,
+    //       i + 26,
+    //       i + 27,
+    //       i + 28,
+    //     ];
+
+    //     min300 = [
+    //       i,
+    //       i + 1,
+    //       i + 2,
+    //       i + 3,
+    //       i + 4,
+    //       i + 5,
+    //       i + 6,
+    //       i + 7,
+    //       i + 8,
+    //       i + 9,
+    //       i + 10,
+    //       i + 11,
+    //       i + 12,
+    //       i + 13,
+    //       i + 14,
+    //       i + 15,
+    //       i + 16,
+    //       i + 17,
+    //       i + 18,
+    //       i + 19,
+    //       i + 20,
+    //       i + 21,
+    //       i + 22,
+    //       i + 23,
+
+    //       i + 24,
+    //       i + 25,
+    //       i + 26,
+    //       i + 27,
+    //       i + 28,
+    //       i + 29,
+    //     ];
+    //   }
+    // }
+
+    let minValuesObj = {};
     for (let i = 0; i < options.length; i++) {
       if (timeReserve === options[i].value && options[i].id === i) {
-        min10 = [i];
-        min20 = [i, i + 1];
-        min30 = [i, i + 1, i + 2];
-        min40 = [i, i + 1, i + 2, i + 3];
-        min50 = [i, i + 1, i + 2, i + 3, i + 4];
-        min60 = [i, i + 1, i + 2, i + 3, i + 4, i + 5];
-        min70 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6];
-        min80 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7];
-        min90 = [i, i + 1, i + 2, i + 3, i + 4, i + 5, i + 6, i + 7, i + 8];
-        min100 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-        ];
-        min110 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-        ];
-        min120 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-        ];
-        min130 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-        ];
-        min140 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-        ];
-        min150 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-        ];
-        min160 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-        ];
-        min170 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-        ];
-        min180 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-        ];
-        min190 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-        ];
-        min200 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-        ];
-        min210 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-        ];
+        for (let j = 1; j <= totalTime / 10; j++) {
+          minValuesObj[`min${j * 10}`] = [i];
+        }
+        for (let j = 2; j <= totalTime / 10; j++) {
+          let arr = [];
+          for (let k = 0; k <= j - 1; k++) {
+            arr.push(i + k);
+          }
 
-        min220 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-        ];
-
-        min230 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-        ];
-
-        min240 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-        ];
-
-        min250 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-          i + 24,
-        ];
-
-        min260 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-          i + 24,
-          i + 25,
-        ];
-
-        min270 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-
-          i + 24,
-          i + 25,
-          i + 26,
-        ];
-
-        min280 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-
-          i + 24,
-          i + 25,
-          i + 26,
-          i + 27,
-        ];
-
-        min290 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-
-          i + 24,
-          i + 25,
-          i + 26,
-          i + 27,
-          i + 28,
-        ];
-
-        min300 = [
-          i,
-          i + 1,
-          i + 2,
-          i + 3,
-          i + 4,
-          i + 5,
-          i + 6,
-          i + 7,
-          i + 8,
-          i + 9,
-          i + 10,
-          i + 11,
-          i + 12,
-          i + 13,
-          i + 14,
-          i + 15,
-          i + 16,
-          i + 17,
-          i + 18,
-          i + 19,
-          i + 20,
-          i + 21,
-          i + 22,
-          i + 23,
-
-          i + 24,
-          i + 25,
-          i + 26,
-          i + 27,
-          i + 28,
-          i + 29,
-        ];
+          // console.log(arr);
+          minValuesObj[`min${j * 10}`] = arr;
+        }
       }
     }
+
     return {
-      min10,
-      min20,
-      min30,
-      min40,
-      min50,
-      min60,
-      min70,
-      min80,
-      min90,
-      min100,
-      min110,
-      min120,
-      min130,
-      min140,
-      min150,
-      min160,
-      min170,
-      min180,
-      min190,
-      min200,
-      min210,
-      min220,
-      min230,
-      min240,
-      min250,
-      min260,
-      min270,
-      min280,
-      min290,
-      min300,
+      // min10,
+      // min20,
+      // min30,
+      // min40,
+      // min50,
+      // min60,
+      // min70,
+      // min80,
+      // min90,
+      // min100,
+      // min110,
+      // min120,
+      // min130,
+      // min140,
+      // min150,
+      // min160,
+      // min170,
+      // min180,
+      // min190,
+      // min200,
+      // min210,
+      // min220,
+      // min230,
+      // min240,
+      // min250,
+      // min260,
+      // min270,
+      // min280,
+      // min290,
+      // min300,
+      minValuesObj,
     };
-  }, [timeReserve]);
+  }, [timeReserve, totalTime]);
 
   useEffect(() => {
     const minValues1 = minValues();
@@ -1015,13 +1068,6 @@ const Hotel = () => {
                                           </span>
                                         );
                                       })}
-                                    {/* {isbooked.includes(true) && (
-                                      <FontAwesomeIcon
-                                        icon={faCircle}
-                                        color="green "
-                                        size="sm"
-                                      />
-                                    )} */}
                                   </span>
                                 </div>
                               )}
@@ -1183,7 +1229,7 @@ const Hotel = () => {
                 ) : (
                   <h1 className="font-semibold text-xl">
                     Please{" "}
-                    <Link to={`/login?redirect=/shops/${id}`}>
+                    <Link to={`/login?redirect=/shops/${shopIdLocation}`}>
                       <span className="text-blue-500">login</span>
                     </Link>{" "}
                     to write a review
@@ -1221,41 +1267,12 @@ const Hotel = () => {
           <Reserve
             setOpen={setOpenModal}
             open={open}
-            shopId={id}
+            shopId={shopIdLocation}
             shopName={data.name}
             shopOwner={data.shopOwnerId}
             setOpacity={setOpacity}
-            min10={minutesValues.min10}
-            min20={minutesValues.min20}
-            min30={minutesValues.min30}
-            min40={minutesValues.min40}
-            min50={minutesValues.min50}
-            min60={minutesValues.min60}
-            min70={minutesValues.min70}
-            min80={minutesValues.min80}
-            min90={minutesValues.min90}
-            min100={minutesValues.min100}
-            min110={minutesValues.min110}
-            min120={minutesValues.min120}
-            min130={minutesValues.min130}
-            min140={minutesValues.min140}
-            min150={minutesValues.min150}
-            min160={minutesValues.min160}
-            min170={minutesValues.min170}
-            min180={minutesValues.min180}
-            min190={minutesValues.min190}
-            min200={minutesValues.min200}
-            min210={minutesValues.min210}
-            min220={minutesValues.min220}
-            min230={minutesValues.min230}
-            min240={minutesValues.min240}
-            min250={minutesValues.min250}
-            min260={minutesValues.min260}
-            min270={minutesValues.min270}
-            min280={minutesValues.min280}
-            min290={minutesValues.min290}
-            min300={minutesValues.min300}
             selectedValue={selectValue}
+            minValuesObj={minutesValues.minValuesObj}
             value={value}
             options={options}
           />
@@ -1263,40 +1280,10 @@ const Hotel = () => {
           <Test1
             setOpen={setOpenModal}
             open={open}
-            shopId={id}
+            shopId={shopIdLocation}
             shopName={data.name}
             shopOwner={data.shopOwnerId}
-            setOpacity={setOpacity}
-            min10={minutesValues.min10}
-            min20={minutesValues.min20}
-            min30={minutesValues.min30}
-            min40={minutesValues.min40}
-            min50={minutesValues.min50}
-            min60={minutesValues.min60}
-            min70={minutesValues.min70}
-            min80={minutesValues.min80}
-            min90={minutesValues.min90}
-            min100={minutesValues.min100}
-            min110={minutesValues.min110}
-            min120={minutesValues.min120}
-            min130={minutesValues.min130}
-            min140={minutesValues.min140}
-            min150={minutesValues.min150}
-            min160={minutesValues.min160}
-            min170={minutesValues.min170}
-            min180={minutesValues.min180}
-            min190={minutesValues.min190}
-            min200={minutesValues.min200}
-            min210={minutesValues.min210}
-            min220={minutesValues.min220}
-            min230={minutesValues.min230}
-            min240={minutesValues.min240}
-            min250={minutesValues.min250}
-            min260={minutesValues.min260}
-            min270={minutesValues.min270}
-            min280={minutesValues.min280}
-            min290={minutesValues.min290}
-            min300={minutesValues.min300}
+            minValuesObj={minutesValues.minValuesObj}
             selectedValue={selectValue}
             value={value}
             options={options}

@@ -18,42 +18,10 @@ const Test1 = (props) => {
   const [categories, setCategories] = useState();
   const {
     setOpen,
-    setOpacity,
+    minValuesObj,
     shopId,
     shopName,
     shopOwner,
-
-    min10,
-    min20,
-    min30,
-    min40,
-    min50,
-    min60,
-    min70,
-    min80,
-    min90,
-    min100,
-
-    min110,
-    min120,
-    min130,
-    min140,
-    min150,
-    min160,
-    min170,
-    min180,
-    min190,
-    min200,
-    min210,
-    min220,
-    min230,
-    min240,
-    min250,
-    min260,
-    min270,
-    min280,
-    min290,
-    min300,
 
     selectedValue,
     value,
@@ -61,9 +29,9 @@ const Test1 = (props) => {
   } = useMemo(() => props, [props]);
 
   const [loading, setLoading] = useState(false);
-  const [buttonLoad, setButtonLoad] = useState(false);
+
   const [durationBySeat, setDurationBySeat] = useState([]);
-  const [duration, setDuration] = useState(0);
+
   const [show, setShow] = useState(false);
   const [durations, setDurations] = useState([]);
 
@@ -87,6 +55,7 @@ const Test1 = (props) => {
   const navigate = useNavigate();
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
+  const [totalTime, setTotalTime] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -109,6 +78,25 @@ const Test1 = (props) => {
         },
         []
       );
+
+      const mergedPreviewServices = data[0]?.parlourServices
+        ?.reduce((arr, item) => {
+          arr.push(item.services);
+          return arr;
+        }, [])
+        .reduce((arr, item) => {
+          return arr.concat(item);
+        }, []);
+
+      const totalTimeOfServices = mergedPreviewServices.reduce(
+        (acc, service) => {
+          return (acc += service.duration);
+        },
+        0
+      );
+
+      setTotalTime(totalTimeOfServices);
+
       setParlourServices(parlourServices);
       setCategories(data[0]?.parlourServices);
       setLoading(true);
@@ -116,6 +104,8 @@ const Test1 = (props) => {
     !loading && fetchData();
   }, [loading, shopId]);
 
+  //Second Step----------------------------------------------------------------------------->
+  //finding wether there is booking in front of this selected time here
   useEffect(() => {
     const findDurationsToBlock = () => {
       const filteredUnavailableDates = () => {
@@ -124,8 +114,6 @@ const Test1 = (props) => {
 
         for (let i = 0; i < data[0]?.roomNumbers.length; i++) {
           const array = data[0]?.roomNumbers[i];
-
-          // console.log(array, 'mak');
 
           const roomUnavailableDates = array?.unavailableDates?.filter(
             (item) => {
@@ -144,11 +132,7 @@ const Test1 = (props) => {
         return unavailableDates;
       };
 
-      const ioo = filteredUnavailableDates();
-
-      // console.log(ioo);
-
-      const arrays = ioo;
+      const arrays = filteredUnavailableDates();
 
       const minFound = []; // declare an array to store objects
 
@@ -157,91 +141,33 @@ const Test1 = (props) => {
       arrays?.forEach((array, i) => {
         const matchedIndexes = [];
         array?.unavailableDates?.forEach((item, j) => {
-          const conditions = [
-            options[selectedValue + 1],
-            options[selectedValue + 2],
-            options[selectedValue + 3],
-            options[selectedValue + 4],
-            options[selectedValue + 5],
-            options[selectedValue + 6],
-            options[selectedValue + 7],
-            options[selectedValue + 8],
-            options[selectedValue + 9],
-            options[selectedValue + 10],
-            options[selectedValue + 11],
-            options[selectedValue + 12],
-            options[selectedValue + 13],
-            options[selectedValue + 14],
-            options[selectedValue + 15],
-            options[selectedValue + 16],
-            options[selectedValue + 17],
-            options[selectedValue + 18],
-            options[selectedValue + 19],
-            options[selectedValue + 20],
-            options[selectedValue + 21],
-            options[selectedValue + 22],
-            options[selectedValue + 23],
-            options[selectedValue + 24],
-            options[selectedValue + 25],
-            options[selectedValue + 26],
-            options[selectedValue + 27],
-            options[selectedValue + 28],
-            options[selectedValue + 29],
-            options[selectedValue + 30],
-          ];
+          let conditions = [];
+          for (let k = 0; k <= totalTime / 10; k++) {
+            conditions.push(options[selectedValue + k]);
+          }
 
           conditions?.some((condition, index) => {
             if (condition?.value === item.time) {
-              matchedIndexes.push(index + 1);
+              // console.log({ condition, item, index, selectedValue });
+              matchedIndexes.push(index);
               return true; // break out of loop
             }
           });
         });
-
-        // console.log({ matchedIndexes, i }, "matchedIndexes");
 
         //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
         //  finding smallest number because if 10min found from options[selectedValue + 1]
 
         const smallestNumber = Math.min(...matchedIndexes);
 
-        // console.log(smallestNumber, "smallestNumber");
-
         // dynamically declare and assign boolean variables
-        minFound[i] = {};
-        minFound[i][`min10found${i + 1}`] = smallestNumber === 1;
-        minFound[i][`min20found${i + 1}`] = smallestNumber === 2;
-        minFound[i][`min30found${i + 1}`] = smallestNumber === 3;
-        minFound[i][`min40found${i + 1}`] = smallestNumber === 4;
-        minFound[i][`min50found${i + 1}`] = smallestNumber === 5;
-        minFound[i][`min60found${i + 1}`] = smallestNumber === 6;
-        minFound[i][`min70found${i + 1}`] = smallestNumber === 7;
-        minFound[i][`min80found${i + 1}`] = smallestNumber === 8;
-        minFound[i][`min90found${i + 1}`] = smallestNumber === 9;
-        minFound[i][`min100found${i + 1}`] = smallestNumber === 10;
-        minFound[i][`min110found${i + 1}`] = smallestNumber === 11;
-        minFound[i][`min120found${i + 1}`] = smallestNumber === 12;
-        minFound[i][`min130found${i + 1}`] = smallestNumber === 13;
-        minFound[i][`min140found${i + 1}`] = smallestNumber === 14;
-        minFound[i][`min150found${i + 1}`] = smallestNumber === 15;
-        minFound[i][`min160found${i + 1}`] = smallestNumber === 16;
-        minFound[i][`min170found${i + 1}`] = smallestNumber === 17;
-        minFound[i][`min180found${i + 1}`] = smallestNumber === 18;
-        minFound[i][`min190found${i + 1}`] = smallestNumber === 19;
-        minFound[i][`min200found${i + 1}`] = smallestNumber === 20;
-        minFound[i][`min210found${i + 1}`] = smallestNumber === 21;
-        minFound[i][`min220found${i + 1}`] = smallestNumber === 22;
-        minFound[i][`min230found${i + 1}`] = smallestNumber === 23;
-        minFound[i][`min240found${i + 1}`] = smallestNumber === 24;
-        minFound[i][`min250found${i + 1}`] = smallestNumber === 25;
-        minFound[i][`min260found${i + 1}`] = smallestNumber === 26;
-        minFound[i][`min270found${i + 1}`] = smallestNumber === 27;
-        minFound[i][`min280found${i + 1}`] = smallestNumber === 28;
-        minFound[i][`min290found${i + 1}`] = smallestNumber === 29;
-        minFound[i][`min300found${i + 1}`] = smallestNumber === 30;
-      });
 
-      // console.log(minFound, "minFound");
+        minFound[i] = {};
+
+        for (let l = 1; l < totalTime / 10; l++) {
+          minFound[i][`min${l * 10}found${i + 1}`] = smallestNumber === l;
+        }
+      });
 
       const allKeys = [];
 
@@ -249,7 +175,6 @@ const Test1 = (props) => {
         const keys = Object.keys(minFound[i]);
         allKeys.push(...keys);
       }
-      // console.log(allKeys, "allKeys");
 
       const getFilteredKeys = () => {
         return minFound
@@ -258,7 +183,6 @@ const Test1 = (props) => {
       };
 
       const filteredKeys = getFilteredKeys();
-      // console.log(filteredKeys, "filteredKeys");
 
       const getDurations = () => {
         return filteredKeys
@@ -271,10 +195,12 @@ const Test1 = (props) => {
       setDurations(durations);
       setShow(true);
 
-      // console.log(durations, "durations");
+      console.log("Done");
     };
-    data && data[0]?.roomNumbers && findDurationsToBlock();
-  }, [data, options, selectedValue, value]);
+    data && data[0]?.roomNumbers && totalTime && findDurationsToBlock();
+  }, [data, options, selectedValue, totalTime, value]);
+
+  //starting here checking availability of options, if not disable the select boxes accordingly
 
   //check if the room is available to book or not
 
@@ -284,7 +210,7 @@ const Test1 = (props) => {
 
       const compareDate = moment(value).format("MMM Do YY");
 
-      const found = array?.unavailableDates.map((item) => {
+      const found = array.unavailableDates.map((item) => {
         return compareDate === item.date && item.values.includes(selectedValue);
       });
 
@@ -292,6 +218,8 @@ const Test1 = (props) => {
     },
     [data, selectedValue, value]
   );
+
+  //Third Step---------------------------------------------------------------------------->
 
   //update the options with ids corrospondingly with inputs
 
@@ -301,7 +229,6 @@ const Test1 = (props) => {
     );
     setCategoriesOptions(result[0].services);
   };
-
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
@@ -322,28 +249,17 @@ const Test1 = (props) => {
     let existingDuration = durationBySeat.find((d) => d.id === seatId);
     let newDuration = existingDuration ? existingDuration.value : 0;
 
-    if (event.target.checked) {
-      if (event.target.name === service?.service) {
-        newAmount += service?.price;
-        newDuration += service?.duration;
-      }
-    } else {
-      if (event.target.name === service?.service) {
-        newAmount -= service?.price;
-        newDuration -= service?.duration;
+    if (event.target.name === service.service) {
+      if (event.target.checked) {
+        newAmount += service.price;
+        newDuration += service.duration;
+      } else {
+        newAmount -= service.price;
+        newDuration -= service.duration;
       }
     }
 
     setTotalAmount(newAmount);
-
-    const getBlocks = () => {
-      let values = [];
-      for (let i = 0; i < 30; i++) {
-        values.push({ id: selectedValue - (i + 1), value: (i + 1) * 10 });
-      }
-
-      return values;
-    };
 
     if (existingDuration) {
       setDurationBySeat(
@@ -352,7 +268,7 @@ const Test1 = (props) => {
             return {
               id: seatId,
               value: newDuration,
-              block: getBlocks(),
+
               seatNo: seatIndex,
             };
           } else {
@@ -366,93 +282,14 @@ const Test1 = (props) => {
         {
           id: seatId,
           value: newDuration,
-          block: getBlocks(),
+
           seatNo: seatIndex,
         },
       ]);
     }
 
-    setDuration(newDuration);
     setSeats(updatedSeats);
   };
-
-  // //update the values option in dates accoridng to the duration selected by the user from the respective seats from durationBySeat array
-
-  const generateUpdatedDurationBySeat = useCallback(() => {
-    const minLookup = {
-      10: min10,
-      20: min20,
-      30: min30,
-      40: min40,
-      50: min50,
-      60: min60,
-      70: min70,
-      80: min80,
-      90: min90,
-      100: min100,
-      110: min110,
-      120: min120,
-      130: min130,
-      140: min140,
-      150: min150,
-      160: min160,
-      170: min170,
-      180: min180,
-      190: min190,
-      200: min200,
-      210: min210,
-      220: min220,
-      230: min230,
-      240: min240,
-      250: min250,
-      260: min260,
-      270: min270,
-      280: min280,
-      290: min290,
-      300: min300,
-    };
-    const updatedDurationBySeat = durationBySeat.map((item) => {
-      const minValue = minLookup[item.value];
-
-      return minValue ? { ...item, value: minValue } : item;
-    });
-
-    return updatedDurationBySeat;
-  }, [
-    durationBySeat,
-    min10,
-    min100,
-    min110,
-    min120,
-    min130,
-    min140,
-    min150,
-    min160,
-    min170,
-    min180,
-    min190,
-    min20,
-    min200,
-    min210,
-    min220,
-    min230,
-    min240,
-    min250,
-    min260,
-    min270,
-    min280,
-    min290,
-    min30,
-    min300,
-    min40,
-    min50,
-    min60,
-    min70,
-    min80,
-    min90,
-  ]);
-
-  const updatedDurationBySeat = generateUpdatedDurationBySeat();
 
   //generating Id for common id for whole booking process
   const generateRandomString = useCallback((length) => {
@@ -468,43 +305,19 @@ const Test1 = (props) => {
 
   const id = generateRandomString(10);
 
-  // updates dates with all the options to send to room unavilableDates with all the options
-
-  const generateDates = useCallback(() => {
-    const dates = updatedDurationBySeat.map((item, i) => {
-      return {
-        time: time,
-        date: moment(dater).format("MMM Do YY"),
-        isAccepted: "false",
-        bookId: id,
-        findId: item.id,
-        options: seats
-          .filter((ikem) => {
-            if (ikem.id === item.id) {
-              return true;
-            }
-          })
-          .map((ikem) => ikem.options)
-          .flat(),
-        values: updatedDurationBySeat[i]?.value,
-        block: durationBySeat[i]?.block,
-        createdAt: new Date().toISOString(),
-      };
-    });
-
-    return dates;
-  }, [updatedDurationBySeat, time, dater, id, seats, durationBySeat]);
-  const dates = generateDates();
-
-  const getTotalTime = useCallback((total) => {
-    const hours = Math.floor(total / 60);
-    const remainingMinutes = total % 60;
-    if (total >= 60) {
-      return `${hours} h, ${remainingMinutes} min`;
-    } else {
-      return ` ${remainingMinutes} min`;
-    }
-  }, []);
+  //getting time selected for individual Seats
+  const getTotalTime = useCallback(
+    (total) => {
+      const hours = Math.floor(total / 60);
+      const remainingMinutes = total % 60;
+      if (total >= 60) {
+        return `${hours} h, ${remainingMinutes} min`;
+      } else {
+        return ` ${remainingMinutes} min`;
+      }
+    },
+    [durationBySeat]
+  );
 
   if (error) {
     return navigate("/login", { state: { destination: `/shops/${shopId}` } });
@@ -512,11 +325,9 @@ const Test1 = (props) => {
 
   const previewHandler = async (amount, e) => {
     e.preventDefault();
-
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
-
     //getting end value from optiond and checking wetherr user is booking beyond the time limit given by owner
     const num1 = Number(options[options.length - 1].id);
     const num2 = Number(
@@ -554,12 +365,16 @@ const Test1 = (props) => {
           const remainingMinutes = minutes % 60;
           item1 > 60
             ? alert(
-                `Others have booked the extra time already. please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+                `Others have a booking at ${
+                  options[selectedValue + item1 / 10].value
+                }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
                   item2 + 1
                 } `
               )
             : alert(
-                `Others have booked the extra time already. please choose only a option which is of ${item1} minutes in seat${
+                `Others have a booking at ${
+                  options[selectedValue + item1 / 10].value
+                }. Please choose only a option which is of ${item1} minutes in seat${
                   item2 + 1
                 } `
               );
@@ -581,23 +396,73 @@ const Test1 = (props) => {
         if (mergedArr.includes(0)) {
           return;
         }
-        navigate(`/shops/${shopId}/parlour-preview`, {
-          state: {
-            selectedSeats: seats,
-            totalAmount,
-            roomId: data[0]?._id,
-            shopOwner,
-            shopId,
-            shopName,
-            ownerEmail,
-            ownerNumber,
+
+        //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
+        //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
+
+        const generateUpdatedDurationBySeat = () => {
+          const minLookup = {};
+
+          for (let i = 1; i <= Object.keys(minValuesObj).length; i++) {
+            minLookup[i * 10] = minValuesObj[`min${i * 10}`];
+          }
+
+          const updatedDurationBySeat = durationBySeat.map((item) => {
+            const minValue = minLookup[item.value];
+
+            return minValue ? { ...item, value: minValue } : item;
+          });
+
+          return updatedDurationBySeat;
+        };
+
+        const updatedDurationBySeat = generateUpdatedDurationBySeat();
+
+        // updates dates with all the options to send to room unavilableDates with all the options to backend.
+
+        const dates = updatedDurationBySeat?.map((item, i) => {
+          return {
+            time: time,
+            date: moment(dater).format("MMM Do YY"),
+            isAccepted: "false",
             bookId: id,
-            user,
-            link: "https://easytym.com/history",
-            dates,
-            previewServices,
-          },
+            findId: item.id,
+            options: seats
+              .filter((ikem) => {
+                if (ikem.id === item.id) {
+                  return true;
+                }
+              })
+              .map((ikem) => ikem.options)
+              .flat(),
+            values: updatedDurationBySeat[i]?.value,
+
+            createdAt: new Date().toISOString(),
+          };
         });
+
+        if (dates) {
+          navigate(`/shops/${shopId}/parlour-preview`, {
+            state: {
+              selectedSeats: seats,
+              totalAmount,
+              roomId: data[0]?._id,
+              shopOwner,
+              shopId,
+              shopName,
+              ownerEmail,
+              ownerNumber,
+              bookId: id,
+              user,
+              link: "https://easytym.com/history",
+              dates,
+              previewServices,
+            },
+          });
+        } else {
+          toast("something wrong!");
+          return;
+        }
       }
     }
   };
@@ -632,10 +497,15 @@ const Test1 = (props) => {
               Note* You can select multiple seats at a time
             </strong>
 
-            <p className="text-center mb-1 text-white py-2">
-              {" "}
-              Amount : &#8377; {totalAmount}
-            </p>
+            <div>
+              <p className="text-center mb-1 text-white">
+                {" "}
+                Amount : &#8377; {totalAmount}
+              </p>
+              <p className="text-center mb-1 text-white">
+                Selected Time : {options[selectedValue].value}
+              </p>
+            </div>
 
             {seats?.map((seat, i) => {
               return (
@@ -717,8 +587,7 @@ const Test1 = (props) => {
               }}
               className="primary-button flex items-center justify-evenly"
             >
-              Preview&nbsp;
-              {buttonLoad && <span className="buttonloader"></span>}
+              Preview
             </button>
           </div>
         ) : (
