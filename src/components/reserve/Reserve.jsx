@@ -500,8 +500,8 @@ const Reserve = () => {
             Select Services
           </h2>
 
-          <div className="grid md:grid-cols-10 md:gap-5    md:w-[90vw] w-[95.5vw] mx-auto">
-            <div className="overflow-x-auto lg:col-span-7 md:col-span-6">
+          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
+            <div className="overflow-x-auto lg:col-span-3 md:col-span-3">
               {show ? (
                 seats?.map((seat, i) => {
                   return (
@@ -588,7 +588,7 @@ const Reserve = () => {
                 </div>
               )}
             </div>
-            <div className="overflow-x-auto  lg:col-span-3 md:col-span-4">
+            <div className="lg:col-span-1 md:col-span-2">
               <div
                 className={`card  p-5 ${
                   height
