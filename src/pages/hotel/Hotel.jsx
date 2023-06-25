@@ -51,8 +51,8 @@ const Hotel = () => {
 
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
-  const [opacity, setOpacity] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  // const [opacity, setOpacity] = useState(false);
+  // const [openModal, setOpenModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { city, date, time } = useContext(SearchContext);
   const [value, setValue] = useState(date ? date : new Date());
@@ -248,8 +248,32 @@ const Hotel = () => {
       payload: { type, destination: city, value, time: timeReserve },
     });
 
-    if (user) {
-      setOpenModal(true);
+    if (user && type === "saloon") {
+      navigate(`/shops/${shopIdLocation}/salon-reserve`, {
+        state: {
+          shopId: shopIdLocation,
+          shopName: data.name,
+          shopOwner: data.shopOwnerId,
+
+          selectedValue: selectValue,
+          minValuesObj: minutesValues.minValuesObj,
+          value: value,
+          options: options,
+        },
+      });
+    } else if (user && type === "parlour") {
+      navigate(`/shops/${shopIdLocation}/parlour-reserve`, {
+        state: {
+          shopId: shopIdLocation,
+          shopName: data.name,
+          shopOwner: data.shopOwnerId,
+
+          selectedValue: selectValue,
+          minValuesObj: minutesValues.minValuesObj,
+          value: value,
+          options: options,
+        },
+      });
     } else {
       navigate("/login", {
         state: { destination: `/shops/${shopIdLocation}` },
@@ -1082,9 +1106,7 @@ const Hotel = () => {
               <div className="">
                 <button
                   className="headerBtn md:p-3 p-2.5 lg:ml-1 jello-horizontal"
-                  onClick={() => {
-                    handleClick();
-                  }}
+                  onClick={handleClick}
                 >
                   Check Services
                 </button>
@@ -1095,7 +1117,7 @@ const Hotel = () => {
       </div>
       <div />
       {services?.length > 0 ? <Test services={services} /> : ""}
-      {loading || opacity ? (
+      {loading ? (
         <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
           <span className="loader  "></span>
         </div>
@@ -1261,7 +1283,7 @@ const Hotel = () => {
         </div>
       )}
       <Footer />
-
+      {/* 
       {openModal &&
         (type === "saloon" ? (
           <Reserve
@@ -1288,7 +1310,7 @@ const Hotel = () => {
             value={value}
             options={options}
           />
-        ))}
+        ))} */}
     </div>
   );
 };

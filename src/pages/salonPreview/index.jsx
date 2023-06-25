@@ -1,21 +1,16 @@
 import React from "react";
-import SIdebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
+
 import Footer from "../../components/footer/Footer";
 import { useEffect } from "react";
-import { useContext } from "react";
 
-import { SearchContext } from "../../context/SearchContext";
-import Layout from "../../components/navbar/Layout";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 
 const SalonPreview = (props) => {
-  // const { state } = useLocation();
   const { state, setSalonPreview } = props;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -23,10 +18,28 @@ const SalonPreview = (props) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { open } = useContext(SearchContext);
-  let w = window.innerWidth;
+  const [height, setHeight] = useState(false);
 
   const [showPreviewServices, setShowPreviewServices] = useState();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >= 80) {
+        console.log(scrollY);
+        setHeight(true);
+      } else {
+        setHeight(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const showPreviewServicess = state?.selectedSeats.map((seat, i) => {
@@ -172,17 +185,14 @@ const SalonPreview = (props) => {
   };
 
   return (
-    <div>
-      {/* {open && <SIdebar />}
-      {w < 768 && <Greeting />}
-      <div className=" px-4">{w >= 768 && <Layout />}</div> */}
-      <div>
-        <h2 className=" text-lg font-bold py-5 text-left text-white">
+    <>
+      <div className="pb-20 min-h-screen">
+        <h2 className="mb-2 text-lg font-bold py-5 text-left md:px-10 px-2.5">
           Order Preview
         </h2>
 
-        <div className="grid md:grid-cols-4 md:gap-5  w-[90vw]  ">
-          <div className="overflow-x-auto md:col-span-3">
+        <div className="grid md:grid-cols-10 md:gap-5  h-auto px-2 md:px-10 ">
+          <div className="overflow-x-auto lg:col-span-7 md:col-span-6">
             {showPreviewServices?.map((seat, i) => {
               return (
                 seat.show.length > 0 && (
@@ -191,9 +201,9 @@ const SalonPreview = (props) => {
                       Selected Items - Seat {seat.index + 1}
                     </h2>
                     <table className="min-w-full">
-                      <thead className="border-b">
+                      <thead className="border-b bg-gray-300">
                         <tr className="border-b-2 border-gray-200">
-                          <th className="text-left">Service Name</th>
+                          <th className="text-left p-5">Service Name</th>
                           <th className=" p-5 text-right">Price</th>
                           <th className="p-5 text-right">Duration</th>
                         </tr>
@@ -204,7 +214,7 @@ const SalonPreview = (props) => {
                             key={item.id}
                             className="border-b-2 border-gray-200"
                           >
-                            <td>{item.service}</td>
+                            <td className="p-5">{item.service}</td>
                             <td className="p-5 text-right">
                               &#8377; {item.price}
                             </td>
@@ -220,8 +230,14 @@ const SalonPreview = (props) => {
               );
             })}
           </div>
-          <div>
-            <div className="card  p-5">
+          <div className="overflow-x-auto  lg:col-span-3 md:col-span-4">
+            <div
+              className={`card p-5 ${
+                height
+                  ? "md:sticky top-24 lg:py-5 transition-all delay-200"
+                  : ""
+              }`}
+            >
               <h2 className="mb-2 text-lg">Order Summary</h2>
               <ul>
                 <li>
@@ -259,7 +275,6 @@ const SalonPreview = (props) => {
                 <li>
                   {!loading ? (
                     <button
-                      disabled={loading}
                       onClick={placeOrderHandler}
                       className="primary-button flex items-center justify-center  w-full"
                     >
@@ -275,7 +290,6 @@ const SalonPreview = (props) => {
                 </li>
                 <li>
                   <button
-                    // disabled={loading}
                     onClick={() => setSalonPreview(false)}
                     className="primary-button w-full my-2"
                   >
@@ -287,8 +301,8 @@ const SalonPreview = (props) => {
           </div>
         </div>
       </div>
-      {/* <Footer /> */}
-    </div>
+      <Footer />
+    </>
   );
 };
 

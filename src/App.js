@@ -30,6 +30,8 @@ import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSucces
 import Test from "./pages/Test1";
 import ParlourPreview from "./pages/parlourPreview";
 import SalonPreview from "./pages/salonPreview";
+import Reserve from "./components/reserve/Reserve";
+import Test1 from "./pages/Test1";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -51,7 +53,9 @@ function App() {
         <Route path="/test" element={<Test />} />
 
         <Route path="/shops/:id" element={<Hotel />} />
-        <Route path="/shops/:id/parlour-preview" element={<ParlourPreview />} />
+        <Route path="/shops/:id/salon-reserve" element={<Reserve />} />
+
+        <Route path="/shops/:id/parlour-reserve" element={<Test1 />} />
 
         <Route path="/login" element={<Login />} />
         <Route
@@ -102,10 +106,6 @@ function App() {
         <Route
           path="/iron/iron-payment-success"
           element={<IronPaymentSuccess />}
-        />
-        <Route
-            path="/shops/:id/salon-preview"
-            element={<SalonPreview />}
         />
       </Routes>
     </BrowserRouter>

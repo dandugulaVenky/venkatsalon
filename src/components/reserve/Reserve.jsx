@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "./reserve.css";
 import useFetch from "../../hooks/useFetch";
@@ -7,17 +7,19 @@ import { useContext, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useCallback } from "react";
 import { useMemo } from "react";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/salonPreview";
+import Layout from "../navbar/Layout";
+import Greeting from "../navbar/Greeting";
 
-const Reserve = (props) => {
+const Reserve = () => {
+  const { state } = useLocation();
   const {
-    setOpen,
     shopId,
     shopName,
     shopOwner,
@@ -25,10 +27,11 @@ const Reserve = (props) => {
     selectedValue,
     value,
     options,
-  } = useMemo(() => props, [props]);
+  } = useMemo(() => state, [state]);
 
   const [loading, setLoading] = useState(false);
   const [buttonLoad, setButtonLoad] = useState(false);
+  const w = window.innerWidth;
 
   const [reserveState, setReserveState] = useState(null);
 
@@ -37,6 +40,8 @@ const Reserve = (props) => {
   const [durations, setDurations] = useState([]);
   const [show, setShow] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+
+  const [height, setHeight] = useState(false);
 
   const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
 
@@ -60,6 +65,27 @@ const Reserve = (props) => {
   const [totalTime, setTotalTime] = useState(0);
 
   //First step --------------------------------------------------------------------------->
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [salonPreview]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >= 80) {
+        setHeight(true);
+      } else {
+        setHeight(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -298,6 +324,7 @@ const Reserve = (props) => {
 
   const previewHandler = async (amount, e) => {
     e.preventDefault();
+
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
@@ -456,126 +483,159 @@ const Reserve = (props) => {
     }
   };
 
-  return salonPreview && reserveState !== null ? (
-    <div className="reserve-preview">
-      <div className="preview-container scrollable-container">
-        <SalonPreview state={reserveState} setSalonPreview={setSalonPreview} />
-      </div>
-    </div>
-  ) : (
-    <form className="reserve flex flex-col space-y-2">
-      <span className="text-[12px] text-white font-bold">
-        Note : You can select 1 or 2 seats at a time!
-      </span>
+  return (
+    <>
+      {w >= 768 && <Layout />}
+      {w < 768 && <Greeting />}
+      {salonPreview ? (
+        <div className="min-h-screen">
+          <SalonPreview
+            state={reserveState}
+            setSalonPreview={setSalonPreview}
+          />
+        </div>
+      ) : (
+        <div className="pb-10">
+          <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
+            Select Services
+          </h2>
 
-      <div
-        className={`border border-white p-3 rounded-md relative tilt-in-fwd-tr `}
-      >
-        <FontAwesomeIcon
-          icon={faCircleXmark}
-          className="absolute top-0 right-0 text-white "
-          onClick={() => setOpen(false)}
-        />
-        <div>
-          <p className="text-center mb-1 text-white">
-            {" "}
-            Amount : &#8377; {totalAmount}
-          </p>
-          <p className="text-center mb-1 text-white">
-            Selected Time : {options[selectedValue].value}
-          </p>
-        </div>
-        <div className="flex  flex-col over scrollable-container ">
-          {show &&
-            seats?.map((seat, i) => (
-              <div key={seat.id} className="rContainer">
-                <span className="py-2">
-                  <h3 className="text-md font-bold px-5 pt-2">Seat {i + 1}</h3>
-                  <h3 className="font-extrabold px-5">
-                    {durationBySeat.length > 0 &&
-                    seat.id === durationBySeat[i]?.id
-                      ? getTotalTime(durationBySeat[i].value)
-                      : "0 min"}
-                  </h3>
-                </span>
-                <div className="flex flex-col items-start mt-3 space-y-2">
-                  <div class="relative overflow-x-auto md:w-auto w-[85vw]">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                      <thead class="text-xs  uppercase bg-[#00ccbb] text-gray-800">
-                        <tr>
-                          <th scope="col" class="px-6 py-3">
-                            Name
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Price
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Duration
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {data[0]?.services?.map((service, j) => {
-                          const selectedOptions = new Set(seat.options);
-                          return (
-                            <tr class="bg-white border-b dark:bg-gray-300 dark:border-gray-800">
-                              <th
-                                scope="row"
-                                class="px-6 py-4 font-medium  whitespace-nowrap dark:text-white flex items-center justify-start space-x-2"
+          <div className="grid md:grid-cols-10 md:gap-5    md:w-[90vw] w-[95.5vw] mx-auto">
+            <div className="overflow-x-auto lg:col-span-7 md:col-span-6">
+              {show ? (
+                seats?.map((seat, i) => {
+                  return (
+                    <div className="card overflow-x-auto p-5">
+                      <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5">
+                        <span>Seat {i + 1}</span>
+                        <span>&#8377; 0</span>
+                        <span>
+                          <FontAwesomeIcon icon={faClock} size="sm" />{" "}
+                          {durationBySeat.length > 0 &&
+                          seat.id === durationBySeat[i]?.id
+                            ? getTotalTime(durationBySeat[i].value)
+                            : "0 min"}
+                        </span>
+                      </h2>
+                      <table className="min-w-full ">
+                        <thead className="border-b bg-gray-300 ">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+
+                            <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data[0]?.services?.map((service, j) => {
+                            const selectedOptions = new Set(seat.options);
+                            return (
+                              <tr
+                                key={j}
+                                className="border-b-2 border-gray-200"
                               >
-                                <input
-                                  type="checkbox"
-                                  name={service.service}
-                                  checked={selectedOptions.has(service.service)}
-                                  className="h-6 w-6"
-                                  id={service.service}
-                                  onChange={(event) =>
-                                    handleOptionChange(
-                                      event,
-                                      seat.id,
-                                      service,
-                                      seat.index
-                                    )
-                                  }
-                                  disabled={isAvailable(
-                                    seat,
-                                    i,
-                                    service.service
-                                  )}
-                                />
-                                <label className="text-gray-900">
-                                  {service.service}
-                                </label>
-                              </th>
-                              <td class="px-6 py-4 text-gray-900">
-                                Rs.{service.price}{" "}
-                              </td>
-                              <td class="px-6 py-4 text-gray-900">
-                                {service.duration}{" "}
-                                <FontAwesomeIcon icon={faClock} />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                  <input
+                                    type="checkbox"
+                                    name={service.service}
+                                    checked={selectedOptions.has(
+                                      service.service
+                                    )}
+                                    className="h-6 w-6"
+                                    id={service.service}
+                                    onChange={(event) =>
+                                      handleOptionChange(
+                                        event,
+                                        seat.id,
+                                        service,
+                                        seat.index
+                                      )
+                                    }
+                                    disabled={isAvailable(
+                                      seat,
+                                      i,
+                                      service.service
+                                    )}
+                                  />
+                                  <label className="text-gray-900">
+                                    {service.service}
+                                  </label>
+                                </td>
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  &#8377; {service.price}
+                                </td>
+
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  {service.duration} min
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="flex items-start mt-20 justify-center min-h-screen">
+                  <span className="buttonloader"></span>
                 </div>
+              )}
+            </div>
+            <div className="overflow-x-auto  lg:col-span-3 md:col-span-4">
+              <div
+                className={`card  p-5 ${
+                  height
+                    ? "md:sticky top-24  lg:py-5 transition-all delay-200"
+                    : ""
+                }`}
+              >
+                <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
+                <ul>
+                  <li>
+                    <div className="mb-2 flex justify-between ">
+                      <div>Date</div>
+                      <div className="">
+                        {moment(value).format("MMM Do YY")}
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="mb-2 flex justify-between">
+                      <div>Time</div>
+                      <div> {options[selectedValue].value}-7:00 PM</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="mb-2 flex justify-between">
+                      <div>Total</div>
+                      <div> &#8377; {totalAmount}</div>
+                    </div>
+                  </li>
+
+                  <li>
+                    <button
+                      disabled={buttonLoad}
+                      onClick={(e) => previewHandler(totalAmount, e)}
+                      className="primary-button flex items-center justify-center  w-full"
+                    >
+                      Preview{" "}
+                      {buttonLoad && <span className="buttonloader"></span>}
+                    </button>
+                  </li>
+                </ul>
               </div>
-            ))}
-          {!loading && <span className="loader  "></span>}
+            </div>
+          </div>
         </div>
-      </div>
-      <button
-        onClick={(e) => {
-          previewHandler(totalAmount, e);
-        }}
-        className="primary-button flex items-center justify-evenly"
-      >
-        Preview&nbsp;
-        {buttonLoad && <span className="buttonloader"></span>}
-      </button>
-    </form>
+      )}
+    </>
   );
   // <>ji</>
 };

@@ -169,3 +169,17 @@
   width: 100%;
   margin-top: 20px;
 }
+
+.neo {
+  background-image: url("https://res.cloudinary.com/duk9xkcp5/image/upload/v1687704167/pexels-pixabay-219677_kgdqgm.jpg");
+  height: fit-content;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  overflow-y: auto;
+}
+.nice {
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}

@@ -3,16 +3,18 @@ import React, { useCallback, useContext, useMemo } from "react";
 import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { SearchContext } from "../context/SearchContext";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
 import baseUrl from "../utils/client";
 import { toast } from "react-toastify";
 import useFetch from "../hooks/useFetch";
 import ParlourPreview from "./parlourPreview";
+import Layout from "../components/navbar/Layout";
+import Greeting from "../components/navbar/Greeting";
 
 const Test1 = (props) => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -20,19 +22,22 @@ const Test1 = (props) => {
   const [reserveState, setReserveState] = useState(null);
   const [parlourPreview, setParlourPreview] = useState(false);
 
+  const { state } = useLocation();
   const {
-    setOpen,
-    minValuesObj,
     shopId,
     shopName,
     shopOwner,
-
+    minValuesObj,
     selectedValue,
     value,
     options,
-  } = useMemo(() => props, [props]);
+  } = useMemo(() => state, [state]);
+
+  let w = window.innerWidth;
 
   const [loading, setLoading] = useState(false);
+
+  const [height, setHeight] = useState(false);
 
   const [durationBySeat, setDurationBySeat] = useState([]);
 
@@ -60,6 +65,28 @@ const Test1 = (props) => {
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
   const [totalTime, setTotalTime] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [parlourPreview]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >= 80) {
+        setHeight(true);
+      } else {
+        setHeight(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -487,26 +514,21 @@ const Test1 = (props) => {
     }
   };
 
-  return parlourPreview && reserveState !== null ? (
-    <div className="reserve-preview">
-      <div className="preview-container scrollable-container">
-        <ParlourPreview
-          state={reserveState}
-          setParlourPreview={setParlourPreview}
-        />
-      </div>
-    </div>
-  ) : (
-    <div className="parlour-reserve">
-      <div className="flex flex-col items-center  justify-center space-y-5 border-2 border-white rounded-md p-3 relative">
-        <FontAwesomeIcon
-          icon={faCircleXmark}
-          className="absolute top-0 right-0 text-white "
-          onClick={() => setOpen(false)}
-        />
-        <div className="md:flex md:mx-auto ">
-          <div className="px-2 ">
-            <p className="py-1 text-md text-white font-semibold">Categories</p>
+  return (
+    <>
+      {w >= 768 && <Layout />}
+      {w < 768 && <Greeting />}
+      {parlourPreview && reserveState !== null ? (
+        <div className="min-h-screen">
+          <ParlourPreview
+            state={reserveState}
+            setParlourPreview={setParlourPreview}
+          />
+        </div>
+      ) : (
+        <div className="pb-10">
+          <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
+            <p className="py-1 text-md text-black font-semibold">Categories</p>
 
             <select className="w-52" onChange={handleChange}>
               <option selected>Select a category</option>
@@ -514,116 +536,147 @@ const Test1 = (props) => {
                 return <option key={i}>{service}</option>;
               })}
             </select>
-          </div>{" "}
-        </div>
+          </h2>
 
-        {show && categoriesOptions?.length > 0 ? (
-          <div className="md:w-[70vw]  parlour-container scrollable-container mx-auto w-[98vw]">
-            <p className="py-3 text-xl font-semibold text-white">
-              Select Services
-            </p>
-            <strong className="pb-2 font-semibold text-sm text-white">
-              Note* You can select multiple seats at a time
-            </strong>
+          <div className="grid md:grid-cols-10 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
+            <div className="overflow-x-auto lg:col-span-7 md:col-span-6">
+              {show ? (
+                seats?.map((seat, i) => {
+                  return (
+                    <div className="card overflow-x-auto p-5">
+                      <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
+                        <span>Seat {i + 1}</span>
+                        <span>&#8377; 0</span>
+                        <span>
+                          <FontAwesomeIcon icon={faClock} size="sm" />{" "}
+                          {durationBySeat.length > 0 &&
+                          seat.id === durationBySeat[i]?.id
+                            ? getTotalTime(durationBySeat[i].value)
+                            : "0 min"}
+                        </span>
+                      </h2>
+                      <table className="min-w-full ">
+                        <thead className="border-b bg-gray-300 ">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+                            {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                              Category
+                            </th> */}
 
-            <div>
-              <p className="text-center mb-1 text-white">
-                {" "}
-                Amount : &#8377; {totalAmount}
-              </p>
-              <p className="text-center mb-1 text-white">
-                Selected Time : {options[selectedValue].value}
-              </p>
-            </div>
+                            <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {show &&
+                            categoriesOptions?.map((option, j) => {
+                              const selectedOptions = new Set(seat.options);
+                              return (
+                                <tr
+                                  key={j}
+                                  className="border-b-2 border-gray-200"
+                                >
+                                  <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                    <input
+                                      type="checkbox"
+                                      name={option.service}
+                                      checked={selectedOptions.has(
+                                        option.service
+                                      )}
+                                      className="h-6 w-6"
+                                      id={option.service}
+                                      onChange={(event) =>
+                                        handleOptionChange(
+                                          event,
+                                          seat.id,
+                                          option,
+                                          seat.index
+                                        )
+                                      }
+                                      disabled={isAvailable(i)}
+                                    />
+                                    <label className="text-gray-900">
+                                      {option.service}
+                                    </label>
+                                  </td>
+                                  <td className="p-5 text-right md:text-md text-sm">
+                                    &#8377; {option.price}
+                                  </td>
 
-            {seats?.map((seat, i) => {
-              return (
-                <div class="relative overflow-x-auto rounded-md py-3">
-                  <span>
-                    <h3 className="text-md font-bold px-5 pt-2 pb-2 text-white">
-                      Seat {i + 1}
-                    </h3>
-                    <h3 className="font-extrabold px-5 text-white pb-2">
-                      {durationBySeat.length > 0 &&
-                      seat.id === durationBySeat[i]?.id
-                        ? getTotalTime(durationBySeat[i]?.value)
-                        : "0 min"}
-                    </h3>
-                  </span>
-                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" class="px-6 py-3">
-                          Product name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Price
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Category
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                          Duration
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {show &&
-                        categoriesOptions?.map((option, j) => {
-                          const selectedOptions = new Set(seat.options);
-                          return (
-                            <tr
-                              key={j}
-                              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                            >
-                              <th
-                                scope="row"
-                                class="px-6 py-4 font-medium text-white whitespace-nowrap flex items-center space-x-2"
-                              >
-                                <input
-                                  type="checkbox"
-                                  name={option.service}
-                                  checked={selectedOptions.has(option.service)}
-                                  className="h-6 w-6"
-                                  onChange={(event) =>
-                                    handleOptionChange(
-                                      event,
-                                      seat.id,
-                                      option,
-                                      seat.index
-                                    )
-                                  }
-                                  disabled={isAvailable(i)}
-                                />
-                                <label className="text-white">
-                                  {option.service}
-                                </label>
-                              </th>
-                              <td class="px-6 py-4">{option.price}</td>
-                              <td class="px-6 py-4">{option.category}</td>
-                              <td class="px-6 py-4">{option.duration}</td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
+                                  {/* <td className="p-5 text-right md:text-md text-sm">
+                                    {option.category}
+                                  </td> */}
+                                  <td className="p-5 text-right md:text-md text-sm">
+                                    {option.duration} min
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="flex items-start mt-20 justify-center min-h-screen">
+                  <span className="buttonloader"></span>
                 </div>
-              );
-            })}
-            <button
-              onClick={(e) => {
-                previewHandler(totalAmount, e);
-              }}
-              className="primary-button flex items-center justify-evenly"
-            >
-              Preview
-            </button>
+              )}
+            </div>
+            <div className="overflow-x-auto  lg:col-span-3 md:col-span-4">
+              <div
+                className={`card  p-5 ${
+                  height
+                    ? "md:sticky top-24  lg:py-5 transition-all delay-200"
+                    : ""
+                }`}
+              >
+                <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
+                <ul>
+                  <li>
+                    <div className="mb-2 flex justify-between ">
+                      <div>Date</div>
+                      <div className="">
+                        {moment(value).format("MMM Do YY")}
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="mb-2 flex justify-between">
+                      <div>Time</div>
+                      <div> {options[selectedValue].value}-7:00 PM</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div className="mb-2 flex justify-between">
+                      <div>Total</div>
+                      <div> &#8377; {totalAmount}</div>
+                    </div>
+                  </li>
+
+                  <li>
+                    <button
+                      // disabled={buttonLoad}
+                      onClick={(e) => previewHandler(totalAmount, e)}
+                      className="primary-button flex items-center justify-center  w-full"
+                    >
+                      Preview{" "}
+                      {/* {buttonLoad && <span className="buttonloader"></span>} */}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-        ) : (
-          "Nothing"
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 
