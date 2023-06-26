@@ -193,7 +193,7 @@ const SalonPreview = (props) => {
             "url('https://res.cloudinary.com/duk9xkcp5/image/upload/v1687704167/pexels-pixabay-219677_kgdqgm.jpg')",
         }}
       >
-        <h2 className="mb-2 text-lg font-bold py-5 text-left md:px-10 px-2.5">
+        <h2 className="mb-2 text-lg font-extrabold text-white py-5 text-left md:px-10 px-2.5">
           Order Preview
         </h2>
 
