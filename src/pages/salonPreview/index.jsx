@@ -186,7 +186,13 @@ const SalonPreview = (props) => {
 
   return (
     <>
-      <div className="pb-20 min-h-screen">
+      <div
+        className="pb-20 min-h-screen  bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/duk9xkcp5/image/upload/v1687704167/pexels-pixabay-219677_kgdqgm.jpg')",
+        }}
+      >
         <h2 className="mb-2 text-lg font-bold py-5 text-left md:px-10 px-2.5">
           Order Preview
         </h2>

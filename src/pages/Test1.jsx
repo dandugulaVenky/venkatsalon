@@ -345,15 +345,30 @@ const Test1 = (props) => {
 
   //getting time selected for individual Seats
   const getTotalTime = useCallback(
-    (total) => {
-      const hours = Math.floor(total / 60);
-      const remainingMinutes = total % 60;
-      if (total >= 60) {
-        return `${hours} h, ${remainingMinutes} min`;
+    (seat) => {
+      const result = durationBySeat?.filter(
+        (option) => option.id === seat.id
+      )[0];
+
+      let ans = {};
+
+      if (result !== undefined) {
+        const hours = Math.floor(result.value / 60);
+        const remainingMinutes = result.value % 60;
+        if (result?.value >= 60) {
+          ans["time"] = `${hours} h, ${remainingMinutes} min`;
+          ans["amount"] = result.amount;
+        } else {
+          ans["time"] = ` ${remainingMinutes} min`;
+          ans["amount"] = result.amount;
+        }
       } else {
-        return ` ${remainingMinutes} min`;
+        ans["time"] = 0;
+        ans["amount"] = 0;
       }
+      return ans;
     },
+
     [durationBySeat]
   );
 
@@ -549,26 +564,18 @@ const Test1 = (props) => {
             <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
               {show ? (
                 seats?.map((seat, i) => {
+                  const seatValues = getTotalTime(seat);
+
                   const isDisabled = isAvailable(i);
                   return (
                     !isDisabled && (
-                      <div className="card overflow-x-auto p-5">
+                      <div className="card overflow-x-auto p-5" key={i}>
                         <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
                           <span>Seat {i + 1}</span>
-                          <span>
-                            &#8377;{" "}
-                            {durationBySeat?.length > 0 &&
-                            seat.id === durationBySeat[i]?.id
-                              ? durationBySeat[i].amount
-                              : "0"}
-                          </span>
-
+                          <span>&#8377; {seat ? seatValues.amount : 0} </span>
                           <span>
                             <FontAwesomeIcon icon={faClock} size="sm" />{" "}
-                            {durationBySeat.length > 0 &&
-                            seat.id === durationBySeat[i]?.id
-                              ? getTotalTime(durationBySeat[i].value)
-                              : "0 min"}
+                            {seat ? seatValues.time : 0}
                           </span>
                         </h2>
                         <table className="min-w-full ">

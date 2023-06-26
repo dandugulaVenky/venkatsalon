@@ -196,8 +196,14 @@ const ParlourPreview = (props) => {
 
   return (
     <>
-      <div className="pb-20 min-h-screen">
-        <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.2rem] pl-4 text-left text-black">
+      <div
+        className="pb-20 min-h-screen bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/duk9xkcp5/image/upload/v1687704167/pexels-pixabay-219677_kgdqgm.jpg')",
+        }}
+      >
+        <h2 className=" text-lg  py-5 md:pl-[4.2rem] pl-4 text-left text-white font-extrabold">
           Order Preview
         </h2>
 

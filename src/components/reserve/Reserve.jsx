@@ -3,7 +3,7 @@ import { faClock } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "./reserve.css";
 import useFetch from "../../hooks/useFetch";
-import { memo, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
@@ -69,23 +69,23 @@ const Reserve = () => {
     window.scrollTo(0, 0);
   }, [salonPreview]);
 
-  const handleScroll = useCallback(() => {
-    const scrollY = window.scrollY;
-    if (scrollY >= 80) {
-      setHeight(true);
-    } else {
-      setHeight(false);
-    }
-  }, []);
-
   useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >= 80) {
+        setHeight(true);
+      } else {
+        setHeight(false);
+      }
+    };
+
     window.addEventListener("scroll", handleScroll);
 
     // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleScroll]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -210,7 +210,7 @@ const Reserve = () => {
   //check if the room is available to book or not
 
   const isAvailable = useCallback(
-    (i) => {
+    (seat, i, service) => {
       const array = data[0]?.roomNumbers[i];
 
       const compareDate = moment(value).format("MMM Do YY");
@@ -253,10 +253,12 @@ const Reserve = () => {
       if (event.target.checked) {
         newAmount += service.price;
         seatAmount += service.price;
+
         newDuration += service.duration;
       } else {
         newAmount -= service.price;
         seatAmount -= service.price;
+
         newDuration -= service.duration;
       }
     }
@@ -271,6 +273,7 @@ const Reserve = () => {
               id: seatId,
               value: newDuration,
               amount: seatAmount,
+
               seatNo: seatIndex,
             };
           } else {
@@ -285,6 +288,7 @@ const Reserve = () => {
           id: seatId,
           value: newDuration,
           amount: seatAmount,
+
           seatNo: seatIndex,
         },
       ]);
@@ -309,15 +313,30 @@ const Reserve = () => {
 
   //getting time selected for individual Seats
   const getTotalTime = useCallback(
-    (total) => {
-      const hours = Math.floor(total / 60);
-      const remainingMinutes = total % 60;
-      if (total >= 60) {
-        return `${hours} h, ${remainingMinutes} min`;
+    (seat) => {
+      const result = durationBySeat?.filter(
+        (option) => option.id === seat.id
+      )[0];
+
+      let ans = {};
+
+      if (result !== undefined) {
+        const hours = Math.floor(result.value / 60);
+        const remainingMinutes = result.value % 60;
+        if (result?.value >= 60) {
+          ans["time"] = `${hours} h, ${remainingMinutes} min`;
+          ans["amount"] = result.amount;
+        } else {
+          ans["time"] = ` ${remainingMinutes} min`;
+          ans["amount"] = result.amount;
+        }
       } else {
-        return ` ${remainingMinutes} min`;
+        ans["time"] = 0;
+        ans["amount"] = 0;
       }
+      return ans;
     },
+
     [durationBySeat]
   );
 
@@ -507,87 +526,82 @@ const Reserve = () => {
             <div className="overflow-x-auto lg:col-span-3 md:col-span-3">
               {show ? (
                 seats?.map((seat, i) => {
-                  const isDisabled = isAvailable(i);
+                  const seatValues = getTotalTime(seat);
+
                   return (
-                    !isDisabled && (
-                      <div className="card overflow-x-auto p-5">
-                        <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5">
-                          <span>Seat {i + 1}</span>
-                          <span>
-                            &#8377;
-                            {durationBySeat?.length > 0 &&
-                            seat.id === durationBySeat[i]?.id
-                              ? durationBySeat[i].amount
-                              : "0"}
-                          </span>
-                          <span>
-                            <FontAwesomeIcon icon={faClock} size="sm" />
-                            {durationBySeat?.length > 0 &&
-                            seat.id === durationBySeat[i]?.id
-                              ? getTotalTime(durationBySeat[i].value)
-                              : "0 min"}
-                          </span>
-                        </h2>
-                        <table className="min-w-full ">
-                          <thead className="border-b bg-gray-300 ">
-                            <tr className="border-b-2 border-gray-200">
-                              <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                Service Name
-                              </th>
-                              <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                Price
-                              </th>
+                    <div className="card overflow-x-auto p-5" key={i}>
+                      <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5">
+                        <span>Seat {i + 1}</span>
 
-                              <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                Duration
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {data[0]?.services?.map((service, j) => {
-                              const selectedOptions = new Set(seat.options);
-                              return (
-                                <tr
-                                  key={j}
-                                  className="border-b-2 border-gray-200"
-                                >
-                                  <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                    <input
-                                      type="checkbox"
-                                      name={service.service}
-                                      checked={selectedOptions.has(
-                                        service.service
-                                      )}
-                                      className={`h-6 w-6`}
-                                      id={service.service}
-                                      onChange={(event) =>
-                                        handleOptionChange(
-                                          event,
-                                          seat.id,
-                                          service,
-                                          seat.index
-                                        )
-                                      }
-                                      disabled={isDisabled}
-                                    />
-                                    <label className="text-gray-900">
-                                      {service.service}
-                                    </label>
-                                  </td>
-                                  <td className="p-5 text-right md:text-md text-sm">
-                                    &#8377; {service.price}
-                                  </td>
+                        <span>&#8377; {seat ? seatValues.amount : 0} </span>
+                        <span>
+                          <FontAwesomeIcon icon={faClock} size="sm" />{" "}
+                          {seat ? seatValues.time : 0}
+                        </span>
+                      </h2>
+                      <table className="min-w-full ">
+                        <thead className="border-b bg-gray-300 ">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
 
-                                  <td className="p-5 text-right md:text-md text-sm">
-                                    {service.duration} min
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    )
+                            <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data[0]?.services?.map((service, j) => {
+                            const selectedOptions = new Set(seat.options);
+                            return (
+                              <tr
+                                key={j}
+                                className="border-b-2 border-gray-200"
+                              >
+                                <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                  <input
+                                    type="checkbox"
+                                    name={service.service}
+                                    checked={selectedOptions.has(
+                                      service.service
+                                    )}
+                                    className="h-6 w-6"
+                                    id={service.service}
+                                    onChange={(event) =>
+                                      handleOptionChange(
+                                        event,
+                                        seat.id,
+                                        service,
+                                        seat.index
+                                      )
+                                    }
+                                    disabled={isAvailable(
+                                      seat,
+                                      i,
+                                      service.service
+                                    )}
+                                  />
+                                  <label className="text-gray-900">
+                                    {service.service}
+                                  </label>
+                                </td>
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  &#8377; {service.price}
+                                </td>
+
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  {service.duration} min
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   );
                 })
               ) : (
@@ -648,4 +662,4 @@ const Reserve = () => {
   // <>ji</>
 };
 
-export default memo(Reserve);
+export default Reserve;
