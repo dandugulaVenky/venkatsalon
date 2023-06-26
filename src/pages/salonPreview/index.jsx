@@ -202,7 +202,7 @@ const SalonPreview = (props) => {
             {showPreviewServices?.map((seat, i) => {
               return (
                 seat.show.length > 0 && (
-                  <div className="card overflow-x-auto p-5">
+                  <div className="card overflow-x-auto p-5" key={i}>
                     <h2 className="mb-2 text-lg">
                       Selected Items - Seat {seat.index + 1}
                     </h2>
