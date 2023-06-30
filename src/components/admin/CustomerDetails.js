@@ -5,9 +5,9 @@ import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AuthContext } from "../context/AuthContext";
-import useFetch from "../hooks/useFetch";
-import baseUrl from "../utils/client";
+import { AuthContext } from "../../context/AuthContext";
+import useFetch from "../../hooks/useFetch";
+import baseUrl from "../../utils/client";
 
 const CustomerDetails = ({ item, setOpen }) => {
   const navigate = useNavigate();

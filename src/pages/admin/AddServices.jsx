@@ -1,0 +1,279 @@
+import React, { useContext, useEffect } from "react";
+import {
+  parlourCategories,
+  parlourServices,
+} from "../../utils/parlourServices";
+import { salonCategories, salonServices } from "../../utils/salonServices";
+
+import axios from "axios";
+import { useState } from "react";
+import Layout from "../../components/navbar/Layout";
+import Greeting from "../../components/navbar/Greeting";
+import Footer from "../../components/footer/Footer";
+import baseUrl from "../../utils/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../context/AuthContext";
+
+const AddServices = () => {
+  const type = "parlour";
+
+  const categories = type === "parlour" ? parlourCategories : salonCategories;
+  const services = type === "parlour" ? parlourServices : salonServices;
+
+  const [categoriesOptions, setCategoriesOptions] = useState();
+  const [category, setCategory] = useState();
+  const { user } = useContext(AuthContext);
+  const [allServices, setAllServices] = useState({});
+  const [shopServices, setShopServices] = useState([]);
+  const [roomId, setRoomId] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data } = await axios.get(
+        `${baseUrl}/api/hotels/room/${user?.shopId}`
+      );
+
+      setRoomId(data[0]?._id);
+    };
+    fetchData();
+  }, [user?.shopId]);
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    const result = categories.filter((category, i) =>
+      category.category === e.target.value ? category.services : null
+    );
+    setCategoriesOptions(result[0].services);
+  };
+
+  const allHandleChange = (e, option) => {
+    let value = e.target.value;
+    if (option === "price" || option === "duration") {
+      value = Number(value);
+    }
+    setAllServices((prev) => ({ ...prev, [option]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(allServices);
+    if (
+      allServices.service === "" ||
+      allServices.price === "" ||
+      allServices.price === 0 ||
+      allServices.duration === "" ||
+      allServices.duration === 0
+    ) {
+      toast("Something went wrong!");
+      return;
+    }
+
+    let result = {
+      category: category,
+      services: allServices,
+    };
+
+    if (shopServices.length > 0) {
+      const res = shopServices.map((shopService) => {
+        if (shopService.category === category) {
+          const existing = shopService.services.service === allServices.service;
+
+          if (existing) {
+            toast(`already added! ${shopService.services.service}`);
+            return 0;
+          } else {
+            return 1;
+          }
+        } else {
+          return 1;
+        }
+      });
+      console.log(res);
+      if (res.includes(0)) {
+        return null;
+      }
+    }
+    setShopServices((prevServices) => [...prevServices, result]);
+
+    setAllServices({
+      service: "",
+      price: "",
+      duration: "",
+    });
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+
+    if (shopServices?.length === 0) {
+      return alert("Please include all fields!");
+    }
+
+    let a = shopServices;
+
+    let groupedServices = a.reduce((accumulator, item) => {
+      const { category, services } = item;
+
+      if (!accumulator[category]) {
+        accumulator[category] = {
+          category: category,
+          services: [],
+        };
+      }
+
+      accumulator[category].services.push(services);
+
+      return accumulator;
+    }, {});
+
+    // Step 2: Convert the grouped services object into an array
+    let mergedServices = Object.values(groupedServices);
+
+    const finalMergedServices = mergedServices.map((mergedService) => {
+      const ans = mergedService.services.map((service) => {
+        return {
+          ...service,
+          category: mergedService.category, // Add a new key-value pair
+        };
+      });
+
+      return {
+        category: mergedService.category,
+        services: ans,
+      };
+    });
+
+    try {
+      const res = await axios.post(
+        `${baseUrl}/api/rooms/addRoomServices/${roomId}`,
+        {
+          parlourServices: finalMergedServices,
+        }
+      );
+
+      if (res.status === 201) {
+        toast("added successfully!");
+        setAllServices(null);
+        setTimeout(() => navigate("/admin"), 2000);
+      } else {
+        toast("Something wrong!");
+        return;
+      }
+    } catch (err) {
+      const message = err.response.data.existingServices;
+      console.log(message);
+      const show = message.map((res) => res.service);
+      alert(`This services are already present { ${show} }`);
+      //   alert(err);
+    }
+  };
+  let w = window.innerWidth;
+  return (
+    <div>
+      {w >= 768 && <Layout />}
+      {w < 768 && <Greeting />}
+      <div className="md:py-10 px-5 min-h-screen">
+        <div className="flex md:flex-row flex-col flex-wrap items-center justify-around py-10 md:space-y-0 space-y-3">
+          <select
+            onChange={handleCategoryChange}
+            className="border-2 border-[#00ccbb] w-full md:w-auto "
+            value={category}
+          >
+            <option selected>Select a category</option>
+            {services.map((service, i) => {
+              return <option key={i}>{service}</option>;
+            })}
+          </select>
+          <select
+            onChange={(e) => allHandleChange(e, "service")}
+            className="border-2 border-[#00ccbb] w-full md:w-auto"
+            value={allServices?.service}
+          >
+            <option selected>Select a service</option>
+            {categoriesOptions?.map((service, i) => {
+              return <option key={i}>{service.name}</option>;
+            })}
+          </select>
+          <select
+            onChange={(e) => allHandleChange(e, "price")}
+            className="border-2 border-[#00ccbb] w-full md:w-auto"
+            value={allServices?.price}
+          >
+            <option selected>Select price</option>
+            {[
+              100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
+              1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
+            ].map((price, i) => {
+              return <option key={i}>{price}</option>;
+            })}
+          </select>{" "}
+          <select
+            onChange={(e) => allHandleChange(e, "duration")}
+            className="border-2 border-[#00ccbb] w-full md:w-auto"
+            value={allServices?.duration}
+          >
+            <option selected>Select duration in minutes</option>
+            {[
+              10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
+            ].map((duration, i) => {
+              return <option key={i}>{duration}</option>;
+            })}
+          </select>
+          <button className="primary-button" onClick={handleSubmit}>
+            AddMass
+          </button>
+        </div>
+        <div class="relative overflow-x-auto">
+          <table class="w-full text-sm text-left text-gray-500 ">
+            <thead class="text-xs text-white uppercase bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3">
+                  Category Name{" "}
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Service Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Price
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Duration
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {shopServices?.length > 0
+                ? shopServices.map((service, i) => {
+                    return (
+                      <tr
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        key={i}
+                      >
+                        <th
+                          scope="row"
+                          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {service.category}
+                        </th>
+                        <td class="px-6 py-4">{service.services.service}</td>
+                        <td class="px-6 py-4">{service.services.price}</td>
+                        <td class="px-6 py-4">{service.services.duration}</td>
+                      </tr>
+                    );
+                  })
+                : "Not Found"}
+            </tbody>
+          </table>
+        </div>
+        <button className="primary-button my-4" onClick={handleClick}>
+          Confirm
+        </button>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default AddServices;

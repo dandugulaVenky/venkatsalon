@@ -34,6 +34,7 @@ input,
 select {
   @apply rounded border p-1  outline-none border-blue-900 ring-white bg-white text-black font-rubik   focus:ring;
 }
+
 input::placeholder {
   color: rgb(146, 148, 152);
   font-size: small;

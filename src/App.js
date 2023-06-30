@@ -32,6 +32,11 @@ import ParlourPreview from "./pages/parlourPreview";
 import SalonPreview from "./pages/salonPreview";
 import Reserve from "./components/reserve/Reserve";
 import Test1 from "./pages/Test1";
+import Transactions from "./pages/admin/Transactions";
+import AdminOrders from "./pages/admin/AdminOrders";
+import Packages from "./pages/admin/Packages";
+import MyServices from "./pages/admin/MyServices";
+import AddServices from "./pages/admin/AddServices";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -79,6 +84,47 @@ function App() {
           element={
             <ProtectedRoute>
               <Admin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/transactions"
+          element={
+            <ProtectedRoute>
+              <Transactions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <ProtectedRoute>
+              <AdminOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/packages"
+          element={
+            <ProtectedRoute>
+              <Packages />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/my-services"
+          element={
+            <ProtectedRoute>
+              <MyServices />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/add-services"
+          element={
+            <ProtectedRoute>
+              <AddServices />
             </ProtectedRoute>
           }
         />
