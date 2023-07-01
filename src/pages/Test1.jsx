@@ -12,7 +12,7 @@ import axios from "axios";
 import baseUrl from "../utils/client";
 import { toast } from "react-toastify";
 import useFetch from "../hooks/useFetch";
-import ParlourPreview from "./parlourPreview";
+import ParlourPreview from "./preview";
 import Layout from "../components/navbar/Layout";
 import Greeting from "../components/navbar/Greeting";
 
@@ -542,10 +542,7 @@ const Test1 = (props) => {
       {w < 768 && <Greeting />}
       {parlourPreview && reserveState !== null ? (
         <div className="min-h-screen">
-          <ParlourPreview
-            state={reserveState}
-            setParlourPreview={setParlourPreview}
-          />
+          <ParlourPreview state={reserveState} setPreview={setParlourPreview} />
         </div>
       ) : (
         <div className="pb-10">

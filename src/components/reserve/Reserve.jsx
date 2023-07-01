@@ -1,23 +1,30 @@
+import React, { useCallback, useContext, useMemo } from "react";
+
+import { useState, useEffect } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
-import "./reserve.css";
-import useFetch from "../../hooks/useFetch";
-import { useContext, useState } from "react";
-import { SearchContext } from "../../context/SearchContext";
-import axios from "axios";
-import { AuthContext } from "../../context/AuthContext";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useCallback } from "react";
-import { useMemo } from "react";
-import baseUrl from "../../utils/client";
+import moment from "moment";
+import axios from "axios";
+
 import { toast } from "react-toastify";
-import SalonPreview from "../../pages/salonPreview";
+
+import { SearchContext } from "../../context/SearchContext";
+import baseUrl from "../../utils/client";
+import { AuthContext } from "../../context/AuthContext";
 import Layout from "../navbar/Layout";
 import Greeting from "../navbar/Greeting";
+import SalonPreview from "../../pages/preview";
+import useFetch from "../../hooks/useFetch";
 
 const Reserve = () => {
+  const [categoriesOptions, setCategoriesOptions] = useState();
+  const [categories, setCategories] = useState();
+  const [reserveState, setReserveState] = useState(null);
+  const [salonPreview, setSalonPreview] = useState(false);
+
   const { state } = useLocation();
   const {
     shopId,
@@ -29,19 +36,22 @@ const Reserve = () => {
     options,
   } = useMemo(() => state, [state]);
 
+  let w = window.innerWidth;
+
   const [loading, setLoading] = useState(false);
-  const [buttonLoad, setButtonLoad] = useState(false);
-  const w = window.innerWidth;
-
-  const [reserveState, setReserveState] = useState(null);
-
-  const [salonPreview, setSalonPreview] = useState(false);
-  const [seats, setSeats] = useState();
-  const [durations, setDurations] = useState([]);
-  const [show, setShow] = useState(false);
-  const [totalAmount, setTotalAmount] = useState(0);
 
   const [height, setHeight] = useState(false);
+
+  const [durationBySeat, setDurationBySeat] = useState([]);
+
+  const [show, setShow] = useState(false);
+  const [durations, setDurations] = useState([]);
+
+  const [previewServices, setPreviewServices] = useState();
+
+  const [seats, setSeats] = useState();
+  const [parlourServices, setParlourServices] = useState();
+  const [totalAmount, setTotalAmount] = useState(0);
 
   const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
 
@@ -57,14 +67,8 @@ const Reserve = () => {
   const navigate = useNavigate();
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
-
-  const [previewServices, setPreviewServices] = useState();
-
-  const [durationBySeat, setDurationBySeat] = useState([]);
-
   const [totalTime, setTotalTime] = useState(0);
 
-  //First step --------------------------------------------------------------------------->
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [salonPreview]);
@@ -90,26 +94,48 @@ const Reserve = () => {
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
-      setPreviewServices(data[0]?.services);
+      // console.log(data[0].roomNumbers);
 
-      const totalTimeOfServices = data[0]?.services.reduce((acc, service) => {
-        return (acc += service.duration);
-      }, 0);
+      const res =
+        data &&
+        data[0]?.roomNumbers?.map((id, i) => {
+          return { id: id._id, options: [], index: i };
+        });
+
+      setSeats(res);
+      setPreviewServices(data[0]?.parlourServices);
+
+      const services = (data[0]?.parlourServices || []).reduce((arr, item) => {
+        arr.push(item.category);
+        return arr;
+      }, []);
+
+      const mergedPreviewServices = data[0]?.parlourServices
+        ?.reduce((arr, item) => {
+          arr.push(item.services);
+          return arr;
+        }, [])
+        .reduce((arr, item) => {
+          return arr.concat(item);
+        }, []);
+
+      const totalTimeOfServices = mergedPreviewServices.reduce(
+        (acc, service) => {
+          return (acc += service.duration);
+        },
+        0
+      );
 
       setTotalTime(totalTimeOfServices);
 
-      const res = data[0].roomNumbers?.map((id, i) => {
-        return { id: id._id, options: [], index: i };
-      });
-
-      setSeats(res);
+      setParlourServices(services);
+      setCategories(data[0]?.parlourServices);
       setLoading(true);
     };
     !loading && fetchData();
   }, [loading, shopId]);
 
   //Second Step----------------------------------------------------------------------------->
-
   //finding wether there is booking in front of this selected time here
   useEffect(() => {
     const findDurationsToBlock = () => {
@@ -210,7 +236,7 @@ const Reserve = () => {
   //check if the room is available to book or not
 
   const isAvailable = useCallback(
-    (seat, i, service) => {
+    (i) => {
       const array = data[0]?.roomNumbers[i];
 
       const compareDate = moment(value).format("MMM Do YY");
@@ -228,6 +254,12 @@ const Reserve = () => {
 
   //update the options with ids corrospondingly with inputs
 
+  const handleChange = (e) => {
+    const result = categories.filter((category, i) =>
+      category.category === e.target.value ? category.services : null
+    );
+    setCategoriesOptions(result[0].services);
+  };
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
@@ -257,7 +289,7 @@ const Reserve = () => {
         newDuration += service.duration;
       } else {
         newAmount -= service.price;
-        seatAmount -= service.price;
+        seatAmount += service.price;
 
         newDuration -= service.duration;
       }
@@ -346,7 +378,6 @@ const Reserve = () => {
 
   const previewHandler = async (amount, e) => {
     e.preventDefault();
-
     if (amount < 10) {
       return alert("Please select atleast an option!");
     }
@@ -509,99 +540,108 @@ const Reserve = () => {
     <>
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      {salonPreview ? (
+      {salonPreview && reserveState !== null ? (
         <div className="min-h-screen">
-          <SalonPreview
-            state={reserveState}
-            setSalonPreview={setSalonPreview}
-          />
+          <SalonPreview state={reserveState} setPreview={setSalonPreview} />
         </div>
       ) : (
         <div className="pb-10">
           <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
-            Select Services
+            <p className="py-1 text-md text-black font-semibold">Categories</p>
+
+            <select className="w-52" onChange={handleChange}>
+              <option selected>Select a category</option>
+              {parlourServices?.map((service, i) => {
+                return <option key={i}>{service}</option>;
+              })}
+            </select>
           </h2>
 
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
-            <div className="overflow-x-auto lg:col-span-3 md:col-span-3">
+            <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
               {show ? (
                 seats?.map((seat, i) => {
                   const seatValues = getTotalTime(seat);
 
+                  const isDisabled = isAvailable(i);
                   return (
-                    <div className="card overflow-x-auto p-5" key={i}>
-                      <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5">
-                        <span>Seat {i + 1}</span>
+                    !isDisabled && (
+                      <div className="card overflow-x-auto p-5" key={i}>
+                        <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
+                          <span>Seat {i + 1}</span>
+                          <span>&#8377; {seat ? seatValues.amount : 0} </span>
+                          <span>
+                            <FontAwesomeIcon icon={faClock} size="sm" />{" "}
+                            {seat ? seatValues.time : 0}
+                          </span>
+                        </h2>
+                        <table className="min-w-full ">
+                          <thead className="border-b bg-gray-300 ">
+                            <tr className="border-b-2 border-gray-200">
+                              <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                Service Name
+                              </th>
+                              <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                                Price
+                              </th>
+                              {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                              Category
+                            </th> */}
 
-                        <span>&#8377; {seat ? seatValues.amount : 0} </span>
-                        <span>
-                          <FontAwesomeIcon icon={faClock} size="sm" />{" "}
-                          {seat ? seatValues.time : 0}
-                        </span>
-                      </h2>
-                      <table className="min-w-full ">
-                        <thead className="border-b bg-gray-300 ">
-                          <tr className="border-b-2 border-gray-200">
-                            <th className="text-left md:text-md text-sm md:p-5 p-4">
-                              Service Name
-                            </th>
-                            <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                              Price
-                            </th>
+                              <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                Duration
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {show &&
+                              categoriesOptions?.map((option, j) => {
+                                const selectedOptions = new Set(seat.options);
+                                return (
+                                  <tr
+                                    key={j}
+                                    className="border-b-2 border-gray-200"
+                                  >
+                                    <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                      <input
+                                        type="checkbox"
+                                        name={option.service}
+                                        checked={selectedOptions.has(
+                                          option.service
+                                        )}
+                                        className="h-6 w-6"
+                                        id={option.service}
+                                        onChange={(event) =>
+                                          handleOptionChange(
+                                            event,
+                                            seat.id,
+                                            option,
+                                            seat.index
+                                          )
+                                        }
+                                        // disabled={isAvailable(i)}
+                                      />
+                                      <label className="text-gray-900">
+                                        {option.service}
+                                      </label>
+                                    </td>
+                                    <td className="p-5 text-right md:text-md text-sm">
+                                      &#8377; {option.price}
+                                    </td>
 
-                            <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                              Duration
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data[0]?.services?.map((service, j) => {
-                            const selectedOptions = new Set(seat.options);
-                            return (
-                              <tr
-                                key={j}
-                                className="border-b-2 border-gray-200"
-                              >
-                                <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                  <input
-                                    type="checkbox"
-                                    name={service.service}
-                                    checked={selectedOptions.has(
-                                      service.service
-                                    )}
-                                    className="h-6 w-6"
-                                    id={service.service}
-                                    onChange={(event) =>
-                                      handleOptionChange(
-                                        event,
-                                        seat.id,
-                                        service,
-                                        seat.index
-                                      )
-                                    }
-                                    disabled={isAvailable(
-                                      seat,
-                                      i,
-                                      service.service
-                                    )}
-                                  />
-                                  <label className="text-gray-900">
-                                    {service.service}
-                                  </label>
-                                </td>
-                                <td className="p-5 text-right md:text-md text-sm">
-                                  &#8377; {service.price}
-                                </td>
-
-                                <td className="p-5 text-right md:text-md text-sm">
-                                  {service.duration} min
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
+                                    {/* <td className="p-5 text-right md:text-md text-sm">
+                                    {option.category}
+                                  </td> */}
+                                    <td className="p-5 text-right md:text-md text-sm">
+                                      {option.duration} min
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )
                   );
                 })
               ) : (
@@ -643,12 +683,12 @@ const Reserve = () => {
 
                   <li>
                     <button
-                      disabled={buttonLoad}
+                      // disabled={buttonLoad}
                       onClick={(e) => previewHandler(totalAmount, e)}
                       className="primary-button flex items-center justify-center  w-full"
                     >
                       Preview{" "}
-                      {buttonLoad && <span className="buttonloader"></span>}
+                      {/* {buttonLoad && <span className="buttonloader"></span>} */}
                     </button>
                   </li>
                 </ul>
@@ -659,7 +699,6 @@ const Reserve = () => {
       )}
     </>
   );
-  // <>ji</>
 };
 
 export default Reserve;

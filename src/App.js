@@ -28,8 +28,7 @@ import Orders from "./pages/ironing/iron-pages/Orders";
 import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 import Test from "./pages/Test1";
-import ParlourPreview from "./pages/parlourPreview";
-import SalonPreview from "./pages/salonPreview";
+
 import Reserve from "./components/reserve/Reserve";
 import Test1 from "./pages/Test1";
 import Transactions from "./pages/admin/Transactions";

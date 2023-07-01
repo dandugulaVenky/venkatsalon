@@ -149,7 +149,7 @@ const AddServices = () => {
       const res = await axios.post(
         `${baseUrl}/api/rooms/addRoomServices/${roomId}`,
         {
-          parlourServices: finalMergedServices,
+          services: finalMergedServices,
         }
       );
 

@@ -22,7 +22,7 @@ const MyServices = () => {
 
   let w = window.innerWidth;
 
-  const [parlourServices, setParlourServices] = useState();
+  const [shopServices, setShopServices] = useState();
 
   const [edit, setEdit] = useState(false);
 
@@ -47,15 +47,12 @@ const MyServices = () => {
       const { data } = await axios.get(
         `${baseUrl}/api/hotels/room/${user?.shopId}`
       );
-      const parlourServices = (data[0]?.parlourServices || []).reduce(
-        (arr, item) => {
-          arr.push(item.category);
-          return arr;
-        },
-        []
-      );
+      const services = (data[0]?.services || []).reduce((arr, item) => {
+        arr.push(item.category);
+        return arr;
+      }, []);
 
-      const mergedServices = data[0]?.parlourServices
+      const mergedServices = data[0]?.services
         ?.reduce((arr, item) => {
           arr.push(item.services);
           return arr;
@@ -67,8 +64,8 @@ const MyServices = () => {
       setRoomId(data[0]?._id);
       setAllServices(mergedServices);
       setCategoriesOptions(mergedServices);
-      setParlourServices(parlourServices);
-      setCategories(data[0]?.parlourServices);
+      setShopServices(services);
+      setCategories(data[0]?.services);
     };
     fetchData();
   }, [user?.shopId, showInclusions, edit, deleted]);
@@ -361,7 +358,7 @@ const MyServices = () => {
                   <p className="text-white">
                     Cost of Services : &#8377;&nbsp;
                     {showInclusions?.inclusions.reduce(
-                      (acc, service) => acc + service.price,
+                      (acc, service) => acc + service?.price,
                       0
                     )}
                   </p>
@@ -389,12 +386,12 @@ const MyServices = () => {
                         <tr key={j} className="border-b-2 border-white">
                           <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
                             <label className="text-white">
-                              {option.service}
+                              {option?.service}
                             </label>
                           </td>
                           <td className="p-5 text-right md:text-md text-sm">
                             <label className="text-white">
-                              &#8377; {option.price}
+                              &#8377; {option?.price}
                             </label>
                           </td>
 
@@ -403,7 +400,7 @@ const MyServices = () => {
                                         </td> */}
                           <td className="p-5 text-right md:text-md text-sm">
                             <label className="text-white">
-                              {option.duration} min
+                              {option?.duration} min
                             </label>
                           </td>
                         </tr>
@@ -428,7 +425,7 @@ const MyServices = () => {
 
               <select className="w-52" onChange={handleChange}>
                 <option selected>Select a category</option>
-                {parlourServices?.map((service, i) => {
+                {shopServices?.map((service, i) => {
                   return <option key={i}>{service}</option>;
                 })}
               </select>

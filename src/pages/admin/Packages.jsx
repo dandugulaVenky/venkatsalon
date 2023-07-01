@@ -22,7 +22,7 @@ const Packages = () => {
 
   const [height, setHeight] = useState(false);
 
-  const [parlourServices, setParlourServices] = useState();
+  const [services, setServices] = useState();
   const [roomId, setRoomId] = useState();
   const [packageName, setPackageName] = useState();
   const [preview, setPreview] = useState(false);
@@ -54,20 +54,17 @@ const Packages = () => {
         `${baseUrl}/api/hotels/room/${user?.shopId}`
       );
 
-      const parlourServices = (data[0]?.parlourServices || []).reduce(
-        (arr, item) => {
-          arr.push(item.category);
-          return arr;
-        },
-        []
-      );
-      const packageRemovedServices = parlourServices.filter(
+      const services = (data[0]?.services || []).reduce((arr, item) => {
+        arr.push(item.category);
+        return arr;
+      }, []);
+      const packageRemovedServices = services.filter(
         (service) => service !== "packages"
       );
 
       setRoomId(data[0]?._id);
-      setParlourServices(packageRemovedServices);
-      setCategories(data[0]?.parlourServices);
+      setServices(packageRemovedServices);
+      setCategories(data[0]?.services);
       setLoading(true);
     };
     fetchData();
@@ -174,7 +171,7 @@ const Packages = () => {
 
               <select className="w-full" onChange={handleChange}>
                 <option selected>Select a category</option>
-                {parlourServices?.map((service, i) => {
+                {services?.map((service, i) => {
                   return <option key={i}>{service}</option>;
                 })}
               </select>

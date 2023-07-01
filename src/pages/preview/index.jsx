@@ -10,10 +10,10 @@ import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 
-const ParlourPreview = (props) => {
-  // const { state,setParlourPreview } = useLocation();
+const Preview = (props) => {
+  // const { state,setPreview } = useLocation();
 
-  const { state, setParlourPreview } = props;
+  const { state, setPreview } = props;
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -317,7 +317,7 @@ const ParlourPreview = (props) => {
                 </li>
                 <li>
                   <button
-                    onClick={() => setParlourPreview(false)}
+                    onClick={() => setPreview(false)}
                     className="primary-button w-full my-2"
                   >
                     Forgot Something?
@@ -333,4 +333,4 @@ const ParlourPreview = (props) => {
   );
 };
 
-export default ParlourPreview;
+export default Preview;
