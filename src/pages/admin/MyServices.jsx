@@ -11,7 +11,7 @@ import Greeting from "../../components/navbar/Greeting";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Footer from "../../components/footer/Footer";
 
 const MyServices = () => {
@@ -21,10 +21,6 @@ const MyServices = () => {
   const { user } = useContext(AuthContext);
 
   let w = window.innerWidth;
-
-  const [loading, setLoading] = useState(false);
-
-  const [height, setHeight] = useState(false);
 
   const [parlourServices, setParlourServices] = useState();
 
@@ -41,27 +37,9 @@ const MyServices = () => {
   const [allServices, setAllServices] = useState([]);
   const [roomId, setRoomId] = useState();
   const [deleted, setDeleted] = useState(false);
-  const navigate = useNavigate();
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      if (scrollY >= 80) {
-        setHeight(true);
-      } else {
-        setHeight(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
   useEffect(() => {
@@ -91,7 +69,6 @@ const MyServices = () => {
       setCategoriesOptions(mergedServices);
       setParlourServices(parlourServices);
       setCategories(data[0]?.parlourServices);
-      setLoading(true);
     };
     fetchData();
   }, [user?.shopId, showInclusions, edit, deleted]);
@@ -103,12 +80,22 @@ const MyServices = () => {
     setCategoriesOptions(result[0]?.services);
   };
 
+  const handleInput = (e, option) => {
+    let value = e.target.value;
+    if (option === "price" || option === "duration") {
+      value = Number(value);
+    }
+    setEditedService((prev) => ({ ...prev, [option]: value }));
+  };
+
   const handleEdit = (j, option) => {
     setEdit(j);
     setEditedService({
       service: option.service,
+      oldServiceName: option.service,
       price: option.price,
       duration: option.duration,
+      category: option.category,
     });
   };
   const [editedService, setEditedService] = useState({});
@@ -139,27 +126,16 @@ const MyServices = () => {
     }
   };
 
-  const handleInput = (e, option) => {
-    let value = e.target.value;
-    if (option === "price" || option === "duration") {
-      value = Number(value);
-    }
-    setEditedService((prev) => ({ ...prev, [option]: value }));
-  };
-
   // to add edited service data to backend
 
   const handleAdd = async (e) => {
     e.preventDefault();
 
-    const category = allServices.find(
-      (service) => service.service === editedService.service
-    );
     const { status } = await axios.post(
       `${baseUrl}/api/rooms/updateRoomService/${roomId}`,
       {
         editedService,
-        category: category.category,
+        allServices,
       },
       { withCredentials: true }
     );
@@ -178,8 +154,14 @@ const MyServices = () => {
   const handleInclusions = (e, option) => {
     e.preventDefault();
 
+    const inclusions = option.inclusions.map((inclusion) => {
+      return allServices.filter(
+        (service) => service.service === inclusion.service
+      )[0];
+    });
+
     setShowInclusions({
-      inclusions: option.inclusions,
+      inclusions: inclusions,
       package: option.service,
     });
   };
@@ -265,7 +247,7 @@ const MyServices = () => {
                 setCanAddServices(null);
                 setAddRemoveServices(null);
               }}
-              className="float-right text-white"
+              className="right-40 absolute top-40 text-white"
             />
             {addRemoveServices?.length > 0 ? (
               <>
@@ -369,12 +351,21 @@ const MyServices = () => {
               </>
             ) : (
               <>
-                <button
-                  className="primary-button my-3"
-                  onClick={handleAddOrRemove}
-                >
-                  Add / Remove Service
-                </button>
+                <div className="flex items-center justify-between">
+                  <button
+                    className="primary-button my-3"
+                    onClick={handleAddOrRemove}
+                  >
+                    Add / Remove Service
+                  </button>
+                  <p className="text-white">
+                    Cost of Services : &#8377;&nbsp;
+                    {showInclusions?.inclusions.reduce(
+                      (acc, service) => acc + service.price,
+                      0
+                    )}
+                  </p>
+                </div>
                 <table className="min-w-[70vw] ">
                   <thead className="border-b bg-gray-300 ">
                     <tr className="border-b-2 border-gray-200">
@@ -481,9 +472,18 @@ const MyServices = () => {
                         return (
                           <tr key={j} className="border-b-2 border-white">
                             <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                              <label className="text-gray-900 font-extrabold">
-                                {option.service}
-                              </label>
+                              {edit === j ? (
+                                <input
+                                  type="text"
+                                  value={editedService.service}
+                                  onChange={(e) => handleInput(e, "service")}
+                                  readOnly={option.category !== "packages"}
+                                />
+                              ) : (
+                                <label className="text-gray-900">
+                                  &#8377; {option.service}
+                                </label>
+                              )}
                             </td>
                             <td className="p-5 text-right md:text-md text-sm">
                               {edit === j ? (

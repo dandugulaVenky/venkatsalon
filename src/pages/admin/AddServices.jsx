@@ -176,53 +176,76 @@ const AddServices = () => {
       {w < 768 && <Greeting />}
       <div className="md:py-10 px-5 min-h-screen">
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around py-10 md:space-y-0 space-y-3">
-          <select
-            onChange={handleCategoryChange}
-            className="border-2 border-[#00ccbb] w-full md:w-auto "
-            value={category}
-          >
-            <option selected>Select a category</option>
-            {services.map((service, i) => {
-              return <option key={i}>{service}</option>;
-            })}
-          </select>
-          <select
-            onChange={(e) => allHandleChange(e, "service")}
-            className="border-2 border-[#00ccbb] w-full md:w-auto"
-            value={allServices?.service}
-          >
-            <option selected>Select a service</option>
-            {categoriesOptions?.map((service, i) => {
-              return <option key={i}>{service.name}</option>;
-            })}
-          </select>
-          <select
-            onChange={(e) => allHandleChange(e, "price")}
-            className="border-2 border-[#00ccbb] w-full md:w-auto"
-            value={allServices?.price}
-          >
-            <option selected>Select price</option>
-            {[
-              100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
-              1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
-            ].map((price, i) => {
-              return <option key={i}>{price}</option>;
-            })}
-          </select>{" "}
-          <select
-            onChange={(e) => allHandleChange(e, "duration")}
-            className="border-2 border-[#00ccbb] w-full md:w-auto"
-            value={allServices?.duration}
-          >
-            <option selected>Select duration in minutes</option>
-            {[
-              10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
-            ].map((duration, i) => {
-              return <option key={i}>{duration}</option>;
-            })}
-          </select>
+          <div className="space-x-2">
+            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
+              1
+            </span>
+            <select
+              onChange={handleCategoryChange}
+              className="border-2 border-[#00ccbb] w-full md:w-auto "
+              value={category}
+            >
+              <option selected>Select a category</option>
+              {services.map((service, i) => {
+                return <option key={i}>{service}</option>;
+              })}
+            </select>
+          </div>
+          <div className="space-x-2">
+            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
+              2
+            </span>
+            <select
+              onChange={(e) => allHandleChange(e, "service")}
+              className="border-2 border-[#00ccbb] w-full md:w-auto"
+              value={allServices?.service}
+            >
+              <option selected>Select a service</option>
+              {categoriesOptions?.map((service, i) => {
+                return <option key={i}>{service.name}</option>;
+              })}
+            </select>
+          </div>
+
+          <div className="space-x-2">
+            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
+              3
+            </span>
+            <select
+              onChange={(e) => allHandleChange(e, "price")}
+              className="border-2 border-[#00ccbb] w-full md:w-auto"
+              value={allServices?.price}
+            >
+              <option selected>Select price</option>
+              {[
+                100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
+                1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
+              ].map((price, i) => {
+                return <option key={i}>{price}</option>;
+              })}
+            </select>
+          </div>
+
+          <div className="space-x-2">
+            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
+              4
+            </span>
+            <select
+              onChange={(e) => allHandleChange(e, "duration")}
+              className="border-2 border-[#00ccbb] w-full md:w-auto"
+              value={allServices?.duration}
+            >
+              <option selected>Select duration in minutes</option>
+              {[
+                10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140,
+                150,
+              ].map((duration, i) => {
+                return <option key={i}>{duration}</option>;
+              })}
+            </select>
+          </div>
           <button className="primary-button" onClick={handleSubmit}>
-            AddMass
+            Add To Table
           </button>
         </div>
         <div class="relative overflow-x-auto">
@@ -247,17 +270,14 @@ const AddServices = () => {
               {shopServices?.length > 0
                 ? shopServices.map((service, i) => {
                     return (
-                      <tr
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                        key={i}
-                      >
+                      <tr class="border-b bg-gray-800 text-white" key={i}>
                         <th
                           scope="row"
-                          class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          class="px-6 py-4 font-medium  whitespace-nowrap text-white"
                         >
                           {service.category}
                         </th>
-                        <td class="px-6 py-4">{service.services.service}</td>
+                        <td class="px-6 py-4 ">{service.services.service}</td>
                         <td class="px-6 py-4">{service.services.price}</td>
                         <td class="px-6 py-4">{service.services.duration}</td>
                       </tr>

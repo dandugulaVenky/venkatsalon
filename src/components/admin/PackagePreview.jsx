@@ -30,6 +30,10 @@ const PackagePreview = (props) => {
   }, []);
 
   const createHandler = async () => {
+    let serviceNames = services.map((service) => {
+      return { service: service.service };
+    });
+    console.log(serviceNames, "servicename");
     let finalArr = {
       category: "packages",
       services: {
@@ -37,7 +41,7 @@ const PackagePreview = (props) => {
         price: price,
         duration,
         category: "packages",
-        inclusions: services,
+        inclusions: serviceNames,
       },
     };
 

@@ -148,9 +148,12 @@ const Packages = () => {
         <div className="pb-10 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
           <div className="mb-2 py-5  flex items-center justify-around flex-wrap flex-grow basis-full">
             <div className="md:w-auto w-full">
-              <p className="py-1 font-semibold text-lg  ">
-                Enter a package name
-              </p>
+              <div className="flex items-center justify-between">
+                <p className="py-2 font-semibold text-lg  ">Package name </p>
+                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1.5 text-white">
+                  1
+                </span>
+              </div>
               <input
                 type="text"
                 className="h-8 w-full"
@@ -159,10 +162,15 @@ const Packages = () => {
                 onChange={(e) => setPackageName(e.target.value)}
               ></input>
             </div>
-            <div className="text-lg font-bold  text-left text-black md:w-auto w-full">
-              <p className="py-1 text-md text-black font-semibold">
-                Categories
-              </p>
+            <div className="text-lg  text-left text-black md:w-auto w-full">
+              <div className="flex items-center justify-between py-1">
+                <p className="py-1 text-md text-black font-semibold">
+                  Categories
+                </p>
+                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1 text-white">
+                  2
+                </span>
+              </div>
 
               <select className="w-full" onChange={handleChange}>
                 <option selected>Select a category</option>
@@ -173,7 +181,12 @@ const Packages = () => {
             </div>
 
             <div className="text-lg font-bold  text-left text-black md:w-auto w-full">
-              <p className="py-1 text-md text-black font-semibold">Price</p>
+              <div className="flex items-center justify-between py-1">
+                <p className=" text-md text-black font-semibold">Price</p>
+                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1 text-white">
+                  3
+                </span>
+              </div>
               <input
                 type="text"
                 className="h-8 w-full"
