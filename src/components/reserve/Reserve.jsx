@@ -103,14 +103,14 @@ const Reserve = () => {
         });
 
       setSeats(res);
-      setPreviewServices(data[0]?.parlourServices);
+      setPreviewServices(data[0]?.services);
 
-      const services = (data[0]?.parlourServices || []).reduce((arr, item) => {
+      const services = (data[0]?.services || []).reduce((arr, item) => {
         arr.push(item.category);
         return arr;
       }, []);
 
-      const mergedPreviewServices = data[0]?.parlourServices
+      const mergedPreviewServices = data[0]?.services
         ?.reduce((arr, item) => {
           arr.push(item.services);
           return arr;
@@ -129,7 +129,7 @@ const Reserve = () => {
       setTotalTime(totalTimeOfServices);
 
       setParlourServices(services);
-      setCategories(data[0]?.parlourServices);
+      setCategories(data[0]?.services);
       setLoading(true);
     };
     !loading && fetchData();

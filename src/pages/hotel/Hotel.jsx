@@ -142,7 +142,7 @@ const Hotel = () => {
 
         setTotalTime(totalTimeOfServices);
       } else if (type === "parlour") {
-        const mergedPreviewServices = data[0]?.parlourServices
+        const mergedPreviewServices = data[0]?.services
           ?.reduce((arr, item) => {
             arr.push(item.services);
             return arr;
@@ -927,7 +927,6 @@ const Hotel = () => {
   }
 
   const matchedArrays = findMatchingArrays(mergedReady);
-
   const handleTime = (item) => {
     setTimeReserve(item.value);
     const selectedOption = options.find(
