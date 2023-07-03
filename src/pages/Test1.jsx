@@ -100,9 +100,9 @@ const Test1 = (props) => {
         });
 
       setSeats(res);
-      setPreviewServices(data[0]?.parlourServices);
+      setPreviewServices(data[0]?.services);
 
-      const parlourServices = (data[0]?.parlourServices || []).reduce(
+      const parlourServices = (data[0]?.services || []).reduce(
         (arr, item) => {
           arr.push(item.category);
           return arr;
@@ -110,7 +110,7 @@ const Test1 = (props) => {
         []
       );
 
-      const mergedPreviewServices = data[0]?.parlourServices
+      const mergedPreviewServices = data[0]?.services
         ?.reduce((arr, item) => {
           arr.push(item.services);
           return arr;
@@ -129,7 +129,7 @@ const Test1 = (props) => {
       setTotalTime(totalTimeOfServices);
 
       setParlourServices(parlourServices);
-      setCategories(data[0]?.parlourServices);
+      setCategories(data[0]?.services);
       setLoading(true);
     };
     !loading && fetchData();
