@@ -9,6 +9,7 @@ import Layout from "../../components/navbar/Layout";
 import Greeting from "../../components/navbar/Greeting";
 import { toast } from "react-toastify";
 import PackagePreview from "../../components/admin/PackagePreview";
+import Footer from "../../components/footer/Footer";
 
 const Packages = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -315,6 +316,7 @@ const Packages = () => {
           </div>
         </div>
       )}
+      <Footer />
     </>
   );
 };

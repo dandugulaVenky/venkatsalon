@@ -204,8 +204,8 @@ const AddServices = () => {
     <div>
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <div className="md:py-10 px-5 min-h-screen">
-        <div className="flex md:flex-row flex-col flex-wrap items-center justify-around py-10 md:space-y-0 space-y-3">
+      <div className="md:py-10 pb-20 px-5 h-auto">
+        <div className="flex md:flex-row flex-col flex-wrap items-center justify-around pb-4 md:space-y-0 space-y-3">
           <div className="md:w-auto w-full">
             <div className="flex items-center justify-between">
               <p className="py-2 font-semibold text-lg  ">Category </p>
