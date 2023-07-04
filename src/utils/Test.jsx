@@ -6,12 +6,30 @@ import image from "../pages/images/barber.jpg";
 import "./styles.scss";
 import { useContext } from "react";
 import { SearchContext } from "../context/SearchContext";
+import { useEffect } from "react";
+import { useState } from "react";
 const Test = ({ services }) => {
   const { type } = useContext(SearchContext);
+
+  const [mergedServices, setMergedServices] = useState();
+
+  useEffect(() => {
+    const mergedServices = services
+      ?.reduce((arr, item) => {
+        arr.push(item.services);
+        return arr;
+      }, [])
+      .reduce((arr, item) => {
+        return arr.concat(item);
+      }, []);
+
+    setMergedServices(mergedServices);
+  }, [services]);
+
   return (
     <div className="  md:py-10 px-1 py-5 md:mb-0  text-white ">
       <Carousel cols={7} rows={1} gap={8}>
-        {services?.map((item, i) => {
+        {mergedServices?.map((item, i) => {
           return (
             <Carousel.Item key={i}>
               <div className="relative md:h-28 md:w-52 h-44 w-full">

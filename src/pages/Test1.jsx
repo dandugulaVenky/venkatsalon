@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useMemo } from "react";
 import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faClose } from "@fortawesome/free-solid-svg-icons";
 import { SearchContext } from "../context/SearchContext";
 import { AuthContext } from "../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -43,9 +43,10 @@ const Test1 = (props) => {
 
   const [show, setShow] = useState(false);
   const [durations, setDurations] = useState([]);
-
+  const [category, setCategory] = useState();
   const [previewServices, setPreviewServices] = useState();
-
+  const [allServices, setAllServices] = useState();
+  const [showInclusions, setShowInclusions] = useState();
   const [seats, setSeats] = useState();
   const [parlourServices, setParlourServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
@@ -102,13 +103,10 @@ const Test1 = (props) => {
       setSeats(res);
       setPreviewServices(data[0]?.services);
 
-      const parlourServices = (data[0]?.services || []).reduce(
-        (arr, item) => {
-          arr.push(item.category);
-          return arr;
-        },
-        []
-      );
+      const parlourServices = (data[0]?.services || []).reduce((arr, item) => {
+        arr.push(item.category);
+        return arr;
+      }, []);
 
       const mergedPreviewServices = data[0]?.services
         ?.reduce((arr, item) => {
@@ -127,7 +125,7 @@ const Test1 = (props) => {
       );
 
       setTotalTime(totalTimeOfServices);
-
+      setAllServices(mergedPreviewServices);
       setParlourServices(parlourServices);
       setCategories(data[0]?.services);
       setLoading(true);
@@ -255,6 +253,7 @@ const Test1 = (props) => {
   //update the options with ids corrospondingly with inputs
 
   const handleChange = (e) => {
+    setCategory(e.target.value);
     const result = categories.filter((category, i) =>
       category.category === e.target.value ? category.services : null
     );
@@ -495,23 +494,6 @@ const Test1 = (props) => {
         });
 
         if (dates) {
-          // navigate(`/shops/${shopId}/salon-preview`, {
-          // state: {
-          //   selectedSeats: seats,
-          //   totalAmount,
-          //   roomId: data[0]?._id,
-          //   shopOwner,
-          //   shopId,
-          //   shopName,
-          //   ownerEmail,
-          //   ownerNumber,
-          //   bookId: id,
-          //   user,
-          //   link: "https://easytym.com/history",
-          //   dates,
-          //   previewServices,
-          // },
-          // });
           setReserveState({
             selectedSeats: seats,
             totalAmount,
@@ -536,10 +518,101 @@ const Test1 = (props) => {
     }
   };
 
+  const handleInclusions = (e, option) => {
+    e.preventDefault();
+
+    const inclusions = option.inclusions.map((inclusion) => {
+      return allServices.filter(
+        (service) => service.service === inclusion.service
+      )[0];
+    });
+
+    setShowInclusions({
+      inclusions: inclusions,
+      package: option.service,
+    });
+  };
+
+  const ShowInclusions = () => {
+    return (
+      showInclusions?.inclusions?.length > 0 && (
+        <div className="reserve">
+          <div className="overflow-x-auto  ">
+            <FontAwesomeIcon
+              icon={faClose}
+              size="lg"
+              onClick={() => {
+                setShowInclusions(null);
+              }}
+              className="right-40 absolute top-40 text-white"
+            />
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-white">
+                  Cost of Services : &#8377;&nbsp;
+                  {showInclusions?.inclusions.reduce(
+                    (acc, service) => acc + service?.price,
+                    0
+                  )}
+                </p>
+              </div>
+              <table className="min-w-[70vw] ">
+                <thead className="border-b bg-gray-300 ">
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="text-left md:text-md text-sm md:p-5 p-4">
+                      Service Name
+                    </th>
+                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                      Price
+                    </th>
+                    {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                Category
+                              </th> */}
+                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                      Duration
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {showInclusions?.inclusions?.map((option, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-white">
+                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                          <label className="text-white">
+                            {option?.service}
+                          </label>
+                        </td>
+                        <td className="p-5 text-right md:text-md text-sm">
+                          <label className="text-white">
+                            &#8377; {option?.price}
+                          </label>
+                        </td>
+
+                        {/* <td className="p-5 text-right md:text-md text-sm">
+                                      {option.category}
+                                    </td> */}
+                        <td className="p-5 text-right md:text-md text-sm">
+                          <label className="text-white">
+                            {option?.duration} min
+                          </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </>
+          </div>
+        </div>
+      )
+    );
+  };
+
   return (
     <>
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
+      <ShowInclusions />
       {parlourPreview && reserveState !== null ? (
         <div className="min-h-screen">
           <ParlourPreview state={reserveState} setPreview={setParlourPreview} />
@@ -557,144 +630,162 @@ const Test1 = (props) => {
             </select>
           </h2>
 
-          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
-            <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
-              {show ? (
-                seats?.map((seat, i) => {
-                  const seatValues = getTotalTime(seat);
+          {categoriesOptions?.length > 0 ? (
+            <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
+              <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
+                {show ? (
+                  seats?.map((seat, i) => {
+                    const seatValues = getTotalTime(seat);
 
-                  const isDisabled = isAvailable(i);
-                  return (
-                    !isDisabled && (
-                      <div className="card overflow-x-auto p-5" key={i}>
-                        <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
-                          <span>Seat {i + 1}</span>
-                          <span>&#8377; {seat ? seatValues.amount : 0} </span>
-                          <span>
-                            <FontAwesomeIcon icon={faClock} size="sm" />{" "}
-                            {seat ? seatValues.time : 0}
-                          </span>
-                        </h2>
-                        <table className="min-w-full ">
-                          <thead className="border-b bg-gray-300 ">
-                            <tr className="border-b-2 border-gray-200">
-                              <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                Service Name
-                              </th>
-                              <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                Price
-                              </th>
-                              {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                              Category
-                            </th> */}
+                    const isDisabled = isAvailable(i);
+                    return (
+                      !isDisabled && (
+                        <div className="card overflow-x-auto p-5" key={i}>
+                          <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
+                            <span>Seat {i + 1}</span>
+                            <span>&#8377; {seat ? seatValues.amount : 0} </span>
+                            <span>
+                              <FontAwesomeIcon icon={faClock} size="sm" />{" "}
+                              {seat ? seatValues.time : 0}
+                            </span>
+                          </h2>
+                          <table className="min-w-full ">
+                            <thead className="border-b bg-gray-300 ">
+                              <tr className="border-b-2 border-gray-200">
+                                <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                  Service Name
+                                </th>
+                                <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                                  Price
+                                </th>
+                                {category === "packages" && (
+                                  <th className="md:p-5 p-4  md:text-md text-sm text-right ">
+                                    show inclusions
+                                  </th>
+                                )}
+                                <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                  Duration
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {show &&
+                                categoriesOptions?.map((option, j) => {
+                                  const selectedOptions = new Set(seat.options);
+                                  return (
+                                    <tr
+                                      key={j}
+                                      className="border-b-2 border-gray-200"
+                                    >
+                                      <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                        <input
+                                          type="checkbox"
+                                          name={option.service}
+                                          checked={selectedOptions.has(
+                                            option.service
+                                          )}
+                                          className="h-6 w-6"
+                                          id={option.service}
+                                          onChange={(event) =>
+                                            handleOptionChange(
+                                              event,
+                                              seat.id,
+                                              option,
+                                              seat.index
+                                            )
+                                          }
+                                          // disabled={isAvailable(i)}
+                                        />
+                                        <label className="text-gray-900">
+                                          {option.service}
+                                        </label>
+                                      </td>
+                                      <td className="p-5 text-right md:text-md text-sm">
+                                        &#8377; {option.price}
+                                      </td>
 
-                              <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                Duration
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {show &&
-                              categoriesOptions?.map((option, j) => {
-                                const selectedOptions = new Set(seat.options);
-                                return (
-                                  <tr
-                                    key={j}
-                                    className="border-b-2 border-gray-200"
-                                  >
-                                    <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                      <input
-                                        type="checkbox"
-                                        name={option.service}
-                                        checked={selectedOptions.has(
-                                          option.service
-                                        )}
-                                        className="h-6 w-6"
-                                        id={option.service}
-                                        onChange={(event) =>
-                                          handleOptionChange(
-                                            event,
-                                            seat.id,
-                                            option,
-                                            seat.index
-                                          )
-                                        }
-                                        // disabled={isAvailable(i)}
-                                      />
-                                      <label className="text-gray-900">
-                                        {option.service}
-                                      </label>
-                                    </td>
-                                    <td className="p-5 text-right md:text-md text-sm">
-                                      &#8377; {option.price}
-                                    </td>
-
-                                    {/* <td className="p-5 text-right md:text-md text-sm">
-                                    {option.category}
-                                  </td> */}
-                                    <td className="p-5 text-right md:text-md text-sm">
-                                      {option.duration} min
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                          </tbody>
-                        </table>
+                                      {category === "packages" && (
+                                        <td className="p-5 text-right md:text-md text-sm">
+                                          <label
+                                            className="text-gray-900 underline"
+                                            onClick={(e) =>
+                                              handleInclusions(e, option)
+                                            }
+                                          >
+                                            show inclusions
+                                          </label>
+                                        </td>
+                                      )}
+                                      <td className="p-5 text-right md:text-md text-sm">
+                                        {option.duration} min
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                    );
+                  })
+                ) : (
+                  <div className="flex items-start mt-20 justify-center min-h-screen">
+                    <span className="buttonloader"></span>
+                  </div>
+                )}
+              </div>
+              <div className="lg:col-span-1 md:col-span-2">
+                <div
+                  className={`card  p-5 ${
+                    height
+                      ? "md:sticky top-24  lg:py-5 transition-all delay-200"
+                      : ""
+                  }`}
+                >
+                  <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
+                  <ul>
+                    <li>
+                      <div className="mb-2 flex justify-between ">
+                        <div>Date</div>
+                        <div className="">
+                          {moment(value).format("MMM Do YY")}
+                        </div>
                       </div>
-                    )
-                  );
-                })
-              ) : (
-                <div className="flex items-start mt-20 justify-center min-h-screen">
-                  <span className="buttonloader"></span>
+                    </li>
+                    <li>
+                      <div className="mb-2 flex justify-between">
+                        <div>Time</div>
+                        <div> {options[selectedValue].value}-7:00 PM</div>
+                      </div>
+                    </li>
+                    <li>
+                      <div className="mb-2 flex justify-between">
+                        <div>Total</div>
+                        <div> &#8377; {totalAmount}</div>
+                      </div>
+                    </li>
+
+                    <li>
+                      <button
+                        // disabled={buttonLoad}
+                        onClick={(e) => previewHandler(totalAmount, e)}
+                        className="primary-button flex items-center justify-center  w-full"
+                      >
+                        Preview{" "}
+                        {/* {buttonLoad && <span className="buttonloader"></span>} */}
+                      </button>
+                    </li>
+                  </ul>
                 </div>
-              )}
-            </div>
-            <div className="lg:col-span-1 md:col-span-2">
-              <div
-                className={`card  p-5 ${
-                  height
-                    ? "md:sticky top-24  lg:py-5 transition-all delay-200"
-                    : ""
-                }`}
-              >
-                <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
-                <ul>
-                  <li>
-                    <div className="mb-2 flex justify-between ">
-                      <div>Date</div>
-                      <div className="">
-                        {moment(value).format("MMM Do YY")}
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="mb-2 flex justify-between">
-                      <div>Time</div>
-                      <div> {options[selectedValue].value}-7:00 PM</div>
-                    </div>
-                  </li>
-                  <li>
-                    <div className="mb-2 flex justify-between">
-                      <div>Total</div>
-                      <div> &#8377; {totalAmount}</div>
-                    </div>
-                  </li>
-
-                  <li>
-                    <button
-                      // disabled={buttonLoad}
-                      onClick={(e) => previewHandler(totalAmount, e)}
-                      className="primary-button flex items-center justify-center  w-full"
-                    >
-                      Preview{" "}
-                      {/* {buttonLoad && <span className="buttonloader"></span>} */}
-                    </button>
-                  </li>
-                </ul>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="min-h-[60vh] flex items-center justify-center">
+              <p className="font-semibold">
+                Please select any category to view services
+              </p>
+            </div>
+          )}
         </div>
       )}
     </>

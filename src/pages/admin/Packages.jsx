@@ -50,22 +50,27 @@ const Packages = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${user?.shopId}`
-      );
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${user?.shopId}`
+        );
 
-      const services = (data[0]?.services || []).reduce((arr, item) => {
-        arr.push(item.category);
-        return arr;
-      }, []);
-      const packageRemovedServices = services.filter(
-        (service) => service !== "packages"
-      );
+        const services = (data[0]?.services || []).reduce((arr, item) => {
+          arr.push(item.category);
+          return arr;
+        }, []);
+        const packageRemovedServices = services.filter(
+          (service) => service !== "packages"
+        );
 
-      setRoomId(data[0]?._id);
-      setServices(packageRemovedServices);
-      setCategories(data[0]?.services);
-      setLoading(true);
+        setRoomId(data[0]?._id);
+        setServices(packageRemovedServices);
+        setCategories(data[0]?.services);
+        setLoading(true);
+      } catch (err) {
+        console.log(err);
+        toast("something wrong!");
+      }
     };
     fetchData();
   }, [user?.shopId]);

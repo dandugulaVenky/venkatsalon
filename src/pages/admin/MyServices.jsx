@@ -17,6 +17,7 @@ import Footer from "../../components/footer/Footer";
 const MyServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
+  const [disabled, setIsDisabled] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -44,28 +45,33 @@ const MyServices = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${user?.shopId}`
-      );
-      const services = (data[0]?.services || []).reduce((arr, item) => {
-        arr.push(item.category);
-        return arr;
-      }, []);
-
-      const mergedServices = data[0]?.services
-        ?.reduce((arr, item) => {
-          arr.push(item.services);
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${user?.shopId}`
+        );
+        const services = (data[0]?.services || []).reduce((arr, item) => {
+          arr.push(item.category);
           return arr;
-        }, [])
-        .reduce((arr, item) => {
-          return arr.concat(item);
         }, []);
 
-      setRoomId(data[0]?._id);
-      setAllServices(mergedServices);
-      setCategoriesOptions(mergedServices);
-      setShopServices(services);
-      setCategories(data[0]?.services);
+        const mergedServices = data[0]?.services
+          ?.reduce((arr, item) => {
+            arr.push(item.services);
+            return arr;
+          }, [])
+          .reduce((arr, item) => {
+            return arr.concat(item);
+          }, []);
+
+        setRoomId(data[0]?._id);
+        setAllServices(mergedServices);
+        setCategoriesOptions(mergedServices);
+        setShopServices(services);
+        setCategories(data[0]?.services);
+      } catch (err) {
+        console.log(err);
+        toast("something wrong!");
+      }
     };
     fetchData();
   }, [user?.shopId, showInclusions, edit, deleted]);
@@ -101,24 +107,36 @@ const MyServices = () => {
     const confirmed = window.confirm("Are you sure you want to delete?");
 
     if (confirmed) {
-      const res = await axios.post(
-        `${baseUrl}/api/rooms/deleteRoomService/${roomId}`,
-        {
-          service: option,
-        },
-        { withCredentials: true }
-      );
+      setIsDisabled(true);
+      try {
+        const res = await axios.post(
+          `${baseUrl}/api/rooms/deleteRoomService/${roomId}`,
+          {
+            service: option,
+            allServices,
+          },
+          { withCredentials: true }
+        );
 
-      if (res.status === 201) {
-        setShowInclusions(null);
-        setEdit(null);
-        toast("deleted successfully!");
-        setDeleted(!deleted);
-      } else {
-        toast(res.data.message);
-        return;
+        if (res.status === 201) {
+          setShowInclusions(null);
+          setEdit(null);
+          toast("deleted successfully!");
+          setDeleted(!deleted);
+          setIsDisabled(false);
+        } else {
+          toast(res.data.message);
+          setIsDisabled(false);
+
+          return;
+        }
+      } catch (err) {
+        toast("something wrong!");
+        console.log(err);
       }
     } else {
+      setIsDisabled(false);
+
       return;
     }
   };
@@ -127,22 +145,30 @@ const MyServices = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
+    setIsDisabled(true);
 
-    const { status } = await axios.post(
-      `${baseUrl}/api/rooms/updateRoomService/${roomId}`,
-      {
-        editedService,
-        allServices,
-      },
-      { withCredentials: true }
-    );
+    try {
+      const { status } = await axios.post(
+        `${baseUrl}/api/rooms/updateRoomService/${roomId}`,
+        {
+          editedService,
+          allServices,
+        },
+        { withCredentials: true }
+      );
 
-    if (status === 201) {
-      toast("Service edited successfully!");
-      setEdit(null);
-      setDeleted(!deleted);
-    } else {
-      toast("something went wrong!");
+      if (status === 201) {
+        toast("Service edited successfully!");
+        setEdit(null);
+        setDeleted(!deleted);
+        setIsDisabled(false);
+      } else {
+        toast("something went wrong!");
+        setIsDisabled(false);
+      }
+    } catch (err) {
+      toast("something wrong!");
+      console.log(err);
     }
   };
 
@@ -203,6 +229,8 @@ const MyServices = () => {
 
   //finally send data to backend to update inclusions in the services of corrosponding package
   const handleEditedPackageServicesToBackend = async () => {
+    setIsDisabled(true);
+
     const finalArr = {
       services: addRemoveServices,
     };
@@ -211,7 +239,7 @@ const MyServices = () => {
       try {
         const { status } = await axios.post(
           `${baseUrl}/api/rooms/updateRoomPackageServices/${roomId}`,
-          { finalArr, updatePackage: showInclusions.package },
+          { finalArr, updatePackage: showInclusions.package, allServices },
           { withCredentials: true }
         );
         if (status === 201) {
@@ -220,11 +248,16 @@ const MyServices = () => {
           setAddRemoveServices(null);
           setCategoriesOptions(null);
           setCanAddServices(null);
+          setIsDisabled(false);
         }
       } catch (err) {
         toast("Something wrong!");
+        setIsDisabled(false);
+        console.log(err);
       }
     } else {
+      setIsDisabled(false);
+
       return toast("Please add atleast two services!");
     }
   };
@@ -252,6 +285,9 @@ const MyServices = () => {
                   <select
                     className="my-2 p-2 ml-2"
                     onChange={(e) => {
+                      if (e.target.value === "") {
+                        return;
+                      }
                       const selectedService = allServices.find(
                         (service) => service.service === e.target.value
                       );
@@ -269,7 +305,7 @@ const MyServices = () => {
                       ]);
                     }}
                   >
-                    <option>Select a service</option>
+                    <option value={""}>Select a service</option>
                     {canAddServices.map((service, i) => {
                       return (
                         <option value={service.service} key={i}>

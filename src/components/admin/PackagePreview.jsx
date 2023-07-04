@@ -6,8 +6,8 @@ import { toast } from "react-toastify";
 
 const PackagePreview = (props) => {
   const { services, setPreview, packageName, price, duration, roomId } = props;
+  const [disabled, setIsDisabled] = useState(false);
 
-  console.log(props);
   const [height, setHeight] = useState(false);
   const navigate = useNavigate();
   console.log(packageName);
@@ -30,10 +30,11 @@ const PackagePreview = (props) => {
   }, []);
 
   const createHandler = async () => {
+    setIsDisabled(true);
     let serviceNames = services.map((service) => {
       return { service: service.service };
     });
-    console.log(serviceNames, "servicename");
+
     let finalArr = {
       category: "packages",
       services: {
@@ -45,16 +46,23 @@ const PackagePreview = (props) => {
       },
     };
 
-    const { status } = await axios.post(
-      `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
-      { services: finalArr },
-      { withCredentials: true }
-    );
-    if (status === 201) {
-      toast("package added succesfully!");
-      setTimeout(() => navigate("/admin/my-services"), 2000);
-    } else {
-      toast("something went wrong!");
+    try {
+      const { status } = await axios.post(
+        `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
+        { services: finalArr },
+        { withCredentials: true }
+      );
+      if (status === 201) {
+        toast("package added succesfully!");
+        setIsDisabled(false);
+        setTimeout(() => navigate("/admin/my-services"), 2000);
+      } else {
+        toast("something went wrong!");
+        setIsDisabled(false);
+      }
+    } catch (err) {
+      console.log(err);
+      toast("something wrong!");
     }
   };
 
@@ -155,7 +163,7 @@ const PackagePreview = (props) => {
 
                 <li>
                   <button
-                    // disabled={buttonLoad}
+                    disabled={disabled}
                     onClick={createHandler}
                     className="primary-button flex items-center justify-center  w-full"
                   >

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
 import DropdownLink from "../DropdownLink";
@@ -59,11 +59,16 @@ const Layout = () => {
 
   useEffect(() => {
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-        withCredentials: true,
-      });
+      try {
+        let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
+          withCredentials: true,
+        });
 
-      setIsAdmin(isAdmin.data);
+        setIsAdmin(isAdmin.data);
+      } catch (err) {
+        console.log(err);
+        toast("finding admin failed!");
+      }
     };
 
     user?._id && getAdmin(user?._id);

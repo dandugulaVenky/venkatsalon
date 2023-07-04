@@ -12,6 +12,7 @@ import Sidebar from "../../components/navbar/SIdebar";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
+import { toast } from "react-toastify";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -22,11 +23,16 @@ const Admin = () => {
   useEffect(() => {
     setLoading(true);
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-        withCredentials: true,
-      });
-      setIsAdmin(isAdmin.data);
-      setLoading(false);
+      try {
+        let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
+          withCredentials: true,
+        });
+        setIsAdmin(isAdmin.data);
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast("finding admin failed!");
+      }
     };
     getAdmin();
   }, [user?._id]);

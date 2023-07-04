@@ -16,26 +16,46 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 
 const AddServices = () => {
-  const type = "parlour";
-
-  const categories = type === "parlour" ? parlourCategories : salonCategories;
-  const services = type === "parlour" ? parlourServices : salonServices;
-
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [category, setCategory] = useState();
   const { user } = useContext(AuthContext);
   const [allServices, setAllServices] = useState({});
   const [shopServices, setShopServices] = useState([]);
+  const [disabled, setIsDisabled] = useState(false);
+  const [shopType, setShopType] = useState();
   const [roomId, setRoomId] = useState();
   const navigate = useNavigate();
+  const categories =
+    shopType === "parlour" ? parlourCategories : salonCategories;
+  const services = shopType === "parlour" ? parlourServices : salonServices;
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${user?.shopId}`
-      );
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
+        setShopType(data?.type);
+      } catch (err) {
+        toast("Something wrong!");
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user?.shopId]);
 
-      setRoomId(data[0]?._id);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${user?.shopId}`
+        );
+
+        setRoomId(data[0]?._id);
+      } catch (err) {
+        toast("Something wrong!");
+        console.log(err);
+      }
     };
     fetchData();
   }, [user?.shopId]);
@@ -57,16 +77,17 @@ const AddServices = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(allServices);
+    setIsDisabled(true);
     if (
+      category === "" ||
       allServices.service === "" ||
       allServices.price === "" ||
       allServices.price === 0 ||
       allServices.duration === "" ||
       allServices.duration === 0
     ) {
-      toast("Something went wrong!");
+      toast("Please check all fields!");
+
       return;
     }
 
@@ -82,6 +103,7 @@ const AddServices = () => {
 
           if (existing) {
             toast(`already added! ${shopService.services.service}`);
+
             return 0;
           } else {
             return 1;
@@ -106,8 +128,11 @@ const AddServices = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    setIsDisabled(true);
 
     if (shopServices?.length === 0) {
+      setIsDisabled(false);
+
       return alert("Please include all fields!");
     }
 
@@ -156,14 +181,19 @@ const AddServices = () => {
       if (res.status === 201) {
         toast("added successfully!");
         setAllServices(null);
+        setIsDisabled(false);
+
         setTimeout(() => navigate("/admin"), 2000);
       } else {
         toast("Something wrong!");
+        setIsDisabled(false);
+
         return;
       }
     } catch (err) {
       const message = err.response.data.existingServices;
-      console.log(message);
+      setIsDisabled(false);
+
       const show = message.map((res) => res.service);
       alert(`This services are already present { ${show} }`);
       //   alert(err);
@@ -185,7 +215,9 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb] w-full md:w-auto "
               value={category}
             >
-              <option selected>Select a category</option>
+              <option selected value="">
+                Select a category
+              </option>
               {services.map((service, i) => {
                 return <option key={i}>{service}</option>;
               })}
@@ -287,7 +319,11 @@ const AddServices = () => {
             </tbody>
           </table>
         </div>
-        <button className="primary-button my-4" onClick={handleClick}>
+        <button
+          className="primary-button my-4"
+          onClick={handleClick}
+          disabled={disabled}
+        >
           Confirm
         </button>
       </div>
