@@ -449,7 +449,7 @@ const MyServices = () => {
           </div>
         </div>
       ) : (
-        <div className="pb-10 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
+        <div className="pb-20 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
           <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
             Total Services : {allServices?.length}
           </p>
@@ -504,7 +504,7 @@ const MyServices = () => {
                       {categoriesOptions?.map((option, j) => {
                         return (
                           <tr key={j} className="border-b-2 border-white">
-                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                            <td className="md:text-md text-sm flex items-center justify-center p-5">
                               {edit === j ? (
                                 <input
                                   type="text"
@@ -514,7 +514,7 @@ const MyServices = () => {
                                 />
                               ) : (
                                 <label className="text-gray-900">
-                                  &#8377; {option.service}
+                                  {option.service}
                                 </label>
                               )}
                             </td>
@@ -526,8 +526,8 @@ const MyServices = () => {
                                   onChange={(e) => handleInput(e, "price")}
                                 />
                               ) : (
-                                <label className="text-gray-900">
-                                  &#8377; {option.price}
+                                <label className="text-gray-900 w-full">
+                                  &#8377;{option.price}
                                 </label>
                               )}
                             </td>
