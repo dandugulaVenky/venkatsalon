@@ -152,7 +152,7 @@ const Packages = () => {
             <div className="md:w-auto w-full">
               <div className="flex items-center justify-between">
                 <p className="py-2 font-semibold text-lg  ">Package name </p>
-                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1.5 text-white">
+                <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   1
                 </span>
               </div>
@@ -169,7 +169,7 @@ const Packages = () => {
                 <p className="py-1 text-md text-black font-semibold">
                   Categories
                 </p>
-                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1 text-white">
+                <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   2
                 </span>
               </div>
@@ -185,7 +185,7 @@ const Packages = () => {
             <div className="text-lg font-bold  text-left text-black md:w-auto w-full">
               <div className="flex items-center justify-between py-1">
                 <p className=" text-md text-black font-semibold">Price</p>
-                <span className=" bg-[#00ccbb] rounded-full px-3.5 py-1 text-white">
+                <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   3
                 </span>
               </div>

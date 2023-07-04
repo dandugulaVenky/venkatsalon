@@ -206,13 +206,16 @@ const AddServices = () => {
       {w < 768 && <Greeting />}
       <div className="md:py-10 px-5 min-h-screen">
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around py-10 md:space-y-0 space-y-3">
-          <div className="space-x-2">
-            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
-              1
-            </span>
+          <div className="md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold text-lg  ">Category </p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                1
+              </span>
+            </div>
             <select
               onChange={handleCategoryChange}
-              className="border-2 border-[#00ccbb] w-full md:w-auto "
+              className="border-2 border-[#00ccbb]  md:w-auto w-full"
               value={category}
             >
               <option selected value="">
@@ -223,10 +226,13 @@ const AddServices = () => {
               })}
             </select>
           </div>
-          <div className="space-x-2">
-            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
-              2
-            </span>
+          <div className="text-lg  text-left text-black md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold text-lg  ">Service </p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                2
+              </span>
+            </div>
             <select
               onChange={(e) => allHandleChange(e, "service")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
@@ -239,10 +245,13 @@ const AddServices = () => {
             </select>
           </div>
 
-          <div className="space-x-2">
-            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
-              3
-            </span>
+          <div className="text-lg  text-left text-black md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold text-lg  ">Price </p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                3
+              </span>
+            </div>
             <select
               onChange={(e) => allHandleChange(e, "price")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
@@ -258,10 +267,13 @@ const AddServices = () => {
             </select>
           </div>
 
-          <div className="space-x-2">
-            <span className=" bg-[#00ccbb] rounded-full px-3 py-1.5 text-white">
-              4
-            </span>
+          <div className="text-lg  text-left text-black md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold text-lg  ">Duration </p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                4
+              </span>
+            </div>
             <select
               onChange={(e) => allHandleChange(e, "duration")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
@@ -276,9 +288,20 @@ const AddServices = () => {
               })}
             </select>
           </div>
-          <button className="primary-button" onClick={handleSubmit}>
-            Add To Table
-          </button>
+          <div className=" md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold md:text-lg ">Add</p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-1 text-white">
+                5
+              </span>
+            </div>
+            <button
+              className="primary-button md:w-auto w-full "
+              onClick={handleSubmit}
+            >
+              Add To Table
+            </button>
+          </div>
         </div>
         <div class="relative overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 ">
@@ -299,23 +322,25 @@ const AddServices = () => {
               </tr>
             </thead>
             <tbody>
-              {shopServices?.length > 0
-                ? shopServices.map((service, i) => {
-                    return (
-                      <tr class="border-b bg-gray-800 text-white" key={i}>
-                        <th
-                          scope="row"
-                          class="px-6 py-4 font-medium  whitespace-nowrap text-white"
-                        >
-                          {service.category}
-                        </th>
-                        <td class="px-6 py-4 ">{service.services.service}</td>
-                        <td class="px-6 py-4">{service.services.price}</td>
-                        <td class="px-6 py-4">{service.services.duration}</td>
-                      </tr>
-                    );
-                  })
-                : "Not Found"}
+              {shopServices?.length > 0 ? (
+                shopServices.map((service, i) => {
+                  return (
+                    <tr class="border-b bg-gray-800 text-white" key={i}>
+                      <th
+                        scope="row"
+                        class="px-6 py-4 font-medium  whitespace-nowrap text-white"
+                      >
+                        {service.category}
+                      </th>
+                      <td class="px-6 py-4 ">{service.services.service}</td>
+                      <td class="px-6 py-4">{service.services.price}</td>
+                      <td class="px-6 py-4">{service.services.duration}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <td className="p-5">Not found</td>
+              )}
             </tbody>
           </table>
         </div>
