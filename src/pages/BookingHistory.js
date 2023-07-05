@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import "../components/searchItem/searchItem.css";
 import Footer from "../components/footer/Footer";
@@ -7,12 +7,8 @@ import useFetch from "../hooks/useFetch";
 
 import { AuthContext } from "../context/AuthContext";
 
-import BookingHistoryItem from "../components/BookingHistoryItem";
 import { toast } from "react-toastify";
-import {
-  faCircleArrowDown,
-  faCircleArrowUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/navbar/Layout";
@@ -21,6 +17,8 @@ import Sidebar from "../components/navbar/SIdebar";
 import Greeting from "../components/navbar/Greeting";
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
+import moment from "moment";
+import axios from "axios";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
@@ -37,25 +35,38 @@ const BookingHistory = () => {
   const [userInput, setUserInput] = useState("");
 
   const [visible, setVisible] = useState(5);
+  const [roomData, setRoomData] = useState();
+  const [showServices, setShowServices] = useState(null);
+  // const setLoadMore = () => setVisible((prev) => prev + 5);
 
-  const setLoadMore = () => setVisible((prev) => prev + 5);
+  const fetchData = async (item) => {
+    try {
+      const { data } = await axios.get(
+        `${baseUrl}/api/hotels/room/${user.shopId}`
+      );
+
+      setRoomData(data[0].roomNumbers);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffectOnce(() => {
-    console.log("my effect is running");
-
+    fetchData();
+    window.scrollTo(0, 0);
     if (error) {
       toast("Please login to see history!");
     }
     return () => console.log("my effect is destroying");
   });
 
-  useEffect(() => {
-    if (userInput) {
-      return setVisible(5);
-    }
+  // useEffect(() => {
+  //   if (userInput) {
+  //     return setVisible(5);
+  //   }
 
-    // console.log(userInput);
-  }, [userInput]);
+  //   // console.log(userInput);
+  // }, [userInput]);
 
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -72,11 +83,61 @@ const BookingHistory = () => {
     });
   }
   const filteredArray = filterArray(data, userInput);
-  // console.log(data);
-  // console.log(visible);
 
   let w = window.innerWidth;
   const { open } = useContext(SearchContext);
+
+  const GetPushed = () => {
+    // console.log(item);
+    const item = showServices;
+    let seats = [];
+
+    roomData?.map((seat, i) => {
+      if (seat._id === item.selectedSeats[i]?.id) {
+        seats.push(seat.number);
+      } else if (seat._id === item.selectedSeats[i]?.id) {
+        seats.push(seat.number);
+      }
+    });
+
+    return (
+      <div className="reserve">
+        <div className="overflow-x-auto relative ">
+          <FontAwesomeIcon
+            icon={faClose}
+            size="sm"
+            className="right-1 absolute top-1 text-black  border-2  rounded-full px-2 py-1 border-black"
+            onClick={() => setShowServices(null)}
+          />
+
+          <>
+            <div className="card p-5 overflow-auto md:max-w-[60vw] max-w-[90vw]">
+              {item.selectedSeats.map((seat, i) => {
+                return (
+                  <div className="py-2">
+                    <p className="font-semibold">Seat - {seats[i]}</p>
+                    <span key={i}>
+                      Services :{" "}
+                      {seat.options.map((option, i) => {
+                        return (
+                          <span className="ml-1 font-bold" key={i}>
+                            {option}{" "}
+                            <span>
+                              {i !== seat.options.length - 1 ? "," : "."}
+                            </span>
+                          </span>
+                        );
+                      })}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="">
@@ -84,7 +145,7 @@ const BookingHistory = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
 
-      <div className="flex min-h-screen flex-col ">
+      {/* <div className="flex min-h-screen flex-col ">
         {loading ? (
           <div className="min-h-[75vh] flex items-center justify-center">
             <span className="loader "></span>
@@ -136,7 +197,129 @@ const BookingHistory = () => {
             )}
           </div>
         )}
+      </div> */}
+      {showServices !== null && <GetPushed />}
+
+      <div className="flex items-center justify-between max-w-[90vw] mx-auto py-5">
+        <p className=" md:text-xl text-xs font-semibold">Booking-History</p>
+
+        <input
+          onChange={(e) => setUserInput(e.target.value)}
+          value={userInput}
+          className="bg-slate-100 text-black  rounded-md md:w-[14.3rem] w-[9.3rem]  "
+          placeholder="Filter by date,time,ref.."
+        />
+
+        <p className="md:text-lg text-xs">Count : {filteredArray.length}</p>
       </div>
+      {filteredArray?.length > 0 ? (
+        <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 min-h-screen">
+          <>
+            <div className="overflow-x-auto  col-span-5">
+              <table className="min-w-full ">
+                <thead className="border-b bg-gray-400 ">
+                  <tr className="border-b-2 border-gray-200 ">
+                    <th className="text-center md:text-md text-sm md:p-5 py-3">
+                      Reference
+                    </th>
+                    <th className=" md:p-5 px-10 md:text-md text-sm text-right">
+                      Date
+                    </th>
+                    <th className="md:p-5 px-10  md:text-md text-sm text-right">
+                      Time
+                    </th>
+                    <th className="md:p-5 px-5  md:text-md text-sm text-right">
+                      Amount
+                    </th>
+                    <th className="md:p-5  px-10  md:text-md text-sm text-right">
+                      Shop
+                    </th>
+                    {
+                      <th className="md:p-5  px-10 md:text-md text-sm text-right">
+                        Inclusions
+                      </th>
+                    }
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Payment
+                    </th>{" "}
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Done
+                    </th>
+                    <th className="md:p-5 px-5 md:text-md text-sm text-right">
+                      CreatedAt
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredArray?.slice(0, visible)?.map((item, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-white">
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.referenceNumber}{" "}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.date}
+                          </label>
+                        </td>
+
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900">{item.time}</label>
+                        </td>
+
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            <label>&#8377; {item.totalAmount}</label>
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>{item.shop}</label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm underline">
+                          <label onClick={() => setShowServices(item)}>
+                            Show Services
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {item.isPaid === true ? "paid" : "Not paid"}
+                          </label>
+                        </td>
+
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {" "}
+                            {item.isDone === "false" ? (
+                              <span className="text-red-500">Not Yet Done</span>
+                            ) : item.isDone === "cancelled" ? (
+                              <span className="text-red-500">Cancelled</span>
+                            ) : (
+                              <span className="text-green-500"> Done</span>
+                            )}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {moment(item.createdAt).format(
+                              "MMM Do YY hh:mm:ss A"
+                            )}
+                          </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
+        </div>
+      ) : (
+        <div className="min-h-[75vh] flex items-center justify-center">
+          <span className="loader"></span>
+        </div>
+      )}
       <Footer />
     </div>
   );

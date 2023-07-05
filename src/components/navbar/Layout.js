@@ -67,7 +67,6 @@ const Layout = () => {
         setIsAdmin(isAdmin.data);
       } catch (err) {
         console.log(err);
-        toast("finding admin failed!");
       }
     };
 

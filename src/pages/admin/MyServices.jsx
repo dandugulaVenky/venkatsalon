@@ -267,8 +267,8 @@ const MyServices = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
       {showInclusions?.inclusions?.length > 0 ? (
-        <div className="reserve">
-          <div className="overflow-x-auto  ">
+        <div className="reserve relative">
+          <div className="overflow-auto  ">
             <FontAwesomeIcon
               icon={faClose}
               size="lg"
@@ -277,7 +277,7 @@ const MyServices = () => {
                 setCanAddServices(null);
                 setAddRemoveServices(null);
               }}
-              className="right-40 absolute top-40 text-white"
+              className=" text-white md:right-20 right-10 border-2 rounded-full px-2 py-1 md:top-40 top-32 absolute  border-white"
             />
             {addRemoveServices?.length > 0 ? (
               <>
@@ -315,7 +315,7 @@ const MyServices = () => {
                     })}
                   </select>
                 )}
-                <table className="min-w-[70vw] ">
+                <table className="md:min-w-[70vw] min-w-[95vw] mx-auto">
                   <thead className="border-b bg-gray-300 ">
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left md:text-md text-sm md:p-5 p-4">
@@ -384,14 +384,14 @@ const MyServices = () => {
               </>
             ) : (
               <>
-                <div className="flex items-center justify-between">
+                <div className="flex md:flex-row flex-col py-2 items-center justify-around ">
                   <button
                     className="primary-button my-3"
                     onClick={handleAddOrRemove}
                   >
                     Add / Remove Service
                   </button>
-                  <p className="text-white">
+                  <p className="text-white md:text-md text-xs">
                     Cost of Services : &#8377;&nbsp;
                     {showInclusions?.inclusions.reduce(
                       (acc, service) => acc + service?.price,
@@ -399,7 +399,7 @@ const MyServices = () => {
                     )}
                   </p>
                 </div>
-                <table className="min-w-[70vw] ">
+                <table className="md:min-w-[70vw] min-w-[95vw] mx-auto ">
                   <thead className="border-b bg-gray-300 ">
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left md:text-md text-sm md:p-5 p-4">

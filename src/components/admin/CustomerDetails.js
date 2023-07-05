@@ -280,35 +280,32 @@ const CustomerDetails = ({ item, setOpen }) => {
   }
 
   return (
-    <div className="reserve px-4">
-      <div className="rContainer1">
+    <div className="reserve-admin px-4">
+      <div className="relative border-2 border-white rounded p-3">
         <FontAwesomeIcon
           icon={faCircleXmark}
-          className="rClose"
+          className="text-white float-right"
           onClick={() => setOpen(false)}
         />
-        <span>
-          {item.referenceNumber && (
-            <span className=" text-[20px] ">
-              Reference No:{item.referenceNumber}
-            </span>
-          )}
-        </span>
+
         <div className="">
           <div className="space-y-1.5">
             <div className="flex space-x-2">
-              <img
-                src="https://picsum.photos/800/600?random=2"
-                alt=""
-                className="siImg"
-              />
-
               <div className="flex flex-col md:space-y-2 space-y-1 ">
-                <h1 className=" text-[13px] md:text-[15px] ">
+                <h1>
+                  <span>
+                    {item.referenceNumber && (
+                      <span className=" text-[20px] text-white">
+                        Reference No:{item.referenceNumber}
+                      </span>
+                    )}
+                  </span>
+                </h1>
+                <h1 className=" text-[13px] md:text-[15px] text-white">
                   {" "}
                   BookedDate : {item.date}
                 </h1>
-                <span className="text-[13px] md:text-[15px]">
+                <span className="text-[13px] md:text-[15px] text-white">
                   BookedTime : {item.time}
                 </span>
                 {/* <span className="text-[13px] md:text-sm">
