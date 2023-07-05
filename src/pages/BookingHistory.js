@@ -19,12 +19,15 @@ import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
 import axios from "axios";
+import { useEffect } from "react";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { data, loading, error } = useFetch(
+  const [shopId, setShopId] = useState();
+
+  const { data, error } = useFetch(
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
@@ -37,22 +40,10 @@ const BookingHistory = () => {
   const [visible, setVisible] = useState(5);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
+
   // const setLoadMore = () => setVisible((prev) => prev + 5);
 
-  const fetchData = async (item) => {
-    try {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${user.shopId}`
-      );
-
-      setRoomData(data[0].roomNumbers);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffectOnce(() => {
-    fetchData();
     window.scrollTo(0, 0);
     if (error) {
       toast("Please login to see history!");
@@ -60,6 +51,21 @@ const BookingHistory = () => {
     return () => console.log("my effect is destroying");
   });
 
+  useEffect(() => {
+    const fetchData = async (item) => {
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${shopId}`
+        );
+
+        setRoomData(data[0].roomNumbers);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    user?.bookings[0]?.shopId && fetchData();
+  }, [shopId, user?.bookings]);
   // useEffect(() => {
   //   if (userInput) {
   //     return setVisible(5);
@@ -90,6 +96,7 @@ const BookingHistory = () => {
   const GetPushed = () => {
     // console.log(item);
     const item = showServices;
+
     let seats = [];
 
     roomData?.map((seat, i) => {
@@ -278,7 +285,13 @@ const BookingHistory = () => {
                           <label>{item.shop}</label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm underline">
-                          <label onClick={() => setShowServices(item)}>
+                          <label
+                            onClick={() => {
+                              setShowServices(item);
+
+                              setShopId(item.shopId);
+                            }}
+                          >
                             Show Services
                           </label>
                         </td>
