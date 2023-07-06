@@ -638,7 +638,7 @@ const Reserve = () => {
 
           {categoriesOptions?.length > 0 ? (
             <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
-              <div className=" lg:col-span-3 md:col-span-3">
+              <div className=" lg:col-span-3 md:col-span-3 overflow-x-auto">
                 {show ? (
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
