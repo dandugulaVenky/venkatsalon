@@ -284,13 +284,14 @@ const BookingHistory = () => {
                         <td className="p-3 text-right md:text-md text-sm">
                           <label>{item.shop}</label>
                         </td>
-                        <td className="p-3 text-right md:text-md text-sm underline">
+                        <td className="p-3 text-right md:text-md text-sm underline cursor-pointer">
                           <label
                             onClick={() => {
                               setShowServices(item);
 
                               setShopId(item.shopId);
                             }}
+                            className="cursor-pointer"
                           >
                             Show Services
                           </label>

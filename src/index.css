@@ -434,3 +434,12 @@ input::placeholder {
   justify-content: center;
   z-index: 999;
 }
+
+.highlight:hover {
+  transform: scale(1.055);
+
+  transition: 0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
+    0.5s box-shadow,
+    0.5s -webkit-transform cubic-bezier(0.155, 1.105, 0.295, 1.12);
+  cursor: pointer;
+}

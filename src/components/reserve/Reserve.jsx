@@ -10,7 +10,7 @@ import moment from "moment";
 import axios from "axios";
 
 import { toast } from "react-toastify";
-
+import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
@@ -294,7 +294,7 @@ const Reserve = () => {
         newDuration += service.duration;
       } else {
         newAmount -= service.price;
-        seatAmount += service.price;
+        seatAmount -= service.price;
 
         newDuration -= service.duration;
       }
@@ -638,7 +638,7 @@ const Reserve = () => {
 
           {categoriesOptions?.length > 0 ? (
             <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
-              <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
+              <div className=" lg:col-span-3 md:col-span-3">
                 {show ? (
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
@@ -646,7 +646,7 @@ const Reserve = () => {
                     const isDisabled = isAvailable(i);
                     return (
                       !isDisabled && (
-                        <div className="card overflow-x-auto p-5" key={i}>
+                        <div className="card  md:p-5 p-1.5" key={i}>
                           <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
                             <span>Seat {i + 1}</span>
                             <span>&#8377; {seat ? seatValues.amount : 0} </span>
@@ -655,82 +655,86 @@ const Reserve = () => {
                               {seat ? seatValues.time : 0}
                             </span>
                           </h2>
-                          <table className="min-w-full ">
-                            <thead className="border-b bg-gray-300 ">
-                              <tr className="border-b-2 border-gray-200">
-                                <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                  Service Name
-                                </th>
-                                <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                  Price
-                                </th>
-                                {category === "packages" && (
-                                  <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                    show inclusions
+                          <div className="overflow-x-auto w-full">
+                            <table className="min-w-full ">
+                              <thead className="border-b bg-gray-300 ">
+                                <tr className="border-b-2 border-gray-200">
+                                  <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                    Service Name
                                   </th>
-                                )}
+                                  <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                                    Price
+                                  </th>
+                                  {category === "packages" && (
+                                    <th className="md:p-5 p-4  md:text-md text-sm text-right ">
+                                      show inclusions
+                                    </th>
+                                  )}
 
-                                <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                  Duration
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {show &&
-                                categoriesOptions?.map((option, j) => {
-                                  const selectedOptions = new Set(seat.options);
-                                  return (
-                                    <tr
-                                      key={j}
-                                      className="border-b-2 border-gray-200"
-                                    >
-                                      <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                        <input
-                                          type="checkbox"
-                                          name={option.service}
-                                          checked={selectedOptions.has(
-                                            option.service
-                                          )}
-                                          className="h-6 w-6"
-                                          id={option.service}
-                                          onChange={(event) =>
-                                            handleOptionChange(
-                                              event,
-                                              seat.id,
-                                              option,
-                                              seat.index
-                                            )
-                                          }
-                                          // disabled={isAvailable(i)}
-                                        />
-                                        <label className="text-gray-900">
-                                          {option.service}
-                                        </label>
-                                      </td>
-                                      <td className="p-5 text-right md:text-md text-sm">
-                                        &#8377; {option.price}
-                                      </td>
-
-                                      {category === "packages" && (
-                                        <td className="p-5 text-right md:text-md text-sm">
-                                          <label
-                                            className="text-gray-900 underline"
-                                            onClick={(e) =>
-                                              handleInclusions(e, option)
+                                  <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                    Duration
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {show &&
+                                  categoriesOptions?.map((option, j) => {
+                                    const selectedOptions = new Set(
+                                      seat.options
+                                    );
+                                    return (
+                                      <tr
+                                        key={j}
+                                        className="border-b-2 border-gray-200"
+                                      >
+                                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                          <input
+                                            type="checkbox"
+                                            name={option.service}
+                                            checked={selectedOptions.has(
+                                              option.service
+                                            )}
+                                            className="h-6 w-6"
+                                            id={option.service}
+                                            onChange={(event) =>
+                                              handleOptionChange(
+                                                event,
+                                                seat.id,
+                                                option,
+                                                seat.index
+                                              )
                                             }
-                                          >
-                                            show inclusions
+                                            // disabled={isAvailable(i)}
+                                          />
+                                          <label className="text-gray-900">
+                                            {option.service}
                                           </label>
                                         </td>
-                                      )}
-                                      <td className="p-5 text-right md:text-md text-sm">
-                                        {option.duration} min
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                            </tbody>
-                          </table>
+                                        <td className="p-5 text-right md:text-md text-sm">
+                                          &#8377; {option.price}
+                                        </td>
+
+                                        {category === "packages" && (
+                                          <td className="p-5 text-right md:text-md text-sm">
+                                            <label
+                                              className="text-gray-900 underline"
+                                              onClick={(e) =>
+                                                handleInclusions(e, option)
+                                              }
+                                            >
+                                              show inclusions
+                                            </label>
+                                          </td>
+                                        )}
+                                        <td className="p-5 text-right md:text-md text-sm">
+                                          {option.duration} min
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       )
                     );
@@ -787,7 +791,8 @@ const Reserve = () => {
               </div>
             </div>
           ) : (
-            <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="min-h-[60vh] flex items-center flex-col justify-center">
+              <img src={Select} alt="select category" className="h-72" />
               <p className="font-semibold">
                 Please select any category to view services
               </p>

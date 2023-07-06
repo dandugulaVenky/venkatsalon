@@ -22,6 +22,7 @@ const Admin = () => {
 
   useEffect(() => {
     setLoading(true);
+    window.scrollTo(0, 0);
     const getAdmin = async () => {
       try {
         let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {

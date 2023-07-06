@@ -154,7 +154,7 @@ const CustomerDetails = ({ item, setOpen }) => {
           shopName: shopData.name,
           ownerEmail: email,
           ownerNumber: phone,
-          link: "https://main--profound-babka-e67f58.netlify.app/history",
+          link: "https://easytym.com/history",
         },
         { withCredentials: true }
       );
@@ -318,15 +318,22 @@ const CustomerDetails = ({ item, setOpen }) => {
                     );
                   })}
                 </span> */}
-                <span className="flex md:space-x-1 flex-wrap md:space-y-0 space-y-1">
+                <span className="flex md:space-x-1 flex-wrap  space-y-1">
                   {item.selectedSeats.map((seat, i) => {
                     return (
                       <span
                         className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white"
                         key={i}
                       >
-                        {seat.options.map((option) => {
-                          return <span className="ml-1">{option}</span>;
+                        {seat.options.map((option, j) => {
+                          return (
+                            <span className="">
+                              {option}{" "}
+                              <span>
+                                {j !== seat.options.length - 1 ? ", " : ". "}
+                              </span>
+                            </span>
+                          );
                         })}
                         &nbsp;- seat {seats[i]}
                       </span>
