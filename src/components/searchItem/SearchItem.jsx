@@ -7,53 +7,11 @@ import useFetch from "../../hooks/useFetch";
 import "./searchItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCheck,
   faCheckCircle,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
-import baseUrl from "../../utils/client";
 
 const SearchItem = ({ item }) => {
-  let disable = false;
-  const { date, time, city } = useContext(SearchContext);
-  const dater = moment(date).format("MMM Do YY");
-  const { data, loading, error } = useFetch(
-    `${baseUrl}/api/hotels/room/${item._id}`
-  );
-
-  // let htms = "";
-  let count = 0;
-  const isAvailable = (data, dater, time) => {
-    var k = 0;
-    k = k + 1;
-
-    const isFound = data.unavailableDates.map((item, i) => {
-      let newString = item?.time?.replace(/:/g, "").replace(/\s/g, "");
-
-      let newString1 = time?.replace(/:/g, "").replace(/\s/g, "");
-
-      if (item?.date.includes(dater)) {
-        // alert("Sorry, this date and time is already booked.");
-        if (newString.includes(newString1)) {
-          count += 1;
-        }
-      }
-    });
-
-    if (count === 2) {
-      return (disable = true);
-      // return (document.getElementById("report").innerHTML = htms);
-    }
-  };
-
-  const mapData = data[0];
-  for (let i = 0; i < mapData?.roomNumbers.length; i++) {
-    if (dater && time) {
-      isAvailable(mapData?.roomNumbers[i], dater, time);
-    }
-  }
-
-  // console.log("data from SearchItem", data);
   return (
     <div className="searchItem list ">
       <div className="siDesc">
@@ -98,16 +56,7 @@ const SearchItem = ({ item }) => {
           <span className="md:text-lg text-sm">Rs.{item.cheapestPrice}</span>
           <span className="siTaxOp">Includes taxes and fees</span>
           <Link to={`/shops/${item._id}`}>
-            <button
-              className={
-                disable
-                  ? "siCheckButton bg-blue-400"
-                  : "siCheckButton jello-horizontal"
-              }
-              disabled={disable}
-            >
-              {disable ? "Booked" : "Book 💇‍♂️"}
-            </button>
+            <button className="siCheckButton jello-horizontal">Book</button>
           </Link>
         </div>
       </div>

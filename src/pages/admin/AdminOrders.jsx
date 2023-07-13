@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -20,6 +20,8 @@ import Greeting from "../../components/navbar/Greeting";
 import { SearchContext } from "../../context/SearchContext";
 import Footer from "../../components/footer/Footer";
 import CustomerDetails from "../../components/admin/CustomerDetails";
+import { salonCategories } from "../../utils/salonServices";
+import { parlourCategories } from "../../utils/parlourServices";
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
 
@@ -27,6 +29,7 @@ const AdminOrders = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [shopType, setShopType] = useState();
 
   const [value, setValue] = useState(new Date());
   const [allOrders, setAllOrders] = useState(false);
@@ -35,6 +38,10 @@ const AdminOrders = () => {
 
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(5);
+
+  const [resultInServicesCount, setResultInServicesCount] = useState({});
+  const [resultInCategoriesCount, setResultInCategoriesCount] = useState({});
+
   const navigate = useNavigate();
 
   const setLoadMore = () => setVisible((prev) => prev + 5);
@@ -48,7 +55,19 @@ const AdminOrders = () => {
     }
     return null;
   }
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
+        setShopType(data?.type);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user?.shopId]);
   useEffect(() => {
     const requests = async () => {
       setLoading(true);
@@ -63,6 +82,74 @@ const AdminOrders = () => {
         .then((res) => {
           setData(res.data);
 
+          const typeServices =
+            shopType === "parlour" ? parlourCategories : salonCategories;
+
+          //merge all the services from utils
+          const mergedPreviewServices = typeServices
+            ?.reduce((arr, item) => {
+              arr.push(item.services);
+              return arr;
+            }, [])
+            .reduce((arr, item) => {
+              return arr.concat(item);
+            }, []);
+
+          //remove packages becaause packages are not comparable because they have differnt names which are not predefined
+          const packagesRemovedServices = mergedPreviewServices.filter(
+            (service) => service.category !== "packages"
+          );
+
+          //now again merge all the user services based on selection date
+
+          let services = res?.data
+            ?.reduce((acc, item) => {
+              acc.push(item.selectedSeats);
+              return acc;
+            }, [])
+            .reduce((arr, item) => {
+              return arr.concat(item);
+            }, [])
+            .reduce((acc1, item1) => {
+              return acc1.concat(item1.options);
+            }, []);
+
+          // get the objs based on user selected service names
+
+          let getObjs = services?.map((service) => {
+            return packagesRemovedServices?.filter(
+              (ser) => ser.name === service
+            )[0];
+          });
+
+          //we will get ndefined for the package services names like winter etc..which does not have in our utils folder
+          const filteredUndefined = getObjs.filter(
+            (service) => service !== undefined
+          );
+
+          //find the count of each category andeach service except packages
+
+          let resultInServices = {};
+          let resultInCategories = {};
+
+          for (let i = 0; i < filteredUndefined.length; i++) {
+            const name = filteredUndefined[i].name;
+            resultInServices[name] = (resultInServices[name] || 0) + 1;
+            const cat = filteredUndefined[i].category;
+            resultInCategories[cat] = (resultInCategories[cat] || 0) + 1;
+          }
+
+          //now as we do not count packages service count as they were not needed and we need package category count
+
+          const filterPackages = getObjs.filter(
+            (service) => service === undefined
+          );
+
+          resultInCategories.packages = filterPackages.length;
+
+          setResultInServicesCount(resultInServices);
+          setResultInCategoriesCount(resultInCategories);
+
           setLoading(false);
         })
         .catch((error) => {
@@ -71,7 +158,7 @@ const AdminOrders = () => {
         });
     };
     requests();
-  }, [allOrders, navigate, shopId, value, visible]);
+  }, [allOrders, navigate, shopId, shopType, value, visible]);
 
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -103,6 +190,10 @@ const AdminOrders = () => {
   };
 
   let w = window.innerWidth;
+
+  console.log(resultInServicesCount);
+  console.log(resultInCategoriesCount);
+
   const { open } = useContext(SearchContext);
   return (
     <div>
@@ -248,4 +339,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default memo(AdminOrders);

@@ -18,7 +18,7 @@ const MyServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
   const [disabled, setIsDisabled] = useState(false);
-
+  const [deleteItemLoader, setDeleteItemLoader] = useState("");
   const { user } = useContext(AuthContext);
 
   let w = window.innerWidth;
@@ -108,6 +108,7 @@ const MyServices = () => {
 
     if (confirmed) {
       setIsDisabled(true);
+      setDeleteItemLoader(option.service);
       try {
         const res = await axios.post(
           `${baseUrl}/api/rooms/deleteRoomService/${roomId}`,
@@ -340,7 +341,7 @@ const MyServices = () => {
                     {addRemoveServices?.map((option, j) => {
                       return (
                         <tr key={j} className="border-b-2 border-white">
-                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                          <td className="md:text-md text-sm flex items-start justify-start p-5 space-x-2">
                             <label className="text-white font-bold">
                               {option.service}
                             </label>
@@ -504,7 +505,7 @@ const MyServices = () => {
                       {categoriesOptions?.map((option, j) => {
                         return (
                           <tr key={j} className="border-b-2 border-white">
-                            <td className="md:text-md text-sm flex items-center justify-center p-5">
+                            <td className="md:text-md text-sm flex items-center justify-start p-5">
                               {edit === j ? (
                                 <input
                                   type="text"
@@ -553,7 +554,7 @@ const MyServices = () => {
                               <td className="p-5 text-right md:text-md text-sm">
                                 {
                                   <label
-                                    className="text-gray-900 underline"
+                                    className="text-gray-900 underline cursor-pointer"
                                     onClick={(e) => handleInclusions(e, option)}
                                   >
                                     show inclusions
@@ -572,7 +573,11 @@ const MyServices = () => {
                                     className="px-3 py-1.5 bg-blue-600 rounded-md"
                                     onClick={handleAdd}
                                   >
-                                    Add
+                                    {disabled ? (
+                                      <span className="buttonloader ml-2"></span>
+                                    ) : (
+                                      "Save"
+                                    )}
                                   </button>
                                   <button
                                     onClick={() => setEdit(null)}
@@ -590,11 +595,16 @@ const MyServices = () => {
                               )}
                             </td>
                             <td className="p-5 text-right md:text-md text-sm">
-                              <FontAwesomeIcon
-                                icon={faTrash}
-                                size="lg"
-                                onClick={() => handleDelete(option)}
-                              />
+                              {disabled &&
+                              deleteItemLoader === option.service ? (
+                                <span className="buttonloader ml-2"></span>
+                              ) : (
+                                <FontAwesomeIcon
+                                  icon={faTrash}
+                                  size="lg"
+                                  onClick={() => handleDelete(option)}
+                                />
+                              )}
                             </td>
                           </tr>
                         );

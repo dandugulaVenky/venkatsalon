@@ -54,7 +54,7 @@ const PackagePreview = (props) => {
       );
       if (status === 201) {
         toast("package added succesfully!");
-        setIsDisabled(false);
+
         setTimeout(() => navigate("/admin/my-services"), 2000);
       } else {
         toast("something went wrong!");
@@ -62,7 +62,7 @@ const PackagePreview = (props) => {
       }
     } catch (err) {
       console.log(err);
-      toast("something wrong!");
+      toast(err.response.data.message);
     }
   };
 
@@ -73,7 +73,7 @@ const PackagePreview = (props) => {
           Preview Of Package
         </p>
         <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
-          <div className="overflow-x-auto  lg:col-span-3 md:col-span-3">
+          <div className="overflow-x-auto   md:col-span-3">
             <table className="min-w-full ">
               <thead className="border-b bg-gray-300 ">
                 <tr className="border-b-2 border-gray-200">
@@ -167,7 +167,11 @@ const PackagePreview = (props) => {
                     onClick={createHandler}
                     className="primary-button flex items-center justify-center  w-full"
                   >
-                    Proceed{" "}
+                    {disabled ? (
+                      <span className="buttonloader ml-2"></span>
+                    ) : (
+                      "Proceed"
+                    )}
                     {/* {buttonLoad && <span className="buttonloader"></span>} */}
                   </button>
                 </li>
