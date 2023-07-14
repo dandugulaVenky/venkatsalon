@@ -56,7 +56,7 @@ const Categories = ({ type }) => {
             : "loading"}
         </h1>
         <button
-          className="px-4 md:text-xl text-sm font-semibold pb-8"
+          className="px-4 text-xl font-semibold pb-8"
           onClick={handleAllCities}
         >
           <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
