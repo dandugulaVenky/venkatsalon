@@ -37,6 +37,7 @@ import Packages from "./pages/admin/Packages";
 import MyServices from "./pages/admin/MyServices";
 import AddServices from "./pages/admin/AddServices";
 import Compare from "./pages/admin/Compare";
+import AllCities from "./pages/AllCities/AllCities";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -55,6 +56,7 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* <Route path="/get-started" element={<Home />} /> */}
         <Route path="/shops" element={<List />} />
+          <Route path="/cities" element={<AllCities />} />
         <Route path="/test" element={<Test />} />
 
         <Route path="/shops/:id" element={<Hotel />} />

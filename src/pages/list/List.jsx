@@ -18,9 +18,6 @@ import baseUrl from "../../utils/client";
 const List = () => {
   let { city, type } = useContext(SearchContext);
 
-  // const [time, setTime] = useState(location.state.value);
-  // const [openDate, setOpenDate] = useState(false);
-
   const min = useState(0);
   const max = useState(999);
   const w = window.innerWidth;
@@ -32,20 +29,8 @@ const List = () => {
       max || 999
     }`
   );
-  const [loaded, setLoaded] = useState(false);
+
   const navigate = useNavigate();
-
-  const [colony, setColony] = useState("");
-  const [colonyWiseShops, setColonyWiseShops] = useState([]);
-  const [colonies, setColonies] = useState([]);
-
-  const getAllColonies = async () => {
-    const colonies = await axios.post(`${baseUrl}/api/hotels/allColonies`, {
-      destination: city,
-    });
-
-    setColonies(colonies.data);
-  };
 
   const scroll = () => {
     window.scrollTo(0, 0);
@@ -57,29 +42,20 @@ const List = () => {
       return navigate("/get-started");
     }
     scroll();
-  }, []);
+  }, [city, navigate, type]);
 
-  useEffect(() => {
-    getColonyWiseShops(colony);
-  }, [colony]);
-
-  useEffect(() => {
-    getAllColonies();
-  }, []);
-
-  const getColonyWiseShops = async (colony) => {
-    const shops = await axios.post(`${baseUrl}/api/hotels/getColonyWiseShops`, {
-      colony,
-      type,
-    });
-    setLoaded(true);
-    // console.log("makodeeeeeeeeeeeeeee", shops);
-    setColonyWiseShops(shops.data);
-  };
-  if (colony) {
-    loaded === false && getColonyWiseShops(colony);
-  }
   const { open } = useContext(SearchContext);
+
+  const [userInput, setUserInput] = useState("");
+  function filterArray(array, userInput) {
+    if (!userInput) {
+      return array;
+    }
+    return array?.filter((shop) => {
+      return shop.name.toLowerCase().includes(userInput.toLowerCase());
+    });
+  }
+  const filteredArray = filterArray(data, userInput);
 
   return (
     <div>
@@ -87,33 +63,28 @@ const List = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
 
-      <div>
-        <div>
-          <div className=" min-h-screen pb-24 md:pt-0 pt-2">
+      <div className="w-full mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl pb-24">
+        <div className="flex  items-center justify-center py-10 space-x-2 mx-3">
+          <label className="font-semibold"> Find Shop : </label>
+          <input
+            type="text"
+            className="w-64 rounded-lg"
+            onChange={(e) => setUserInput(e.target.value)}
+            value={userInput}
+            placeholder="Search shop name"
+          />
+        </div>
+        <div className="w-full">
+          <div className=" min-h-screen w-full  md:pt-0 pt-2">
             {loading ? (
               <div className="min-h-[65vh] flex items-center justify-center">
                 <span className="loader "></span>
               </div>
             ) : (
               <>
-                <div className="md:px-44 px-4 ">
-                  <select
-                    onChange={(e) => setColony(e.target.value)}
-                    className=" mb-8 "
-                  >
-                    <option value="" disabled selected>
-                      Select a colony
-                    </option>
-                    {colonies?.map((shop, i) => {
-                      return (
-                        <option value={shop} key={i}>
-                          {shop}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {data.length <= 0 && (
-                    <div className="min-h-[55vh] flex items-center justify-center">
+                <div className="grid grid-cols-12  gap-8 ">
+                  {data?.length <= 0 && (
+                    <div className="min-h-[55vh] flex items-center justify-center ">
                       <p className="text-2xl font-semibold">
                         {" "}
                         No {type}s found
@@ -121,13 +92,11 @@ const List = () => {
                     </div>
                   )}
 
-                  {colony === ""
-                    ? data.map((item) => (
-                        <SearchItem item={item} key={item._id} />
-                      ))
-                    : colonyWiseShops.map((item) => (
-                        <SearchItem item={item} key={item._id} />
-                      ))}
+                  {filteredArray?.map((item) => (
+                    <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
+                      <SearchItem item={item} key={item._id} />
+                    </div>
+                  ))}
                 </div>
               </>
             )}

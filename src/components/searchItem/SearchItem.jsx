@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
 import { SearchContext } from "../../context/SearchContext";
@@ -13,55 +13,49 @@ import {
 
 const SearchItem = ({ item }) => {
   return (
-    <div className="searchItem list ">
-      <div className="siDesc">
-        {/* <h1 id="report" className="text-red-500 text-xs">
-          .
-        </h1> */}
-        <div className="flex space-x-2">
-          <img src={item.photos[0]} alt="" className="siImg" />
-
-          <div className="flex flex-col md:space-y-2 space-y-0.5 ">
-            <h1 className=" md:text-lg text-sm">
-              {item.name}{" "}
-              <span className="text-xs">
-                <FontAwesomeIcon icon={faCheckCircle} />
-              </span>
-            </h1>
-            <span className="siDistance md:flex md:items-center ">
-              {" "}
-              <FontAwesomeIcon
-                icon={faMapLocationDot}
-                className="mr-1 lg:text-[30px] md:text-[18px]"
-              />
-              <span> {item.distance}m from center</span>
-            </span>
-            <span className="siTaxiOp px-2 md:text-sm ">
-              Reviews : {item.numReviews}
-            </span>
+    <>
+      <Link to={`/shops/${item._id}`}>
+        <div className=" hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer mx-4">
+          <div className=" list rounded-md">
+            <div className="w-full">
+              <img src={item.photos[0]} alt="" className="siImg w-full h-52" />
+            </div>
+            <div className=" grid grid-cols-12 p-5  ">
+              <div className="space-y-2.5 col-span-8">
+                <h1 className=" md:text-md text-sm">
+                  {item.name}{" "}
+                  <span className="text-xs">
+                    <FontAwesomeIcon icon={faCheckCircle} size="sm" />
+                  </span>
+                </h1>
+                <h1 className=" md:flex md:items-center">
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faMapLocationDot}
+                    className="mr-1 lg:text-[20px] md:text-[14px]"
+                    size="sm"
+                  />
+                  <span className="text-sm"> {item.distance}m from center</span>
+                </h1>
+                <h1 className="text-sm siTaxiOp">
+                  Reviews : {item.numReviews}
+                </h1>
+              </div>
+              <div className="siDetail col-span-4">
+                <div className="siDetailTexts">
+                  <span className="md:text-lg text-sm">
+                    Rs.{item.cheapestPrice}
+                  </span>
+                  <span className="siTaxOp">Includes taxes and fees</span>
+                  <span className="siCancelOp">Free cancellation </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div className="flex items-center justify-start space-x-2">
-          <span className="siCancelOp">Free cancellation </span>
-        </div>
-        <span className="siFeatures">{item.desc}</span>
-
-        {/* <span className="siCancelOpSubtitle">
-          You can cancel later, so lock in this great price today!
-        </span> */}
-      </div>
-      <div className="siDetails">
-        <div className="siDetailTexts">
-          <span className="md:text-lg text-sm">Rs.{item.cheapestPrice}</span>
-          <span className="siTaxOp">Includes taxes and fees</span>
-          <Link to={`/shops/${item._id}`}>
-            <button className="siCheckButton jello-horizontal">Book</button>
-          </Link>
-        </div>
-      </div>
-    </div>
+      </Link>
+    </>
   );
 };
-
-export default SearchItem;
+// jello-horizontal
+export default memo(SearchItem);
