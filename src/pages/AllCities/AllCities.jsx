@@ -1,96 +1,95 @@
-import React, {useContext, useState} from "react";
-import {SearchContext} from "../../context/SearchContext";
-import {useNavigate} from "react-router-dom";
-
+import React, { useContext, useEffect, useState } from "react";
+import { SearchContext } from "../../context/SearchContext";
+import { useNavigate } from "react-router-dom";
+import SIdebar from "../../components/navbar/SIdebar";
+import Greeting from "../../components/navbar/Greeting";
+import Footer from "../../components/footer/Footer";
+import Layout from "../../components/navbar/Layout";
 
 const AllCities = () => {
-    const [searchCity, setSearchCity] = useState("");
-    const { type: type1, dispatch } = useContext(SearchContext);
-    const navigate = useNavigate();
+  const { type: type1, dispatch } = useContext(SearchContext);
+  const navigate = useNavigate();
 
-    const allCitiesArray = [
-        {cityName : "Shadnagar",img:"https://picsum.photos/800/600?random=5"}, {cityName:"Kothur"}, {cityName : "Shamshabad"},
-        {cityName:"Kothur"}, {cityName : "Shadnagar"},  {cityName : "mbnr"},
-        {cityName : "Shadnagar"}, {cityName:"Kothur"}, {cityName : "ShamshabadShamshabad"},
-        // {cityName:"Kothur"}, {cityName : "Shadnagar"},  {cityName : "Shamshabad"},
-        // {cityName : "Shadnagar"}, {cityName:"Kothur"},
-    ];
-const handleSearchCity = (e) => {
-    setSearchCity(e.target.value);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-}
-const handleNavigateCity = (destination) => {
-    dispatch({
-        type: "NEW_SEARCH",
-        payload: { type: type1, destination },
+  const allCitiesArray = [
+    { cityName: "Shadnagar" },
+    { cityName: "Kothur" },
+    { cityName: "Shamshabad" },
+    { cityName: "Kothur" },
+    { cityName: "Shadnagar" },
+    { cityName: "mbnr" },
+    { cityName: "Shadnagar" },
+    { cityName: "Kothur" },
+    { cityName: "ShamshabadShamshabad" },
+  ];
+
+  const [userInput, setUserInput] = useState("");
+  function filterArray(array, userInput) {
+    if (!userInput) {
+      return array;
+    }
+    return array?.filter((city) => {
+      return city.cityName.toLowerCase().includes(userInput.toLowerCase());
     });
-    navigate("/shops",{ state: { destination }});
-}
-    return (
-        <div className="bg-stale-500 p-7 mx-auto w-full"
-        style={{maxWidth:"1200px"}}
-        >
-            <div className="p-4">
-                <label>Search City </label>
-                <input
-                    type="text"
-                    className="w-64 rounded-lg"
-                    onChange={(e) => {handleSearchCity(e)}}
-                />
-            </div>
-            <div className=" p-4 h-screen grid grid-flow-row lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5">
-                {searchCity === "" ?
-                    (allCitiesArray
-                    .map((city) => {
-                        // return     <div className="lg:col-span-1 md:col-span-2">
-                        //     <div
-                        //         className={`card p-5`}
-                        //     >
-                        //         <h2 className="mb-2 text-lg content break-words">Order SummarySummarySummarySummary</h2>
-                        //
-                        //     </div>
-                        // </div>
+  }
+  const filteredArray = filterArray(allCitiesArray, userInput);
+  const handleNavigateCity = (destination) => {
+    dispatch({
+      type: "NEW_SEARCH",
+      payload: { type: type1, destination },
+    });
+    navigate("/shops", { state: { destination } });
+  };
 
-                        return <div
-                        // className="card"
-                        className="flex items-center justify-center w-full
-                         {/*bg-red-800 lg:h-48 md:h-48 sm:h-28 */}
+  let w = window.innerWidth;
+  const { open } = useContext(SearchContext);
+
+  return (
+    <>
+      {open && <SIdebar />}
+      {w >= 768 && <Layout />}
+      {w < 768 && <Greeting />}
+
+      <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
+        <div className="flex flex-col py-10 space-y-2 mx-3">
+          <label> City </label>
+          <input
+            type="text"
+            className="w-64 rounded-lg"
+            onChange={(e) => setUserInput(e.target.value)}
+            value={userInput}
+            placeholder="Search city name"
+          />
+        </div>
+
+        <div className=" min-h-screen w-full pb-24 md:pt-0 pt-2">
+          <>
+            <div className="grid grid-cols-12 md:gap-3 gap-8 ">
+              {filteredArray.map((city) => {
+                return (
+                  <div
+                    className="flex items-center justify-center h-52  lg:col-span-4 md:col-span-5 col-span-12 mx-4  
                           cursor-pointer
                          rounded-lg hover:shadow-2xl hover:scale-105 transition duration-300
                          bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat
                          "
-                        onClick={() => handleNavigateCity(city.cityName)}
-                    >
-                        <p className="text-white font-bold  text-xl text-center  content break-words"
-                           // style={{maxWidth:"40px"}}
-                        >
-                            {city.cityName}
-                        </p>
-                    </div>
-                    }))
-                    : (allCitiesArray.filter((search) => {
-                            console.log(search.cityName ,searchCity,"vgvgv")
-                        return search.cityName.toLowerCase().includes(searchCity.toLowerCase())
-                        }).map((city) => {
-                            return  <div
-                                style={{maxWidth:"1200px"}}
-                                className="relative flex items-center justify-center
-                         bg-red-800 lg:h-48 md:h-48 sm:h-28 w-full cursor-pointer
-                         rounded-lg hover:shadow-2xl hover:scale-105 transition duration-300
-                         bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat
-                         "
-                                onClick={() => handleNavigateCity(city.cityName)}
-
-                            >
-                                <p className="absolute top-28 text-white font-bold  text-xl ">
-                                    {city.cityName}
-                                </p>
-                            </div>
-                        })
-                       )
-                }
+                    onClick={() => handleNavigateCity(city.cityName)}
+                  >
+                    <p className="text-white font-bold  text-xl w-full text-center content break-words ">
+                      {city.cityName}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
+          </>
         </div>
-    );
-}
+      </div>
+      <Footer />
+    </>
+  );
+};
 export default AllCities;
