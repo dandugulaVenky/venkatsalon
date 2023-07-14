@@ -87,33 +87,20 @@ const List = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
 
-      <div>
-        <div>
-          <div className=" min-h-screen pb-24 md:pt-0 pt-2">
+      <div className="w-full mx-auto"
+      style={{maxWidth:"1200px"}}
+      >
+        <div className="w-full">
+          <div className=" min-h-screen w-full pb-24 md:pt-0 pt-2">
             {loading ? (
               <div className="min-h-[65vh] flex items-center justify-center">
                 <span className="loader "></span>
               </div>
             ) : (
               <>
-                <div className="md:px-44 px-4 ">
-                  <select
-                    onChange={(e) => setColony(e.target.value)}
-                    className=" mb-8 "
-                  >
-                    <option value="" disabled selected>
-                      Select a colony
-                    </option>
-                    {colonies?.map((shop, i) => {
-                      return (
-                        <option value={shop} key={i}>
-                          {shop}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  {data.length <= 0 && (
-                    <div className="min-h-[55vh] flex items-center justify-center">
+                <div className="grid grid-cols-12 gap-4 mx-16 p-10">
+                  {data?.length <= 0 && (
+                    <div className="min-h-[55vh] flex items-center justify-center ">
                       <p className="text-2xl font-semibold">
                         {" "}
                         No {type}s found
@@ -122,11 +109,13 @@ const List = () => {
                   )}
 
                   {colony === ""
-                    ? data.map((item) => (
-                        <SearchItem item={item} key={item._id} />
+                    ? data?.map((item) => (
+                    <div className="lg:col-span-4 md:col-span-6 col-span-12">
+                      <SearchItem item={item} key={item._id} />
+                    </div>
                       ))
-                    : colonyWiseShops.map((item) => (
-                        <SearchItem item={item} key={item._id} />
+                    : colonyWiseShops?.map((item) => (
+                            <SearchItem item={item} key={item._id} />
                       ))}
                 </div>
               </>

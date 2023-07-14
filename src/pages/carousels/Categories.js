@@ -39,14 +39,22 @@ const Categories = ({ type }) => {
     navigate("/shops", { state: { destination } });
   };
 
+  const handleAllCities =() => {
+      navigate("/cities");
+  }
   return (
     <div className=" md:mb-0 mb-10 text-black ">
+        <div className="flex flex-row justify-between">
       <h1 className="px-4 text-xl font-semibold pb-8">
         Browse Area Wise{" "}
         {type1
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
           : "loading"}
       </h1>
+        <button className="px-4 text-xl font-semibold pb-8"
+        onClick={handleAllCities}
+        >View all Cities</button>
+        </div>
       <div className="">
         <Carousel cols={4} rows={1} gap={15} loop autoplay={15000}>
           <Carousel.Item>
