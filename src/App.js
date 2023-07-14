@@ -36,6 +36,7 @@ import AdminOrders from "./pages/admin/AdminOrders";
 import Packages from "./pages/admin/Packages";
 import MyServices from "./pages/admin/MyServices";
 import AddServices from "./pages/admin/AddServices";
+import Compare from "./pages/admin/Compare";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -124,6 +125,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AddServices />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/compare"
+          element={
+            <ProtectedRoute>
+              <Compare />
             </ProtectedRoute>
           }
         />

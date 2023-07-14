@@ -112,21 +112,6 @@ const Packages = () => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   let result = {
-  //     category: category,
-  //     services: allServices,
-  //   };
-  //   setShopServices((prevServices) => [...prevServices, result]);
-
-  //   setAllServices({
-  //     service: "",
-  //     price: "",
-  //     duration: "",
-  //   });
-  // };
-
   const getTotalDuration = () => {
     const duration = all?.reduce((acc, service) => acc + service.duration, 0);
     return duration ? duration : 0;

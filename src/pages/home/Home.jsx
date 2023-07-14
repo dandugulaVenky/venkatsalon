@@ -210,6 +210,7 @@ const Home = () => {
 
         <Offers />
       </div>
+
       {/* <button onClick={handleButton} className="mb-20">
         press me
       </button> */}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback, useMemo, useRef } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -20,6 +20,11 @@ import Greeting from "../../components/navbar/Greeting";
 import { SearchContext } from "../../context/SearchContext";
 import Footer from "../../components/footer/Footer";
 import CustomerDetails from "../../components/admin/CustomerDetails";
+import { salonCategories } from "../../utils/salonServices";
+import { parlourCategories } from "../../utils/parlourServices";
+
+import Charts from "../../utils/Charts";
+
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
 
@@ -27,6 +32,7 @@ const AdminOrders = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [shopType, setShopType] = useState();
 
   const [value, setValue] = useState(new Date());
   const [allOrders, setAllOrders] = useState(false);
@@ -35,7 +41,13 @@ const AdminOrders = () => {
 
   const [data, setData] = useState([]);
   const [visible, setVisible] = useState(5);
+
+  const [resultInServicesCount, setResultInServicesCount] = useState({});
+  const [resultInCategoriesCount, setResultInCategoriesCount] = useState({});
+
   const navigate = useNavigate();
+
+  const endRef = useRef(null);
 
   const setLoadMore = () => setVisible((prev) => prev + 5);
 
@@ -48,30 +60,134 @@ const AdminOrders = () => {
     }
     return null;
   }
-
   useEffect(() => {
-    const requests = async () => {
-      setLoading(true);
-      await axios
-        .post(
-          `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
-          {
-            date: allOrders ? "all" : moment(value).format("MMM Do YY"),
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          setData(res.data);
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
+        setShopType(data?.type);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [user?.shopId]);
+
+  const requests = useCallback(async () => {
+    setLoading(true);
+
+    await axios
+      .post(
+        `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
+        {
+          date: allOrders ? "all" : moment(value).format("MMM Do YY"),
+        },
+        { withCredentials: true }
+      )
+      .then(async (res) => {
+        setData(res.data);
+        try {
+          const res1 = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+
+          //merge all the services from utils
+
+          const mergedPreviewServices = res1.data[0]?.services
+            ?.reduce((arr, item) => {
+              arr.push(item.services);
+              return arr;
+            }, [])
+            .reduce((arr, item) => {
+              return arr.concat(item);
+            }, []);
+
+          //now again merge all the user services based on selection date
+
+          let services = res?.data
+            ?.reduce((acc, item) => {
+              acc.push(item.selectedSeats);
+              return acc;
+            }, [])
+            .reduce((arr, item) => {
+              return arr.concat(item);
+            }, [])
+            .reduce((acc1, item1) => {
+              return acc1.concat(item1.options);
+            }, []);
+
+          // get the objs based on user selected service names
+
+          let getObjs = services?.map((service) => {
+            return mergedPreviewServices?.filter(
+              (ser) => ser.service === service
+            )[0];
+          });
+
+          const filteredUndefined = getObjs.filter(
+            (service) => service !== undefined
+          );
+
+          //find the count of each category andeach service except packages
+
+          let resultInServices = {};
+          let resultInCategories = {};
+
+          for (let i = 0; i < filteredUndefined.length; i++) {
+            const name = filteredUndefined[i].service;
+
+            resultInServices[name] = (resultInServices[name] || 0) + 1;
+
+            const cat = filteredUndefined[i].category;
+            resultInCategories[cat] = (resultInCategories[cat] || 0) + 1;
+          }
+
+          //now as we do not count packages service count as they were not needed and we need package category count
+
+          const arr = Object.keys(resultInServices).map((key) => {
+            const price =
+              mergedPreviewServices.filter(
+                (service) => service.service === key
+              )[0].price * resultInServices[key];
+            const category = mergedPreviewServices.find(
+              (service) => service.service === key
+            );
+
+            return {
+              name: key + " Rs-" + price.toString(),
+              amount: price,
+              count: resultInServices[key],
+              category: category.category,
+            };
+          });
+          const arr1 = Object.keys(resultInCategories).map((key) => {
+            const price = arr
+              .filter((service) => service.category === key)
+              .reduce((acc, item) => (acc += item.amount), 0);
+
+            return {
+              name: key + "( Rs-" + price.toString() + ")",
+              amount: price,
+              count: resultInCategories[key],
+            };
+          });
+
+          setResultInServicesCount(arr);
+          setResultInCategoriesCount(arr1);
 
           setLoading(false);
-        })
-        .catch((error) => {
-          console.error(error.response.data.message);
-          navigate("/login", { state: { destination: `/admin` } });
-        });
-    };
+        } catch (err) {
+          console.log(err);
+        }
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+        navigate("/login", { state: { destination: `/admin` } });
+      });
+  }, [allOrders, navigate, shopId, value]);
+
+  useEffect(() => {
     requests();
-  }, [allOrders, navigate, shopId, value, visible]);
+  }, [allOrders, navigate, requests, shopId, shopType, value, visible]);
 
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -103,20 +219,24 @@ const AdminOrders = () => {
   };
 
   let w = window.innerWidth;
+
   const { open } = useContext(SearchContext);
   return (
     <div>
       {open && <SIdebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <div className=" px-5 lg:px-96 pb-24 md:pt-4">
-        <div className="pt-5 mb-5 space-x-2 flex items-center flex-wrap  justify-center">
+      <div
+        className=" md:px-5  pb-20 md:pt-4 mx-auto"
+        style={{ maxWidth: "1140px" }}
+      >
+        <div className="pt-5 mb-5 space-x-2 flex items-center flex-wrap gap-3 justify-center">
           <div className="">
             <DatePicker
               onChange={modifiedOnChange}
               tileClassName={tileClassName}
               value={value}
-              className="bg-slate-100 text-blue-400 p-2.5 h-14 rounded-md md:w-[14.3rem] w-[10.3rem] z-10 "
+              className="bg-slate-100 text-blue-400 p-2.5 h-10 rounded-md md:w-[14.3rem] w-[10.3rem] z-10 "
             />
           </div>
           <div className="">
@@ -136,13 +256,30 @@ const AdminOrders = () => {
           >
             All Orders
           </button>
+          <button
+            className="bg-green-600 px-2 py-1.5 rounded-md text-white"
+            onClick={() => {
+              endRef.current?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            See Statistics
+          </button>
+          <button
+            className="bg-green-600 px-2 py-1.5 rounded-md text-white"
+            onClick={() => {
+              navigate("/admin/compare", { state: { shopId, shopType } });
+            }}
+          >
+            Compare B/w Dates
+          </button>
           <p className="md:text-md text-xs">Count : {filteredArray.length}</p>
         </div>
+
         {filteredArray?.slice(0, visible).map((item, i) => {
           let k = i;
 
           return (
-            <div className="list p-5 overflow-x-auto relative" key={i}>
+            <div className="list p-5 overflow-x-auto relative mx-4" key={i}>
               <div className="space-y-2">
                 <div className="flex space-x-2">
                   <img
@@ -242,10 +379,30 @@ const AdminOrders = () => {
             )}
           </div>
         )}
+
+        <div className="min-w-full overflow-auto py-10" ref={endRef}>
+          <p className="py-10 text-center font-bold">Category Chart</p>
+          <Charts
+            data={resultInCategoriesCount}
+            XAxisDatakey="name"
+            BarDataKey="count"
+            BarDataAmount="amount"
+          />
+        </div>
+        <div className="py-10 min-w-full overflow-auto ">
+          <p className="py-10 text-center font-bold">Services Chart</p>
+          <Charts
+            data={resultInServicesCount}
+            XAxisDatakey="name"
+            BarDataKey="count"
+            BarDataAmount="amount"
+          />
+        </div>
       </div>
+
       <Footer />
     </div>
   );
 };
 
-export default AdminOrders;
+export default memo(AdminOrders);
