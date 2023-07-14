@@ -79,7 +79,7 @@ const BestSaloons = () => {
                         borderRadius: 8,
                       }}
                     />
-                    <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+                    <p className="absolute bottom-10 left-4 text-white font-bold  text-xl content break-words">
                       {item.name}
                     </p>
                     <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
