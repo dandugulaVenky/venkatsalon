@@ -15,15 +15,10 @@ const AllCities = () => {
   }, []);
 
   const allCitiesArray = [
-    { cityName: "Shadnagar" },
-    { cityName: "Kothur" },
-    { cityName: "Shamshabad" },
-    { cityName: "Kothur" },
-    { cityName: "Shadnagar" },
-    { cityName: "mbnr" },
-    { cityName: "Shadnagar" },
-    { cityName: "Kothur" },
-    { cityName: "ShamshabadShamshabad" },
+    { cityName: "shadnagar" },
+    { cityName: "kothur" },
+    { cityName: "shamshabad" },
+    { cityName: "kothur" },
   ];
 
   const [userInput, setUserInput] = useState("");
