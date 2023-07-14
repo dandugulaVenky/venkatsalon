@@ -65,7 +65,9 @@ const List = () => {
 
       <div className="w-full mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl pb-24">
         <div className="flex  items-center justify-center py-10 space-x-2 mx-3">
-          <label className="font-semibold"> Find Shop : </label>
+          <label className="font-semibold md:text-md text-sm">
+            Find Shop:{" "}
+          </label>
           <input
             type="text"
             className="w-64 rounded-lg"
