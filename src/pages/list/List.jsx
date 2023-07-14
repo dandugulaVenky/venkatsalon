@@ -78,12 +78,6 @@ const List = () => {
         </div>
         <div className="w-full ">
           <div className=" min-h-screen w-full  md:pt-0 pt-2">
-            {data?.length <= 0 && (
-              <div className="min-h-[55vh] grid place-items-center">
-                <p className="text-2xl font-semibold"> No {type}s found</p>
-              </div>
-            )}
-
             {loading ? (
               <div className="min-h-[65vh] flex items-center justify-center">
                 <span className="loader "></span>
@@ -98,6 +92,11 @@ const List = () => {
                   ))}
                 </div>
               </>
+            )}
+            {!loading && data?.length <= 0 && (
+              <div className="min-h-[55vh] grid place-items-center">
+                <p className="text-2xl font-semibold"> No {type}s found</p>
+              </div>
             )}
           </div>
         </div>
