@@ -70,30 +70,27 @@ const List = () => {
           </label>
           <input
             type="text"
-            className="w-64 rounded-lg"
+            className="w-64 rounded-md"
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
             placeholder="Search shop name"
           />
         </div>
-        <div className="w-full">
+        <div className="w-full ">
           <div className=" min-h-screen w-full  md:pt-0 pt-2">
+            {data?.length <= 0 && (
+              <div className="min-h-[55vh] grid place-items-center">
+                <p className="text-2xl font-semibold"> No {type}s found</p>
+              </div>
+            )}
+
             {loading ? (
               <div className="min-h-[65vh] flex items-center justify-center">
                 <span className="loader "></span>
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-12  gap-8 ">
-                  {data?.length <= 0 && (
-                    <div className="min-h-[55vh] flex items-center justify-center ">
-                      <p className="text-2xl font-semibold">
-                        {" "}
-                        No {type}s found
-                      </p>
-                    </div>
-                  )}
-
+                <div className="grid grid-cols-12  gap-8 mx-auto">
                   {filteredArray?.map((item) => (
                     <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
                       <SearchItem item={item} key={item._id} />

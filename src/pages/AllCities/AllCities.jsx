@@ -53,7 +53,7 @@ const AllCities = () => {
           <label> City </label>
           <input
             type="text"
-            className="w-64 rounded-lg"
+            className="w-64 rounded-md"
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
             placeholder="Search city name"
