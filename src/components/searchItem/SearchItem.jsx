@@ -57,5 +57,5 @@ const SearchItem = ({ item }) => {
     </>
   );
 };
-// jello-horizontal
+// jello-horizontal;
 export default memo(SearchItem);
