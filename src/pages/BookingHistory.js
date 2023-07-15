@@ -207,7 +207,7 @@ const BookingHistory = () => {
       </div> */}
       {showServices !== null && <GetPushed />}
 
-      <div className=" h-[85.5vh]">
+      <div className="h-[85.5vh]">
         <div className="flex items-center justify-between max-w-[90vw] mx-auto py-5">
           <p className=" md:text-xl text-xs font-semibold">Booking-History</p>
 

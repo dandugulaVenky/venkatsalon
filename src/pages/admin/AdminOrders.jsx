@@ -20,8 +20,6 @@ import Greeting from "../../components/navbar/Greeting";
 import { SearchContext } from "../../context/SearchContext";
 import Footer from "../../components/footer/Footer";
 import CustomerDetails from "../../components/admin/CustomerDetails";
-import { salonCategories } from "../../utils/salonServices";
-import { parlourCategories } from "../../utils/parlourServices";
 
 import Charts from "../../utils/Charts";
 
