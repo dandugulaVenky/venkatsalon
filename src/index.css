@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap");
 
 html,
 body {
   padding: 0;
   margin: 0;
-  /* font-family: Verdana, Geneva, Tahoma, sans-serif */
+  font-family: "Barlow", sans-serif;
+  font-family: "Comfortaa", cursive;
+  font-family: "Signika", sans-serif;
+  font-family: "Signika Negative", sans-serif;
   scroll-behavior: smooth;
   color: #000000;
   background: #e4e5e8b5;
@@ -111,33 +114,51 @@ input::placeholder {
 }
 
 .loader {
+  width: 58px;
+  height: 58px;
   display: inline-block;
-  transform: translateZ(1px);
-}
-.loader:after {
-  content: "";
-  display: inline-block;
-  width: 48px;
-  height: 48px;
-  margin: 8px;
+  position: relative;
+  background-color: #fff;
+  background: radial-gradient(
+    ellipse at center,
+    #00ccbb 0%,
+    #00ccbb 14%,
+    #fff 15%,
+    #fff 100%
+  );
+  background-size: cover;
+  background-position: center;
   border-radius: 50%;
-  background: #6f717c;
-  animation: coin-flip 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  box-shadow: -1px 1px 10px -1px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: -1px 1px 10px -1px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -1px 1px 10px -1px rgba(0, 0, 0, 0.75);
 }
-@keyframes coin-flip {
-  0%,
-  100% {
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
-  }
+.loader::after,
+.loader::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 4px;
+  background: #00ccbb;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  transform-origin: 25% 0;
+  box-sizing: border-box;
+  animation: rotation 10s linear infinite;
+}
+.loader::before {
+  height: 22px;
+  width: 2px;
+  transform: translateX(-50%) rotate(0deg);
+  animation-duration: 1s;
+}
+@keyframes rotation {
   0% {
-    transform: rotateY(0deg);
-  }
-  50% {
-    transform: rotateY(1800deg);
-    animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    transform: rotate(0deg);
   }
   100% {
-    transform: rotateY(3600deg);
+    transform: rotate(360deg);
   }
 }
 

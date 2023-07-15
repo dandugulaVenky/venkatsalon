@@ -58,51 +58,54 @@ const List = () => {
   const filteredArray = filterArray(data, userInput);
 
   return (
-    <div>
+    <>
       {open && <Sidebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-
-      <div className="w-full mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl pb-24">
-        <div className="flex  items-center justify-center py-10 space-x-2 mx-3">
-          <label className="font-semibold md:text-md text-sm">
-            Find Shop:{" "}
-          </label>
-          <input
-            type="text"
-            className="w-64 rounded-md"
-            onChange={(e) => setUserInput(e.target.value)}
-            value={userInput}
-            placeholder="Search shop name"
-          />
-        </div>
-        <div className="w-full ">
-          <div className=" min-h-screen w-full  md:pt-0 pt-2">
-            {loading ? (
-              <div className="min-h-[65vh] flex items-center justify-center">
-                <span className="loader "></span>
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-12  gap-8 mx-auto">
-                  {filteredArray?.map((item) => (
-                    <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
-                      <SearchItem item={item} key={item._id} />
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
-            {!loading && data?.length <= 0 && (
-              <div className="min-h-[55vh] grid place-items-center">
-                <p className="text-2xl font-semibold"> No {type}s found</p>
-              </div>
-            )}
+      <div className="min-h-[85.5vh]">
+        {loading ? (
+          <div className=" flex items-center justify-center h-[70vh]">
+            <span className="loader "></span>
           </div>
-        </div>
+        ) : (
+          <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl pb-24">
+            <div className="flex  items-center justify-center py-10 space-x-2 mx-3">
+              <label className="font-semibold md:text-md text-sm">
+                Find Shop:{" "}
+              </label>
+              <input
+                type="text"
+                className="w-64 rounded-md"
+                onChange={(e) => setUserInput(e.target.value)}
+                value={userInput}
+                placeholder="Search shop name"
+              />
+            </div>
+            <div className="w-full ">
+              <div className=" min-h-screen w-full  md:pt-0 pt-2">
+                {!loading && (
+                  <>
+                    <div className="grid grid-cols-12  gap-8 mx-auto">
+                      {filteredArray?.map((item) => (
+                        <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
+                          <SearchItem item={item} key={item._id} />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {!loading && data?.length <= 0 && (
+                  <div className="min-h-[55vh] grid place-items-center">
+                    <p className="text-2xl font-semibold"> No {type}s found</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
-    </div>
+    </>
   );
 };
 

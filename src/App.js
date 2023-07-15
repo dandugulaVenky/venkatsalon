@@ -56,7 +56,7 @@ function App() {
         <Route path="/" element={<Home />} />
         {/* <Route path="/get-started" element={<Home />} /> */}
         <Route path="/shops" element={<List />} />
-          <Route path="/cities" element={<AllCities />} />
+        <Route path="/cities" element={<AllCities />} />
         <Route path="/test" element={<Test />} />
 
         <Route path="/shops/:id" element={<Hotel />} />
