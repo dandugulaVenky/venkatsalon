@@ -25,24 +25,16 @@ const BookingHistory = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [shopId, setShopId] = useState();
-
-  const { data, error } = useFetch(
-    `${baseUrl}/api/users/getBookings/${user._id}`,
-    { credentials: true }
-  );
-
-  if (error?.response?.data?.status === 401) {
-    navigate("/login", { state: { destination: `/history` } });
-  }
+  const [shopId, setShopId] = useState(user?.shopId);
   const [userInput, setUserInput] = useState("");
 
   const [visible, setVisible] = useState(5);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
-
-  // const setLoadMore = () => setVisible((prev) => prev + 5);
-
+  const { data, error } = useFetch(
+    `${baseUrl}/api/users/getBookings/${user._id}`,
+    { credentials: true }
+  );
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     if (error) {
@@ -50,22 +42,28 @@ const BookingHistory = () => {
     }
     return () => console.log("my effect is destroying");
   });
-
   useEffect(() => {
     const fetchData = async (item) => {
       try {
         const { data } = await axios.get(
           `${baseUrl}/api/hotels/room/${shopId}`
         );
-
+        console.log(data);
         setRoomData(data[0].roomNumbers);
       } catch (err) {
         console.log(err);
       }
     };
 
-    user?.bookings[0]?.shopId && fetchData();
+    fetchData();
   }, [shopId, user?.bookings]);
+
+  if (error?.response?.data?.status === 401) {
+    navigate("/login", { state: { destination: `/history` } });
+  }
+
+  // const setLoadMore = () => setVisible((prev) => prev + 5);
+
   // useEffect(() => {
   //   if (userInput) {
   //     return setVisible(5);
@@ -98,14 +96,26 @@ const BookingHistory = () => {
     const item = showServices;
 
     let seats = [];
+    console.log(roomData);
+    // roomData?.map((seat, i) => {
+    //   console.log(seat, i);
+    //   console.log(item.selectedSeats);
+    //   if (seat._id === item.selectedSeats[i]?.id) {
+    //     seats.push(seat.number);
+    //   } else if (seat._id === item.selectedSeats[i]?.id) {
+    //     seats.push(seat.number);
+    //   }
+    // });
 
-    roomData?.map((seat, i) => {
-      if (seat._id === item.selectedSeats[i]?.id) {
-        seats.push(seat.number);
-      } else if (seat._id === item.selectedSeats[i]?.id) {
-        seats.push(seat.number);
-      }
-    });
+    if (item && roomData) {
+      item.selectedSeats.map((seat, i) => {
+        const find = roomData.find((item) => item?._id === seat.id);
+        console.log(find);
+        if (find) {
+          seats.push(find.number);
+        }
+      });
+    }
 
     return (
       <div className="reserve">
@@ -128,7 +138,7 @@ const BookingHistory = () => {
                       {seat.options.map((option, i) => {
                         return (
                           <span className="ml-1 font-bold" key={i}>
-                            {option}{" "}
+                            {option.service}{" "}
                             <span>
                               {i !== seat.options.length - 1 ? "," : "."}
                             </span>

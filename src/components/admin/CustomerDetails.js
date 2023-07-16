@@ -62,13 +62,15 @@ const CustomerDetails = ({ item, setOpen }) => {
     }
   }
 
-  data[0]?.roomNumbers?.map((seat, i) => {
-    if (seat._id === item.selectedSeats[i]?.id) {
-      seats.push(seat.number);
-    } else if (seat._id === item.selectedSeats[i]?.id) {
-      seats.push(seat.number);
-    }
-  });
+  if (data[0]?.roomNumbers) {
+    item.selectedSeats.map((seat, i) => {
+      const find = data[0]?.roomNumbers.find((item) => item._id === seat.id);
+
+      if (find) {
+        seats.push(find.number);
+      }
+    });
+  }
 
   //This is to send request with unailvalabledateId to backend for updating
   const isAvailable = (data, date, time, bookId) => {
@@ -328,7 +330,7 @@ const CustomerDetails = ({ item, setOpen }) => {
                         {seat.options.map((option, j) => {
                           return (
                             <span className="">
-                              {option}{" "}
+                              {option.service}{" "}
                               <span>
                                 {j !== seat.options.length - 1 ? ", " : ". "}
                               </span>

@@ -122,29 +122,17 @@ const Compare = () => {
               return acc1.concat(item1.options);
             }, []);
 
-          // get the objs based on user selected service names
-
-          let getObjs = services?.map((service) => {
-            return mergedPreviewServices?.filter(
-              (ser) => ser.service === service
-            )[0];
-          });
-
-          const filteredUndefined = getObjs.filter(
-            (service) => service !== undefined
-          );
-
           //find the count of each category andeach service except packages
 
           let resultInServices = {};
           let resultInCategories = {};
 
-          for (let i = 0; i < filteredUndefined.length; i++) {
-            const name = filteredUndefined[i].service;
+          for (let i = 0; i < services.length; i++) {
+            const name = services[i].service;
 
             resultInServices[name] = (resultInServices[name] || 0) + 1;
 
-            const cat = filteredUndefined[i].category;
+            const cat = services[i].category;
             resultInCategories[cat] = (resultInCategories[cat] || 0) + 1;
           }
 

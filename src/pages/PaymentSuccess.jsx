@@ -98,6 +98,7 @@ export const PaymentSuccess = () => {
           dates: finalBookingDetails.dates,
           user: finalBookingDetails?.user,
           selectedSeats: selectedSeats1,
+
           totalAmount: finalBookingDetails?.totalAmount,
           shopId: finalBookingDetails?.shopId,
           shopName: finalBookingDetails?.shopName,
@@ -117,6 +118,7 @@ export const PaymentSuccess = () => {
           shopName: finalBookingDetails?.shopName,
           bookId: finalBookingDetails?.bookId,
           selectedSeats: selectedSeats1,
+
           totalAmount: finalBookingDetails?.totalAmount,
           isPaid: true,
           isDone: "false",

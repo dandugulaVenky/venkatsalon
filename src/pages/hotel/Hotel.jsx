@@ -48,7 +48,7 @@ const Hotel = () => {
   const [reviews, setReviews] = useState([]);
   const [loadingg, setLoadingg] = useState(false);
   const [totalTime, setTotalTime] = useState(0);
-
+  const [mergedServices, setMergedServices] = useState();
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
   // const [opacity, setOpacity] = useState(false);
@@ -150,6 +150,7 @@ const Hotel = () => {
         },
         0
       );
+      setMergedServices(mergedPreviewServices);
       setTotalTime(totalTimeOfServices);
 
       const res =
@@ -244,7 +245,7 @@ const Hotel = () => {
           shopId: shopIdLocation,
           shopName: data.name,
           shopOwner: data.shopOwnerId,
-
+          mergedServices,
           selectedValue: selectValue,
           minValuesObj: minutesValues.minValuesObj,
           value: value,
@@ -257,6 +258,7 @@ const Hotel = () => {
           shopId: shopIdLocation,
           shopName: data.name,
           shopOwner: data.shopOwnerId,
+          mergedServices,
 
           selectedValue: selectValue,
           minValuesObj: minutesValues.minValuesObj,

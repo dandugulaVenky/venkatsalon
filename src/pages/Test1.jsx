@@ -31,6 +31,7 @@ const Test1 = (props) => {
     selectedValue,
     value,
     options,
+    mergedServices,
   } = useMemo(() => state, [state]);
 
   let w = window.innerWidth;
@@ -615,7 +616,11 @@ const Test1 = (props) => {
       <ShowInclusions />
       {parlourPreview && reserveState !== null ? (
         <div className="min-h-screen">
-          <ParlourPreview state={reserveState} setPreview={setParlourPreview} />
+          <ParlourPreview
+            state={reserveState}
+            setPreview={setParlourPreview}
+            mergedServices={mergedServices}
+          />
         </div>
       ) : (
         <div className="pb-10">

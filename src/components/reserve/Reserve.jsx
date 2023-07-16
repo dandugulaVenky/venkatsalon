@@ -37,6 +37,7 @@ const Reserve = () => {
     selectedValue,
     value,
     options,
+    mergedServices,
   } = useMemo(() => state, [state]);
 
   let w = window.innerWidth;
@@ -621,7 +622,11 @@ const Reserve = () => {
       <ShowInclusions />
       {salonPreview && reserveState !== null ? (
         <div className="min-h-screen">
-          <SalonPreview state={reserveState} setPreview={setSalonPreview} />
+          <SalonPreview
+            state={reserveState}
+            setPreview={setSalonPreview}
+            mergedServices={mergedServices}
+          />
         </div>
       ) : (
         <div className="pb-10">

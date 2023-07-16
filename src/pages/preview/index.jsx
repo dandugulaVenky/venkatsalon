@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
-  const { state, setPreview } = props;
+  const { state, setPreview, mergedServices } = props;
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -90,12 +90,25 @@ const Preview = (props) => {
       link,
       dates,
     } = state;
+
+    const manipulatedSelectedSeats = selectedSeats.map((seat) => {
+      if (seat.options.length > 0) {
+        const mappedOptions = seat.options.map((option) =>
+          mergedServices.find((service) => service.service === option)
+        );
+        return { ...seat, options: mappedOptions };
+      } else {
+        return seat;
+      }
+    });
+
     try {
       const { status } = await axios.post(
         `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
 
         {
-          selectedSeats,
+          selectedSeats: manipulatedSelectedSeats,
+
           totalAmount,
           roomId,
           shopOwner,
