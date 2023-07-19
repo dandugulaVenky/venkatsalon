@@ -19,7 +19,11 @@ const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [category, setCategory] = useState();
   const { user } = useContext(AuthContext);
-  const [allServices, setAllServices] = useState({});
+  const [allServices, setAllServices] = useState({
+    service: "",
+    price: 0,
+    duration: 0,
+  });
   const [shopServices, setShopServices] = useState([]);
   const [disabled, setIsDisabled] = useState(false);
   const [shopType, setShopType] = useState();
@@ -80,9 +84,7 @@ const AddServices = () => {
     if (
       category === "" ||
       allServices.service === "" ||
-      allServices.price === "" ||
       allServices.price === 0 ||
-      allServices.duration === "" ||
       allServices.duration === 0
     ) {
       toast("Please check all fields!");
@@ -120,8 +122,8 @@ const AddServices = () => {
 
     setAllServices({
       service: "",
-      price: "",
-      duration: "",
+      price: 0,
+      duration: 0,
     });
   };
 

@@ -31,7 +31,7 @@ const BookingHistory = () => {
   const [visible, setVisible] = useState(5);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
-  const { data, error } = useFetch(
+  const { data, loading, error } = useFetch(
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
@@ -48,7 +48,7 @@ const BookingHistory = () => {
         const { data } = await axios.get(
           `${baseUrl}/api/hotels/room/${shopId}`
         );
-        console.log(data);
+
         setRoomData(data[0].roomNumbers);
       } catch (err) {
         console.log(err);
@@ -230,6 +230,11 @@ const BookingHistory = () => {
 
           <p className="md:text-lg text-xs">Count : {filteredArray.length}</p>
         </div>
+        {loading && filteredArray?.length === 0 && (
+          <div className="min-h-[75vh] flex items-center justify-center">
+            <span className="loader"></span>
+          </div>
+        )}
         {filteredArray?.length > 0 ? (
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 min-h-screen">
             <>
@@ -344,10 +349,11 @@ const BookingHistory = () => {
           </div>
         ) : (
           <div className="min-h-[75vh] flex items-center justify-center">
-            <span className="loader"></span>
+            {/* <span className="loader"></span> */}No Bookings Found
           </div>
         )}
       </div>
+
       <Footer />
     </div>
   );
