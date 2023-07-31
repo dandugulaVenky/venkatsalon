@@ -13,9 +13,14 @@
 }
 
 .head1 {
-  background-color: white;
+  background-color: #ffffffde;
   max-height: 130px;
   transition: max-height 0.3s ease;
+  color: #000000 !important;
+  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 .head2 {

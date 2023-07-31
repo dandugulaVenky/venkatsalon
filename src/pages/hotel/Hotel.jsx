@@ -17,7 +17,7 @@ import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 import { AuthContext } from "../../context/AuthContext";
-import Reserve from "../../components/reserve/Reserve";
+
 import Layout from "../../components/navbar/Layout";
 
 import { ListItem, TextField } from "@material-ui/core";
@@ -63,31 +63,68 @@ const Hotel = () => {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const w = window.innerWidth;
+  const lunch = [24, 25, 26, 27, 28, 29];
+  const breakTime = [42, 43, 44, 45, 46, 47];
 
+  const block = ["Jul 28th 23", "Jul 29th 23"];
   const [minutesValues, setMinutesvalues] = useState([]);
+  const today = moment(value).format("MMM Do YY");
+  const [matchedArrays, setMatchedArrays] = useState();
 
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
+  function isSpecificDate(value, targetDate) {
+    return value.toString() === targetDate.toString();
+  }
 
   const handleChange = (value) => {
+    if (block.length > 0) {
+      const isBlockedDate = block.find((blockedDate) =>
+        isSpecificDate(moment(value).format("MMM Do YY"), blockedDate)
+      );
+      console.log(isBlockedDate);
+      if (isBlockedDate) {
+        alert("Owner  not selectable!");
+        return null;
+      }
+    }
+
     if (value === null) {
       setValue(null);
       return;
-    }
-    if (isTuesday(value)) {
+    } else if (isTuesday(value)) {
+      alert("Tuesdays are not selectable!");
       return;
+    } else {
+      setValue(value);
     }
-
-    setValue(value);
   };
 
   const isTuesday = (value) => {
-    return value?.getDay() === 2; // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+    const dayOfWeek = value?.getDay();
+    if (dayOfWeek === 2) {
+      return true;
+    }
   };
 
-  function tileClassName({ value, view }) {
-    return isTuesday(value) ? "disabled-tuesday" : null;
+  function tileClassName({ date, value }) {
+    const formattedDate = moment(date).format("MMM Do YY");
+
+    if (isTuesday(date)) {
+      return "red-tuesday";
+    }
+
+    if (block.length > 0) {
+      const isBlockedDate = block.find((blockedDate) =>
+        isSpecificDate(formattedDate, blockedDate)
+      );
+      if (isBlockedDate) {
+        return "yellow-date";
+      }
+    }
+
+    return null;
   }
   // const filterOptions = () => {
   //   const date = new Date();
@@ -165,13 +202,39 @@ const Hotel = () => {
           };
         });
 
-      setDatra(res);
+      let filter = [];
+      res.map((date) => {
+        const answer = date.dates.filter((item) => today === item.date);
+        filter.push(answer);
+      });
+
+      const mergedReady = [];
+      filter.map((item, i) => {
+        const allValues = item.map((date) => {
+          return date.values;
+        });
+        mergedReady.push(allValues);
+      });
+      // console.log(mergedReady, "mergeready");
+
+      function findMatchingArrays(arr) {
+        const matchedArrays = [];
+        for (let i = 0; i < arr?.length; i++) {
+          const mergedDates = [...new Set(arr[i].flat())];
+
+          matchedArrays.push(mergedDates);
+        }
+        return matchedArrays;
+      }
+
+      const matchedArrays = findMatchingArrays(mergedReady);
+      setMatchedArrays(matchedArrays);
     };
     // filterOptions();
 
     fetchReviews();
     fetchData();
-  }, [fetchReviews, navigate, shopIdLocation, type, value]);
+  }, [fetchReviews, navigate, shopIdLocation, today, type, value]);
 
   useEffect(() => {
     const scroll = () => {
@@ -225,15 +288,40 @@ const Hotel = () => {
   }
 
   const handleClick = () => {
-    let result = convertToMilliseconds(timeReserve);
-    let result2 = compareTimeDiff(result);
-
     let day1 = moment(value).format("MMM Do YY");
     let day2 = moment(new Date()).format("MMM Do YY");
+
+    if (block.length > 0) {
+      const isBlockedDate = block.find((blockedDate) =>
+        isSpecificDate(day1, blockedDate)
+      );
+      if (isBlockedDate) {
+        alert("Owner is not available");
+        return null;
+      }
+    }
+
+    if (isTuesday(value)) {
+      alert("Tuesdays are not selectable!");
+      return;
+    }
+
+    if (lunch.includes(selectValue)) {
+      return toast(
+        "It is lunch time for owner! Please select before or after his lunch time"
+      );
+    }
+
+    if (breakTime.includes(selectValue) && day1 === day2) {
+      return toast("Owner took bresk!");
+    }
+    let result = convertToMilliseconds(timeReserve);
+    let result2 = compareTimeDiff(result);
 
     if (day1 === day2 && result2 >= 0) {
       return toast("Please select a valid time!");
     }
+
     dispatch({
       type: "NEW_SEARCH",
       payload: { type, destination: city, value, time: timeReserve },
@@ -342,34 +430,7 @@ const Hotel = () => {
       ? options.find((option) => option.value === timeReserve).id
       : null
   );
-  const today = moment(value).format("MMM Do YY");
 
-  let filter = [];
-  datra.map((date) => {
-    const answer = date.dates.filter((item) => today === item.date);
-    filter.push(answer);
-  });
-
-  const mergedReady = [];
-  filter.map((item, i) => {
-    const allValues = item.map((date) => {
-      return date.values;
-    });
-    mergedReady.push(allValues);
-  });
-  // console.log(mergedReady, "mergeready");
-
-  function findMatchingArrays(arr) {
-    const matchedArrays = [];
-    for (let i = 0; i < arr?.length; i++) {
-      const mergedDates = [...new Set(arr[i].flat())];
-
-      matchedArrays.push(mergedDates);
-    }
-    return matchedArrays;
-  }
-
-  const matchedArrays = findMatchingArrays(mergedReady);
   const handleTime = (item) => {
     setTimeReserve(item.value);
     const selectedOption = options.find(
@@ -417,12 +478,12 @@ const Hotel = () => {
             <div>
               <div className="-mt-1 ">
                 <DatePicker
-                  onClick={() => w > 820 && window.scrollTo(0, 200)}
+                  // onClick={() => w > 820 && window.scrollTo(0, 100)}
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}
-                  maxDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
+                  maxDate={new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)}
                   className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[12.3rem] w-[14.3rem]  mt-3  "
                 />
               </div>
@@ -433,14 +494,25 @@ const Hotel = () => {
                   <Menu.Button
                     onClick={() =>
                       w > 820
-                        ? window.scrollTo(0, 400)
-                        : window.scrollTo(0, 200)
+                        ? window.scrollTo(0, 200)
+                        : window.scrollTo(0, 100)
                     }
                     className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]"
                   >
                     <div className="w-full flex items-center justify-between">
                       <span className="md:text-md ">
-                        {timeReserve ? timeReserve : "Select Time"}
+                        {timeReserve ? (
+                          <p
+                            className={
+                              lunch.includes(options[selectValue].id) &&
+                              ` text-red-500 `
+                            }
+                          >
+                            {timeReserve}
+                          </p>
+                        ) : (
+                          "Select Time"
+                        )}
                       </span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -507,14 +579,15 @@ const Hotel = () => {
                                     active
                                       ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
                                       : "text-gray-700",
-                                    ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 ${
-                                      !finalBooked && ` text-red-500 `
-                                    }`
+                                    ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
                                   )}
                                 >
                                   <span
                                     className={`${
                                       !finalBooked && " text-red-500"
+                                    }  ${
+                                      lunch.includes(option.id) &&
+                                      ` text-red-500 `
                                     }`}
                                   >
                                     {option.value}

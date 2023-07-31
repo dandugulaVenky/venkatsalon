@@ -38,6 +38,7 @@ import MyServices from "./pages/admin/MyServices";
 import AddServices from "./pages/admin/AddServices";
 import Compare from "./pages/admin/Compare";
 import AllCities from "./pages/AllCities/AllCities";
+import Break from "./pages/admin/Break";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -135,6 +136,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Compare />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/break"
+          element={
+            <ProtectedRoute>
+              <Break />
             </ProtectedRoute>
           }
         />

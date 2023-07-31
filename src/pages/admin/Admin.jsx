@@ -61,6 +61,9 @@ const Admin = () => {
       case "addServices":
         navigate("/admin/add-services");
         break;
+      case "block":
+        navigate("/admin/break");
+        break;
       default:
         console.log("It is an unknown input.");
         break;
@@ -108,6 +111,9 @@ const Admin = () => {
             onClick={() => handleClick("packages")}
           >
             <p>Add Packages</p>
+          </div>
+          <div className="card p-5 w-full" onClick={() => handleClick("block")}>
+            <p>Take A Break </p>
           </div>
         </div>
       ) : (

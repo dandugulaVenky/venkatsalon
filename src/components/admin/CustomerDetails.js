@@ -2,18 +2,15 @@ import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import moment from "moment";
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import baseUrl from "../../utils/client";
 
-const CustomerDetails = ({ item, setOpen }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {}, [setOpen]);
-
+const CustomerDetails = ({ item, setOpenModal }) => {
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
 
   const { date, time, bookId } = item;
@@ -38,27 +35,35 @@ const CustomerDetails = ({ item, setOpen }) => {
     let currentDate = new Date();
     let time1Date = new Date(time1);
 
-    // Compare the year, month, and day components
-    if (
-      time1Date.getFullYear() === currentDate.getFullYear() &&
-      time1Date.getMonth() === currentDate.getMonth() &&
-      time1Date.getDate() === currentDate.getDate()
-    ) {
-      // Compare the time components
-      if (
-        time1Date.getHours() === currentDate.getHours() &&
-        time1Date.getMinutes() === currentDate.getMinutes()
-      ) {
-        return 0; // Time is the same
-      } else if (time1Date > currentDate) {
-        return 1; // Time is in the future
-      } else {
-        return -1; // Time is in the past
-      }
-    } else if (time1Date > currentDate) {
-      return 1; // Date is in the future
+    // Calculate the time difference in milliseconds between the given time and the current time
+    let timeDiff = time1Date.getTime() - currentDate.getTime();
+
+    // Check if the time difference is less than or equal to 1.5 hours (90 minutes)
+    if (timeDiff >= 90 * 60 * 1000) {
+      return 10; // The current time is 1.5 hours or less before the given time
     } else {
-      return -1; // Date is in the past
+      // Compare the year, month, and day components
+      if (
+        time1Date.getFullYear() === currentDate.getFullYear() &&
+        time1Date.getMonth() === currentDate.getMonth() &&
+        time1Date.getDate() === currentDate.getDate()
+      ) {
+        // Compare the time components
+        if (
+          time1Date.getHours() === currentDate.getHours() &&
+          time1Date.getMinutes() === currentDate.getMinutes()
+        ) {
+          return 0; // Time is the same
+        } else if (time1Date > currentDate) {
+          return 1; // Time is in the future
+        } else {
+          return -1; // Time is in the past
+        }
+      } else if (time1Date > currentDate) {
+        return 1; // Date is in the future
+      } else {
+        return -1; // Date is in the past
+      }
     }
   }
 
@@ -91,14 +96,16 @@ const CustomerDetails = ({ item, setOpen }) => {
   };
 
   const handleCancel = async (user) => {
+    setLoading(true);
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    if (result2 === -1) {
-      return toast("Cannot approve past times!");
+    if (result2 !== 10) {
+      setLoading(false);
+      return toast("Cannot cancel now!");
     }
-    setOpen(false);
+
     try {
       await Promise.all(
         uniqueArr.map((item) => {
@@ -113,36 +120,29 @@ const CustomerDetails = ({ item, setOpen }) => {
       );
     } catch (err) {
       toast(err.response.data.message);
+      setLoading(false);
     }
 
-    try {
-      await Promise.all(
-        uniqueArr1.map((item) => {
-          axios.put(
-            `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
-            {
-              isDone: "cancelled",
-            },
-            { withCredentials: true }
-          );
-        })
-      );
-    } catch (err) {
-      toast(err);
-    }
-    try {
-      await Promise(
+    await Promise.all(
+      uniqueArr1.map((item) => {
         axios.put(
-          `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
+          `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
           {
             isDone: "cancelled",
           },
           { withCredentials: true }
-        )
-      );
-    } catch (err) {
-      toast(err);
-    }
+        );
+      })
+    );
+    await Promise.resolve(
+      axios.put(
+        `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
+        {
+          isDone: "cancelled",
+        },
+        { withCredentials: true }
+      )
+    );
 
     try {
       const { email, phone } = user;
@@ -162,29 +162,33 @@ const CustomerDetails = ({ item, setOpen }) => {
       );
     } catch (err) {
       toast(err.response.data.message);
+      setLoading(false);
     }
-
+    setOpenModal(false);
+    setLoading(false);
     toast("Rejected Successfully");
-
-    window.location.replace("/admin");
   };
 
   const handleClick = async (uniqueArr, uniqueArr1) => {
-    // console.log("I am clicked", { uniqueArr, uniqueArr1 });
-
+    setLoading(true);
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    if (result2 === -1) {
-      return toast("Cannot approve past times!");
+    // if (result2 === -1) {
+    //   return toast("Cannot approve past times!");
+    // }
+    if (result2 === 1 || result2 === 10) {
+      setLoading(false);
+      return toast("Cannot approve Future times!");
     }
-    setOpen(false);
+
     if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
+      const { email, phone } = user;
       try {
         await Promise.all(
           uniqueArr.map((item) => {
-            axios.put(
+            return axios.put(
               `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
               {
                 isAccepted: "true",
@@ -193,61 +197,51 @@ const CustomerDetails = ({ item, setOpen }) => {
             );
           })
         );
-        try {
-          await Promise.all(
-            uniqueArr1.map((item) => {
-              axios.put(
-                `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
-                {
-                  isDone: "true",
-                },
-                { withCredentials: true }
-              );
-            })
-          );
-        } catch (err) {
-          toast(err);
-        }
-        try {
-          await Promise(
-            axios.put(
-              `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
+        await Promise.all(
+          uniqueArr1.map((item) => {
+            return axios.put(
+              `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
               {
                 isDone: "true",
               },
               { withCredentials: true }
-            )
-          );
-        } catch (err) {
-          toast(err);
-        }
-
-        try {
-          const { email, phone } = user;
-          const mail = await axios.post(
-            `${baseUrl}/api/sendmail`,
+            );
+          })
+        );
+        await Promise.resolve(
+          axios.put(
+            `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
             {
-              email: item.email,
-              userNumber: item.phone,
-              //shopName we are using already in backend
-              shopName: shopData.name,
-              ownerEmail: email,
-              ownerNumber: phone,
-              link: "https://easytym.com/history",
+              isDone: "true",
             },
             { withCredentials: true }
-          );
-        } catch (err) {
-          console.log(err);
-        }
-        toast("Done Successfully");
+          )
+        );
 
-        window.location.replace("/admin");
+        const mail = await axios.post(
+          `${baseUrl}/api/sendmail`,
+          {
+            email: item.email,
+            userNumber: item.phone,
+            //shopName we are using already in backend
+            shopName: shopData.name,
+            ownerEmail: email,
+            ownerNumber: phone,
+            link: "https://easytym.com/history",
+          },
+          { withCredentials: true }
+        );
+        setOpenModal(false);
+        toast("Done Successfully");
+        setLoading(false);
       } catch (err) {
-        toast(err);
+        toast("Something wrong!, please contact your administrator");
+        console.log(err);
+        setLoading(false);
       }
     } else {
       toast("Something wrong!");
+      setLoading(false);
     }
   };
 
@@ -287,7 +281,7 @@ const CustomerDetails = ({ item, setOpen }) => {
         <FontAwesomeIcon
           icon={faCircleXmark}
           className="text-white float-right"
-          onClick={() => setOpen(false)}
+          onClick={() => setOpenModal(false)}
         />
 
         <div className="">
@@ -362,40 +356,47 @@ const CustomerDetails = ({ item, setOpen }) => {
                 </span>
               </div>
             </div>
-            <div className="space-x-3">
-              <button
-                className={
-                  item.isDone === "true" || item.isDone === "cancelled"
-                    ? "siCheckButton bg-blue-400 px-4"
-                    : "primary-button"
-                }
-                onClick={() => {
-                  item.isDone === "false" && handleClick(uniqueArr, uniqueArr1);
-                }}
-                disabled={
-                  item.isDone === "true" || item.isDone === "cancelled"
-                    ? true
-                    : false
-                }
-              >
-                {item.isDone === "true" ? "Accepted" : "Mark Done"}
-              </button>
-              <button
-                className={
-                  item.isDone === "true" || item.isDone === "cancelled"
-                    ? "siCheckButton bg-red-400 px-4"
-                    : "danger-button"
-                }
-                onClick={() => item.isDone === "false" && handleCancel(user)}
-                disabled={
-                  item.isDone === "true" || item.isDone === "cancelled"
-                    ? true
-                    : false
-                }
-              >
-                Cancel
-              </button>
-            </div>
+            {loading ? (
+              <p className="py-2">
+                <span className="buttonloader ml-2"></span>
+              </p>
+            ) : (
+              <div className="space-x-3">
+                <button
+                  className={
+                    item.isDone === "true" || item.isDone === "cancelled"
+                      ? "siCheckButton bg-blue-400 px-4"
+                      : "primary-button"
+                  }
+                  onClick={() => {
+                    item.isDone === "false" &&
+                      handleClick(uniqueArr, uniqueArr1);
+                  }}
+                  disabled={
+                    item.isDone === "true" || item.isDone === "cancelled"
+                      ? true
+                      : false
+                  }
+                >
+                  {item.isDone === "true" ? "Accepted" : "Mark Done"}
+                </button>
+                <button
+                  className={
+                    item.isDone === "true" || item.isDone === "cancelled"
+                      ? "siCheckButton bg-red-400 px-4"
+                      : "danger-button"
+                  }
+                  onClick={() => item.isDone === "false" && handleCancel(user)}
+                  disabled={
+                    item.isDone === "true" || item.isDone === "cancelled"
+                      ? true
+                      : false
+                  }
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

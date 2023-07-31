@@ -169,12 +169,16 @@
 
 .red-tuesday {
   color: red !important;
+  opacity: 0.7;
 }
-
+.yellow-date {
+  background-color: yellow !important;
+  cursor: pointer !important;
+}
 .disabled-tuesday {
   opacity: 0.5; /* Adjust the styling as per your requirements */
   cursor: no-drop !important  ;
-  color: lightgray !important;
+  background-color: red !important;
 }
 .react-date-picker__calendar-button__icon {
   stroke-width: 1.25;

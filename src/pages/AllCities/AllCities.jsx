@@ -62,7 +62,7 @@ const AllCities = () => {
 
         <div className=" min-h-screen w-full pb-24 md:pt-0 pt-2">
           <>
-            <div className="grid grid-cols-12 md:gap-3 gap-8 ">
+            <div className="grid grid-cols-12 gap-5 ">
               {filteredArray.map((city) => {
                 return (
                   <div

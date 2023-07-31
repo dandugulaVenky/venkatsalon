@@ -15,7 +15,6 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
-import { useEffect } from "react";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",

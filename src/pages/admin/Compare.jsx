@@ -14,6 +14,7 @@ import Charts from "../../utils/Charts";
 
 const Compare = () => {
   let w = window.innerWidth;
+
   const {
     state: { shopId },
   } = useLocation();
@@ -59,11 +60,13 @@ const Compare = () => {
       .then(async (res) => {
         let output = [];
         let output1 = [];
-
+        let statusDoneServices = res.data.filter(
+          (booking) => booking.isDone === "true"
+        );
         //problem here is total amount remains same but thee owner may change the price
         //  which will prices of categories amount may show false values
         new Promise((resolve, reject) => {
-          res?.data.forEach((item) => {
+          statusDoneServices.forEach((item) => {
             const existingItem = output.find(
               (outputItem) => outputItem.Date === item.date
             );
@@ -110,7 +113,7 @@ const Compare = () => {
 
           //now again merge all the user services based on selection date
 
-          let services = res?.data
+          let services = statusDoneServices
             ?.reduce((acc, item) => {
               acc.push(item.selectedSeats);
               return acc;
@@ -183,12 +186,12 @@ const Compare = () => {
   const { open } = useContext(SearchContext);
 
   const modifiedOnChange = (selectedDate) => {
-    // Perform your desired modifications or actions her
+    // Perform your desired modifications or actions here
     setValue(selectedDate);
     setMonths(0);
   };
   const modifiedOnChange1 = (selectedDate) => {
-    // Perform your desired modifications or actions her
+    // Perform your desired modifications or actions here
     setValue1(selectedDate);
     setMonths(0);
   };

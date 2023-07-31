@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
@@ -36,7 +36,7 @@ const Layout = () => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -49,11 +49,14 @@ const Layout = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    scrollTimeoutIdRef.current = setTimeout(() => {
+      window.addEventListener("scroll", handleScroll);
+    }, 800);
 
-    // Clean up the event listener on component unmount
+    // Clean up the event listener and clear the timeout on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeoutIdRef.current);
     };
   }, []);
 
@@ -112,7 +115,7 @@ const Layout = () => {
                 />
               </Link>
               <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
-                <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
+                <FontAwesomeIcon icon={faLocation} size="lg" />
                 <p className="text-sm">
                   {city ? shortenString(city).toUpperCase() : "loading"}
                 </p>
@@ -120,7 +123,6 @@ const Layout = () => {
                   <FontAwesomeIcon
                     icon={faChevronCircleDown}
                     size="lg"
-                    color="#00ccbb"
                     onClick={handleLocation}
                   />
                 )}

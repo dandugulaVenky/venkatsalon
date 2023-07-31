@@ -47,7 +47,7 @@ const CarouselBanner = () => {
               src={banner}
               key={i}
               alt="text"
-              className="rounded-md md:h-auto h-40"
+              className="rounded-md w-full md:h-48 h-36"
             />
           );
         })}

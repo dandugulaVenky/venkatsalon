@@ -33,7 +33,7 @@ const AdminOrders = () => {
   const [shopType, setShopType] = useState();
 
   const [value, setValue] = useState(new Date());
-  const [allOrders, setAllOrders] = useState(false);
+  const [allOrders, setAllOrders] = useState("");
   const [customerDetailsId, setCustomerDetailsId] = useState("");
   const [userInput, setUserInput] = useState("");
 
@@ -79,7 +79,7 @@ const AdminOrders = () => {
       .post(
         `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
         {
-          date: allOrders ? "all" : moment(value).format("MMM Do YY"),
+          date: allOrders ? allOrders : moment(value).format("MMM Do YY"),
         },
         { withCredentials: true }
       )
@@ -99,9 +99,13 @@ const AdminOrders = () => {
               return arr.concat(item);
             }, []);
 
+          let statusDoneServices = res.data.filter(
+            (booking) => booking.isDone === "true"
+          );
+          // console.log(statusDoneServices);
           //now again merge all the user services based on selection date
 
-          let services = res?.data
+          let services = statusDoneServices
             ?.reduce((acc, item) => {
               acc.push(item.selectedSeats);
               return acc;
@@ -173,7 +177,16 @@ const AdminOrders = () => {
 
   useEffect(() => {
     requests();
-  }, [allOrders, navigate, requests, shopId, shopType, value, visible]);
+  }, [
+    allOrders,
+    navigate,
+    requests,
+    shopId,
+    shopType,
+    value,
+    visible,
+    openModal,
+  ]);
 
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -207,58 +220,84 @@ const AdminOrders = () => {
   let w = window.innerWidth;
 
   const { open } = useContext(SearchContext);
+
+  const containerStyle = {
+    display: "flex",
+    flexWrap: "wrap", // Allow items to wrap into multiple lines if needed
+  };
+
+  const itemStyle = {
+    flex: "1 1 150px", // flex-grow flex-shrink flex-basis
+    margin: "10px", // Add some space between items
+    padding: "5px",
+  };
+
   return (
     <div>
       {open && <SIdebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
       <div
-        className=" md:px-5  pb-20 md:pt-4 mx-auto"
+        className="px-3  pb-20 md:pt-4 mx-auto"
         style={{ maxWidth: "1140px" }}
       >
-        <div className="pt-5 mb-5 space-x-2 flex items-center flex-wrap gap-3 justify-center">
-          <div className="">
-            <DatePicker
-              onChange={modifiedOnChange}
-              tileClassName={tileClassName}
-              value={value}
-              className="bg-slate-100 text-blue-400 p-2.5 h-10 rounded-md md:w-[14.3rem] w-[10.3rem] z-10 "
-            />
-          </div>
-          <div className="">
-            <input
-              onChange={(e) => setUserInput(e.target.value)}
-              value={userInput}
-              className="bg-slate-100 text-black  rounded-md md:w-[14.4rem] w-[10.4rem]"
-              placeholder="Filter everything.."
-            />
-          </div>
+        <div className="pt-5 mb-5  " style={containerStyle}>
           <button
-            className="bg-[#00ccbb] px-2 py-1.5 rounded-md text-white"
+            className="bg-[#00ccbb]  rounded-md text-white"
             onClick={() => {
-              setAllOrders(true);
+              setAllOrders("allTillNow");
               setValue(null);
             }}
+            style={itemStyle}
           >
-            All Orders
+            All Orders Till Now
           </button>
           <button
-            className="bg-green-600 px-2 py-1.5 rounded-md text-white"
+            className="bg-[#00ccbb]  rounded-md text-white"
+            onClick={() => {
+              setAllOrders("futureOrders");
+              setValue(null);
+            }}
+            style={itemStyle}
+          >
+            Future Orders
+          </button>
+          <button
+            className="bg-green-600  rounded-md text-white"
             onClick={() => {
               endRef.current?.scrollIntoView({ behavior: "smooth" });
             }}
+            style={itemStyle}
           >
             See Statistics
           </button>
           <button
-            className="bg-green-600 px-2 py-1.5 rounded-md text-white"
+            className="bg-green-600  rounded-md text-white"
             onClick={() => {
               navigate("/admin/compare", { state: { shopId, shopType } });
             }}
+            style={itemStyle}
           >
             Compare B/w Dates
           </button>
-          <p className="md:text-md text-xs">Count : {filteredArray.length}</p>
+          <input
+            onChange={(e) => setUserInput(e.target.value)}
+            value={userInput}
+            className="bg-slate-100 text-black  rounded-md "
+            placeholder="Filter everything.."
+            style={itemStyle}
+          />
+          <DatePicker
+            onChange={modifiedOnChange}
+            tileClassName={tileClassName}
+            value={value}
+            className="bg-slate-100 text-blue-400  h-10 z-10  rounded-md p-2 ml-2.5 my-2  w-auto"
+            style={itemStyle}
+          />
+
+          <p className="md:text-md text-md" style={itemStyle}>
+            Count : {filteredArray.length}
+          </p>
         </div>
 
         {filteredArray?.slice(0, visible).map((item, i) => {
@@ -302,7 +341,10 @@ const AdminOrders = () => {
                       Open
                     </button>
                     {item._id === customerDetailsId && openModal && (
-                      <CustomerDetails setOpen={setOpenModal} item={item} />
+                      <CustomerDetails
+                        setOpenModal={setOpenModal}
+                        item={item}
+                      />
                     )}
                   </div>
                 </div>
