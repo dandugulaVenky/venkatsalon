@@ -15,7 +15,8 @@ import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
-
+import { useNavigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -63,7 +64,7 @@ function Break() {
   const [selectValue, setselectValue] = useState();
   const lunch = [24, 25, 26, 27, 28, 29];
   const breakTime = [42, 43, 44, 45, 46, 47];
-
+  const navigate = useNavigate();
   const block = ["Jul 28th 23", "Jul 29th 23"];
 
   const initialSelectedDates = [
@@ -76,12 +77,15 @@ function Break() {
 
   const [selectedDates, setSelectedDates] = useState(initialSelectedDates);
   const [timeReserve, setTimeReserve] = useState();
-  const [timeReserve1, setTimeReserve1] = useState()
-  const [timeBlockArray,setTimeBlockArray]=useState()
+  const [timeReserve1, setTimeReserve1] = useState();
+  const [timeBlockArray, setTimeBlockArray] = useState();
 
   const [matchedArrays, setMatchedArrays] = useState();
 
   const today = moment(value).format("MMM Do YY");
+  const { data: shopData } = useFetch(
+    `${baseUrl}/api/hotels/find/${user?.shopId}`
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,10 +96,13 @@ function Break() {
       const res =
         data &&
         data[0]?.roomNumbers?.map((id, i) => {
+          const filter = id.unavailableDates.filter(
+            (item1) => item1.isAccepted !== "cancelled"
+          );
           return {
             id: id._id,
 
-            dates: id.unavailableDates?.map((item) => {
+            dates: filter?.map((item) => {
               return { date: item.date, values: item.values };
             }),
           };
@@ -128,11 +135,14 @@ function Break() {
 
       const matchedArrays = findMatchingArrays(mergedReady);
       setMatchedArrays(matchedArrays);
+      setTimeBlockArray(
+        data[0]?.blockTimings.find((item) => item.date === today)
+      );
     };
     // filterOptions();
 
     fetchData();
-  }, [today, user?.shopId]);
+  }, [today, user?.shopId, timeReserve]);
 
   const handleSelect = (ranges) => {
     setSelectedDates([ranges.selection]);
@@ -159,40 +169,137 @@ function Break() {
     setSelectedDates(initialSelectedDates);
   };
 
-  const submitTimings = () => {
+  const submitTimings = async () => {
     let confirm = window.confirm("Are u sure to block these timings?");
 
     if (!confirm) {
       return;
     }
-console.log(timeReserve)
+
     if (timeReserve === "" || timeReserve1 === "") {
       return toast("Please select start and end time correctly!");
     }
     let result = convertToMilliseconds(timeReserve);
     let result2 = compareTimeDiff(result);
 
-    // if (result2 >= 0) {
-    //   return toast("Please select a valid time!");
-    // }
+    if (result2 >= 0) {
+      return toast("Please select a valid time!");
+    }
+
     const selectedOption = options.find(
       (option) => option.value === timeReserve1
     );
     const selectedOption1 = options.find(
       (option) => option.value === timeReserve
     );
-    console.log(selectedOption.id - selectedOption1.id);
-    if ((selectedOption.id - selectedOption1.id) * 10 < 59) {
-      return toast("Please ensure to select more than or equal to an hour!");
+
+    if (
+      lunch.includes(selectedOption1.id) ||
+      lunch.includes(selectedOption.id)
+    ) {
+      return alert(
+        `You cannot select ${selectedOption1.value}- ${selectedOption.value} because it is messing up your lunch time!`
+      );
     }
-let blockArray=[]
-let count=selectedOption1.id
- while(count<selectedOption.id){
-blockArray.push(count)
-count=count+1
- }
- setTimeBlockArray({date:moment(new Date()).format("MMM Do YY"),block:blockArray})
- console.log({date:moment(new Date()).format("MMM Do YY"),block:blockArray})
+
+    console.log(selectedOption.id - selectedOption1.id);
+    if (selectedOption.id - selectedOption1.id < 0) {
+      return alert("Please ensure to select in order !");
+    } else if (
+      (selectedOption.id - selectedOption1.id) * 10 < 59 ||
+      (selectedOption.id - selectedOption1.id) * 10 === 0
+    ) {
+      return alert("Please ensure to select more than or equal to an hour!");
+    }
+
+    //finnaly
+
+    let blockArray = [];
+    let count = selectedOption1.id;
+    while (count < selectedOption.id) {
+      blockArray.push(count);
+      count = count + 1;
+    }
+
+    console.log({
+      date: moment(new Date()).format("MMM Do YY"),
+      block: blockArray,
+    });
+    let matchFound = false;
+
+    if (matchedArrays) {
+      for (const item of matchedArrays) {
+        for (const item1 of item) {
+          if (item1 === selectedOption.id) {
+            matchFound = true;
+            alert(
+              `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment!`
+            );
+            break; // Exit from the innermost loop
+          } else if (item1 === selectedOption1.id) {
+            matchFound = true;
+            alert(
+              `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment!`
+            );
+            break; // Exit from the innermost loop
+          } else if (blockArray.includes(item1)) {
+            matchFound = true;
+            alert(
+              `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
+            );
+            break; // Exit from the innermost loop
+          } else if (lunch.includes(item1)) {
+            matchFound = true;
+            alert(
+              `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
+            );
+            break; // Exit from the innermost loop
+          }
+        }
+      }
+      if (matchFound) {
+        return; // Exit from the outer loop
+      }
+    }
+    let blockageFound = false;
+    for (let i = 0; i < timeBlockArray?.block.length; i++) {
+      if (blockArray.includes(timeBlockArray.block[i])) {
+        blockageFound = true;
+        alert(
+          `You cannot select ${selectedOption1.value} - ${selectedOption.value} because there might be something blocking in between!`
+        );
+        break;
+      }
+    }
+    if (blockageFound) {
+      return;
+    }
+
+    if (blockArray.length > 0) {
+      try {
+        await axios.post(
+          `${baseUrl}/api/rooms/updateBlockTimings/${shopData.rooms[0]}`,
+          {
+            date: moment(new Date()).format("MMM Do YY"),
+            block: blockArray,
+          },
+          { withCredentials: true }
+        );
+      } catch (err) {
+        if (err.response.status === 401) {
+          navigate("/login", {
+            state: { destination: `/admin/break` },
+          });
+        }
+        console.log(err);
+      }
+    }
+    console.log({
+      date: moment(new Date()).format("MMM Do YY"),
+      block: blockArray,
+    });
+    setTimeReserve(null);
+    setTimeReserve1(null);
   };
 
   const blockedDates = ["Aug 1st 23", "Aug 2nd 23", "Aug 3rd 23"];
@@ -202,11 +309,11 @@ count=count+1
 
   const handleTime = (item) => {
     setTimeReserve(item.value);
-    };
+  };
 
   const handleTime1 = (item) => {
     setTimeReserve1(item.value);
-    };
+  };
 
   return (
     <div className="">
@@ -218,227 +325,250 @@ count=count+1
           <div className=" md:col-span-3 col-span-6">
             <div className="grid place-items-center gap-5">
               <p className="text-2xl font-bold">ONLY FOR TODAY</p>
-              <div >
-               <div className="pb-6">
-               <p>Select Start Timing you want to block?</p>
-                <div className="flex md:flex-row flex-col    items-start">
-                  <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                      <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
-                        <div className="w-full flex items-center justify-between">
-                          <span className="md:text-md ">
-                            {timeReserve ? <p>{timeReserve}</p> : "Select Time"}
-                          </span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5 ml-2 -mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem]  mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <p
-                                className={classNames(
-                                  `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
-                                )}
-                              >
-                                Select Time
-                              </p>
-                            )}
-                          </Menu.Item>
-
-                          {matchedArrays?.length > 0
-                            ? options?.map((option, i) => {
-                                const isbooked = matchedArrays?.map((item) =>
-                                  // console.log(item?.includes(i))
-                                  item?.includes(i)
-                                );
-                                const finalBooked = isbooked.includes(false);
-                                const falseIndexes = [];
-
-                                for (let i = 0; i < isbooked.length; i++) {
-                                  if (!isbooked[i]) {
-                                    falseIndexes.push(i);
-                                  }
-                                }
-
-                                return (
-                                  <Menu.Item key={i} id={option.id}>
-                                    {({ active }) => (
-                                      <div
-                                        onClick={() => handleTime(option)}
-                                        className={classNames(
-                                          active
-                                            ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
-                                            : "text-gray-700",
-                                          ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
-                                        )}
-                                      >
-                                        <span
-                                          className={`  ${(timeBlockArray?.block.includes(option.id) || lunch.includes(option.id)|| !finalBooked )&& ` text-red-500 `}`}
-                                        >
-                                          {option.value}
-                                        </span>
-                                        <span className="w-auto overflow-x-auto">
-                                          {isbooked.includes(true) &&
-                                            "Appointment"} 
-
-                                            {timeBlockArray?.block.includes(option.id) && (timeBlockArray.block[0]===option.id ||timeBlockArray.block[timeBlockArray.block.length-1]===option.id?'blocked':<span>&nbsp;&nbsp; .</span>)}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </Menu.Item>
-                                );
-                              })
-                            : "Loading"}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-
-                 
-                </div></div>
+              <div>
                 <div className="pb-6">
-                <p>Select Start Timing you want to block?</p>
-                <div className="flex md:flex-row flex-col     items-start">
-                  <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                      <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
-                        <div className="w-full flex items-center justify-between">
-                          <span className="md:text-md ">
-                            {timeReserve1 ? <p>{timeReserve1}</p> : "Select Time"}
-                          </span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5 ml-2 -mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                      </Menu.Button>
-                    </div>
+                  <p>Select Start Timing you want to block?</p>
+                  <div className="flex md:flex-row flex-col    items-start">
+                    <Menu as="div" className="relative inline-block text-left">
+                      <div>
+                        <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
+                          <div className="w-full flex items-center justify-between">
+                            <span className="md:text-md ">
+                              {timeReserve ? (
+                                <p>{timeReserve}</p>
+                              ) : (
+                                "Select Time"
+                              )}
+                            </span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-5 h-5 ml-2 -mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                          </div>
+                        </Menu.Button>
+                      </div>
 
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem]  mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <p
-                                className={classNames(
-                                  `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
-                                )}
-                              >
-                                Select Time
-                              </p>
-                            )}
-                          </Menu.Item>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem]  mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div className="py-1">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <p
+                                  className={classNames(
+                                    `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
+                                  )}
+                                >
+                                  Select Time
+                                </p>
+                              )}
+                            </Menu.Item>
 
-                          {matchedArrays?.length > 0
-                            ? options?.map((option, i) => {
-                                const isbooked = matchedArrays?.map((item) =>
-                                  // console.log(item?.includes(i))
-                                  item?.includes(i)
-                                );
-                                const finalBooked = isbooked.includes(false);
-                                const falseIndexes = [];
+                            {matchedArrays?.length > 0
+                              ? options?.map((option, i) => {
+                                  const isbooked = matchedArrays?.map((item) =>
+                                    // console.log(item?.includes(i))
+                                    item?.includes(i)
+                                  );
+                                  const finalBooked = isbooked.includes(false);
 
-                                for (let i = 0; i < isbooked.length; i++) {
-                                  if (!isbooked[i]) {
-                                    falseIndexes.push(i);
-                                  }
-                                }
-
-                                return (
-                                  <Menu.Item key={i} id={option.id}>
-                                    {({ active }) => (
-                                      <div
-                                        onClick={() => handleTime1(option)}
-                                        className={classNames(
-                                          active
-                                            ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
-                                            : "text-gray-700",
-                                          ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
-                                        )}
-                                      >
-                                        <span
-                                          className={`${
-                                            !finalBooked && " text-red-500"
-                                          }  ${
-                                            lunch.includes(option.id) &&
-                                            ` text-red-500 `
-                                          }`}
+                                  return (
+                                    <Menu.Item key={i} id={option.id}>
+                                      {({ active }) => (
+                                        <div
+                                          onClick={() => handleTime(option)}
+                                          className={classNames(
+                                            active
+                                              ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
+                                              : "text-gray-700",
+                                            ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
+                                          )}
                                         >
-                                          {option.value}
-                                        </span>
-                                        <span className="w-auto overflow-x-auto">
-                                          {isbooked.includes(true) &&
-                                            "Appointment"}
-                                        </span>
-                                      </div>
-                                    )}
-                                  </Menu.Item>
-                                );
-                              })
-                            : "Loading"}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                                          <span
+                                            className={`  ${
+                                              (timeBlockArray?.block.includes(
+                                                option.id
+                                              ) ||
+                                                lunch.includes(option.id) ||
+                                                !finalBooked) &&
+                                              ` text-red-500 `
+                                            }`}
+                                          >
+                                            {option.value}
+                                          </span>
+                                          <span className="w-auto overflow-x-auto">
+                                            {isbooked.includes(true) &&
+                                              "Appointment"}
 
-                </div>
-                </div>
-
-                 
-               <div className="mx-auto">
-                    <button
-                      className="headerBtn  jello-horizontal px-5"
-                      onClick={submitTimings}
-                    >
-                     Submit
-                    </button>
+                                            {timeBlockArray?.block.includes(
+                                              option.id
+                                            ) &&
+                                              (timeBlockArray.block[0] ===
+                                                option.id ||
+                                              timeBlockArray.block[
+                                                timeBlockArray.block.length - 1
+                                              ] === option.id ? (
+                                                "blocked"
+                                              ) : (
+                                                <span>&nbsp;&nbsp; .</span>
+                                              ))}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </Menu.Item>
+                                  );
+                                })
+                              : "Loading"}
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
                   </div>
+                </div>
+                <div className="pb-6">
+                  <p>Select Start Timing you want to block?</p>
+                  <div className="flex md:flex-row flex-col    items-start">
+                    <Menu as="div" className="relative inline-block text-left">
+                      <div>
+                        <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
+                          <div className="w-full flex items-center justify-between">
+                            <span className="md:text-md ">
+                              {timeReserve1 ? (
+                                <p>{timeReserve1}</p>
+                              ) : (
+                                "Select Time"
+                              )}
+                            </span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-5 h-5 ml-2 -mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                          </div>
+                        </Menu.Button>
+                      </div>
+
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem]  mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <div className="py-1">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <p
+                                  className={classNames(
+                                    `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
+                                  )}
+                                >
+                                  Select Time
+                                </p>
+                              )}
+                            </Menu.Item>
+
+                            {matchedArrays?.length > 0
+                              ? options?.map((option, i) => {
+                                  const isbooked = matchedArrays?.map((item) =>
+                                    // console.log(item?.includes(i))
+                                    item?.includes(i)
+                                  );
+                                  const finalBooked = isbooked.includes(false);
+
+                                  return (
+                                    <Menu.Item key={i} id={option.id}>
+                                      {({ active }) => (
+                                        <div
+                                          onClick={() => handleTime1(option)}
+                                          className={classNames(
+                                            active
+                                              ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
+                                              : "text-gray-700",
+                                            ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
+                                          )}
+                                        >
+                                          <span
+                                            className={`  ${
+                                              (timeBlockArray?.block.includes(
+                                                option.id
+                                              ) ||
+                                                lunch.includes(option.id) ||
+                                                !finalBooked) &&
+                                              ` text-red-500 `
+                                            }`}
+                                          >
+                                            {option.value}
+                                          </span>
+                                          <span className="w-auto overflow-x-auto">
+                                            {isbooked.includes(true) &&
+                                              "Appointment"}
+
+                                            {timeBlockArray?.block.includes(
+                                              option.id
+                                            ) &&
+                                              (timeBlockArray.block[0] ===
+                                                option.id ||
+                                              timeBlockArray.block[
+                                                timeBlockArray.block.length - 1
+                                              ] === option.id ? (
+                                                "blocked"
+                                              ) : (
+                                                <span>&nbsp;&nbsp; .</span>
+                                              ))}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </Menu.Item>
+                                  );
+                                })
+                              : "Loading"}
+                          </div>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
+                </div>
+
+                <div className="mx-auto">
+                  <button
+                    className="headerBtn  jello-horizontal px-5"
+                    onClick={submitTimings}
+                  >
+                    Submit
+                  </button>
+                </div>
               </div>
             </div>
-            
           </div>
           <div className="  md:col-span-3 col-span-6 md:border-l-2 md:border-t-0 border-t-2  border-black">
             <div className="grid place-items-center gap-3 mt-5 md:mt-0">
@@ -469,10 +599,9 @@ count=count+1
 
 export default Break;
 
-
- 
-              // eslint-disable-next-line no-lone-blocks
-              {/* <div>
+// eslint-disable-next-line no-lone-blocks
+{
+  /* <div>
                 <p>Select End Timing you want to block?</p>
                 <div className="flex items-start space-x-3">
                   <Menu as="div" className="relative inline-block text-left">
@@ -554,4 +683,5 @@ export default Break;
                 <button onClick={submitTimings} className="primary-button my-4">
                   Submit
                 </button>
-              </div>  */}
+              </div>  */
+}

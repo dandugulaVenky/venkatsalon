@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import Carousel from "nuka-carousel";
 import banner1 from "../pages/images/banner1.png";
 import banner2 from "../pages/images/banner2.png";
@@ -13,6 +13,7 @@ const CarouselBanner = () => {
   w >= 768
     ? (images = [banner1, banner2, banner3])
     : (images = [banner4, banner5, banner6]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const renderPaginationDots = ({ currentSlide, slideCount }) => {
     const dotElements = [];
@@ -20,7 +21,7 @@ const CarouselBanner = () => {
       dotElements.push(
         <button
           key={i}
-          onClick={() => this.slider.goToSlide(i)}
+          onClick={() => setCurrentSlide(i)}
           className={currentSlide === i ? "active " : ""}
           aria-label={`Slide ${i + 1}`}
         >
@@ -31,14 +32,13 @@ const CarouselBanner = () => {
     return <div className="pagination-dots">{dotElements}</div>;
   };
   return (
-    <div className="px-4 scale-in-center md:mt-0 md:pt-0  ">
+    <div className="px-4 scale-in-center md:mt-0 md:pt-0">
       <Carousel
         autoplay={true}
         wrapAround={true}
+        slideIndex={currentSlide}
         renderBottomCenterControls={renderPaginationDots}
-        // renderCenterLeftControls={null} // Hide the default controls
-        // renderCenterRightControls={null}
-
+        afterSlide={setCurrentSlide}
         autoplayInterval={3000}
       >
         {images.map((banner, i) => {

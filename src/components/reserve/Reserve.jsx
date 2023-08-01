@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
 
-import { toast } from "react-toastify";
 import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
@@ -18,6 +17,7 @@ import Layout from "../navbar/Layout";
 import Greeting from "../navbar/Greeting";
 import SalonPreview from "../../pages/preview";
 import useFetch from "../../hooks/useFetch";
+import { toast } from "react-toastify";
 
 const Reserve = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -38,6 +38,7 @@ const Reserve = () => {
     value,
     options,
     mergedServices,
+    breakTime,
   } = useMemo(() => state, [state]);
 
   let w = window.innerWidth;
@@ -399,15 +400,47 @@ const Reserve = () => {
       options.filter((option) => option.id === selectedValue)[0].id
     );
 
+    console.log(lunchStart - lunchEnd, "lunchStart - lunchEnd");
+    console.log(breakTime);
+    const breakTimeFiltered = breakTime.block.filter(
+      (item) => item > selectedValue
+    )[0];
+
+    const check0 = durationBySeat.map((duration) =>
+      duration.value > (breakTimeFiltered - selectedValue) * 10
+        ? { seatNo: duration.seatNo, isReachedEnd: true }
+        : { seatNo: duration.seatNo, isReachedEnd: false }
+    );
+
+    if (check0) {
+      const lunch = check0.map((item) => {
+        if (item.isReachedEnd) {
+          alert(
+            `You can only book until ${
+              options[selectedValue + (breakTimeFiltered - selectedValue)].value
+            } because owner has blocked from next ${
+              (breakTimeFiltered - selectedValue) * 10
+            } mins in Seat No.${item.seatNo + 1} `
+          );
+          return true;
+        }
+      });
+
+      if (lunch.includes(true)) {
+        return null; // Stop execution of the whole function
+      }
+    }
+
     const check1 = durationBySeat.map((duration) =>
       duration.value > (lunchStart - lunchEnd) * 10
         ? { seatNo: duration.seatNo, isReachedEnd: true }
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
 
+    // lunchStart - lunchEnd > 0  because lunch timeat 1pm will be - if we select at 2pm
     if (check1) {
       const lunch = check1.map((item) => {
-        if (item.isReachedEnd && (lunchStart - lunchEnd) * 10 > 0) {
+        if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
           alert(
             `You can only book until ${
               options[selectedValue + 1].value
@@ -529,7 +562,7 @@ const Reserve = () => {
                 createdAt: new Date().toISOString(),
               };
             });
-
+            console.log("done");
             if (dates) {
               setReserveState({
                 selectedSeats: seats,

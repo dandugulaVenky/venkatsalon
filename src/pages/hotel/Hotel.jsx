@@ -55,16 +55,16 @@ const Hotel = () => {
   // const [openModal, setOpenModal] = useState(false);
   const { user } = useContext(AuthContext);
   const { city, date, time } = useContext(SearchContext);
-  const [value, setValue] = useState(date ? date : new Date());
-  const [timeReserve, setTimeReserve] = useState(time ? time : "");
-  const [datra, setDatra] = useState([]);
+  const [value, setValue] = useState(new Date());
+  const [timeReserve, setTimeReserve] = useState();
+
   const { type, dispatch } = useContext(SearchContext);
   const { open: sidebar } = useContext(SearchContext);
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const w = window.innerWidth;
   const lunch = [24, 25, 26, 27, 28, 29];
-  const breakTime = [42, 43, 44, 45, 46, 47];
+  const [breakTime, setBreakTime] = useState();
 
   const block = ["Jul 28th 23", "Jul 29th 23"];
   const [minutesValues, setMinutesvalues] = useState([]);
@@ -189,6 +189,11 @@ const Hotel = () => {
       );
       setMergedServices(mergedPreviewServices);
       setTotalTime(totalTimeOfServices);
+      setBreakTime(
+        data[0]?.blockTimings.find(
+          (item) => item.date === moment(value).format("MMM Do YY")
+        )
+      );
 
       const res =
         data &&
@@ -312,8 +317,8 @@ const Hotel = () => {
       );
     }
 
-    if (breakTime.includes(selectValue) && day1 === day2) {
-      return toast("Owner took bresk!");
+    if (breakTime?.block.includes(selectValue) && day1 === day2) {
+      return toast("Owner took break!");
     }
     let result = convertToMilliseconds(timeReserve);
     let result2 = compareTimeDiff(result);
@@ -338,6 +343,7 @@ const Hotel = () => {
           minValuesObj: minutesValues.minValuesObj,
           value: value,
           options: options,
+          breakTime,
         },
       });
     } else if (user && type === "parlour") {
@@ -352,6 +358,7 @@ const Hotel = () => {
           minValuesObj: minutesValues.minValuesObj,
           value: value,
           options: options,
+          breakTime: breakTime,
         },
       });
     } else {
@@ -588,13 +595,25 @@ const Hotel = () => {
                                     }  ${
                                       lunch.includes(option.id) &&
                                       ` text-red-500 `
+                                    } ${
+                                      breakTime?.block.includes(option.id) &&
+                                      ` text-red-500 `
                                     }`}
                                   >
                                     {option.value}
+                                    {breakTime?.block.includes(option.id) &&
+                                      (breakTime.block[0] === option.id ||
+                                      breakTime.block[
+                                        breakTime.block.length - 1
+                                      ] === option.id ? (
+                                        <span>&nbsp;&nbsp; blocked</span>
+                                      ) : (
+                                        <span>&nbsp;&nbsp; .</span>
+                                      ))}
                                   </span>
                                   <span className="w-auto overflow-x-auto">
-                                    {isbooked.includes(true) &&
-                                      falseIndexes.map((item) => {
+                                    {isbooked?.includes(true) &&
+                                      falseIndexes?.map((item) => {
                                         return (
                                           <span>
                                             S{item + 1}&nbsp;
