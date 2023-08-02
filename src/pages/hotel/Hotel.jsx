@@ -66,7 +66,7 @@ const Hotel = () => {
   const lunch = [24, 25, 26, 27, 28, 29];
   const [breakTime, setBreakTime] = useState();
 
-  const block = ["Jul 28th 23", "Jul 29th 23"];
+  const [block, setBlock] = useState();
   const [minutesValues, setMinutesvalues] = useState([]);
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
@@ -187,13 +187,6 @@ const Hotel = () => {
         },
         0
       );
-      setMergedServices(mergedPreviewServices);
-      setTotalTime(totalTimeOfServices);
-      setBreakTime(
-        data[0]?.blockTimings.find(
-          (item) => item.date === moment(value).format("MMM Do YY")
-        )
-      );
 
       const res =
         data &&
@@ -233,7 +226,16 @@ const Hotel = () => {
       }
 
       const matchedArrays = findMatchingArrays(mergedReady);
+
       setMatchedArrays(matchedArrays);
+      setMergedServices(mergedPreviewServices);
+      setTotalTime(totalTimeOfServices);
+      setBreakTime(
+        data[0]?.blockTimings.find(
+          (item) => item.date === moment(value).format("MMM Do YY")
+        )
+      );
+      setBlock(data[0]?.blockDays);
     };
     // filterOptions();
 

@@ -61,11 +61,9 @@ function Break() {
 
   const [value, setValue] = useState(new Date());
 
-  const [selectValue, setselectValue] = useState();
   const lunch = [24, 25, 26, 27, 28, 29];
-  const breakTime = [42, 43, 44, 45, 46, 47];
+
   const navigate = useNavigate();
-  const block = ["Jul 28th 23", "Jul 29th 23"];
 
   const initialSelectedDates = [
     {
@@ -79,7 +77,7 @@ function Break() {
   const [timeReserve, setTimeReserve] = useState();
   const [timeReserve1, setTimeReserve1] = useState();
   const [timeBlockArray, setTimeBlockArray] = useState();
-
+  const [disabledDates, setDisabledDates] = useState();
   const [matchedArrays, setMatchedArrays] = useState();
 
   const today = moment(value).format("MMM Do YY");
@@ -138,6 +136,11 @@ function Break() {
       setTimeBlockArray(
         data[0]?.blockTimings.find((item) => item.date === today)
       );
+      setDisabledDates(
+        data[0].blockDays.map((dateStr) =>
+          moment(dateStr, "MMM Do YY").toDate()
+        )
+      );
     };
     // filterOptions();
 
@@ -147,7 +150,7 @@ function Break() {
   const handleSelect = (ranges) => {
     setSelectedDates([ranges.selection]);
   };
-  const submit = () => {
+  const submit = async () => {
     let confirm = window.confirm("Are u sure to block these dates?");
 
     if (!confirm) {
@@ -166,6 +169,25 @@ function Break() {
       currentDate.setDate(currentDate.getDate() + 1);
     }
     console.log(formattedDates1);
+    if (formattedDates1 !== undefined) {
+      try {
+        await axios.post(
+          `${baseUrl}/api/rooms/updateBlockDays/${shopData.rooms[0]}`,
+          {
+            formattedDates1,
+          },
+          { withCredentials: true }
+        );
+      } catch (err) {
+        if (err.response.status === 401) {
+          navigate("/login", {
+            state: { destination: `/admin/break` },
+          });
+        }
+        console.log(err);
+      }
+    }
+
     setSelectedDates(initialSelectedDates);
   };
 
@@ -301,11 +323,6 @@ function Break() {
     setTimeReserve(null);
     setTimeReserve1(null);
   };
-
-  const blockedDates = ["Aug 1st 23", "Aug 2nd 23", "Aug 3rd 23"];
-  const disabledDates = blockedDates.map((dateStr) =>
-    moment(dateStr, "MMM Do YY").toDate()
-  );
 
   const handleTime = (item) => {
     setTimeReserve(item.value);
