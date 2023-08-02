@@ -401,18 +401,20 @@ const Reserve = () => {
     );
 
     console.log(lunchStart - lunchEnd, "lunchStart - lunchEnd");
-    console.log(breakTime);
-    const breakTimeFiltered = breakTime.block.filter(
-      (item) => item > selectedValue
-    )[0];
 
-    const check0 = durationBySeat.map((duration) =>
-      duration.value > (breakTimeFiltered - selectedValue) * 10
-        ? { seatNo: duration.seatNo, isReachedEnd: true }
-        : { seatNo: duration.seatNo, isReachedEnd: false }
-    );
+    if (breakTime !== undefined) {
+      const breakTimeFiltered = breakTime?.block.filter(
+        (item) => item > selectedValue
+      )[0];
 
-    if (check0) {
+      const check0 = durationBySeat.map((duration) =>
+        duration.value > (breakTimeFiltered - selectedValue) * 10
+          ? { seatNo: duration.seatNo, isReachedEnd: true }
+          : { seatNo: duration.seatNo, isReachedEnd: false }
+      );
+
+      console.log("hii");
+
       const lunch = check0.map((item) => {
         if (item.isReachedEnd) {
           alert(

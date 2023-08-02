@@ -145,7 +145,7 @@ function Break() {
     // filterOptions();
 
     fetchData();
-  }, [today, user?.shopId, timeReserve]);
+  }, [today, user?.shopId, timeReserve, selectedDates]);
 
   const handleSelect = (ranges) => {
     setSelectedDates([ranges.selection]);
