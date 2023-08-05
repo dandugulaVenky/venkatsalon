@@ -1,4 +1,10 @@
-import React, { useContext, useState, Fragment, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  Fragment,
+  useEffect,
+  useCallback,
+} from "react";
 import { Menu, Transition } from "@headlessui/react";
 
 import { SearchContext } from "../../context/SearchContext";
@@ -79,68 +85,84 @@ function Break() {
   const [timeBlockArray, setTimeBlockArray] = useState();
   const [disabledDates, setDisabledDates] = useState();
   const [matchedArrays, setMatchedArrays] = useState();
+  const [warnOwnerBookings, setWarnOwnerBookings] = useState();
+  const [shopData, setShopData] = useState();
 
   const today = moment(value).format("MMM Do YY");
-  const { data: shopData } = useFetch(
-    `${baseUrl}/api/hotels/find/${user?.shopId}`
-  );
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${user?.shopId}`
-      );
+      try {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${user?.shopId}`
+        );
 
-      const res =
-        data &&
-        data[0]?.roomNumbers?.map((id, i) => {
-          const filter = id.unavailableDates.filter(
-            (item1) => item1.isAccepted !== "cancelled"
-          );
-          return {
-            id: id._id,
+        const { data: shopData } = await axios.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
 
-            dates: filter?.map((item) => {
-              return { date: item.date, values: item.values };
-            }),
-          };
+        const res =
+          data &&
+          data[0]?.roomNumbers?.map((id, i) => {
+            const filter = id.unavailableDates.filter(
+              (item1) => item1.isAccepted !== "cancelled"
+            );
+            return {
+              id: id._id,
+
+              dates: filter?.map((item) => {
+                return { date: item.date, values: item.values };
+              }),
+            };
+          });
+
+        let filter = [];
+        res.map((date) => {
+          const answer = date.dates.filter((item) => today === item.date);
+          filter.push(answer);
         });
 
-      let filter = [];
-      res.map((date) => {
-        const answer = date.dates.filter((item) => today === item.date);
-        filter.push(answer);
-      });
-
-      const mergedReady = [];
-      filter.map((item, i) => {
-        const allValues = item.map((date) => {
-          return date.values;
+        const mergedReady = [];
+        filter.map((item, i) => {
+          const allValues = item.map((date) => {
+            return date.values;
+          });
+          mergedReady.push(allValues);
         });
-        mergedReady.push(allValues);
-      });
-      // console.log(mergedReady, "mergeready");
+        // console.log(mergedReady, "mergeready");
 
-      function findMatchingArrays(arr) {
-        const matchedArrays = [];
-        for (let i = 0; i < arr?.length; i++) {
-          const mergedDates = [...new Set(arr[i].flat())];
+        function findMatchingArrays(arr) {
+          const matchedArrays = [];
+          for (let i = 0; i < arr?.length; i++) {
+            const mergedDates = [...new Set(arr[i].flat())];
 
-          matchedArrays.push(mergedDates);
+            matchedArrays.push(mergedDates);
+          }
+          return matchedArrays;
         }
-        return matchedArrays;
-      }
 
-      const matchedArrays = findMatchingArrays(mergedReady);
-      setMatchedArrays(matchedArrays);
-      setTimeBlockArray(
-        data[0]?.blockTimings.find((item) => item.date === today)
-      );
-      setDisabledDates(
-        data[0].blockDays.map((dateStr) =>
-          moment(dateStr, "MMM Do YY").toDate()
-        )
-      );
+        const matchedArrays = findMatchingArrays(mergedReady);
+
+        setShopData(shopData);
+        let withoutCancelledServices = shopData?.requests?.filter(
+          (booking) => booking.isDone !== "cancelled"
+        );
+
+        const find = withoutCancelledServices?.map((item) => item.date);
+
+        setWarnOwnerBookings(find);
+        setMatchedArrays(matchedArrays);
+        setTimeBlockArray(
+          data[0]?.blockTimings.find((item) => item.date === today)
+        );
+        setDisabledDates(
+          data[0].blockDays.map((dateStr) =>
+            moment(dateStr, "MMM Do YY").toDate()
+          )
+        );
+      } catch (err) {
+        console.log(err);
+      }
     };
     // filterOptions();
 
@@ -157,19 +179,36 @@ function Break() {
       return;
     }
 
+    if (
+      selectedDates[0].startDate.toDateString() === new Date().toDateString()
+    ) {
+      return alert("You cannot block Today!");
+    }
+
     const formattedDates1 = [];
     const startDate = selectedDates[0].startDate;
     const endDate = selectedDates[0].endDate;
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
-      console.log(currentDate, "currentDate");
-      console.log(typeof currentDate);
-
       formattedDates1.push(formatDateToBackendFormat(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    console.log(formattedDates1);
-    if (formattedDates1 !== undefined) {
+
+    const ty = warnOwnerBookings?.filter((item) =>
+      formattedDates1.includes(item)
+    );
+
+    let ty1 = [...new Set(ty)];
+
+    if (ty1?.length > 0) {
+      return alert(
+        `you have 1 or more bookings on ${ty1?.map(
+          (item) => item
+        )} cannot be cancelled, pls cancel them one by one and come here, go.`
+      );
+    }
+
+    if (formattedDates1?.length > 0) {
       try {
         await axios.post(
           `${baseUrl}/api/rooms/updateBlockDays/${shopData.rooms[0]}`,
@@ -178,6 +217,8 @@ function Break() {
           },
           { withCredentials: true }
         );
+        setSelectedDates(initialSelectedDates);
+        alert("Successfully blocked!");
       } catch (err) {
         if (err.response.status === 401) {
           navigate("/login", {
@@ -185,10 +226,11 @@ function Break() {
           });
         }
         console.log(err);
+        alert("error!");
       }
+    } else {
+      return alert("Please Select dates to block!");
     }
-
-    setSelectedDates(initialSelectedDates);
   };
 
   const submitTimings = async () => {
@@ -337,7 +379,7 @@ function Break() {
       {open && <SIdebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <div className="p-10 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
+      <div className="md:p-10 p-5 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
         <div className="grid grid-cols-6  gap-2">
           <div className=" md:col-span-3 col-span-6">
             <div className="grid place-items-center gap-5">
@@ -587,13 +629,13 @@ function Break() {
               </div>
             </div>
           </div>
-          <div className="  md:col-span-3 col-span-6 md:border-l-2 md:border-t-0 border-t-2  border-black">
+          <div className="md:col-span-3 col-span-6 md:border-l-2 md:border-t-0 border-t-2  border-black">
             <div className="grid place-items-center gap-3 mt-5 md:mt-0">
               <p className="text-2xl font-bold">ONLY FROM TOMORROW</p>
               <div>
                 <p>Select dates you want to block?</p>
               </div>
-              <div className="flex md:flex-row flex-col items-start md:space-x-3 space-x-0 space-y-4 md:space-y-0">
+              <div className="flex md:flex-row flex-col items-start md:space-x-3 space-x-0 space-y-4 md:space-y-0 pb-5">
                 <DateRange
                   ranges={selectedDates}
                   onChange={handleSelect}
@@ -601,7 +643,7 @@ function Break() {
                   maxDate={new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)}
                   disabledDates={disabledDates}
                 />
-                <button onClick={submit} className="primary-button">
+                <button onClick={submit} className="primary-button ">
                   Submit
                 </button>
               </div>
@@ -615,90 +657,3 @@ function Break() {
 }
 
 export default Break;
-
-// eslint-disable-next-line no-lone-blocks
-{
-  /* <div>
-                <p>Select End Timing you want to block?</p>
-                <div className="flex items-start space-x-3">
-                  <Menu as="div" className="relative inline-block text-left">
-                    <div>
-                      <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
-                        <div className="w-full flex items-center justify-between">
-                          <span className="md:text-md ">
-                            {timeReserve.endTime
-                              ? timeReserve.endTime
-                              : "Select Time"}
-                          </span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-5 h-5 ml-2 -mr-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                      </Menu.Button>
-                    </div>
-
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-100"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem]  mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <div className="py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <p
-                                className={classNames(
-                                  `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
-                                )}
-                              >
-                                Select Time
-                              </p>
-                            )}
-                          </Menu.Item>
-
-                          {options?.map((option, i) => {
-                            return (
-                              <Menu.Item key={i} id={option.id}>
-                                {({ active }) => (
-                                  <div
-                                    onClick={() =>
-                                      handleTime(option, "endTime")
-                                    }
-                                    className={classNames(
-                                      active
-                                        ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
-                                        : "text-gray-700",
-                                      ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
-                                    )}
-                                  >
-                                    <span>{option.value}</span>{" "}
-                                  </div>
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                        </div>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
-                <button onClick={submitTimings} className="primary-button my-4">
-                  Submit
-                </button>
-              </div>  */
-}

@@ -413,8 +413,6 @@ const Reserve = () => {
           : { seatNo: duration.seatNo, isReachedEnd: false }
       );
 
-      console.log("hii");
-
       const lunch = check0.map((item) => {
         if (item.isReachedEnd) {
           alert(
@@ -445,7 +443,7 @@ const Reserve = () => {
         if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
           alert(
             `You can only book until ${
-              options[selectedValue + 1].value
+              options[lunchStart].value
             } because it is lunch time for owner in this shop, so please select only ${
               (lunchStart - lunchEnd) * 10
             } mins in Seat No.${item.seatNo + 1} `
