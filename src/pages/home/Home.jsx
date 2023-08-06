@@ -15,6 +15,7 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
+import MapComponent from "../../components/MapComponent";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -165,8 +166,12 @@ const Home = () => {
     reference !== undefined && reference !== null && handleToast();
     return () => console.log("my effect is destroying");
   }, []);
-  let w = window.innerWidth;
 
+  let w = window.innerWidth;
+  const handleMapClick = (coords) => {
+    alert("Clicked coordinates:", coords);
+    // Do something with the coordinates, e.g., save them in state.
+  };
   return (
     <div className="h-auto">
       {open && <Sidebar />}
@@ -209,7 +214,10 @@ const Home = () => {
 
         <Offers />
       </div>
-
+      <div className="my-5">
+        <h1>React Google Maps Click Example</h1>
+        <MapComponent onMapClick={handleMapClick} />
+      </div>
       {/* <button onClick={handleButton} className="mb-20">
         press me
       </button> */}

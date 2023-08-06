@@ -5,7 +5,6 @@ import React from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from "react-places-autocomplete";
-
 export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +33,10 @@ export default class AutoComplete extends React.Component {
         })
 
         .catch((error) => console.error("Error", error));
-      setHeader(false);
+      setTimeout(() => {
+        setHeader(false);
+      }, 350);
+
       if (!register) {
         setTimeout(() => {
           window.scrollTo(0, 1200);
@@ -43,7 +45,7 @@ export default class AutoComplete extends React.Component {
     };
 
     return (
-      <div className="flex items-center justify-center  my-5 overflow-auto">
+      <div className="flex items-center justify-center  my-5 overflow-auto ">
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
@@ -95,7 +97,7 @@ export default class AutoComplete extends React.Component {
                           size="lg"
                           color="#00ccbb"
                         />
-                        <span>{suggestion.description}</span>
+                        <span className="">{suggestion.description}</span>
                       </div>
                     </div>
                   );

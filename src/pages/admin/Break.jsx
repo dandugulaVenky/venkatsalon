@@ -379,7 +379,7 @@ function Break() {
       {open && <SIdebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <div className="md:p-10 p-5 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
+      <div className="md:p-10 p-5 min-h-[80vh]  mx-auto border-2 border-gray-100 shadow-lg mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
         <div className="grid grid-cols-6  gap-2">
           <div className=" md:col-span-3 col-span-6">
             <div className="grid place-items-center gap-5">

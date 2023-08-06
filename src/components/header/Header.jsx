@@ -354,30 +354,46 @@
 
 // export default Header;
 
-import React, { useContext } from "react";
+import React, { memo, useMemo } from "react";
 
 import "./header.css";
 import AutoComplete from "../AutoComplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
-const Header = ({ setHeader, setAddress, dispatch, type, city, register }) => {
-  return (
-    <div className="header slide-right z-20">
-      <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
-        <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
-        <span>{city}</span>
-      </p>
+const Header = (props) => {
+  const { setHeader, setAddress, dispatch, type, city, register, header } =
+    useMemo(() => props, [props]);
 
-      <AutoComplete
-        setHeader={setHeader}
-        setAddress={setAddress}
-        dispatch={dispatch}
-        type={type}
-        register={register}
-      />
-    </div>
+  if (header === null) {
+    return;
+  }
+  return (
+    header !== null && (
+      <div
+        className={`header slide-right z-20 ${
+          header === null
+            ? "hidden"
+            : header
+            ? "slide-right-in"
+            : "slide-right-out"
+        }`}
+      >
+        <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
+          <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
+          <span>{city}</span>
+        </p>
+
+        <AutoComplete
+          setHeader={setHeader}
+          setAddress={setAddress}
+          dispatch={dispatch}
+          type={type}
+          register={register}
+        />
+      </div>
+    )
   );
 };
 
-export default Header;
+export default memo(Header);

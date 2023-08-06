@@ -401,7 +401,8 @@ input::placeholder {
 .input-suggestion {
   font-family: "Lato", sans-serif;
   width: 400px;
-  height: 60px;
+  height: auto;
+  padding: 5px;
   background-color: white;
   border-bottom: 1px black dotted;
   display: flex;

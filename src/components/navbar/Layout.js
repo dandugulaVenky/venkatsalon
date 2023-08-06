@@ -34,7 +34,7 @@ const Layout = () => {
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
-  const [header, setHeader] = useState(false);
+  const [header, setHeader] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,7 +79,7 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const handleLocation = () => {
-    setHeader(!header);
+    setHeader(true);
   };
 
   useEffect(() => {
@@ -96,8 +96,13 @@ const Layout = () => {
           dispatch={dispatch1}
           type={type}
           city={city}
+          header={header}
         />
-      ) : null}
+      ) : address.length > 0 ? (
+        <Header header={header} />
+      ) : (
+        <Header header={null} />
+      )}
 
       <div className="pb-[6.3rem]">
         <div className="mainHead">

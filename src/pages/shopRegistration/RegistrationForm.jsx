@@ -5,7 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
 import Layout from "../../components/navbar/Layout";
-import "./otp.css";
+import "../registration/otp.css";
 import "react-phone-number-input/style.css";
 import { AuthContext } from "../../context/AuthContext";
 import LoginImage from "../../pages/images/login.jpeg";
@@ -18,19 +18,23 @@ import Sidebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
 import Header from "../../components/header/Header";
 
-import OtpVerification from "./OtpVerification";
+import OtpVerification from "../registration/OtpVerification";
 import baseUrl from "../../utils/client";
+import options from "../../utils/time";
+import RegistrationWizard from "./RegistrationWizard";
 
-const Register = () => {
+const RegistrationForm = () => {
   const [token, setToken] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  let { dispatch: dispatch1, city, type } = useContext(SearchContext);
+  let { dispatch: dispatch1, type } = useContext(SearchContext);
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [header, setHeader] = useState(null);
+  const [header, setHeader] = useState(false);
   const [verified, setVerified] = useState(false);
   const { pathname } = useLocation();
-
+  const navigate = useNavigate();
+  const userID = "123";
+  // console.log(options,"opt");
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
@@ -65,9 +69,7 @@ const Register = () => {
     requestPermission();
   }, []);
 
-  const navigate = useNavigate();
-
-  const { loading, error: errorContext, dispatch } = useContext(AuthContext);
+  const { loading, error: errorContext } = useContext(AuthContext);
 
   const {
     handleSubmit,
@@ -83,39 +85,40 @@ const Register = () => {
     if (!termsAccepted) {
       return toast("Please accept terms and conditions to continue!");
     }
+    console.log({ name, email, password, city });
+    // try {
+    //   const res = await axios.post(`${baseUrl}/api/auth/register`, {
+    //     username: name.trim().toLowerCase(),
+    //     email: email.trim().toLowerCase(),
+    //     password: password.trim(),
 
-    try {
-      const res = await axios.post(`${baseUrl}/api/auth/register`, {
-        username: name.trim().toLowerCase(),
-        email: email.trim().toLowerCase(),
-        password: password.trim(),
+    //     city:city.toLowerCase(),
+    //     phone: number,
+    //   });
 
-        city: city.toLowerCase(),
-        phone: number,
-      });
+    //   if (res.status === 200) {
+    //     dispatch({ type: "LOGIN_START" });
+    //     try {
+    //       const res = await axios.post(`${baseUrl}/api/auth/login`, {
+    //         phone: number,
 
-      if (res.status === 200) {
-        dispatch({ type: "LOGIN_START" });
-        try {
-          const res = await axios.post(`${baseUrl}/api/auth/login`, {
-            phone: number,
+    //         password,
+    //       });
+    //       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+    //       token !== "" && saveToken(res.data.details._id, token);
 
-            password,
-          });
-          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-          token !== "" && saveToken(res.data.details._id, token);
-
-          navigate("/");
-        } catch (err) {
-          dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-        }
-      }
-    } catch (err) {
-      toast.error(err.response.data.message);
-    }
+    //       navigate("/");
+    //     } catch (err) {
+    //       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+    //     }
+    //   }
+    // } catch (err) {
+    //   toast.error(err.response.data.message);
+    // }
+    navigate("/shop-details", { state: { userID } });
   };
   const handleLocation = () => {
-    setHeader(true);
+    setHeader(!header);
   };
 
   let w = window.innerWidth;
@@ -132,13 +135,18 @@ const Register = () => {
           register={true}
           header={header}
         />
-      ) : (
+      ) : address.length > 0 ? (
         <Header header={header} />
+      ) : (
+        <Header header={null} />
       )}
       {open && <Sidebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 pt-5">
+      <div className="md:py-0.5 py-5">
+        <RegistrationWizard activeStep={0} />
+      </div>
+      <div className="px-8 w-full mx-auto md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 pt-5">
         <img
           src={LoginImage}
           alt="login"
@@ -201,14 +209,14 @@ const Register = () => {
               type="password"
               id="password"
               {...register("password", {
-                minLength: {
-                  value: 8,
-                  message: "password must be more than 8 chars",
-                },
                 pattern: {
                   value: /^(?=.*[@_])[a-zA-Z0-9@_]+$/,
                   message:
                     "Password must include special characters like @ or _",
+                },
+                minLength: {
+                  value: 8,
+                  message: "password must be more than 8 chars",
                 },
               })}
             />
@@ -223,9 +231,8 @@ const Register = () => {
               type="text"
               className="w-full"
               id="city"
-              placeholder={"enter city name."}
               value={address}
-              readOnly
+              placeholder="enter city name"
               {...register("city", {
                 required: "Please enter city",
                 minLength: {
@@ -247,14 +254,8 @@ const Register = () => {
             loading={loading}
             number={number}
             setNumber={setNumber}
+            userID={userID}
           />
-          {pathname.includes("/register") && (
-            <p className="text-xs underline text-blue-600 pb-2">
-              <Link to="/shop-registration">
-                Are you a barber/beautician? Click Here
-              </Link>
-            </p>
-          )}
           <p className="text-xs underline text-blue-600">
             <Link to="/login">Already have an account? Click Here</Link>
           </p>
@@ -267,4 +268,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegistrationForm;
