@@ -168,10 +168,7 @@ const Home = () => {
   }, []);
 
   let w = window.innerWidth;
-  const handleMapClick = (coords) => {
-    alert("Clicked coordinates:", coords);
-    // Do something with the coordinates, e.g., save them in state.
-  };
+
   return (
     <div className="h-auto">
       {open && <Sidebar />}
@@ -214,10 +211,7 @@ const Home = () => {
 
         <Offers />
       </div>
-      <div className="my-5">
-        <h1>React Google Maps Click Example</h1>
-        <MapComponent onMapClick={handleMapClick} />
-      </div>
+
       {/* <button onClick={handleButton} className="mb-20">
         press me
       </button> */}

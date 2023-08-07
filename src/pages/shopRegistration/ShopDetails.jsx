@@ -1,34 +1,36 @@
 import SIdebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
-import Seo from "../../utils/Seo";
+
 import Layout from "../../components/navbar/Layout";
-import CheckoutWizard from "../ironing/ironing-utils/CheckoutWizard";
+
 import Footer from "../../components/footer/Footer";
 import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { useForm } from "react-hook-form";
-import Cookies from "js-cookie";
+
 import { useNavigate, useLocation } from "react-router-dom";
-import { Store } from "../ironing/ironing-utils/Store";
+
 import options from "../../utils/time";
 import RegistrationWizard from "./RegistrationWizard";
+import MapComponent from "../../components/MapComponent";
 
 const ShopDetails = () => {
   const {
     handleSubmit,
     register,
     formState: { errors },
-    setValue,
   } = useForm();
   const navigate = useNavigate();
   const { open } = useContext(SearchContext);
-  const { state, dispatch } = useContext(Store);
+
   const [selectedStartTime, setSelectedStartTime] = useState("");
   const [selectedEndTime, setSelectedEndTime] = useState("");
+  const [latLong, setLatLong] = useState(null);
 
+  const [map, setMap] = useState(false);
   let w = window.innerWidth;
   const location = useLocation();
-  const userIdValue = location.state;
+  const userIdValue = location.state.userID;
 
   const shopID = "qwerty";
 
@@ -48,10 +50,11 @@ const ShopDetails = () => {
     console.log(shopName, "shop name in shop-details");
     console.log(shopID, "shop id in shop-details");
     console.log(userID, "user id in shop details");
-    if (
-      selectedStartTime !== selectedEndTime
-      // && selectedStartTime !== "" && selectedEndTime !== ""
-    ) {
+    if (!latLong) {
+      alert("Please select address in map");
+    } else if (selectedStartTime === "" || selectedEndTime === "") {
+      alert("Select start time and end time correctly!");
+    } else if (selectedStartTime !== selectedEndTime) {
       const selectedStartIndex = options.filter((option) => {
         return option.value === selectedStartTime;
       })[0]?.id;
@@ -66,26 +69,11 @@ const ShopDetails = () => {
       });
       console.log(lunchTimeArray, "lunch array in shop-details");
       navigate("/shop-final-registration", {
-        state: { userIdValue, shopID, shopName },
+        state: { userIdValue, shopID, shopName, latLong },
       });
     } else {
-      console.log("Select different times");
+      alert("Something wrong!");
     }
-
-    // Cookies.set(
-    //     "iron-cart",
-    //     JSON.stringify({
-    //         ...cart,
-    //         shippingAddress: {
-    //             fullName,
-    //             address,
-    //             city,
-    //             phone,
-    //         },
-    //     })
-    // );
-
-    // navigate("/iron/place-order");
   };
   const handleStartTimeChange = (event) => {
     // console.log(event.target.value,"value start")
@@ -95,15 +83,36 @@ const ShopDetails = () => {
     // console.log(event.target.value,"E")
     setSelectedEndTime(event.target.value);
   };
+  const handleMapClick = (coords) => {
+    setLatLong(coords);
+    setMap(!map);
+  };
+
+  const handleClick = () => {
+    setMap(!map);
+  };
+
   return (
     <>
       {open && <SIdebar />}
       {w < 768 && <Greeting />}
-      {/*<Seo props={siteMetadata} />*/}
+
       <div className=" px-4">{w >= 768 && <Layout />}</div>
       <div className="md:py-0.5 py-5">
         <RegistrationWizard activeStep={1} />
       </div>
+      {map ? (
+        <div className="reserve">
+          <div className="md:w-[75%] w-[90%] mx-auto">
+            <h1>React Google Maps Click Example</h1>
+            <MapComponent onMapClick={handleMapClick} latLong={latLong} />
+          </div>
+        </div>
+      ) : (
+        <div className="hidden">
+          <MapComponent latLong={latLong} />
+        </div>
+      )}
       <form
         className="card mx-auto max-w-screen-md py-0.5 md:px-12 px-7
                  {/*h-[90vh]*/}
@@ -119,6 +128,10 @@ const ShopDetails = () => {
             autoFocus
             {...register("shopName", {
               required: "Please enter Shop name",
+              minLength: {
+                value: 4,
+                message: "Username must be more than 3 chars",
+              },
             })}
           />
           {errors.shopName && (
@@ -127,27 +140,16 @@ const ShopDetails = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="address">User ID</label>
-          <input
-            className="w-full"
-            id="userId"
-            value={userIdValue}
-            {...register("userID", {
-              // required: "Please enter user ID",
-              //     minLength: {
-              //         value: 8,
-              //         message: "Address must be more than 8 chars",
-              //     },
-            })}
-          />
+          <input className="w-full" id="userId" value={userIdValue} readOnly />
           {errors.userID && (
             <div className="text-red-500">{errors.userID.message}</div>
           )}
         </div>
-        <div className="flex">
-          <div className="mb-4 mr-4 flex flex-col">
+        <div className="flex w-full ">
+          <div className="mb-4 mr-4 flex flex-col w-full">
             <label htmlFor="type">Lunch Start time</label>
             <select
-              className="w-28"
+              className="w-full"
               value={selectedStartTime}
               onChange={(e) => handleStartTimeChange(e)}
             >
@@ -161,10 +163,10 @@ const ShopDetails = () => {
               ))}
             </select>
           </div>
-          <div className="mb-4 flex flex-col">
+          <div className="mb-4 flex flex-col  w-full">
             <label htmlFor="type">Lunch End time</label>
             <select
-              className="w-28"
+              className="w-full"
               value={selectedEndTime}
               onChange={(e) => handleEndTimeChange(e)}
             >
@@ -186,7 +188,11 @@ const ShopDetails = () => {
             type="number"
             id="phone"
             {...register("phone", {
-              // required: "Please enter phone number",
+              required: "Please enter phone number",
+              minLength: {
+                value: 10,
+                message: "Phone must be 10 numbers",
+              },
             })}
           />
           {errors.phone && (
@@ -199,7 +205,11 @@ const ShopDetails = () => {
             className="w-full"
             id="city"
             {...register("city", {
-              // required: "Please enter city",
+              required: "Please enter city",
+              minLength: {
+                value: 3,
+                message: "City must be more than 3 chars",
+              },
             })}
           />
           {errors.city && (
@@ -210,9 +220,14 @@ const ShopDetails = () => {
           <label htmlFor="description">Description</label>
           <input
             className="w-full"
+            placeholder="unique point about your shop"
             id="description"
             {...register("description", {
-              // required: "Please enter description",
+              required: "Please enter description",
+              minLength: {
+                value: 10,
+                message: "City must be more than 10 chars",
+              },
             })}
           />
           {errors.description && (
@@ -225,7 +240,7 @@ const ShopDetails = () => {
             className="w-full"
             id="description"
             {...register("type", {
-              // required: "Please select a type",
+              required: "Please select a type",
             })}
           >
             <option>Salon</option>
@@ -235,13 +250,15 @@ const ShopDetails = () => {
             <div className="text-red-500 ">{errors.type.message}</div>
           )}
         </div>
-        <div className="mb-4">
+        <div className="mb-4" onClick={handleClick}>
           <label htmlFor="address">Exact Address</label>
           <input
             className="w-full"
+            placeholder="click me to show map"
             id="address"
+            value={latLong ? `lat:${latLong?.lat} , lng:${latLong?.lng}` : ""}
             {...register("address", {
-              // required: "Please enter address",
+              required: "Please enter address",
               minLength: {
                 value: 8,
                 message: "Address must be more than 8 chars",
@@ -253,19 +270,6 @@ const ShopDetails = () => {
           )}
         </div>
 
-        {/* <div className="mb-4">
-          <label htmlFor="country">Country</label>
-          <input
-            className="w-full"
-            id="country"
-            {...register("country", {
-              required: "Please enter country",
-            })}
-          />
-          {errors.country && (
-            <div className="text-red-500 ">{errors.country.message}</div>
-          )}
-        </div> */}
         <div className="mb-4 flex justify-between">
           <button className="primary-button">Next</button>
         </div>

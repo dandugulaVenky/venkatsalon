@@ -78,14 +78,17 @@ const RegistrationForm = () => {
     formState: { errors },
   } = useForm();
 
-  const submitHandler = async ({ name, email, password, city }) => {
-    if (!verified) {
-      return toast("Please verify the phone number!");
-    }
-    if (!termsAccepted) {
-      return toast("Please accept terms and conditions to continue!");
-    }
-    console.log({ name, email, password, city });
+  const submitHandler = async ({ name, email, password }) => {
+    // if (!verified) {
+    //   return toast("Please verify the phone number!");
+    // }
+    // else if (!termsAccepted) {
+    //   return toast("Please accept terms and conditions to continue!");
+    // }else if(!address){
+    //   return toast("Please select a city!");
+
+    // }
+    console.log({ name, email, password, address });
     // try {
     //   const res = await axios.post(`${baseUrl}/api/auth/register`, {
     //     username: name.trim().toLowerCase(),
@@ -225,25 +228,16 @@ const RegistrationForm = () => {
             )}
           </div>
 
-          <div className="mb-4" onClick={handleLocation}>
+          <div className="mb-4">
             <label htmlFor="city">Address</label>
             <input
               type="text"
               className="w-full"
               id="city"
-              value={address}
+              value={address ? address : ""}
+              onClick={handleLocation}
               placeholder="enter city name"
-              {...register("city", {
-                required: "Please enter city",
-                minLength: {
-                  value: 3,
-                  message: "City must be more than 3 chars",
-                },
-              })}
             />
-            {errors.city && (
-              <div className="text-red-500">{errors.city.message}</div>
-            )}
           </div>
 
           <OtpVerification

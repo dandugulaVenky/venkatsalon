@@ -1,10 +1,10 @@
 import { useLocation } from "react-router-dom";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import SIdebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
-import Seo from "../../utils/Seo";
+
 import Layout from "../../components/navbar/Layout";
-import CheckoutWizard from "../ironing/ironing-utils/CheckoutWizard";
+
 import Footer from "../../components/footer/Footer";
 import { SearchContext } from "../../context/SearchContext";
 import RegistrationWizard from "./RegistrationWizard";
@@ -12,11 +12,14 @@ import RegistrationWizard from "./RegistrationWizard";
 const FinalRegistration = () => {
   let w = window.innerWidth;
   const location = useLocation();
-  const { userIdValue, shopID, shopName } = location.state;
+  const { userIdValue, shopID, shopName, latLong } = useMemo(
+    () => location.state,
+    [location.state]
+  );
   const [seats, setSeats] = useState();
   const { open } = useContext(SearchContext);
   const [seatsArray, setSeatsArray] = useState([]);
-
+  console.log(latLong, "from final");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

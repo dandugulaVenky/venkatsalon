@@ -21,13 +21,14 @@ export default class AutoComplete extends React.Component {
     const handleSelect = (address) => {
       geocodeByAddress(address)
         .then((results) => {
-          setAddress(results[0]?.address_components[0]?.long_name);
-          const city = results[0]?.address_components[0]?.long_name;
+          setAddress(results[0]?.formatted_address.trim().toLowerCase());
+          const city = results[0]?.formatted_address.trim().toLowerCase();
+
           dispatch({
             type: "NEW_SEARCH",
             payload: {
               type: !type ? "saloon" : type,
-              destination: city?.toLowerCase(),
+              destination: city,
             },
           });
         })
@@ -64,6 +65,7 @@ export default class AutoComplete extends React.Component {
                     placeholder: "Search Places ...",
                     className: "location-search-input",
                   })}
+                  autoFocus
                 />
                 <span onClick={() => setHeader(false)} className="cross">
                   <FontAwesomeIcon
