@@ -114,8 +114,7 @@ const ShopDetails = () => {
         </div>
       )}
       <form
-        className="card mx-auto max-w-screen-md py-0.5 md:px-12 px-7
-                 {/*h-[90vh]*/}
+        className="card mx-auto max-w-screen-md py-0.5 md:px-12 px-7 pb-20 
                  "
         onSubmit={handleSubmit(submitHandler)}
       >
@@ -252,19 +251,11 @@ const ShopDetails = () => {
         </div>
         <div className="mb-4" onClick={handleClick}>
           <label htmlFor="address">Exact Address</label>
-          <input
-            className="w-full"
-            placeholder="click me to show map"
-            id="address"
-            value={latLong ? `lat:${latLong?.lat} , lng:${latLong?.lng}` : ""}
-            {...register("address", {
-              required: "Please enter address",
-              minLength: {
-                value: 8,
-                message: "Address must be more than 8 chars",
-              },
-            })}
-          />
+          <p className="w-full px-5 py-2 bg-green-200 rounded-md cursor-pointer">
+            {latLong
+              ? `lat:${latLong?.lat} , lng:${latLong?.lng}`
+              : "Select on map"}
+          </p>
           {errors.address && (
             <div className="text-red-500">{errors.address.message}</div>
           )}
