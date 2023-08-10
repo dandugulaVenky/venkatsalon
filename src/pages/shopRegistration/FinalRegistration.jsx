@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import SIdebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
@@ -8,21 +8,31 @@ import Layout from "../../components/navbar/Layout";
 import Footer from "../../components/footer/Footer";
 import { SearchContext } from "../../context/SearchContext";
 import RegistrationWizard from "./RegistrationWizard";
+import Select from "../images/select.png";
 
 const FinalRegistration = () => {
   let w = window.innerWidth;
-  const location = useLocation();
-  const { userIdValue, shopID, shopName, latLong } = useMemo(
-    () => location.state,
-    [location.state]
-  );
-  const [seats, setSeats] = useState();
+
+  const [seats, setSeats] = useState("");
   const { open } = useContext(SearchContext);
-  const [seatsArray, setSeatsArray] = useState([]);
-  console.log(latLong, "from final");
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
+  const [storedUser, setStoredUser] = useState();
+
+  const navigate = useNavigate();
+
+  function getCookieObject(name) {
+    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+
+    for (const cookie of cookies) {
+      if (cookie.startsWith(name + "=")) {
+        const encodedValue = cookie.substring(name.length + 1);
+        return JSON.parse(decodeURIComponent(encodedValue));
+      }
+    }
+
+    return null; // Cookie not found
+  }
+
   const handleRegister = () => {
     const arrayOfObjects = [];
     for (let i = 1; i <= seats; i++) {
@@ -31,9 +41,29 @@ const FinalRegistration = () => {
       };
       arrayOfObjects.push(newObj);
     }
-    console.log(arrayOfObjects, "arr");
-    setSeatsArray(arrayOfObjects);
+
+    console.log(storedUser);
+    console.log(arrayOfObjects);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    // Usage example
+    const storedUser = getCookieObject("user_info");
+
+    if (storedUser) {
+      setStoredUser(storedUser);
+      if (storedUser.step === 3) {
+        return;
+      } else if (storedUser.step === 2) {
+        return;
+      }
+    } else {
+      console.log("User info not found in the cookie.");
+      navigate("/shop-registration");
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -44,10 +74,11 @@ const FinalRegistration = () => {
       <div className="md:py-0.5 py-5">
         <RegistrationWizard activeStep={2} />
       </div>
-      <div className="flex justify-center w-full min-h-[85vh] items-center">
+      <div className="flex flex-col justify-center w-full min-h-[70vh] items-center">
         <div>
           <p>
-            Shop Name : <span className="ml-2">{shopName}</span>
+            Shop Name :{" "}
+            <span className="ml-2">{storedUser?.hotelInfo?.shopName}</span>
           </p>
           <div className="mb-4">
             <label htmlFor="phone">No.of Seats</label>
@@ -74,6 +105,7 @@ const FinalRegistration = () => {
             </button>
           </div>
         </div>
+        <img src={Select} alt="select category" className="h-72" />
       </div>
       <Footer />
     </>

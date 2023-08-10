@@ -177,7 +177,7 @@ const Home = () => {
 
       <div className="home-img1 mb-5">
         <div className=" px-4">{w >= 768 && <Layout />}</div>
-        <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
+        <div className="md:h-[75vh] h-screen flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
               Welcome To Easytym

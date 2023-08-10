@@ -17,6 +17,7 @@ import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
+
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
     return inputString.substr(0, 30) + "...";

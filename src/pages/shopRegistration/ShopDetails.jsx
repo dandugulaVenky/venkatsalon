@@ -26,17 +26,25 @@ const ShopDetails = () => {
   const [selectedStartTime, setSelectedStartTime] = useState("");
   const [selectedEndTime, setSelectedEndTime] = useState("");
   const [latLong, setLatLong] = useState(null);
-
   const [map, setMap] = useState(false);
   let w = window.innerWidth;
   const location = useLocation();
-  const userIdValue = location.state.userID;
+  const userIdValue = location?.state?.userID || 12345;
 
   const shopID = "qwerty";
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  function getCookieObject(name) {
+    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+
+    for (const cookie of cookies) {
+      if (cookie.startsWith(name + "=")) {
+        const encodedValue = cookie.substring(name.length + 1);
+        return JSON.parse(decodeURIComponent(encodedValue));
+      }
+    }
+
+    return null; // Cookie not found
+  }
 
   const submitHandler = ({
     shopName,
@@ -61,6 +69,10 @@ const ShopDetails = () => {
       const selectedEndIndex = options.filter((option) => {
         return option.value === selectedEndTime;
       })[0]?.id;
+
+      if (selectedEndIndex * 10 - selectedStartTime * 10 < 480) {
+        return alert("Minimum of 8 hrs is needed!");
+      }
       const lunchTime = options.filter((option) => {
         return option.id >= selectedStartIndex && option.id < selectedEndIndex;
       });
@@ -68,6 +80,32 @@ const ShopDetails = () => {
         return option.id;
       });
       console.log(lunchTimeArray, "lunch array in shop-details");
+      const existingUserData = getCookieObject("user_info");
+      existingUserData.hotelInfo = {
+        shopName,
+        userID,
+        phone,
+        city,
+        description,
+        type,
+        address,
+        lunchTimeArray,
+        latLong,
+      };
+      existingUserData.step = 2;
+      function setCookieObject(name1, value, daysToExpire) {
+        const expires = new Date();
+        expires.setDate(expires.getDate() + daysToExpire);
+
+        // Serialize the object to JSON and encode it
+        const cookieValue =
+          encodeURIComponent(JSON.stringify(value)) +
+          (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+        document.cookie = `${name1}=${cookieValue}; path=/`;
+      }
+      setCookieObject("user_info", existingUserData, 7);
+
       navigate("/shop-final-registration", {
         state: { userIdValue, shopID, shopName, latLong },
       });
@@ -76,11 +114,9 @@ const ShopDetails = () => {
     }
   };
   const handleStartTimeChange = (event) => {
-    // console.log(event.target.value,"value start")
     setSelectedStartTime(event.target.value);
   };
   const handleEndTimeChange = (event) => {
-    // console.log(event.target.value,"E")
     setSelectedEndTime(event.target.value);
   };
   const handleMapClick = (coords) => {
@@ -91,6 +127,24 @@ const ShopDetails = () => {
   const handleClick = () => {
     setMap(!map);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+
+    // Usage example
+    const storedUser = getCookieObject("user_info");
+
+    if (storedUser) {
+      if (storedUser.step === 1) {
+        return;
+      } else if (storedUser.step === 2) {
+        navigate("/shop-final-registration");
+      }
+    } else {
+      console.log("User info not found in the cookie.");
+      navigate("/shop-registration");
+    }
+  }, [navigate]);
 
   return (
     <>

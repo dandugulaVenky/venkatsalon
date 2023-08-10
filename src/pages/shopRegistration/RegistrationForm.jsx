@@ -20,7 +20,7 @@ import Header from "../../components/header/Header";
 
 import OtpVerification from "../registration/OtpVerification";
 import baseUrl from "../../utils/client";
-import options from "../../utils/time";
+
 import RegistrationWizard from "./RegistrationWizard";
 
 const RegistrationForm = () => {
@@ -31,10 +31,24 @@ const RegistrationForm = () => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
   const [verified, setVerified] = useState(false);
-  const { pathname } = useLocation();
+  const [askOwner, setAskOwner] = useState(false);
+
   const navigate = useNavigate();
   const userID = "123";
-  // console.log(options,"opt");
+
+  function getCookieObject(name) {
+    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+
+    for (const cookie of cookies) {
+      if (cookie.startsWith(name + "=")) {
+        const encodedValue = cookie.substring(name.length + 1);
+        return JSON.parse(decodeURIComponent(encodedValue));
+      }
+    }
+
+    return null; // Cookie not found
+  }
+
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
@@ -81,43 +95,33 @@ const RegistrationForm = () => {
   const submitHandler = async ({ name, email, password }) => {
     // if (!verified) {
     //   return toast("Please verify the phone number!");
-    // }
-    // else if (!termsAccepted) {
+    // } else if (!termsAccepted) {
     //   return toast("Please accept terms and conditions to continue!");
-    // }else if(!address){
+    // } else if (!address) {
     //   return toast("Please select a city!");
-
     // }
+    const userInfo = {
+      name,
+      email,
+      password,
+      address,
+      number,
+      step: 1,
+    };
     console.log({ name, email, password, address });
-    // try {
-    //   const res = await axios.post(`${baseUrl}/api/auth/register`, {
-    //     username: name.trim().toLowerCase(),
-    //     email: email.trim().toLowerCase(),
-    //     password: password.trim(),
+    function setCookieObject(name1, value, daysToExpire) {
+      const expires = new Date();
+      expires.setDate(expires.getDate() + daysToExpire);
 
-    //     city:city.toLowerCase(),
-    //     phone: number,
-    //   });
+      // Serialize the object to JSON and encode it
+      const cookieValue =
+        encodeURIComponent(JSON.stringify(value)) +
+        (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
 
-    //   if (res.status === 200) {
-    //     dispatch({ type: "LOGIN_START" });
-    //     try {
-    //       const res = await axios.post(`${baseUrl}/api/auth/login`, {
-    //         phone: number,
+      document.cookie = `${name1}=${cookieValue}; path=/`;
+    }
+    setCookieObject("user_info", userInfo, 7);
 
-    //         password,
-    //       });
-    //       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-    //       token !== "" && saveToken(res.data.details._id, token);
-
-    //       navigate("/");
-    //     } catch (err) {
-    //       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-    //     }
-    //   }
-    // } catch (err) {
-    //   toast.error(err.response.data.message);
-    // }
     navigate("/shop-details", { state: { userID } });
   };
   const handleLocation = () => {
@@ -126,7 +130,49 @@ const RegistrationForm = () => {
 
   let w = window.innerWidth;
   const { open } = useContext(SearchContext);
+  useEffect(() => {
+    window.scrollTo(0, 0);
 
+    // Usage example
+    const storedUser = getCookieObject("user_info");
+
+    if (storedUser) {
+      if (storedUser.step === 1) {
+        setAskOwner(true);
+      } else if (storedUser.step === 2) {
+        setAskOwner(true);
+      }
+    } else {
+      console.log("User info not found in the cookie.");
+    }
+  }, [navigate, askOwner]);
+
+  const handleContinueProcess = (check) => {
+    if (check === "startAgain") {
+      function removeCookie(name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      }
+
+      // Usage example
+      removeCookie("user_info");
+
+      setAskOwner(false);
+
+      return null;
+    }
+
+    const storedUser = getCookieObject("user_info");
+
+    if (storedUser) {
+      if (storedUser.step === 1) {
+        navigate("/shop-details");
+      } else if (storedUser.step === 2) {
+        navigate("/shop-final-registration");
+      }
+    } else {
+      console.log("User info not found in the cookie.");
+    }
+  };
   return (
     <div>
       {header ? (
@@ -157,104 +203,121 @@ const RegistrationForm = () => {
           width={400}
           className="card"
         ></img>
-        <form
-          className="md:px-10 px-5 py-2.5 card text-sm "
-          onSubmit={handleSubmit(submitHandler)}
-        >
-          <h1 className="mb-4 text-2xl font-semibold">Register</h1>
+        {!askOwner ? (
+          <form
+            className="md:px-10 px-5 py-2.5 card text-sm "
+            onSubmit={handleSubmit(submitHandler)}
+          >
+            <h1 className="mb-4 text-2xl font-semibold">Register</h1>
 
-          <div className="mb-4 ">
-            <label htmlFor="name">Username</label>
-            <input
-              type="text"
-              className="w-full"
-              id="name"
-              autoFocus
-              {...register("name", {
-                required: "Please enter username",
-                minLength: {
-                  value: 6,
-                  message: "Username must be more than 5 chars",
-                },
-                pattern: {
-                  value: /^[a-zA-Z0-9_.+-@#]+$/i,
-                  message: "Please enter valid username",
-                },
-              })}
-            />
-            {errors.name && (
-              <div className="text-red-500">{errors.name.message}</div>
-            )}
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              className="w-full"
-              id="email"
-              {...register("email", {
-                required: "Please enter email",
-                pattern: {
-                  value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i,
-                  message: "Please enter valid email",
-                },
-              })}
-            />
-            {errors.email && (
-              <div className="text-red-500">{errors.email.message}</div>
-            )}
-          </div>
+            <div className="mb-4 ">
+              <label htmlFor="name">Username</label>
+              <input
+                type="text"
+                className="w-full"
+                id="name"
+                autoFocus
+                {...register("name", {
+                  required: "Please enter username",
+                  minLength: {
+                    value: 6,
+                    message: "Username must be more than 5 chars",
+                  },
+                  pattern: {
+                    value: /^[a-zA-Z0-9_.+-@#]+$/i,
+                    message: "Please enter valid username",
+                  },
+                })}
+              />
+              {errors.name && (
+                <div className="text-red-500">{errors.name.message}</div>
+              )}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                className="w-full"
+                id="email"
+                {...register("email", {
+                  required: "Please enter email",
+                  pattern: {
+                    value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/i,
+                    message: "Please enter valid email",
+                  },
+                })}
+              />
+              {errors.email && (
+                <div className="text-red-500">{errors.email.message}</div>
+              )}
+            </div>
 
-          <div className="mb-4">
-            <label htmlFor="password">Password</label>
-            <input
-              className="w-full"
-              type="password"
-              id="password"
-              {...register("password", {
-                pattern: {
-                  value: /^(?=.*[@_])[a-zA-Z0-9@_]+$/,
-                  message:
-                    "Password must include special characters like @ or _",
-                },
-                minLength: {
-                  value: 8,
-                  message: "password must be more than 8 chars",
-                },
-              })}
-            />
-            {errors.password && (
-              <div className="text-red-500 ">{errors.password.message}</div>
-            )}
-          </div>
+            <div className="mb-4">
+              <label htmlFor="password">Password</label>
+              <input
+                className="w-full"
+                type="password"
+                id="password"
+                {...register("password", {
+                  pattern: {
+                    value: /^(?=.*[@_])[a-zA-Z0-9@_]+$/,
+                    message:
+                      "Password must include special characters like @ or _",
+                  },
+                  minLength: {
+                    value: 8,
+                    message: "password must be more than 8 chars",
+                  },
+                })}
+              />
+              {errors.password && (
+                <div className="text-red-500 ">{errors.password.message}</div>
+              )}
+            </div>
 
-          <div className="mb-4">
-            <label htmlFor="city">Address</label>
-            <input
-              type="text"
-              className="w-full"
-              id="city"
-              value={address ? address : ""}
-              onClick={handleLocation}
-              placeholder="enter city name"
-            />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="city">Address</label>
+              <input
+                type="text"
+                className="w-full"
+                id="city"
+                value={address ? address : ""}
+                onClick={handleLocation}
+                placeholder="enter city name"
+              />
+            </div>
 
-          <OtpVerification
-            verified={verified}
-            setVerified={setVerified}
-            termsAccepted={termsAccepted}
-            setTermsAccepted={setTermsAccepted}
-            loading={loading}
-            number={number}
-            setNumber={setNumber}
-            userID={userID}
-          />
-          <p className="text-xs underline text-blue-600">
-            <Link to="/login">Already have an account? Click Here</Link>
-          </p>
-          {errorContext && <span>{errorContext.message}</span>}
-        </form>
+            <OtpVerification
+              verified={verified}
+              setVerified={setVerified}
+              termsAccepted={termsAccepted}
+              setTermsAccepted={setTermsAccepted}
+              loading={loading}
+              number={number}
+              setNumber={setNumber}
+              userID={userID}
+            />
+            <p className="text-xs underline text-blue-600">
+              <Link to="/login">Already have an account? Click Here</Link>
+            </p>
+            {errorContext && <span>{errorContext.message}</span>}
+          </form>
+        ) : (
+          <div className="flex flex-col space-y-3 pt-1">
+            <button
+              className="primary-button "
+              onClick={() => handleContinueProcess("continue")}
+            >
+              Continue
+            </button>
+            <button
+              className="primary-button"
+              onClick={() => handleContinueProcess("startAgain")}
+            >
+              Start Again
+            </button>
+          </div>
+        )}
       </div>
 
       <Footer />
@@ -263,3 +326,32 @@ const RegistrationForm = () => {
 };
 
 export default RegistrationForm;
+// try {
+//   const res = await axios.post(`${baseUrl}/api/auth/register`, {
+//     username: name.trim().toLowerCase(),
+//     email: email.trim().toLowerCase(),
+//     password: password.trim(),
+
+//     city:city.toLowerCase(),
+//     phone: number,
+//   });
+
+//   if (res.status === 200) {
+//     dispatch({ type: "LOGIN_START" });
+//     try {
+//       const res = await axios.post(`${baseUrl}/api/auth/login`, {
+//         phone: number,
+
+//         password,
+//       });
+//       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+//       token !== "" && saveToken(res.data.details._id, token);
+
+//       navigate("/");
+//     } catch (err) {
+//       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+//     }
+//   }
+// } catch (err) {
+//   toast.error(err.response.data.message);
+// }
