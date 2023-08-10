@@ -95,8 +95,8 @@ const Greeting = () => {
         <Header header={null} />
       )}
 
-      <div className="h-auto">
-        <div className="mainHead ">
+      <div className={`${pathname === "/" ? "h-auto" : "h-20"}`}>
+        <div className="mainHead">
           <div
             className={`flex items-center justify-between px-4 p-2 ${
               isScrolled ? "head1" : "head2"
