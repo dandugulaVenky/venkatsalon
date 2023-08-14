@@ -17,18 +17,18 @@
 //   const { data, loading, error } = useFetch(`/api/hotels/getDistinctCities`);
 //   let { city, time: time1, type, dispatch } = useContext(SearchContext);
 
-//   const cities = data;
+// const cities = data;
 
-//   const [query, setQuery] = useState("");
+// const [query, setQuery] = useState("");
 
-//   const filteredCities =
-//     query === ""
-//       ? cities
-//       : cities.filter((person) => {
-//           return person.toLowerCase().includes(query.toLowerCase());
-//         });
+// const filteredCities =
+//   query === ""
+//     ? cities
+//     : cities.filter((person) => {
+//         return person.toLowerCase().includes(query.toLowerCase());
+//       });
 
-//   const [destination, setDestination] = useState(city ? city : "");
+// const [destination, setDestination] = useState(city ? city : "");
 
 //   const navigate = useNavigate();
 
@@ -371,7 +371,7 @@ const Header = (props) => {
   return (
     header !== null && (
       <div
-        className={`header slide-right z-20 ${
+        className={`header  z-20 ${
           header === null
             ? "hidden"
             : header

@@ -1,9 +1,6 @@
-import moment from "moment";
-import { memo, useContext } from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
-import Rating from "@material-ui/lab/Rating";
-import { SearchContext } from "../../context/SearchContext";
-import useFetch from "../../hooks/useFetch";
+
 import "./searchItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

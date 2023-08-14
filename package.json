@@ -19,6 +19,7 @@
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
+    "caniuse-lite": "^1.0.30001519",
     "date-fns": "^2.30.0",
     "firebase": "^9.16.0",
     "framer-motion": "^9.0.2",

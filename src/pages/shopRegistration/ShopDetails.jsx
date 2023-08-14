@@ -8,11 +8,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { useForm } from "react-hook-form";
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import options from "../../utils/time";
 import RegistrationWizard from "./RegistrationWizard";
 import MapComponent from "../../components/MapComponent";
+import { Combobox } from "@headlessui/react";
 
 const ShopDetails = () => {
   const {
@@ -24,14 +25,15 @@ const ShopDetails = () => {
   const { open } = useContext(SearchContext);
 
   const [selectedStartTime, setSelectedStartTime] = useState("");
+  const [selectedShopStartTime, setSelectedShopStartTime] = useState("");
+  const [storedUser, setStoredUser] = useState();
+
   const [selectedEndTime, setSelectedEndTime] = useState("");
+  const [selectedShopEndTime, setSelectedShopEndTime] = useState("");
+
   const [latLong, setLatLong] = useState(null);
   const [map, setMap] = useState(false);
   let w = window.innerWidth;
-  const location = useLocation();
-  const userIdValue = location?.state?.userID || 12345;
-
-  const shopID = "qwerty";
 
   function getCookieObject(name) {
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -43,36 +45,85 @@ const ShopDetails = () => {
       }
     }
 
-    return null; // Cookie not found
+    return null;
   }
+
+  const cities = [
+    "shadnagar, telangana 509216, india",
+    "kothur, telangana 509228, india",
+    "thimmapur, telangana 509325, india",
+    "shamshabad, telangana 501218, india",
+  ];
+
+  const [query, setQuery] = useState("");
+
+  const filteredCities =
+    query === ""
+      ? cities
+      : cities.filter((city) => {
+          return city.toLowerCase().includes(query.toLowerCase());
+        });
+
+  const [selectedCity, setSelectedCity] = useState("");
 
   const submitHandler = ({
     shopName,
-    userID,
+
     phone,
     city,
     description,
     type,
     address,
   }) => {
-    console.log(shopName, "shop name in shop-details");
-    console.log(shopID, "shop id in shop-details");
-    console.log(userID, "user id in shop details");
     if (!latLong) {
-      alert("Please select address in map");
+      return alert("Please select address in map");
+    } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
+      return alert("Select Shop start time and end time correctly!");
     } else if (selectedStartTime === "" || selectedEndTime === "") {
-      alert("Select start time and end time correctly!");
-    } else if (selectedStartTime !== selectedEndTime) {
-      const selectedStartIndex = options.filter((option) => {
-        return option.value === selectedStartTime;
-      })[0]?.id;
-      const selectedEndIndex = options.filter((option) => {
-        return option.value === selectedEndTime;
-      })[0]?.id;
-
-      if (selectedEndIndex * 10 - selectedStartTime * 10 < 480) {
-        return alert("Minimum of 8 hrs is needed!");
+      return alert("Select lunch start time and end time correctly!");
+    } else if (
+      selectedStartTime !== selectedEndTime &&
+      selectedShopStartTime !== selectedShopEndTime
+    ) {
+      const existingUserData = getCookieObject("user_info");
+      const x = existingUserData.number.includes(phone);
+      if (x) {
+        alert("Alternate should be different from already given number!");
+        return;
       }
+      const selectedShopStartIndex = options.find((option) => {
+        return option.value === selectedShopStartTime;
+      })?.id;
+      const selectedShopEndIndex = options.find((option) => {
+        return option.value === selectedShopEndTime;
+      })?.id;
+
+      const selectedStartIndex = options.find((option) => {
+        return option.value === selectedStartTime;
+      })?.id;
+      const selectedEndIndex = options.find((option) => {
+        return option.value === selectedEndTime;
+      })?.id;
+
+      if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
+        return alert(
+          "Minimum of 8 hrs is needed between opening and closing time!"
+        );
+      }
+      if (selectedEndIndex * 10 - selectedStartIndex * 10 > 60) {
+        return alert("Lunch time should be maximum 1 hour only!");
+      }
+
+      const shopTime = options.filter((option) => {
+        return (
+          option.id >= selectedShopStartIndex &&
+          option.id < selectedShopEndIndex
+        );
+      });
+      const shopTimeArray = shopTime.map((option) => {
+        return option.id;
+      });
+
       const lunchTime = options.filter((option) => {
         return option.id >= selectedStartIndex && option.id < selectedEndIndex;
       });
@@ -80,19 +131,22 @@ const ShopDetails = () => {
         return option.id;
       });
       console.log(lunchTimeArray, "lunch array in shop-details");
-      const existingUserData = getCookieObject("user_info");
+      console.log(shopTimeArray, "Shop array in shop-details");
+
       existingUserData.hotelInfo = {
-        shopName,
-        userID,
-        phone,
-        city,
-        description,
+        name: shopName,
+
+        alternatePhone: phone,
+        city: selectedCity.toLowerCase(),
+        desc: description,
         type,
-        address,
+
         lunchTimeArray,
+        shopTimeArray,
         latLong,
       };
       existingUserData.step = 2;
+      console.log(existingUserData);
       function setCookieObject(name1, value, daysToExpire) {
         const expires = new Date();
         expires.setDate(expires.getDate() + daysToExpire);
@@ -106,19 +160,28 @@ const ShopDetails = () => {
       }
       setCookieObject("user_info", existingUserData, 7);
 
-      navigate("/shop-final-registration", {
-        state: { userIdValue, shopID, shopName, latLong },
-      });
+      navigate("/shop-final-registration");
+
+      console.log("done");
     } else {
       alert("Something wrong!");
     }
   };
+
   const handleStartTimeChange = (event) => {
     setSelectedStartTime(event.target.value);
   };
   const handleEndTimeChange = (event) => {
     setSelectedEndTime(event.target.value);
   };
+
+  const handleShopStartTimeChange = (event) => {
+    setSelectedShopStartTime(event.target.value);
+  };
+  const handleShopEndTimeChange = (event) => {
+    setSelectedShopEndTime(event.target.value);
+  };
+
   const handleMapClick = (coords) => {
     setLatLong(coords);
     setMap(!map);
@@ -135,6 +198,7 @@ const ShopDetails = () => {
     const storedUser = getCookieObject("user_info");
 
     if (storedUser) {
+      setStoredUser(storedUser);
       if (storedUser.step === 1) {
         return;
       } else if (storedUser.step === 2) {
@@ -177,13 +241,18 @@ const ShopDetails = () => {
           <label htmlFor="shopName">Shop Name</label>
           <input
             className="w-full"
+            placeholder="salon name"
             id="shopName"
             autoFocus
             {...register("shopName", {
-              required: "Please enter Shop name",
+              required: "Please enter shop name",
               minLength: {
-                value: 4,
-                message: "Username must be more than 3 chars",
+                value: 6,
+                message: "Username must be more than 5 chars",
+              },
+              pattern: {
+                value: /^[a-z" "A-Z" "0-9_.+-@#]+$/i,
+                message: "Please enter valid shop name",
               },
             })}
           />
@@ -191,13 +260,44 @@ const ShopDetails = () => {
             <div className="text-red-500">{errors.shopName.message}</div>
           )}
         </div>
-        <div className="mb-4">
-          <label htmlFor="address">User ID</label>
-          <input className="w-full" id="userId" value={userIdValue} readOnly />
-          {errors.userID && (
-            <div className="text-red-500">{errors.userID.message}</div>
-          )}
+
+        <div className="flex w-full ">
+          <div className="mb-4 mr-4 flex flex-col w-full">
+            <label htmlFor="type">Shop Start time</label>
+            <select
+              className="w-full"
+              value={selectedShopStartTime}
+              onChange={(e) => handleShopStartTimeChange(e)}
+            >
+              <option selected value="">
+                Select Time
+              </option>
+              {options.map((option, index) => (
+                <option key={option.id} value={option.value}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4 flex flex-col  w-full">
+            <label htmlFor="type">Shop End time</label>
+            <select
+              className="w-full"
+              value={selectedShopEndTime}
+              onChange={(e) => handleShopEndTimeChange(e)}
+            >
+              <option selected value="">
+                Select Time
+              </option>
+              {options.map((option, index) => (
+                <option key={option.id} value={option.value}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
         <div className="flex w-full ">
           <div className="mb-4 mr-4 flex flex-col w-full">
             <label htmlFor="type">Lunch Start time</label>
@@ -234,6 +334,7 @@ const ShopDetails = () => {
             </select>
           </div>
         </div>
+
         <div className="mb-4">
           <label htmlFor="phone">Alternate Phone Number</label>
           <input
@@ -252,11 +353,13 @@ const ShopDetails = () => {
             <div className="text-red-500 ">{errors.phone.message}</div>
           )}
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="city">City/Town</label>
           <input
             className="w-full"
             id="city"
+            value={storedUser?.address}
+            readOnly
             {...register("city", {
               required: "Please enter city",
               minLength: {
@@ -268,7 +371,65 @@ const ShopDetails = () => {
           {errors.city && (
             <div className="text-red-500 ">{errors.city.message}</div>
           )}
+        </div> */}
+
+        <div className="w-full flex  flex-wrap">
+          <div className=" mb-4 w-full">
+            <label htmlFor="city" className="block">
+              City
+            </label>
+            <div className="relative inline-block bg-slate-100 rounded-md  text-black items-center w-full">
+              <Combobox value={selectedCity} onChange={setSelectedCity}>
+                <Combobox.Input
+                  onChange={(event) => setQuery(event.target.value)}
+                  className="pl-2 w-full "
+                  id="city"
+                  {...register("city", {
+                    required: "Please enter shop name",
+                  })}
+                />
+
+                <Combobox.Options
+                  style={{ zIndex: 999 }}
+                  className="absolute top-[2.2rem]  cursor-pointer text-gray-500 bg-gray-100 md:p-3 p-2.5 w-full rounded  md:max-h-32 max-h-48 border border-gray-300 shadow-md  overflow-y-auto"
+                >
+                  {filteredCities.map((person) => (
+                    <Combobox.Option
+                      key={person}
+                      value={person}
+                      className="p-1"
+                    >
+                      {person}
+                    </Combobox.Option>
+                  ))}
+                  {filteredCities.length <= 0 && (
+                    <Combobox.Option>OOPS! We did not found!</Combobox.Option>
+                  )}
+                </Combobox.Options>
+              </Combobox>
+            </div>
+            {errors.city && (
+              <div className="text-red-500 ">{errors.city.message}</div>
+            )}
+          </div>
+          <div className="mb-4 w-full">
+            <label htmlFor="type">Type</label>
+            <select
+              className="w-full p-1.5"
+              id="type"
+              {...register("type", {
+                required: "Please select a type",
+              })}
+            >
+              <option>Salon</option>
+              <option>Parlour</option>
+            </select>
+            {errors.type && (
+              <div className="text-red-500 ">{errors.type.message}</div>
+            )}
+          </div>
         </div>
+
         <div className="mb-4">
           <label htmlFor="description">Description</label>
           <input
@@ -287,22 +448,7 @@ const ShopDetails = () => {
             <div className="text-red-500 ">{errors.description.message}</div>
           )}
         </div>
-        <div className="mb-4">
-          <label htmlFor="type">Type</label>
-          <select
-            className="w-full"
-            id="description"
-            {...register("type", {
-              required: "Please select a type",
-            })}
-          >
-            <option>Salon</option>
-            <option>Parlour</option>
-          </select>
-          {errors.type && (
-            <div className="text-red-500 ">{errors.type.message}</div>
-          )}
-        </div>
+
         <div className="mb-4" onClick={handleClick}>
           <label htmlFor="address">Exact Address</label>
           <p className="w-full px-5 py-2 bg-green-200 rounded-md cursor-pointer">

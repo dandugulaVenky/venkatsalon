@@ -92,7 +92,7 @@ const Hotel = () => {
         );
 
         if (isBlockedDate) {
-          alert("Owner  not selectable!");
+          alert("Owner is not available!");
           return;
         }
       }
@@ -200,13 +200,13 @@ const Hotel = () => {
         });
 
       let filter = [];
-      res.map((date) => {
+      res.forEach((date) => {
         const answer = date.dates.filter((item) => today === item.date);
         filter.push(answer);
       });
 
       const mergedReady = [];
-      filter.map((item, i) => {
+      filter.forEach((item, i) => {
         const allValues = item.map((date) => {
           return date.values;
         });

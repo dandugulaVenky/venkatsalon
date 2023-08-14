@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import Carousel from "nuka-carousel";
-import banner1 from "../pages/images/banner1.png";
-import banner2 from "../pages/images/banner2.png";
-import banner3 from "../pages/images/banner3.png";
+// import banner1 from "../pages/images/banner1.png";
+// import banner2 from "../pages/images/banner2.png";
+// import banner3 from "../pages/images/banner3.png";
 import banner4 from "../pages/images/banner4.jpg";
 import banner5 from "../pages/images/banner5.jpg";
 import banner6 from "../pages/images/banner6.jpg";
@@ -11,7 +11,11 @@ const CarouselBanner = () => {
   const w = window.innerWidth;
 
   w >= 768
-    ? (images = [banner1, banner2, banner3])
+    ? (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+      ])
     : (images = [banner4, banner5, banner6]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -39,7 +43,7 @@ const CarouselBanner = () => {
         slideIndex={currentSlide}
         renderBottomCenterControls={renderPaginationDots}
         afterSlide={setCurrentSlide}
-        autoplayInterval={3000}
+        autoplayInterval={5000}
       >
         {images.map((banner, i) => {
           return (

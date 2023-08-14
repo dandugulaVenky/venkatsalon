@@ -15,7 +15,6 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
-import MapComponent from "../../components/MapComponent";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -176,14 +175,14 @@ const Home = () => {
       <Seo props={siteMetadata} />
 
       <div className="home-img1 mb-5">
-        <div className=" px-4">{w >= 768 && <Layout />}</div>
-        <div className="md:h-[75vh] h-screen flex  flex-col items-center justify-center ">
+        <div className="">{w >= 768 && <Layout />}</div>
+        <div className="md:min-h-[78vh] min-h-screen flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
               Welcome To Easytym
             </h1>
           </div>
-          <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left py-5">
+          <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left md:py-5 py-3">
             Our company provides convenient and reliable salon booking services,
             connecting customers with top-quality beauty parlours and
             professional ironing services. With our user-friendly platform,
