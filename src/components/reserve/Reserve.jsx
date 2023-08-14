@@ -8,6 +8,8 @@ import { faClock, faClose } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import axios from "axios";
+import { useTranslation } from 'react-i18next';
+
 
 import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
@@ -73,6 +75,7 @@ const Reserve = () => {
 
   const { ownerEmail, ownerNumber } = shopOwnerData;
   const [totalTime, setTotalTime] = useState(0);
+  const { t } = useTranslation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -386,7 +389,7 @@ const Reserve = () => {
   const previewHandler = async (amount, e) => {
     e.preventDefault();
     if (amount < 10) {
-      return alert("Please select atleast an option!");
+      return alert(t('SelectOption'));
     }
 
     //getting end value from optiond and checking wetherr user is booking beyond the time limit given by owner
@@ -417,13 +420,18 @@ const Reserve = () => {
 
       const lunch = check0.map((item) => {
         if (item.isReachedEnd) {
-          alert(
-            `You can only book until ${
-              options[selectedValue + (breakTimeFiltered - selectedValue)].value
-            } because owner has blocked from next ${
-              (breakTimeFiltered - selectedValue) * 10
-            } mins in Seat No.${item.seatNo + 1} `
-          );
+          // alert(
+          //   `You can only book1 until ${
+          //     options[selectedValue + (breakTimeFiltered - selectedValue)].value
+          //   } because owner has blocked from next ${
+          //     (breakTimeFiltered - selectedValue) * 10
+          //   } mins in Seat No.${item.seatNo + 1} `
+          // );
+          alert(t('ownerBlockedTime',
+          {time : options[selectedValue + (breakTimeFiltered - selectedValue)].value,
+          mins :  (breakTimeFiltered - selectedValue) * 10,
+          seatNum : item.seatNo + 1,
+          }))
           return true;
         }
       });
@@ -443,13 +451,22 @@ const Reserve = () => {
     if (check1) {
       const lunch = check1.map((item) => {
         if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
-          alert(
-            `You can only book until ${
-              options[selectedValue + 1].value
-            } because it is lunch time for owner in this shop, so please select only ${
-              (lunchStart - lunchEnd) * 10
-            } mins in Seat No.${item.seatNo + 1} `
-          );
+          let name = "Roopali";
+          let name1 = "Gollagadda"
+          // alert(
+          //   `You can only book2 until ${
+          //     options[selectedValue + 1].value
+          //   } because it is lunch time for owner in this shop, so please select only ${
+          //     (lunchStart - lunchEnd) * 10
+          //   } mins in Seat No.${item.seatNo + 1} `
+          // );
+               alert(
+                 t('ownerLunchTime',  
+                 {time : options[selectedValue + 1].value , 
+                  mins :  (lunchStart - lunchEnd) * 10 ,
+                  seatNum : item.seatNo + 1 
+                } ),
+                 );
           return true;
         } else {
           return false;
@@ -467,13 +484,20 @@ const Reserve = () => {
         if (check) {
           const showEnd = check.map((item) => {
             if (item.isReachedEnd) {
+              // alert(
+              // `You can only book until ${
+              //     options[options.length - 1].value
+              //   }, so please select only ${
+              //     (num1 - num2) * 10
+              //   } mins in Seat No.${item.seatNo + 1} `
+              // )
               alert(
-                `You can only book until ${
-                  options[options.length - 1].value
-                }, so please select only ${
-                  (num1 - num2) * 10
-                } mins in Seat No.${item.seatNo + 1} `
-              );
+                )
+                alert('lessTimeLeft' ,
+                {time : options[options.length - 1].value,
+                  mins :  (num1 - num2) * 10,
+                  seatNum : item.seatNo + 1
+                })
               return true;
             } else {
               return false;
@@ -488,20 +512,27 @@ const Reserve = () => {
               const hours = Math.floor(minutes / 60);
               const remainingMinutes = minutes % 60;
               item1 > 60
-                ? alert(
-                    `Others have a booking at ${
-                      options[selectedValue + item1 / 10].value
-                    }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
-                      item2 + 1
-                    } `
-                  )
-                : alert(
-                    `Others have a booking at ${
-                      options[selectedValue + item1 / 10].value
-                    }. Please choose only a option which is of ${item1} minutes in seat${
-                      item2 + 1
-                    } `
-                  );
+                ? 
+                  alert('reachingOthersTime' ,
+                  {
+                    time: options[selectedValue + item1 / 10].value,
+                    hours : hours ,
+                    mins : remainingMinutes,
+                    seatNum : item2 + 1,
+                  })
+                :
+                //  alert(
+                  //   `Others have a booking at ${
+                  //     options[selectedValue + item1 / 10].value
+                  //   }. Please choose only a option which is of ${item1} minutes in seat${
+                  //     item2 + 1
+                  //   } `
+                  // );
+                  alert('reachingOthersTime1',{
+                    time : options[selectedValue + item1 / 10].value,
+                    mins : item1,
+                    seatNum : item2 + 1,
+                  })
 
               return 0;
             };
@@ -698,10 +729,10 @@ const Reserve = () => {
       ) : (
         <div className="pb-10">
           <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
-            <p className="py-1 text-md text-black font-semibold">Categories</p>
+            <p className="py-1 text-md text-black font-semibold">{t('categories')}</p>
 
             <select className="w-52" onChange={handleChange}>
-              <option selected>Select a category</option>
+              <option selected>{t('selectCategory')}</option>
               {salonServices?.map((service, i) => {
                 return <option key={i}>{service}</option>;
               })}
@@ -720,7 +751,7 @@ const Reserve = () => {
                       !isDisabled && (
                         <div className="card  md:p-5 p-1.5" key={i}>
                           <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
-                            <span>Seat {i + 1}</span>
+                            <span>{t('seat')} {i + 1}</span>
                             <span>&#8377; {seat ? seatValues.amount : 0} </span>
                             <span>
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
@@ -732,19 +763,19 @@ const Reserve = () => {
                               <thead className="border-b bg-gray-300 ">
                                 <tr className="border-b-2 border-gray-200">
                                   <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                    Service Name
+                                    {t('serviceName')}
                                   </th>
                                   <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                    Price
+                                  {t('price')}
                                   </th>
                                   {category === "packages" && (
                                     <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                      show inclusions
+                                      {t('showinclusions')}
                                     </th>
                                   )}
 
                                   <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                    Duration
+                                    {t('duration')}
                                   </th>
                                 </tr>
                               </thead>
@@ -794,12 +825,12 @@ const Reserve = () => {
                                                 handleInclusions(e, option)
                                               }
                                             >
-                                              show inclusions
+                                               {t('showinclusions')}
                                             </label>
                                           </td>
                                         )}
                                         <td className="p-5 text-right md:text-md text-sm">
-                                          {option.duration} min
+                                          {option.duration}  {t('min')}
                                         </td>
                                       </tr>
                                     );
@@ -825,11 +856,11 @@ const Reserve = () => {
                       : ""
                   }`}
                 >
-                  <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
+                  <h2 className="mb-2 text-lg font-bold"> {t('orderSummary')}</h2>
                   <ul>
                     <li>
                       <div className="mb-2 flex justify-between ">
-                        <div>Date</div>
+                        <div> {t('date')}</div>
                         <div className="">
                           {moment(value).format("MMM Do YY")}
                         </div>
@@ -837,13 +868,13 @@ const Reserve = () => {
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div>Time</div>
+                        <div> {t('time')}</div>
                         <div> {options[selectedValue].value}-7:00 PM</div>
                       </div>
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div>Total</div>
+                        <div> {t('total')}</div>
                         <div> &#8377; {totalAmount}</div>
                       </div>
                     </li>
@@ -854,7 +885,7 @@ const Reserve = () => {
                         onClick={(e) => previewHandler(totalAmount, e)}
                         className="primary-button flex items-center justify-center  w-full"
                       >
-                        Preview{" "}
+                         {t('preview')}{" "}
                         {/* {buttonLoad && <span className="buttonloader"></span>} */}
                       </button>
                     </li>
@@ -866,7 +897,7 @@ const Reserve = () => {
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
               <img src={Select} alt="select category" className="h-72" />
               <p className="font-semibold">
-                Please select any category to view services
+              {t('selectCategoryToViewServices')}
               </p>
             </div>
           )}

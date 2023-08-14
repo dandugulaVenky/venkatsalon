@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import i18n from 'i18next';
 import App from "./App";
 
 import { AuthContextProvider } from "./context/AuthContext";
@@ -7,9 +9,30 @@ import { AuthContextProvider } from "./context/AuthContext";
 import { SearchContextProvider } from "./context/SearchContext";
 import { StoreProvider } from "./pages/ironing/ironing-utils/Store";
 
+import teTranslation from '../src/translations/te/translation.json';
+import enTranslation from '../src/translations/en/translation.json';
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// Initialize i18next
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: { translation: enTranslation },
+      te: { translation: teTranslation },
+    },
+    // lng: 'en', // Set the default language
+    lng: 'te', // Set the default language
+    fallbackLng: 'en', // Fallback language in case translation is missing for the selected language
+    interpolation: {
+      escapeValue: false, // React already escapes strings, so no need for extra escaping
+    },
+  });
+
 root.render(
-  <React.StrictMode>
+<I18nextProvider i18n={i18n}>
+<React.StrictMode>
     <AuthContextProvider>
       <SearchContextProvider>
         <StoreProvider>
@@ -18,4 +41,5 @@ root.render(
       </SearchContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
-);
+  </I18nextProvider>
+  );

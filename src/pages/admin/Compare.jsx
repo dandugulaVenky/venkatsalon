@@ -11,9 +11,12 @@ import moment from "moment";
 
 import DatePicker from "react-date-picker";
 import Charts from "../../utils/Charts";
+import { useTranslation } from 'react-i18next';
+
 
 const Compare = () => {
   let w = window.innerWidth;
+  const { t } = useTranslation();
 
   const {
     state: { shopId },
@@ -220,12 +223,12 @@ const Compare = () => {
         style={{ maxWidth: "1140px" }}
       >
         <p className="text-center font-semibold py-10 md:text-xl underline">
-          My Services Analysis
+          {t('myservicesAnalysis')}
         </p>
         <div className="flex md:flex-row flex-col px-5 gap-4 items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="">
-              <p>Start Date:</p>
+              <p>{t('startDate')}:</p>
               <DatePicker
                 onChange={modifiedOnChange}
                 tileClassName={tileClassName}
@@ -235,7 +238,7 @@ const Compare = () => {
             </div>
 
             <div className="">
-              <p>End Date:</p>
+              <p>{t('endDate')}:</p>
               <DatePicker
                 onChange={modifiedOnChange1}
                 tileClassName={tileClassName}
@@ -245,7 +248,7 @@ const Compare = () => {
             </div>
           </div>
           <div className="">
-            <p>Test</p>
+            <p>{t('test')}</p>
             <select
               className="bg-slate-100  px-2.5  h-10 rounded-md md:w-[14.3rem] w-[10.3rem] z-10 border-2 border-black"
               onChange={(e) => {
@@ -256,19 +259,19 @@ const Compare = () => {
               value={months}
             >
               <option selected value={0}>
-                Select month
+                {t('selectMonth')}
               </option>
-              <option value={1}>This month</option>
-              <option value={2}>Last Month</option>
+              <option value={1}>{t('thisMonth')}</option>
+              <option value={2}>{t('lastMonth')}</option>
 
-              <option value={3}>Last Three Months</option>
-              <option value={6}>Last Six Months</option>
+              <option value={3}>{t('lastThreeMonths')}</option>
+              <option value={6}>{t('lastSixMonths')}</option>
             </select>
           </div>
         </div>
 
         <div className="min-w-full overflow-auto py-10">
-          <p className="py-10 text-center font-bold">Category Chart</p>
+          <p className="py-10 text-center font-bold">{t('categoryChart')}</p>
           <Charts
             data={resultInCategoriesCount}
             XAxisDatakey="name"
@@ -277,7 +280,7 @@ const Compare = () => {
           />
         </div>
         <div className="py-10 min-w-full overflow-auto ">
-          <p className="py-10 text-center font-bold">Services Chart</p>
+          <p className="py-10 text-center font-bold">{t('servicesChart')}</p>
           <Charts
             data={resultInServicesCount}
             XAxisDatakey="name"
@@ -286,7 +289,7 @@ const Compare = () => {
           />
         </div>
         <div className="py-10 min-w-full overflow-auto ">
-          <p className="py-10 text-center font-bold">Revenue</p>
+          <p className="py-10 text-center font-bold">{t('revenue')}</p>
           <Charts data={amount} XAxisDatakey="Date" BarDataKey="Amount" />
         </div>
       </div>

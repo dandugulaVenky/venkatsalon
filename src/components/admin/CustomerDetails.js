@@ -8,6 +8,9 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import baseUrl from "../../utils/client";
+import { useTranslation } from 'react-i18next';
+
+
 
 const CustomerDetails = ({ item, setOpenModal }) => {
   const [loading, setLoading] = useState(false);
@@ -29,6 +32,8 @@ const CustomerDetails = ({ item, setOpenModal }) => {
   const { data: shopData } = useFetch(
     `${baseUrl}/api/hotels/find/${item.shopId}`
   );
+
+  const { t } = useTranslation();
 
   function compareTimeDiff(time) {
     let time1 = time;
@@ -292,17 +297,17 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                   <span>
                     {item.referenceNumber && (
                       <span className=" text-[20px] text-white">
-                        Reference No:{item.referenceNumber}
+                        {t('referenceNo')}:{item.referenceNumber}
                       </span>
                     )}
                   </span>
                 </h1>
                 <h1 className=" text-[13px] md:text-[15px] text-white">
                   {" "}
-                  BookedDate : {item.date}
+                  {t('bookedDate')} : {item.date}
                 </h1>
                 <span className="text-[13px] md:text-[15px] text-white">
-                  BookedTime : {item.time}
+                {t('bookedTime')} : {item.time}
                 </span>
                 {/* <span className="text-[13px] md:text-sm">
                   Seat Numbers :{" "}
@@ -341,18 +346,18 @@ const CustomerDetails = ({ item, setOpenModal }) => {
             <div className="flex flex-col space-y-1 ">
               <div>
                 <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
-                  Paid status : {item.isPaid === true ? "paid" : "Not paid"}
+                  {t('paidStatus')} : {item.isPaid === true ? "paid" : "Not paid"}
                 </span>
                 <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
-                  Amount : {item.totalAmount}
+                  {t('amount')} : {item.totalAmount}
                 </span>
               </div>
               <div>
                 <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
-                  {item.email}
+                  {t('email',{email:item.email})}
                 </span>
                 <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
-                  {item.phone}
+                  {t('phone',{phone:item.phone})}
                 </span>
               </div>
             </div>
@@ -378,7 +383,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                       : false
                   }
                 >
-                  {item.isDone === "true" ? "Accepted" : "Mark Done"}
+                  {item.isDone === "true" ? `${t('accepted')}` : `${t('markDone')}`}
                 </button>
                 <button
                   className={
@@ -393,7 +398,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                       : false
                   }
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
               </div>
             )}

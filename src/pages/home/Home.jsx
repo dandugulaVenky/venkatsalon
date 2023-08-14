@@ -6,6 +6,7 @@ import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { toast } from "react-toastify";
 import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
@@ -31,6 +32,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
+  const { t } = useTranslation();
 
   const handleToast = () => {
     toast("Reserved successfully 🎉");
@@ -178,16 +180,11 @@ const Home = () => {
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-              Welcome To Easytym
+              {t('welcome')}
             </h1>
           </div>
           <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left py-5">
-            Our company provides convenient and reliable salon booking services,
-            connecting customers with top-quality beauty parlours and
-            professional ironing services. With our user-friendly platform,
-            customers can easily book appointments at their favourite salons or
-            parlours and schedule an at-home pickup and delivery ironing
-            service, saving your time and hassle.
+            {t('welcomeMessage')}
           </h1>
         </div>
       </div>

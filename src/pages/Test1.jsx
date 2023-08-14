@@ -751,7 +751,7 @@ const Test1 = (props) => {
                       : ""
                   }`}
                 >
-                  <h2 className="mb-2 text-lg font-bold">Order Summary</h2>
+                  <h2 className="mb-2 text-lg font-bold">Order Summaryy</h2>
                   <ul>
                     <li>
                       <div className="mb-2 flex justify-between ">

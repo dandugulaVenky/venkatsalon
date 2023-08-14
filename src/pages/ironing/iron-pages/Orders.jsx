@@ -9,12 +9,14 @@ import baseUrl from "../../../utils/client";
 import { AuthContext } from "../../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment/moment";
+import { useTranslation } from 'react-i18next';
 
 const Orders = () => {
   const { open } = useContext(SearchContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   let w = window.innerWidth;
+  const { t } = useTranslation();
 
   const { data, loading, error } = useFetch(
     `${baseUrl}/api/users/iron/getUserIronOrders/${user?._id}`,
@@ -36,28 +38,28 @@ const Orders = () => {
         </div>
       ) : (
         <div className="min-h-[90vh] md:mx-10 mx-5  ">
-          <p className="py-4 font-bold">My Iron Orders</p>
+          <p className="py-4 font-bold">{t('myIronOrders')}</p>
           <div className="grid grid-cols-1 md:gap-4 md:grid-cols-2 lg:grid-cols-4 pb-20">
             {data?.map((order) => (
               <div className="card  overflow-auto ">
                 <div className="flex flex-col items-start justify-center p-5 ">
                   <Link to={`/iron-orders`}>
                     <h2 className="text-lg text-[#00ccbb]">
-                      Order Id: {order?.orderId}
+                      {t('orderId')}: {order?.orderId}
                     </h2>
                   </Link>
 
-                  <p className="font-bold">Rs.{order?.itemsPrice}</p>
+                  <p className="font-bold">{t('rs')}.{order?.itemsPrice}</p>
                   <p className="font-bold">
-                    Paid: {order?.isPaid ? "Yes" : "No"}
+                    {t('paid')}: {order?.isPaid ? "Yes" : "No"}
                   </p>
                   <p className="font-bold">
-                    Delivered: {order?.isDelivered ? "Yes" : "No"}
+                    {t('delivered')}: {order?.isDelivered ? "Yes" : "No"}
                   </p>
-                  <p>Date: {moment(order?.createdAt).format("MMM Do YYYY")}</p>
+                  <p>{t('date')}: {moment(order?.createdAt).format("MMM Do YYYY")}</p>
                   <Link to={`/iron/order/${order?.orderId}`}>
                     <p className="font-bold text-blue-600">
-                      Click for more details
+                      {t('clickForMoreDetails')}
                     </p>
                   </Link>
                 </div>

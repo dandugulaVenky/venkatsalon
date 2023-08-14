@@ -12,10 +12,15 @@ import {
   faBuilding,
 } from "@fortawesome/free-solid-svg-icons";
 import baseUrl from "../../utils/client";
+import { useTranslation } from "react-i18next";
+
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
   const [data, setData] = useState([]);
+  const { t } = useTranslation();
+
+
 
   useEffect(() => {
     try {
@@ -50,9 +55,10 @@ const Categories = ({ type }) => {
     <div className=" md:mb-0 mb-10 text-black ">
       <div className="flex flex-row justify-between">
         <h1 className="px-4 text-xl font-semibold pb-8">
-          Browse Area Wise{" "}
+          {t('browseAreaWise')}{" "}
           {type1
-            ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
+            // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
+            ? t('browseAreaWiseType',{type1: type1?.charAt(0)?.toUpperCase(), type2:  type1?.slice(1)}) + "s"
             : "loading"}
         </h1>
         <button
@@ -86,12 +92,12 @@ const Categories = ({ type }) => {
                 }}
               />
               <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-                Shadnagar
+                {t('shadnagar')}
               </p>
               <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
-                  {data?.length > 0 ? data[0] : "Loading"} Shops
+                  {data?.length > 0 ? data[0] : "Loading"} {t('shops')}
                 </span>
               </p>
             </div>
@@ -121,12 +127,13 @@ const Categories = ({ type }) => {
                 }}
               />
               <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-                Kothur
+              {t('kothur')}
+
               </p>
               <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
-                  {data?.length > 0 ? data[1] : "Loading"} Shops
+                  {data?.length > 0 ? data[1] : "Loading"} {t('shops')}
                 </span>
               </p>
             </div>
@@ -153,12 +160,12 @@ const Categories = ({ type }) => {
                 }}
               />
               <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-                Thimmapur
+                {t('thimmapur')}
               </p>
               <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
-                  {data?.length > 0 ? data[2] : "Loading"} Shops
+                  {data?.length > 0 ? data[2] : "Loading"} {t('shops')}
                 </span>
               </p>
             </div>
@@ -185,12 +192,12 @@ const Categories = ({ type }) => {
                 }}
               />
               <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
-                Shamshabad
+                {t('shamshabad')}
               </p>
               <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
-                  {data?.length > 0 ? data[3] : "Loading"} Shops
+                  {data?.length > 0 ? data[3] : "Loading"} {t('shops')}
                 </span>
               </p>
             </div>

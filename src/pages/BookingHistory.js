@@ -20,6 +20,7 @@ import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
 import axios from "axios";
 import { useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
@@ -35,6 +36,7 @@ const BookingHistory = () => {
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
+  const { t } = useTranslation();
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     if (error) {
@@ -219,7 +221,7 @@ const BookingHistory = () => {
 
       <div className="h-[85.5vh]">
         <div className="flex items-center justify-between max-w-[90vw] mx-auto py-5">
-          <p className=" md:text-xl text-xs font-semibold">Booking-History</p>
+          <p className=" md:text-xl text-xs font-semibold">{t('bookingHistory')}</p>
 
           <input
             onChange={(e) => setUserInput(e.target.value)}
@@ -228,7 +230,7 @@ const BookingHistory = () => {
             placeholder="Filter by date,time,ref.."
           />
 
-          <p className="md:text-lg text-xs">Count : {filteredArray.length}</p>
+          <p className="md:text-lg text-xs">{t('count')} : {filteredArray.length}</p>
         </div>
         {loading && filteredArray?.length === 0 && (
           <div className="min-h-[75vh] flex items-center justify-center">
@@ -243,33 +245,33 @@ const BookingHistory = () => {
                   <thead className="border-b bg-gray-400 ">
                     <tr className="border-b-2 border-gray-200 ">
                       <th className="text-center md:text-md text-sm md:p-5 py-3">
-                        Reference
+                        {t('reference')}
                       </th>
                       <th className=" md:p-5 px-10 md:text-md text-sm text-right">
-                        Date
+                        {t('date')}
                       </th>
                       <th className="md:p-5 px-10  md:text-md text-sm text-right">
-                        Time
+                      {t('time')}
                       </th>
                       <th className="md:p-5 px-5  md:text-md text-sm text-right">
-                        Amount
+                      {t('amount')}
                       </th>
                       <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                        Shop
+                      {t('shop')}
                       </th>
                       {
                         <th className="md:p-5  px-10 md:text-md text-sm text-right">
-                          Inclusions
+                          {t('inclusions')}
                         </th>
                       }
                       <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                        Payment
+                        {t('payment')}
                       </th>{" "}
                       <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                        Done
+                      {t('done')}
                       </th>
                       <th className="md:p-5 px-5 md:text-md text-sm text-right">
-                        CreatedAt
+                        {t('createdAt')}
                       </th>
                     </tr>
                   </thead>

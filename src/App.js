@@ -39,6 +39,7 @@ import AddServices from "./pages/admin/AddServices";
 import Compare from "./pages/admin/Compare";
 import AllCities from "./pages/AllCities/AllCities";
 import Break from "./pages/admin/Break";
+import Telugu from "./pages/translation/Telugu"
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -172,6 +173,7 @@ function App() {
           path="/iron/iron-payment-success"
           element={<IronPaymentSuccess />}
         />
+        <Route path="/telugu" element={<Telugu />}/>
       </Routes>
     </BrowserRouter>
   );

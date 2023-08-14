@@ -1,5 +1,5 @@
 import "./hotel.css";
-
+import { useTranslation } from 'react-i18next';
 import Footer from "../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -70,6 +70,8 @@ const Hotel = () => {
   const [minutesValues, setMinutesvalues] = useState([]);
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
+  const { t } = useTranslation();
+
 
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
@@ -85,7 +87,8 @@ const Hotel = () => {
       );
       console.log(isBlockedDate);
       if (isBlockedDate) {
-        alert("Owner  not selectable!");
+        // alert("Owner  not selectable!");
+        alert(t('ownerNotSelectable'))
         return null;
       }
     }
@@ -94,7 +97,8 @@ const Hotel = () => {
       setValue(null);
       return;
     } else if (isTuesday(value)) {
-      alert("Tuesdays are not selectable!");
+      // alert("Tuesdays are not selectable!");
+      alert(t('tuesdaysNotSelectable'));
       return;
     } else {
       setValue(value);
@@ -303,13 +307,15 @@ const Hotel = () => {
         isSpecificDate(day1, blockedDate)
       );
       if (isBlockedDate) {
-        alert("Owner is not available");
+        // alert("Owner is not available");
+        alert(t('ownerNotAvailable'))
         return null;
       }
     }
 
     if (isTuesday(value)) {
-      alert("Tuesdays are not selectable!");
+      // alert("Tuesdays are not selectable!");
+      alert(t('tuesdaysNotSelectable'))
       return;
     }
 
@@ -466,7 +472,7 @@ const Hotel = () => {
             >
               <FontAwesomeIcon icon={faScissors} />
               <span className="text-xs md:text-lg font-bold ">
-                Saloon Shops
+                {t('saloonShops')}
               </span>
             </div>
             <div
@@ -478,7 +484,7 @@ const Hotel = () => {
             >
               <FontAwesomeIcon icon={faSpa} />
               <span className="text-xs md:text-lg font-bold">
-                Beauty Parlours
+                {t('beautyParlours')}
               </span>
             </div>
           </div>
@@ -520,7 +526,7 @@ const Hotel = () => {
                             {timeReserve}
                           </p>
                         ) : (
-                          "Select Time"
+                          t('selectTime')
                         )}
                       </span>
                       <svg
@@ -559,7 +565,7 @@ const Hotel = () => {
                               `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
                             )}
                           >
-                            Select Time
+                          { t('selectTime')}
                           </p>
                         )}
                       </Menu.Item>
@@ -644,7 +650,7 @@ const Hotel = () => {
                   className="headerBtn md:p-3 p-2.5 lg:ml-1 jello-horizontal"
                   onClick={handleClick}
                 >
-                  Check Services
+                  {t('checkServices')}
                 </button>
               </div>
             </div>
@@ -690,17 +696,18 @@ const Hotel = () => {
           <div className="hotelWrapper mt-2">
             <div className="md:flex space-y-4 items-center justify-between">
               <div className="hotelWrapper">
-                <h1 className="hotelTitle">{data.name}</h1>
+                <h1 className="hotelTitle">{t('salonName',{name : data.name})}</h1>
                 <div className="hotelAddress">
                   <FontAwesomeIcon icon={faLocationDot} />
                   <span>{data.address}</span>
                 </div>
                 <span className="hotelDistance">
-                  Excellent location – {data.distance}m from center
+                  {/* Excellent location – {data.distance}m from center */}
+                  {t('shopDistance',{distance : data.distance})}
                 </span>
                 <span className="hotelPriceHighlight">
-                  Book over Rs.{data.cheapestPrice} at this shop and get a free
-                  Shaving.
+                  {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
+                  {t('shopAbovePrice',{price :data.cheapestPrice })}
                 </span>
               </div>
               <img
@@ -726,8 +733,8 @@ const Hotel = () => {
                 id="reviews"
                 className="mt-5 space-y-3 p-5 bg-gray-100 shadow-md"
               >
-                <h2 className="font-semibold text-xl mb-3">Customer Reviews</h2>
-                {reviews?.length === 0 && "No Reviews"}
+                <h2 className="font-semibold text-xl mb-3">{t('customerReviews')}</h2>
+                {reviews?.length === 0 && t('/noReviews')}
 
                 {reviews?.map((review, i) => {
                   return (
@@ -736,13 +743,17 @@ const Hotel = () => {
                       key={i}
                     >
                       <div className="space-y-2.5 border-r-2 px-5">
-                        <strong>{review.name}</strong>
-                        <h3>{review.createdAt.substring(0, 10)}</h3>
+                        {/* <strong>{review.name}</strong> */}
+                        <strong>{t('reviewName',{name:review.name})}</strong>
+                        {/* <h3>{review.createdAt.substring(0, 10)}</h3> */}
+                        <h3>{t('reviewCreated',{created:review.createdAt.substring(0, 10)})}</h3>
                       </div>
 
                       <div>
-                        <Rating value={review.rating} readOnly></Rating>
-                        <h3>{review.comment}</h3>
+                        {/* <Rating value={review.rating} readOnly></Rating> */}
+                        <Rating value={t('reviewRating',{rating:review.rating})} readOnly></Rating>
+                        {/* <h3>{review.comment}</h3> */}
+                        <h3>{t('reviewComment',{comment:review.comment})}</h3>
                       </div>
                     </div>
                   );
@@ -753,7 +764,7 @@ const Hotel = () => {
                     onSubmit={reviewHandler}
                     className="text-black  bg-white rounded-md p-3"
                   >
-                    <h1 className="font-semibold ">Please leave a review</h1>
+                    <h1 className="font-semibold ">{t('leaveReview')}</h1>
                     <ListItem>
                       <TextField
                         multiline
@@ -777,16 +788,16 @@ const Hotel = () => {
                       className="primary-button ml-5"
                       disabled={loading}
                     >
-                      Submit
+                      {t('submit')}
                     </button>
                   </form>
                 ) : (
                   <h1 className="font-semibold text-xl">
-                    Please{" "}
+                    {t('please')}{" "}
                     <Link to={`/login?redirect=/shops/${shopIdLocation}`}>
-                      <span className="text-blue-500">login</span>
+                      <span className="text-blue-500">{t('login')}</span>
                     </Link>{" "}
-                    to write a review
+                    {t('toWriteReview')}
                   </h1>
                 )}
               </div>

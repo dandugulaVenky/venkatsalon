@@ -3,11 +3,13 @@ import { useState } from "react";
 import Carousel from "react-grid-carousel";
 import { SearchContext } from "../context/SearchContext";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
   const [active, setActive] = useState(type ? type : "saloon");
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handler = (service) => {
     setActive(service);
     window.scrollTo(0, 1200);
@@ -40,7 +42,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              Saloons
+              {t('saloons')}
             </p>
             <span
               className={`${
@@ -67,7 +69,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              Beauty parlours
+              {t('beautyParlours')}
             </p>
             <span
               className={`${
@@ -94,7 +96,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              Ironing
+              {t('ironing')}
             </p>
             <span
               className={`${
@@ -118,7 +120,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              Dry Cleaning
+              {t('dryCleaning')}
             </p>
           </div>
         </Carousel.Item>

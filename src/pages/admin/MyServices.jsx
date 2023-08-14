@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Footer from "../../components/footer/Footer";
+import { useTranslation } from 'react-i18next';
+
 
 const MyServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -38,6 +40,9 @@ const MyServices = () => {
   const [allServices, setAllServices] = useState([]);
   const [roomId, setRoomId] = useState();
   const [deleted, setDeleted] = useState(false);
+  const { t } = useTranslation();
+
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -306,7 +311,7 @@ const MyServices = () => {
                       ]);
                     }}
                   >
-                    <option value={""}>Select a service</option>
+                    <option value={""}>{t('selectService')}</option>
                     {canAddServices.map((service, i) => {
                       return (
                         <option value={service.service} key={i}>
@@ -320,20 +325,20 @@ const MyServices = () => {
                   <thead className="border-b bg-gray-300 ">
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left md:text-md text-sm md:p-5 p-4">
-                        Service Name
+                        {t('serviceName')}
                       </th>
                       <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                        Price
+                        {t('price')}
                       </th>
                       {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
                                     Category
                                   </th> */}
                       <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                        Duration
+                      {t('duration')}
                       </th>
 
                       <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                        Delete
+                      {t('delete')}
                       </th>
                     </tr>
                   </thead>
@@ -357,7 +362,7 @@ const MyServices = () => {
                                         </td> */}
                           <td className="p-5 text-right md:text-md text-sm">
                             <label className="text-white">
-                              {option.duration} min
+                              {option.duration} {t('min')}
                             </label>
                           </td>
 
@@ -380,7 +385,7 @@ const MyServices = () => {
                   className="primary-button my-4"
                   onClick={handleEditedPackageServicesToBackend}
                 >
-                  Confirm Add Services
+                 {t('confirmAddServices')}
                 </button>
               </>
             ) : (
@@ -390,10 +395,10 @@ const MyServices = () => {
                     className="primary-button my-3"
                     onClick={handleAddOrRemove}
                   >
-                    Add / Remove Service
+                    {t('addRemoveService')}
                   </button>
                   <p className="text-white md:text-md text-xs">
-                    Cost of Services : &#8377;&nbsp;
+                   {t('costOfServices')}: &#8377;&nbsp;
                     {showInclusions?.inclusions.reduce(
                       (acc, service) => acc + service?.price,
                       0
@@ -404,16 +409,16 @@ const MyServices = () => {
                   <thead className="border-b bg-gray-300 ">
                     <tr className="border-b-2 border-gray-200">
                       <th className="text-left md:text-md text-sm md:p-5 p-4">
-                        Service Name
+                        {t('serviceName')}
                       </th>
                       <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                        Price
+                        {t('price')}
                       </th>
                       {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
                                     Category
                                   </th> */}
                       <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                        Duration
+                      {t('duration')}
                       </th>
                     </tr>
                   </thead>
@@ -437,7 +442,7 @@ const MyServices = () => {
                                         </td> */}
                           <td className="p-5 text-right md:text-md text-sm">
                             <label className="text-white">
-                              {option?.duration} min
+                              {option?.duration} {t('min')}
                             </label>
                           </td>
                         </tr>
@@ -452,16 +457,16 @@ const MyServices = () => {
       ) : (
         <div className="pb-20 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
           <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
-            Total Services : {allServices?.length}
+            {t('totalServices')} : {allServices?.length}
           </p>
           <div className="mb-2 py-5 flex items-center justify-start flex-wrap min-w-full">
             <h2 className="text-lg font-bold  text-left text-black ml-2">
               <p className="py-1 text-md text-black font-semibold">
-                Categories
+                {t('categoriess')}
               </p>
 
               <select className="w-52" onChange={handleChange}>
-                <option selected>Select a category</option>
+                <option selected>{t('selectCategory')}</option>
                 {shopServices?.map((service, i) => {
                   return <option key={i}>{service}</option>;
                 })}
@@ -477,27 +482,27 @@ const MyServices = () => {
                     <thead className="border-b bg-gray-300 ">
                       <tr className="border-b-2 border-gray-200">
                         <th className="text-left md:text-md text-sm md:p-5 p-4">
-                          Service Name
+                          {t('serviceName')}
                         </th>
                         <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                          Price
+                          {t('price')}
                         </th>
                         {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
                                   Category
                                 </th> */}
                         <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                          Duration
+                          {t('duration')}
                         </th>
                         {
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                            Inclusions
+                            {t('inclusions')}
                           </th>
                         }
                         <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                          Edit
+                          {t('edit')}
                         </th>{" "}
                         <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                          Delete
+                          {t('delete')}
                         </th>
                       </tr>
                     </thead>
@@ -546,7 +551,7 @@ const MyServices = () => {
                                 />
                               ) : (
                                 <label className="text-gray-900">
-                                  {option.duration} min
+                                  {option.duration} {t('min')}
                                 </label>
                               )}
                             </td>
@@ -557,13 +562,13 @@ const MyServices = () => {
                                     className="text-gray-900 underline cursor-pointer"
                                     onClick={(e) => handleInclusions(e, option)}
                                   >
-                                    show inclusions
+                                    {t('showInclusions')}
                                   </label>
                                 }
                               </td>
                             ) : (
                               <td className="p-5 text-right md:text-md text-sm">
-                                <label>No inclusions</label>
+                                <label>{t('noInclusions')}</label>
                               </td>
                             )}
                             <td className="p-5 text-right md:text-md text-sm">
@@ -654,13 +659,13 @@ const MyServices = () => {
             ) : (
               <div className="grid place-items-center">
                 <p>
-                  No Packages found!
+                  {t('noPackagesFound')}
                   <br />
                   <Link
                     className="underline text-blue-600"
                     to="/admin/add-services"
                   >
-                    Click here to add services
+                    {t('clickToAddServices')}
                   </Link>
                 </p>
               </div>

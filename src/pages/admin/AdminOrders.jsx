@@ -22,6 +22,7 @@ import Footer from "../../components/footer/Footer";
 import CustomerDetails from "../../components/admin/CustomerDetails";
 
 import Charts from "../../utils/Charts";
+import { useTranslation } from 'react-i18next';
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -48,6 +49,7 @@ const AdminOrders = () => {
   const endRef = useRef(null);
 
   const setLoadMore = () => setVisible((prev) => prev + 5);
+  const { t } = useTranslation();
 
   // this is to mark tuesdays in red colors
 
@@ -250,7 +252,7 @@ const AdminOrders = () => {
             }}
             style={itemStyle}
           >
-            All Orders Till Now
+            {t('allOrdersTillNow')}
           </button>
           <button
             className="bg-[#00ccbb]  rounded-md text-white"
@@ -260,7 +262,7 @@ const AdminOrders = () => {
             }}
             style={itemStyle}
           >
-            Future Orders
+            {t('futureOrders')}
           </button>
           <button
             className="bg-green-600  rounded-md text-white"
@@ -269,7 +271,7 @@ const AdminOrders = () => {
             }}
             style={itemStyle}
           >
-            See Statistics
+            {t('seeStatistics')}
           </button>
           <button
             className="bg-green-600  rounded-md text-white"
@@ -278,7 +280,7 @@ const AdminOrders = () => {
             }}
             style={itemStyle}
           >
-            Compare B/w Dates
+            {t('compareB/wDates')}
           </button>
           <input
             onChange={(e) => setUserInput(e.target.value)}
@@ -296,7 +298,7 @@ const AdminOrders = () => {
           />
 
           <p className="md:text-md text-md" style={itemStyle}>
-            Count : {filteredArray.length}
+            {t('count')} : {filteredArray.length}
           </p>
         </div>
 
@@ -316,10 +318,10 @@ const AdminOrders = () => {
                   <div className="flex flex-col md:space-y-2 space-y-1 ">
                     <h1 className=" text-xs md:text-[15px] ">
                       {" "}
-                      BookedDate : {item.date}
+                      {t('bookedDate')} : {item.date}
                     </h1>
                     <span className="text-xs md:text-[15px]">
-                      BookedTime : {item.time}
+                    {t('bookedTime')}  : {item.time}
                     </span>
 
                     <div className="flex space-x-1 ">
@@ -327,7 +329,7 @@ const AdminOrders = () => {
                         {item.username}
                       </span>
                       <span className="text-xs md:text-[15px] siTaxiOp mr-2 ">
-                        Paid status :{" "}
+                        {t('paidStatus')} :{" "}
                         {item.isPaid === true ? "paid" : "Not paid"}
                       </span>
                     </div>
@@ -338,7 +340,7 @@ const AdminOrders = () => {
                       }}
                       className="px-2 py-1 bg-[#5151c0] text-white rounded"
                     >
-                      Open
+                      {t('open')}
                     </button>
                     {item._id === customerDetailsId && openModal && (
                       <CustomerDetails
@@ -351,12 +353,12 @@ const AdminOrders = () => {
                 <div className="flex flex-col space-y-1 ">
                   <div className=" flex space-x-1">
                     <p className="text-xs md:text-[15px] siTaxiOp ">
-                      On :{" "}
+                      {t('on')}:{" "}
                       {moment(item.createdAt).format("MMM Do YY hh:mm:ss A")}
                     </p>
                     {item.referenceNumber && (
                       <p className="text-xs md:text-[15px] siTaxiOp">
-                        Ref: {item.referenceNumber}
+                        {t('ref')}: {item.referenceNumber}
                       </p>
                     )}
                   </div>
@@ -381,7 +383,7 @@ const AdminOrders = () => {
 
         {filteredArray?.length === 0 && (
           <h1 className="flex items-center justify-center  h-[60vh]">
-            No Booking Requests
+            {t('noBookingRequests')}
           </h1>
         )}
 
@@ -409,7 +411,7 @@ const AdminOrders = () => {
         )}
 
         <div className="min-w-full overflow-auto py-10" ref={endRef}>
-          <p className="py-10 text-center font-bold">Category Chart</p>
+          <p className="py-10 text-center font-bold">{t('categoryChart')}</p>
           <Charts
             data={resultInCategoriesCount}
             XAxisDatakey="name"
@@ -418,7 +420,7 @@ const AdminOrders = () => {
           />
         </div>
         <div className="py-10 min-w-full overflow-auto ">
-          <p className="py-10 text-center font-bold">Services Chart</p>
+          <p className="py-10 text-center font-bold">{t('servicesChart')}</p>
           <Charts
             data={resultInServicesCount}
             XAxisDatakey="name"

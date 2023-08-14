@@ -13,12 +13,16 @@ import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
+
+
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setLoading(true);
@@ -86,41 +90,41 @@ const Admin = () => {
             className="card p-5 w-full"
             onClick={() => handleClick("transactions")}
           >
-            <p>Transactions</p>
+            <p>{t('transactions')}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("orders")}
           >
-            <p>View Orders</p>
+            <p>{t('viewOrders')}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("services")}
           >
-            <p>My Services</p>
+            <p>{t('myServices')}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("addServices")}
           >
-            <p>Add Services</p>
+            <p>{t('addServices')}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("packages")}
           >
-            <p>Add Packages</p>
+            <p>{t('addPackages')}</p>
           </div>
           <div className="card p-5 w-full" onClick={() => handleClick("block")}>
-            <p>Take A Break </p>
+            <p>{t('takeBreak')} </p>
           </div>
         </div>
       ) : (
         <div className="min-h-screen flex items-center justify-center px-10">
           <p>
-            You are not an admin, if you want to register your saloon, please
-            <Link to="/contactus">contact us</Link>
+            {t('notAnAdmintoRegisterYourSaloonPlease')}
+            <Link to="/contactus">{t('contactUs')}</Link>
           </p>
         </div>
       )}

@@ -10,11 +10,14 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
 import baseUrl from "../../utils/client";
 import { type } from "@testing-library/user-event/dist/type";
+import { useTranslation } from 'react-i18next';
 const BestSaloons = () => {
   const { type: type1, dispatch, city } = useContext(SearchContext);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [status, setStatus] = useState();
+  const { t } = useTranslation();
+  const isSalon = true;
 
   useEffect(() => {
     setLoading(true);
@@ -53,7 +56,8 @@ const BestSaloons = () => {
     <div className=" md:mb-0  text-black ">
       <h1 className=" px-4 text-xl font-semibold pb-8">
         {type1
-          ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
+          // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
+          ?  t('typeForYou',{type1:type1?.charAt(0)?.toUpperCase() , type2:type1?.slice(1)})
           : "loading"}
       </h1>
       {status === 200 && data?.length > 0 ? (
@@ -80,13 +84,14 @@ const BestSaloons = () => {
                       }}
                     />
                     <p className="absolute bottom-10 left-4 text-white font-bold  text-xl content break-words">
-                      {item.name}
+                      {/* {item.name} */}
+                      {t('salonName',{name:item.name})}
                     </p>
                     <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                      <FontAwesomeIcon icon={faStar} size="lg" />
                       <span className="font-semibold">
                         {Math.ceil(item.rating)}{" "}
                       </span>
+                      <FontAwesomeIcon icon={faStar} size="lg" />
                     </p>
                   </div>
                 </Carousel.Item>

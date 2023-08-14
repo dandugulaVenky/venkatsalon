@@ -225,7 +225,7 @@ export default function PlaceOrder() {
                     ) : buttonLoad ? (
                       <span className="buttonloader"></span>
                     ) : (
-                      "Place Order"
+                      "Place Orderrr"
                     )}
                   </button>
                 </li>
