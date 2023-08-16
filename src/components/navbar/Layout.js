@@ -17,6 +17,7 @@ import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
+
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
     return inputString.substr(0, 30) + "...";
@@ -24,7 +25,11 @@ const shortenString = (inputString) => {
     return inputString;
   }
 };
-const Layout = () => {
+
+const scrollNow = () => {
+  return window.scrollTo(0, 0);
+};
+const Layout = ({ bestRef }) => {
   const { user, dispatch } = useContext(AuthContext);
 
   const { state } = useContext(Store);
@@ -34,7 +39,7 @@ const Layout = () => {
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
-  const [header, setHeader] = useState(false);
+  const [header, setHeader] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,7 +84,7 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const handleLocation = () => {
-    setHeader(!header);
+    setHeader(true);
   };
 
   useEffect(() => {
@@ -96,8 +101,14 @@ const Layout = () => {
           dispatch={dispatch1}
           type={type}
           city={city}
+          header={header}
+          bestRef={bestRef}
         />
-      ) : null}
+      ) : address.length > 0 ? (
+        <Header header={header} />
+      ) : (
+        <Header header={null} />
+      )}
 
       <div className="pb-[6.3rem]">
         <div className="mainHead">
@@ -107,7 +118,7 @@ const Layout = () => {
             }`}
           >
             <div className="flex items-center justify-center">
-              <Link to="/">
+              <Link to="/" onClick={scrollNow}>
                 <img
                   src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
                   alt="logo"

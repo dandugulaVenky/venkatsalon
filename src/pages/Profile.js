@@ -13,6 +13,8 @@ import Sidebar from "../components/navbar/SIdebar";
 import Greeting from "../components/navbar/Greeting";
 import { SearchContext } from "../context/SearchContext";
 import baseUrl from "../utils/client";
+import { useTranslation } from 'react-i18next';
+
 
 export default function Profile() {
   //   const { data: session } = useSession();
@@ -26,6 +28,7 @@ export default function Profile() {
     setValue,
     formState: { errors },
   } = useForm();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setValue("name", user?.username);
@@ -89,10 +92,10 @@ export default function Profile() {
           className="px-10 py-5 card h-auto mt-10"
           onSubmit={handleSubmit(submitHandler)}
         >
-          <h1 className="mb-4 text-2xl font-semibold">Update Profile</h1>
+          <h1 className="mb-4 text-2xl font-semibold">{t('updateProfile')}</h1>
 
           <div className="mb-4">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">{t('name')}</label>
             <input
               type="text"
               className="w-full"
@@ -108,7 +111,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t('emailTitle')}</label>
             <input
               type="email"
               className="w-full"
@@ -127,7 +130,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               className="w-full"
               type="password"
@@ -145,7 +148,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label htmlFor="confirmPassword">{t('confirmPassword')}</label>
             <input
               className="w-full"
               type="password"
@@ -165,11 +168,11 @@ export default function Profile() {
             )}
             {errors.confirmPassword &&
               errors.confirmPassword.type === "validate" && (
-                <div className="text-red-500 ">Password do not match</div>
+                <div className="text-red-500 ">{t('passwordDoNotMatch')}</div>
               )}
           </div>
           <div className="mb-4">
-            <button className="primary-button">Update Profile</button>
+            <button className="primary-button">{t('updateProfile')}</button>
           </div>
         </form>
       </div>

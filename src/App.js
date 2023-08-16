@@ -38,6 +38,9 @@ import MyServices from "./pages/admin/MyServices";
 import AddServices from "./pages/admin/AddServices";
 import Compare from "./pages/admin/Compare";
 import AllCities from "./pages/AllCities/AllCities";
+import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
+import FinalRegistration from "./pages/shopRegistration/FinalRegistration";
+import ShopDetails from "./pages/shopRegistration/ShopDetails";
 import Break from "./pages/admin/Break";
 import Telugu from "./pages/translation/Telugu"
 
@@ -57,6 +60,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         {/* <Route path="/get-started" element={<Home />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/shop-registration" element={<RegistrationForm />} />
+        <Route path="/shop-details" element={<ShopDetails />} />
+        <Route
+          path="/shop-final-registration"
+          element={<FinalRegistration />}
+        />
+
         <Route path="/shops" element={<List />} />
         <Route path="/cities" element={<AllCities />} />
         <Route path="/test" element={<Test />} />
@@ -66,7 +78,6 @@ function App() {
 
         <Route path="/shops/:id/parlour-reserve" element={<Test1 />} />
 
-        <Route path="/login" element={<Login />} />
         <Route
           path="/profile"
           element={
@@ -148,7 +159,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/register" element={<Register />} />
         <Route
           path="/payment-success"
           element={

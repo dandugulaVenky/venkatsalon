@@ -6,11 +6,7 @@ import { SearchContext } from "../../context/SearchContext";
 import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowAltCircleRight,
-  faArrowRight,
-  faBuilding,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import baseUrl from "../../utils/client";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +22,7 @@ const Categories = ({ type }) => {
     try {
       const getCount = async () => {
         const { data } = await axios.get(
-          `${baseUrl}/api/hotels/countByCity?cities=shadnagar,kothur,thimmapur,shamshabad&&type=${type1}`
+          `${baseUrl}/api/hotels/countByCity?cities=shadnagar, telangana 509216, india-kothur, telangana 509228, india-thimmapur, telangana 509325, india-shamshabad, telangana 501218, india&&type=${type1}`
         );
 
         setData(data);
@@ -75,7 +71,7 @@ const Categories = ({ type }) => {
               className="relative  h-52 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
-                handleSearch("shadnagar");
+                handleSearch("shadnagar, telangana 509216, india");
               }}
               style={{ cursor: "pointer" }}
             >
@@ -110,7 +106,7 @@ const Categories = ({ type }) => {
               className="relative  h-52 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
-                handleSearch("kothur");
+                handleSearch("kothur, telangana 509228, india");
               }}
               style={{ cursor: "pointer" }}
             >
@@ -143,7 +139,7 @@ const Categories = ({ type }) => {
               className="relative  h-52 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
-                handleSearch("thimmapur");
+                handleSearch("thimmapur, telangana 509325, india");
               }}
               style={{ cursor: "pointer" }}
             >
@@ -175,7 +171,7 @@ const Categories = ({ type }) => {
               className="relative  h-52 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
-                handleSearch("shamshabad");
+                handleSearch("shamshabad, telangana 501218, india");
               }}
               style={{ cursor: "pointer" }}
             >

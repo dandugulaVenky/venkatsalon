@@ -5,8 +5,7 @@ import Layout from "../../components/navbar/Layout";
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import { useTranslation } from 'react-i18next';
+import { useContext, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
@@ -32,7 +31,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
-  const { t } = useTranslation();
 
   const handleToast = () => {
     toast("Reserved successfully 🎉");
@@ -167,35 +165,43 @@ const Home = () => {
     reference !== undefined && reference !== null && handleToast();
     return () => console.log("my effect is destroying");
   }, []);
+  const endRef = useRef(null);
   let w = window.innerWidth;
 
   return (
     <div className="h-auto">
       {open && <Sidebar />}
-      {w < 768 && <Greeting />}
+      {w < 768 && <Greeting bestRef={endRef} />}
       <Seo props={siteMetadata} />
 
       <div className="home-img1 mb-5">
-        <div className=" px-4">{w >= 768 && <Layout />}</div>
-        <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
+        <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
+        <div className="md:min-h-[78vh] min-h-screen flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-              {t('welcome')}
+              Welcome To Easytym
             </h1>
           </div>
-          <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left py-5">
-            {t('welcomeMessage')}
+          <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left md:py-5 py-3">
+            Our company provides convenient and reliable salon booking services,
+            connecting customers with top-quality beauty parlours and
+            professional ironing services. With our user-friendly platform,
+            customers can easily book appointments at their favourite salons or
+            parlours and schedule an at-home pickup and delivery ironing
+            service, saving your time and hassle.
           </h1>
         </div>
       </div>
       <CarouselBanner />
 
-      <Services />
+      <div ref={endRef}>
+        <Services />
+      </div>
 
       <div className="flex flex-wrap items-center justify-evenly space-y-2">
         <div className=" md:mb-2   flex justify-center items-center ">
           <div className="md:max-w-[1244px] w-full space-y-10 mt-12  ">
-            <div className="">
+            <div>
               <BestSaloons />
             </div>
             <div className="">

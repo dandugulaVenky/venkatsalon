@@ -4,7 +4,7 @@ import {
   faLocation,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useRef } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -15,6 +15,8 @@ import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { ToastContainer } from "react-toastify";
 import "./greeting.scss";
+import "./navbar.scss";
+
 const shortenString = (inputString) => {
   if (inputString.length > 20) {
     return inputString.substr(0, 20) + "..";
@@ -22,9 +24,15 @@ const shortenString = (inputString) => {
     return inputString;
   }
 };
-const Greeting = () => {
+
+const scrollNow = () => {
+  return window.scrollTo(0, 0);
+};
+const Greeting = ({ bestRef }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { pathname } = useLocation();
+  const scrollTimeoutIdRef = useRef(null);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -35,11 +43,14 @@ const Greeting = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    scrollTimeoutIdRef.current = setTimeout(() => {
+      window.addEventListener("scroll", handleScroll);
+    }, 800);
 
-    // Clean up the event listener on component unmount
+    // Clean up the event listener and clear the timeout on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeoutIdRef.current);
     };
   }, []);
 
@@ -80,14 +91,20 @@ const Greeting = () => {
           dispatch={dispatch1}
           type={type}
           city={city}
+          header={header}
+          bestRef={bestRef}
         />
-      ) : null}
+      ) : address.length > 0 ? (
+        <Header header={header} />
+      ) : (
+        <Header header={null} />
+      )}
 
-      <div className="h-20">
-        <div className="greetingHead  ">
+      <div className={`${pathname === "/" ? "h-auto" : "h-20"}`}>
+        <div className="mainHead">
           <div
             className={`flex items-center justify-between px-4 p-2 ${
-              isScrolled ? "greetinghead1" : "greetinghead2"
+              isScrolled ? "head1" : "head2"
             }`}
           >
             <div className="flex items-center justify-center">
@@ -98,6 +115,7 @@ const Greeting = () => {
                   className={`${
                     isScrolled ? "greetingimgs1" : "greetingimgs2"
                   }`}
+                  onClick={scrollNow}
                 />
               </Link>
             </div>
@@ -117,7 +135,7 @@ const Greeting = () => {
             </div>
             {pathname.includes("iron") && (
               <Link to="/iron/cart">
-                <a className=" font-semibold md:text-lg text-xs ">
+                <a className=" font-semibold md:text-lg text-xs " href="###">
                   <FontAwesomeIcon icon={faCartShopping} color="black" />
                   {cartItemsCount > 0 && (
                     <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">

@@ -81,18 +81,6 @@ const Hotel = () => {
   }
 
   const handleChange = (value) => {
-    if (block.length > 0) {
-      const isBlockedDate = block.find((blockedDate) =>
-        isSpecificDate(moment(value).format("MMM Do YY"), blockedDate)
-      );
-      console.log(isBlockedDate);
-      if (isBlockedDate) {
-        // alert("Owner  not selectable!");
-        alert(t('ownerNotSelectable'))
-        return null;
-      }
-    }
-
     if (value === null) {
       setValue(null);
       return;
@@ -101,6 +89,16 @@ const Hotel = () => {
       alert(t('tuesdaysNotSelectable'));
       return;
     } else {
+      if (block.length > 0) {
+        const isBlockedDate = block.find((blockedDate) =>
+          isSpecificDate(moment(value).format("MMM Do YY"), blockedDate)
+        );
+
+        if (isBlockedDate) {
+          alert("Owner is not available!");
+          return;
+        }
+      }
       setValue(value);
     }
   };
@@ -205,13 +203,13 @@ const Hotel = () => {
         });
 
       let filter = [];
-      res.map((date) => {
+      res.forEach((date) => {
         const answer = date.dates.filter((item) => today === item.date);
         filter.push(answer);
       });
 
       const mergedReady = [];
-      filter.map((item, i) => {
+      filter.forEach((item, i) => {
         const allValues = item.map((date) => {
           return date.values;
         });
@@ -556,7 +554,7 @@ const Hotel = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="h-96  overflow-auto absolute z-50 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="h-96  overflow-auto absolute z-10 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       <Menu.Item>
                         {({ active }) => (

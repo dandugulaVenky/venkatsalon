@@ -5,7 +5,6 @@ import React from "react";
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from "react-places-autocomplete";
-
 export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props);
@@ -17,33 +16,49 @@ export default class AutoComplete extends React.Component {
   };
 
   render() {
-    const { setHeader, setAddress, dispatch, type, register } = this.props;
+    const { setHeader, setAddress, dispatch, type, register, bestRef } =
+      this.props;
 
     const handleSelect = (address) => {
       geocodeByAddress(address)
         .then((results) => {
-          setAddress(results[0]?.address_components[0]?.long_name);
-          const city = results[0]?.address_components[0]?.long_name;
+          setAddress(results[0]?.formatted_address.trim().toLowerCase());
+          const city = results[0]?.formatted_address.trim().toLowerCase();
+
           dispatch({
             type: "NEW_SEARCH",
             payload: {
               type: !type ? "saloon" : type,
-              destination: city?.toLowerCase(),
+              destination: city,
             },
           });
         })
 
         .catch((error) => console.error("Error", error));
-      setHeader(false);
+      setTimeout(() => {
+        setHeader(false);
+      }, 350);
+
       if (!register) {
-        setTimeout(() => {
-          window.scrollTo(0, 1200);
-        }, 1000);
+        if (bestRef.current) {
+          setTimeout(() => {
+            bestRef.current.scrollIntoView({ behavior: "smooth" });
+
+            // After the initial scrolling is completed, add more scrolling
+            setTimeout(() => {
+              const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
+              window.scrollBy({
+                top: additionalScrollAmount,
+                behavior: "smooth",
+              });
+            }, 800); // Adjust the delay as needed
+          }, 1000);
+        }
       }
     };
 
     return (
-      <div className="flex items-center justify-center  my-5 overflow-auto">
+      <div className="flex items-center justify-center  my-5 overflow-auto ">
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
@@ -62,6 +77,7 @@ export default class AutoComplete extends React.Component {
                     placeholder: "Search Places ...",
                     className: "location-search-input",
                   })}
+                  autoFocus
                 />
                 <span onClick={() => setHeader(false)} className="cross">
                   <FontAwesomeIcon
@@ -95,7 +111,7 @@ export default class AutoComplete extends React.Component {
                           size="lg"
                           color="#00ccbb"
                         />
-                        <span>{suggestion.description}</span>
+                        <span className="">{suggestion.description}</span>
                       </div>
                     </div>
                   );

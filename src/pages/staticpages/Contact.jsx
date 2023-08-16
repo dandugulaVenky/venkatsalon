@@ -16,6 +16,8 @@ import Greeting from "../../components/navbar/Greeting";
 import { useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
+import { useTranslation } from 'react-i18next';
+
 
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
@@ -63,6 +65,8 @@ export default function Contact() {
     }
   };
   const { open } = useContext(SearchContext);
+  const { t } = useTranslation();
+
 
   let w = window.innerWidth;
   return (
@@ -79,10 +83,10 @@ export default function Contact() {
             className="px-10 py-2.5 card h-auto  "
             onSubmit={handleSubmit(submitHandler)}
           >
-            <h1 className="mb-4 text-2xl font-semibold">Contact Us</h1>
+            <h1 className="mb-4 text-2xl font-semibold">{t('contactUs')}</h1>
 
             <div className="mb-4">
-              <label htmlFor="name">Full Name</label>
+              <label htmlFor="name">{t('fullName')}</label>
               <input
                 type="text"
                 className="w-full"
@@ -102,7 +106,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{t('emailTitle')}</label>
               <input
                 className="w-full"
                 type="email"
@@ -115,7 +119,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="phone">Phone</label>
+              <label htmlFor="phone">{t('phoneTitle')}</label>
               <input
                 type="text"
                 className="w-full"
@@ -134,7 +138,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="message">Message</label>
+              <label htmlFor="message">{t('messageTitle')}</label>
               <textarea
                 type="text"
                 className="w-full"
@@ -153,16 +157,16 @@ export default function Contact() {
             </div>
             <div className="mb-1">
               <button className="primary-button" disabled={loading}>
-                Submit
+                {t('submit')}
               </button>
             </div>
           </form>
           <div className="card h-auto  w-96 p-8 flex items-center justify-center">
             <p>
-              Address : Thimmapur, Rangareddy, H.No: 9-101, Hyderabad 509325 .{" "}
+              {t('aboutAddress')}{" "}
             </p>
-            <p>Call Us : +91 8919788492 </p>
-            <p>Email : rajeshchitikala888@gmail.com</p>
+            <p>{t('callUs')}</p>
+            <p>{t('aboutUsEmail')}</p>
           </div>
         </div>
 

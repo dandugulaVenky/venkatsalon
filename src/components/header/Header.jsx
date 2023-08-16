@@ -17,18 +17,18 @@
 //   const { data, loading, error } = useFetch(`/api/hotels/getDistinctCities`);
 //   let { city, time: time1, type, dispatch } = useContext(SearchContext);
 
-//   const cities = data;
+// const cities = data;
 
-//   const [query, setQuery] = useState("");
+// const [query, setQuery] = useState("");
 
-//   const filteredCities =
-//     query === ""
-//       ? cities
-//       : cities.filter((person) => {
-//           return person.toLowerCase().includes(query.toLowerCase());
-//         });
+// const filteredCities =
+//   query === ""
+//     ? cities
+//     : cities.filter((person) => {
+//         return person.toLowerCase().includes(query.toLowerCase());
+//       });
 
-//   const [destination, setDestination] = useState(city ? city : "");
+// const [destination, setDestination] = useState(city ? city : "");
 
 //   const navigate = useNavigate();
 
@@ -354,30 +354,55 @@
 
 // export default Header;
 
-import React, { useContext } from "react";
+import React, { memo, useMemo } from "react";
 
 import "./header.css";
 import AutoComplete from "../AutoComplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
-const Header = ({ setHeader, setAddress, dispatch, type, city, register }) => {
-  return (
-    <div className="header slide-right z-20">
-      <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
-        <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
-        <span>{city}</span>
-      </p>
+const Header = (props) => {
+  const {
+    setHeader,
+    setAddress,
+    dispatch,
+    type,
+    city,
+    register,
+    header,
+    bestRef,
+  } = useMemo(() => props, [props]);
 
-      <AutoComplete
-        setHeader={setHeader}
-        setAddress={setAddress}
-        dispatch={dispatch}
-        type={type}
-        register={register}
-      />
-    </div>
+  if (header === null) {
+    return;
+  }
+  return (
+    header !== null && (
+      <div
+        className={`header  z-20 ${
+          header === null
+            ? "hidden"
+            : header
+            ? "slide-right-in"
+            : "slide-right-out"
+        }`}
+      >
+        <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
+          <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
+          <span>{city}</span>
+        </p>
+
+        <AutoComplete
+          setHeader={setHeader}
+          setAddress={setAddress}
+          dispatch={dispatch}
+          type={type}
+          register={register}
+          bestRef={bestRef}
+        />
+      </div>
+    )
   );
 };
 
-export default Header;
+export default memo(Header);

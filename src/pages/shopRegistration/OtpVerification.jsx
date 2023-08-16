@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useState } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -6,36 +6,25 @@ import PhoneInput from "react-phone-number-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import "./otp.css";
+import "../registration/otp.css";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-function removeCookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-}
+
 const OtpVerification = (props) => {
-  const {
-    token,
-    verified,
-    setVerified,
-    number,
-    setNumber,
-    storedUser,
-    setCanShowNumber,
-  } = useMemo(() => props, [props]);
+  const { token, verified, setVerified, number, setNumber, storedUser } =
+    useMemo(() => props, [props]);
 
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
 
-  // const [number, setNumber] = useState();
-  let { dispatch } = useContext(AuthContext);
-
   let [disablenow, setDisableNow] = useState();
   const navigate = useNavigate();
+
+  //this should be used in finalRegustration Page
   const saveToken = async (id, token) => {
     try {
       const response = await axios.post(`${baseUrl}/tokens`, {
@@ -65,8 +54,8 @@ const OtpVerification = (props) => {
     if (number.toString().length !== 13 || number === undefined) return;
     try {
       setDisable(true);
-      const response = await setUpRecaptha(number);
-      setResult(response);
+      // const response = await setUpRecaptha(number);
+      // setResult(response);
       setFlag(true);
       setDisable(false);
     } catch (err) {
@@ -88,10 +77,11 @@ const OtpVerification = (props) => {
     setDisable(true);
 
     try {
-      await result.confirm(otp);
+      // await result.confirm(otp);
       setVerified(true);
       storedUser.verified = true;
       storedUser.number = number;
+      storedUser.step = 1;
       function setCookieObject(name1, value, daysToExpire) {
         const expires = new Date();
         expires.setDate(expires.getDate() + daysToExpire);
@@ -103,51 +93,12 @@ const OtpVerification = (props) => {
 
         document.cookie = `${name1}=${cookieValue}; path=/`;
       }
-      setCookieObject("normalUser_info", storedUser, 7);
+      setCookieObject("user_info", storedUser, 7);
       setDisable(false);
+      navigate("/shop-details");
     } catch (err) {
       toast(err.message);
       setDisable(false);
-    }
-  };
-
-  const RegisterNow = async () => {
-    console.log("registernow");
-    const { name, email, password, city } = storedUser;
-
-    try {
-      const res = await axios.post(`${baseUrl}/api/auth/register`, {
-        username: name.trim().toLowerCase(),
-        email: email.trim().toLowerCase(),
-        password: password.trim(),
-
-        city: city.toLowerCase(),
-        phone: number,
-      });
-
-      if (res.status === 200) {
-        dispatch({ type: "LOGIN_START" });
-        try {
-          const res = await axios.post(
-            `${baseUrl}/api/auth/login`,
-            {
-              phone: number,
-              password,
-            },
-            { withCredentials: true }
-          );
-          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-          token !== "" && saveToken(res.data.details._id, token);
-
-          removeCookie("normalUser_info");
-          navigate("/");
-        } catch (err) {
-          dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-        }
-      }
-    } catch (err) {
-      toast.error(err.response.data.message);
-      setCanShowNumber(false);
     }
   };
 
@@ -217,14 +168,6 @@ const OtpVerification = (props) => {
           <FontAwesomeIcon icon={faCheckCircle} size="lg" className="ml-3" />
         </div>
       </div>
-
-      {verified ? (
-        <button className="primary-button" onClick={RegisterNow}>
-          Proceed
-        </button>
-      ) : (
-        ""
-      )}
     </>
   );
 };

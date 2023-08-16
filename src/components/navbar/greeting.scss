@@ -11,24 +11,3 @@
   background-size: cover;
   transition: max-height 0.3s ease;
 }
-
-.greetinghead1 {
-  background-color: white;
-  max-height: 100px;
-  transition: max-height 0.3s ease;
-}
-
-.greetinghead2 {
-  background-color: transparent;
-  max-height: 150px;
-  transition: max-height 0.3s ease;
-}
-
-.greetingHead {
-  height: auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 19;
-}

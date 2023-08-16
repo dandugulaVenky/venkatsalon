@@ -451,8 +451,6 @@ const Reserve = () => {
     if (check1) {
       const lunch = check1.map((item) => {
         if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
-          let name = "Roopali";
-          let name1 = "Gollagadda"
           // alert(
           //   `You can only book2 until ${
           //     options[selectedValue + 1].value
@@ -462,7 +460,7 @@ const Reserve = () => {
           // );
                alert(
                  t('ownerLunchTime',  
-                 {time : options[selectedValue + 1].value , 
+                 {time : options[lunchStart].value , 
                   mins :  (lunchStart - lunchEnd) * 10 ,
                   seatNum : item.seatNo + 1 
                 } ),
