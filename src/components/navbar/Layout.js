@@ -25,7 +25,11 @@ const shortenString = (inputString) => {
     return inputString;
   }
 };
-const Layout = () => {
+
+const scrollNow = () => {
+  return window.scrollTo(0, 0);
+};
+const Layout = ({ bestRef }) => {
   const { user, dispatch } = useContext(AuthContext);
 
   const { state } = useContext(Store);
@@ -98,6 +102,7 @@ const Layout = () => {
           type={type}
           city={city}
           header={header}
+          bestRef={bestRef}
         />
       ) : address.length > 0 ? (
         <Header header={header} />
@@ -113,7 +118,7 @@ const Layout = () => {
             }`}
           >
             <div className="flex items-center justify-center">
-              <Link to="/">
+              <Link to="/" onClick={scrollNow}>
                 <img
                   src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
                   alt="logo"

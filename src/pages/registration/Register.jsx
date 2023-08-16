@@ -145,6 +145,14 @@ const Register = () => {
       {open && <Sidebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
+
+      {pathname.includes("/register") && (
+        <p className="text-lg underline text-blue-600 pb-2 text-center">
+          <Link to="/shop-registration">
+            Are you a barber/beautician? Click Here
+          </Link>
+        </p>
+      )}
       <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 pt-5">
         <img
           src={LoginImage}
@@ -277,14 +285,7 @@ const Register = () => {
               </button>
             </div>
 
-            {pathname.includes("/register") && (
-              <p className="text-xs underline text-blue-600 pb-2">
-                <Link to="/shop-registration">
-                  Are you a barber/beautician? Click Here
-                </Link>
-              </p>
-            )}
-            <p className="text-xs underline text-blue-600">
+            <p className="text-md underline text-blue-600">
               <Link to="/login">Already have an account? Click Here</Link>
             </p>
             {errorContext && <span>{errorContext.message}</span>}

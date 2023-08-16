@@ -141,8 +141,8 @@ export default function Login() {
               Login
             </button>
           </div>
-          <p className="text-xs underline text-blue-600">
-            Don't have an account? <Link to="/register">Click Here</Link>
+          <p className="text-md underline text-blue-600 mt-3">
+            <Link to="/register"> Don't have an account? Click Here</Link>
           </p>
           {errorContext && (
             <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">

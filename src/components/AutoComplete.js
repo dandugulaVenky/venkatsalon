@@ -16,7 +16,8 @@ export default class AutoComplete extends React.Component {
   };
 
   render() {
-    const { setHeader, setAddress, dispatch, type, register } = this.props;
+    const { setHeader, setAddress, dispatch, type, register, bestRef } =
+      this.props;
 
     const handleSelect = (address) => {
       geocodeByAddress(address)
@@ -39,9 +40,20 @@ export default class AutoComplete extends React.Component {
       }, 350);
 
       if (!register) {
-        setTimeout(() => {
-          window.scrollTo(0, 1200);
-        }, 1000);
+        if (bestRef.current) {
+          setTimeout(() => {
+            bestRef.current.scrollIntoView({ behavior: "smooth" });
+
+            // After the initial scrolling is completed, add more scrolling
+            setTimeout(() => {
+              const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
+              window.scrollBy({
+                top: additionalScrollAmount,
+                behavior: "smooth",
+              });
+            }, 800); // Adjust the delay as needed
+          }, 1000);
+        }
       }
     };
 

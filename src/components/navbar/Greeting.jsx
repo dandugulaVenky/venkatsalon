@@ -24,7 +24,11 @@ const shortenString = (inputString) => {
     return inputString;
   }
 };
-const Greeting = () => {
+
+const scrollNow = () => {
+  return window.scrollTo(0, 0);
+};
+const Greeting = ({ bestRef }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { pathname } = useLocation();
   const scrollTimeoutIdRef = useRef(null);
@@ -88,6 +92,7 @@ const Greeting = () => {
           type={type}
           city={city}
           header={header}
+          bestRef={bestRef}
         />
       ) : address.length > 0 ? (
         <Header header={header} />
@@ -110,6 +115,7 @@ const Greeting = () => {
                   className={`${
                     isScrolled ? "greetingimgs1" : "greetingimgs2"
                   }`}
+                  onClick={scrollNow}
                 />
               </Link>
             </div>

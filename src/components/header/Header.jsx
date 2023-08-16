@@ -362,8 +362,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const Header = (props) => {
-  const { setHeader, setAddress, dispatch, type, city, register, header } =
-    useMemo(() => props, [props]);
+  const {
+    setHeader,
+    setAddress,
+    dispatch,
+    type,
+    city,
+    register,
+    header,
+    bestRef,
+  } = useMemo(() => props, [props]);
 
   if (header === null) {
     return;
@@ -390,6 +398,7 @@ const Header = (props) => {
           dispatch={dispatch}
           type={type}
           register={register}
+          bestRef={bestRef}
         />
       </div>
     )
