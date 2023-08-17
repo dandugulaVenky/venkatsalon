@@ -35,6 +35,8 @@ import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 import { Menu, Transition } from "@headlessui/react";
 import Test1 from "../Test1";
+import Login from "../../components/Login1";
+import Login1 from "../../components/Login1";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -51,8 +53,7 @@ const Hotel = () => {
   const [mergedServices, setMergedServices] = useState();
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
-  // const [opacity, setOpacity] = useState(false);
-  // const [openModal, setOpenModal] = useState(false);
+  const [loginUser, setLoginUser] = useState(false);
   const { user } = useContext(AuthContext);
   const { city, date, time } = useContext(SearchContext);
   const [value, setValue] = useState(new Date());
@@ -368,9 +369,10 @@ const Hotel = () => {
         },
       });
     } else {
-      navigate("/login", {
-        state: { destination: `/shops/${shopIdLocation}` },
-      });
+      // navigate("/login", {
+      //   state: { destination: `/shops/${shopIdLocation}` },
+      // });
+      setLoginUser(true);
     }
   };
 
@@ -458,6 +460,9 @@ const Hotel = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
       <CarouselBanner />
+      {loginUser && (
+        <Login1 setLoginUser={setLoginUser} shopId={shopIdLocation} />
+      )}
       <div className="px-4 scrollable-container ">
         <div className="w-full bg-[#00ccbb] rounded-md  p-5 flex items-center justify-center flex-col mt-4 ">
           <div className="flex items-center justify-center space-x-5 pt-5 md:-ml-0 -ml-2.5 text-white ">

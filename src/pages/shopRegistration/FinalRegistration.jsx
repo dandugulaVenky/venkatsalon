@@ -50,47 +50,53 @@ const FinalRegistration = () => {
 
       arrayOfObjects.push(newObj);
     }
-    alert("We will contact you shortly! Thanks for choosing EASYTYM");
+
     function removeCookie(name) {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     }
 
-    // Usage example
-    removeCookie("user_info");
-    navigate("/login");
-    // try {
-    //   const res = await axios.post(`${baseUrl}/api/auth/register`, {
-    //     username: storedUser?.name.trim().toLowerCase(),
-    //     email: storedUser?.email.trim().toLowerCase(),
-    //     password: storedUser?.password.trim(),
+    try {
+      const res = await axios.post(`${baseUrl}/api/auth/register`, {
+        username: storedUser?.name.trim().toLowerCase(),
+        email: storedUser?.email.trim().toLowerCase(),
+        password: storedUser?.password.trim(),
 
-    //     city: storedUser?.address.toLowerCase(),
-    //     phone: storedUser?.number,
-    //   });
+        city: storedUser?.city.toLowerCase(),
+        phone: storedUser?.number,
+      });
 
-    //   const newhotel = {
-    //     ...storedUser.hotelInfo,
-    //     city: storedUser.hotelInfo.city.toLowerCase(),
-    //   };
+      const newhotel = {
+        ...storedUser.hotelInfo,
+        city: storedUser.hotelInfo.city.toLowerCase(),
+      };
 
-    //   const response = await axios.post(`${baseUrl}/api/hotels`, newhotel);
-    //   const hotelId = response.data._id;
-    //   console.log({ newhotel, hotelId });
+      const response = await axios.post(`${baseUrl}/api/hotels`, newhotel);
+      const hotelId = response.data._id;
 
-    //   await axios.post(`${baseUrl}/api/rooms/${hotelId}`, {
-    //     roomNumbers: arrayOfObjects,
-    //     name: storedUser?.hotelInfo?.name,
-    //     shopId: hotelId,
-    //   });
+      await axios.post(`${baseUrl}/api/rooms/${hotelId}`, {
+        roomNumbers: arrayOfObjects,
+        name: storedUser?.hotelInfo?.name,
+        shopId: hotelId,
+      });
 
-    //   console.log("done saving shop");
-    // } catch (err) {
-    //   alert(err.response.data.message);
-    //   console.log(err);
-    // }
+      alert("We will contact you shortly! Thanks for choosing EASYTYM");
+      // Usage example
+      removeCookie("user_info");
+      navigate("/login");
+    } catch (err) {
+      alert(err.response.data.message);
+      if (err.response.status === 409) {
+        navigate("/shop-registration", { state: { goToStep: true } });
+      } else if (err.response.status === 400) {
+        navigate("/shop-registration", {
+          state: { goToStep: true, phoneNumber: true },
+        });
+      }
+      console.log(err);
+    }
 
-    console.log(storedUser);
-    console.log(arrayOfObjects);
+    // console.log(storedUser);
+    // console.log(arrayOfObjects);
   };
 
   useEffect(() => {
