@@ -63,7 +63,7 @@
     "tax":"Tax",
     "placeOrder":"Place Order",
     "forgotSomething":"Forgot Something?",
-    "bookingHistory":"Booking-History",
+    "bookingHistory":"Booking History",
     "count":"Count",
     "reference":"Reference",
     "amount":"Amount",
@@ -181,7 +181,81 @@
     "/contact-us":"/contact-us",
     "fullName":"Full Name",
     "phoneTitle":"Phone",
-    "messageTitle":"Message"
+    "messageTitle":"Message",
+    "/iron":"/iron",
+    "ironingWelcome":"Hi, Welcome To Easytym Ironing🫡",
+    "ironingMessage":"Our company provides convenient and reliable salon booking services,connecting customers with top-quality beauty parlours and professional ironing services. With our user-friendly platform,customers can easily book appointments at their favourite salons or parlours and schedule an at-home pickup and delivery ironing service, saving your time and hassle.",
+    "items":"Items",
+    "addToCart":"Add to cart",
+    "productName":"{{name}}",
+    "/iron/product/slug":"/iron/product/slug",
+    "description":"Description",
+    "productDescription":"This Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis distinctio tempore asperiores, explicabo atque nam perferendis quam sunt dolore vel similique molestiae error totam ab, esse odio. Exercitationem, ab accusamus.",
+    "backToIroning":"🫡",
+    "shoppingCart":"Shopping Cart",
+    "emptyCart":"Cart is empty.",
+    "goAddingItems":" Go adding items",
+    "item":"Item",
+    "quantity":"Quantity",
+    "action":"Action",
+    "checkOut":"Check Out",
+    "goBack":"Go Back",
+    "/iron/shipping":"/iron/shipping",
+    "shippingAddress":"Shipping Address",
+    "exactAddress":"Exact Address",
+    "cityTown":"City/Town",
+    "currentPhoneNumber":"Current Phone Number",
+    "next":"Next",
+    "/iron/place-order":"/iron/place-order",
+    "goShopping":"Go Shopping",
+    "orderItems":"Order Items",
+    "subtotal":"Subtotal",
+    "shipping":"Shipping",
+    "loading":"Loading...",
+    "/login":"/login",
+    "loginTitle":"Login",
+    "dontHaveAccountClickHere":"Don't have an account? Click Here",
+    "/register":"/register",
+    "barber/beauticianClickHere":"Are you a barber/beautician? Click Here",
+    "register":"Register",
+    "username":"Username",
+    "address":"Address",
+    "agreeAllThetermsAndConditions":"I agree, all the terms and conditions and",
+    "haveReadPrivacyAndCancellationPolicy":"I have read privacy policy and cancellation policy",
+    "alreadyHaveAccountClickHere":"Already have an account? Click Here",
+    "/layout":"/layout",
+    "ironHome":"Iron Home",
+    "about":"About",
+    "contact":"Contact",
+    "cart":" Cart",
+    "profile":"Profile",
+    "ironOrders":"Iron Orders",
+    "aAdminDashboard":"Admin Dashboard",
+    "logout":" Logout",
+    "/footer":"/footer",
+    "attapur":"Attapur",
+    "katedan":"Katedan",
+    "aboutUs":"About Us",
+    "privacyPolicy":"Privacy Policy",
+    "termscondi":"Terms & Conditions..",
+    "careers":"Careers",
+    "joinUs":"Join Us"
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

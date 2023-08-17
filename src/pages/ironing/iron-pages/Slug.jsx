@@ -14,6 +14,8 @@ import { SearchContext } from "../../../context/SearchContext";
 import Layout from "../../../components/navbar/Layout";
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import Footer from "../../../components/footer/Footer";
+import { useTranslation } from 'react-i18next';
+
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -75,6 +77,8 @@ export default function Slug() {
   const { open } = useContext(SearchContext);
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
 
   if (!product) {
     return <p>Produt Not Found</p>;
@@ -113,23 +117,19 @@ export default function Slug() {
           <ul className="space-y-1 card p-5">
             <li>
               <h1 className="text-lg">
-                <span className="text-[#00ccbb]">Category:</span> {product.name}
+                <span className="text-[#00ccbb]">{t('category')}:</span> {t('productName',{name:product.name})}
               </h1>
             </li>
 
             <li>
-              <span className="text-[#00ccbb]">Description:</span> This Lorem
-              ipsum dolor sit amet consectetur adipisicing elit. Nobis
-              distinctio tempore asperiores, explicabo atque nam perferendis
-              quam sunt dolore vel similique molestiae error totam ab, esse
-              odio. Exercitationem, ab accusamus.
+              <span className="text-[#00ccbb]">{t('description')}:</span> {t('productDescription')}
             </li>
           </ul>
         </div>
         <div>
           <div className="card p-5">
             <div className="mb-2 flex justify-between">
-              <div>Price</div>
+              <div>{t('price')}</div>
               <div>${product.price}</div>
             </div>
 
@@ -137,10 +137,10 @@ export default function Slug() {
               className="primary-button w-full"
               onClick={addToCartHandler}
             >
-              Add to cart
+             {t('addToCart')}
             </button>
             <div className="default-button text-center  my-2">
-              <Link to="/iron">back to Ironing🫡</Link>
+              <Link to="/iron">{t('backToIroning')}</Link>
             </div>
           </div>
         </div>

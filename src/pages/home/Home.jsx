@@ -15,6 +15,8 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
+import { useTranslation } from 'react-i18next';
+
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -31,6 +33,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
+  const { t } = useTranslation();
+
 
   const handleToast = () => {
     toast("Reserved successfully 🎉");
@@ -168,6 +172,7 @@ const Home = () => {
   const endRef = useRef(null);
   let w = window.innerWidth;
 
+
   return (
     <div className="h-auto">
       {open && <Sidebar />}
@@ -179,21 +184,15 @@ const Home = () => {
         <div className="md:min-h-[78vh] min-h-screen flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-              Welcome To Easytym
+              {t('welcome')}
             </h1>
           </div>
           <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 text-md font-bold md:text-center text-left md:py-5 py-3">
-            Our company provides convenient and reliable salon booking services,
-            connecting customers with top-quality beauty parlours and
-            professional ironing services. With our user-friendly platform,
-            customers can easily book appointments at their favourite salons or
-            parlours and schedule an at-home pickup and delivery ironing
-            service, saving your time and hassle.
+            {t('welcomeMessage')}
           </h1>
         </div>
       </div>
       <CarouselBanner />
-
       <div ref={endRef}>
         <Services />
       </div>

@@ -12,6 +12,8 @@ import Seo from "../../../utils/Seo";
 import Layout from "../../../components/navbar/Layout";
 import Footer from "../../../components/footer/Footer";
 import useEffectOnce from "../../../utils/UseEffectOnce";
+import { useTranslation } from 'react-i18next';
+
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -29,6 +31,8 @@ function Cart() {
   const { state, dispatch } = useContext(Store);
   const { open } = useContext(SearchContext);
   let w = window.innerWidth;
+  const { t } = useTranslation();
+
 
   const {
     cart: { cartItems },
@@ -49,12 +53,12 @@ function Cart() {
       <Seo props={siteMetadata} />
       <div className=" px-4">{w >= 768 && <Layout />}</div>
       <div className="bg-gray-200 h-[100vh] md:px-14 px-5 py-10">
-        <h1 className="mb-4 text-xl">Shopping Cart</h1>
+        <h1 className="mb-4 text-xl">{t('shoppingCart')}</h1>
         {cartItems.length === 0 ? (
           <div className="font-bold py-2">
-            Cart is empty.{" "}
+            {t('emptyCart')}{" "}
             <Link to="/iron" className="primary-button">
-              Go adding items
+             {t('goAddingItems')}
             </Link>
           </div>
         ) : (
@@ -63,10 +67,10 @@ function Cart() {
               <table className="min-w-full ">
                 <thead className="border-b">
                   <tr className=" border-2 border-b-white">
-                    <th className="p-5 text-left">Item</th>
-                    <th className="p-5 text-right">Quantity</th>
-                    <th className="p-5 text-right">Price</th>
-                    <th className="p-5">Action</th>
+                    <th className="p-5 text-left">{t('item')}</th>
+                    <th className="p-5 text-right">{t('quantity')}</th>
+                    <th className="p-5 text-right">{t('price')}</th>
+                    <th className="p-5">{t('action')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -116,7 +120,7 @@ function Cart() {
                 <li>
                   <div className="pb-3 text-xl">
                     Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}) :
-                    Rs.{cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
+                    {t('rs')}.{cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                   </div>
                 </li>
                 <li>
@@ -124,7 +128,7 @@ function Cart() {
                     onClick={() => navigate("/iron/shipping")}
                     className="primary-button w-full"
                   >
-                    Check Out
+                    {t('checkOut')}
                   </button>
                 </li>
                 <li>
@@ -132,7 +136,7 @@ function Cart() {
                     onClick={() => navigate(-1)}
                     className="default-button  border-2 border-red-200 w-full my-2"
                   >
-                    Go Back
+                    {t('goBack')}
                   </button>
                 </li>
               </ul>

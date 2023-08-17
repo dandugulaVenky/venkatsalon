@@ -14,6 +14,8 @@ import Footer from "../../../components/footer/Footer";
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../utils/client";
+import { useTranslation } from 'react-i18next';
+
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -48,6 +50,8 @@ export default function PlaceOrder() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+
 
   const placeOrderHandler = async () => {
     setLoading(true);
@@ -122,37 +126,37 @@ export default function PlaceOrder() {
       <Seo props={siteMetadata} />
       <div className=" px-4">{w >= 768 && <Layout />}</div>
       <CheckoutWizard activeStep={2} />
-      <h1 className="mb-4 text-xl px-10 pt-5">Place Order</h1>
+      <h1 className="mb-4 text-xl px-10 pt-5">{t('placeOrder')}</h1>
       {cartItems.length === 0 ? (
         <div className="px-10 pt-10">
-          Cart is empty.{" "}
+          {t('emptyCart')}{" "}
           <Link to="/iron" className="primary-button ">
-            Go shopping
+            {t('goShopping')}
           </Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
-              <h2 className="mb-2 text-lg">Shipping Address</h2>
+              <h2 className="mb-2 text-lg">{t('shippingAddress')}</h2>
               <div>
                 {shippingAddress.fullName}, {shippingAddress.address},{" "}
                 {shippingAddress.city}
               </div>
               <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
-                <Link to="/iron/shipping">Edit</Link>
+                <Link to="/iron/shipping">{t('edit')}</Link>
               </div>
             </div>
 
             <div className="card overflow-x-auto p-5">
-              <h2 className="mb-2 text-lg">Order Items</h2>
+              <h2 className="mb-2 text-lg">{t('orderItems')}</h2>
               <table className="min-w-full">
                 <thead className="border-b">
                   <tr className="border-b-2 border-white">
-                    <th className="px-5 text-left">Item</th>
-                    <th className="    p-5 text-right">Quantity</th>
-                    <th className="  p-5 text-right">Price</th>
-                    <th className="p-5 text-right">Subtotal</th>
+                    <th className="px-5 text-left">{t('item')}</th>
+                    <th className="    p-5 text-right">{t('quantity')}</th>
+                    <th className="  p-5 text-right">{t('price')}</th>
+                    <th className="p-5 text-right">{t('Subtotal')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -173,45 +177,45 @@ export default function PlaceOrder() {
                         </Link>
                       </td>
                       <td className=" p-5 text-right">{item.quantity}</td>
-                      <td className="p-5 text-right">${item.price}</td>
+                      <td className="p-5 text-right">{t('rs')}.{item.price}</td>
                       <td className="p-5 text-right">
-                        Rs.{item.quantity * item.price}
+                        {t('rs')}.{item.quantity * item.price}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
-                <Link to="/iron/cart">Edit</Link>
+                <Link to="/iron/cart">{t('edit')}</Link>
               </div>
             </div>
           </div>
           <div>
             <div className="card  p-5">
-              <h2 className="mb-2 text-lg">Order Summary</h2>
+              <h2 className="mb-2 text-lg">{t('orderSummary')}</h2>
               <ul>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Items</div>
-                    <div>Rs.{itemsPrice}</div>
+                    <div>{t('items')}</div>
+                    <div>{t('rs')}.{itemsPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Tax</div>
-                    <div>Rs.{taxPrice}</div>
+                    <div>{t('tax')}</div>
+                    <div>{t('rs')}.{taxPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Shipping</div>
-                    <div>Rs.{shippingPrice}</div>
+                    <div>{t('shipping')}</div>
+                    <div>{t('rs')}.{shippingPrice}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Total</div>
-                    <div>Rs.{totalPrice}</div>
+                    <div>{t('total')}</div>
+                    <div>{t('rs')}.{totalPrice}</div>
                   </div>
                 </li>
                 <li>
@@ -221,11 +225,11 @@ export default function PlaceOrder() {
                     className="primary-button w-full"
                   >
                     {loading ? (
-                      "Loading..."
+                      t('loading')
                     ) : buttonLoad ? (
                       <span className="buttonloader"></span>
                     ) : (
-                      "Place Orderrr"
+                      t('placeOrder')
                     )}
                   </button>
                 </li>

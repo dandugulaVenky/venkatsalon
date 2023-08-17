@@ -18,6 +18,8 @@ import Greeting from "../../components/navbar/Greeting";
 import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
 import secureLocalStorage from "react-secure-storage";
+import { useTranslation } from 'react-i18next';
+
 
 export default function Login() {
   const location = useLocation();
@@ -26,6 +28,8 @@ export default function Login() {
   const [password, setPassword] = useState();
 
   const [token, setToken] = useState("");
+  const { t } = useTranslation();
+
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
@@ -112,10 +116,10 @@ export default function Login() {
           className="card"
         ></img>
         <form className="px-10 py-5 card h-auto" onSubmit={handleSubmit1}>
-          <h1 className="mb-4 text-2xl font-semibold">Login</h1>
+          <h1 className="mb-4 text-2xl font-semibold">{t('loginTitle')}</h1>
 
           <div className="mb-4">
-            <label htmlFor="name">Phone</label>
+            <label htmlFor="name">{t('phoneTitle')}</label>
             <PhoneInput
               defaultCountry="IN"
               id="number"
@@ -126,7 +130,7 @@ export default function Login() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">{t('password')}</label>
             <input
               className="w-full"
               type="password"
@@ -138,11 +142,11 @@ export default function Login() {
 
           <div className="mb-1">
             <button className="primary-button" disabled={loading}>
-              Login
+            {t('loginTitle')}
             </button>
           </div>
           <p className="text-md underline text-blue-600 mt-3">
-            <Link to="/register"> Don't have an account? Click Here</Link>
+            <Link to="/register">{t('dontHaveAccountClickHere')}</Link>
           </p>
           {errorContext && (
             <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">

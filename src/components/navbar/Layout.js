@@ -17,6 +17,9 @@ import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
+// import { useLanguage } from "../../context/LanguageContext";
+import { useTranslation } from 'react-i18next';
+
 
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
@@ -43,6 +46,9 @@ const Layout = ({ bestRef }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  // const { updateLng } = useLanguage();  
+  const { t } = useTranslation();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,6 +96,14 @@ const Layout = ({ bestRef }) => {
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
+  
+  // const handleLanguageChange = () => {
+  //   console.log("update");
+  //   updateLng('te'); // Change language to English
+  // };
+  // const handleChange = (event) =>{
+  //   i18n.changeLanguage (event.target.value)
+  // }
 
   return (
     <>
@@ -147,22 +161,32 @@ const Layout = ({ bestRef }) => {
                     pathname.includes("/place-order")) && (
                     <Link to="/iron" className="transition-all delay-300">
                       <h1 className=" font-semibold md:text-lg text-xs">
-                        Iron Home
+                        {t('ironHome')}
                       </h1>
                     </Link>
                   )}
                   <Link to="/about-us">
-                    <h1 className=" font-semibold md:text-lg text-xs">About</h1>
+                    <h1 className=" font-semibold md:text-lg text-xs">{t('about')}</h1>
                   </Link>
                   <Link to="/contact-us">
                     <h1 className=" font-semibold md:text-lg text-xs">
-                      Contact
+                    {t('contact')}
                     </h1>
                   </Link>
+                  {/* <button onClick={handleLanguageChange}>Change Language</button> */}
+                  <div>
+                  <label>Locale Change</label>
+                  <select
+                  //  value={locale} onChange={handleChange}
+                   >
+                  <option value="en">English</option>
+                  <option value="te">Telugu</option>
+                  </select>
+                  </div>
                   {pathname.includes("iron") && (
                     <Link to="/iron/cart">
                       <a className=" font-semibold md:text-lg text-xs">
-                        Cart
+                       {t('cart')}
                         {cartItemsCount > 0 && (
                           <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
                             {cartItemsCount}
@@ -186,24 +210,24 @@ const Layout = ({ bestRef }) => {
                     <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1 mt-2">
-                          <Link to="/profile">Profile</Link>
+                          <Link to="/profile">{t('profile')}</Link>
                         </DropdownLink>
                       </Menu.Item>
 
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1">
-                          <Link to="/history">Booking History</Link>
+                          <Link to="/history">{t('bookingHistory')}</Link>
                         </DropdownLink>
                       </Menu.Item>
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1">
-                          <Link to="/iron-orders">Iron Orders</Link>
+                          <Link to="/iron-orders">{t('ironOrders')}</Link>
                         </DropdownLink>
                       </Menu.Item>
                       {isAdmin && (
                         <Menu.Item>
                           <DropdownLink className="dropdown-link p-1">
-                            <Link to="/admin"> Admin Dashboard</Link>
+                            <Link to="/admin">{t('aAdminDashboard')}</Link>
                           </DropdownLink>
                         </Menu.Item>
                       )}
@@ -216,7 +240,7 @@ const Layout = ({ bestRef }) => {
                             navigate("/login");
                           }}
                         >
-                          Logout
+                         {t('logout')}
                         </Link>
                       </Menu.Item>
                     </Menu.Items>

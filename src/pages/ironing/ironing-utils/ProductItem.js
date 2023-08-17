@@ -2,6 +2,7 @@ import React from "react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
+import { t } from "i18next";
 
 export default function ProductItem({ product, addToCartHandler }) {
   const { user } = useContext(AuthContext);
@@ -26,12 +27,12 @@ export default function ProductItem({ product, addToCartHandler }) {
       </Link>
       <div className="flex flex-col items-center justify-center p-5 space-y-1">
         <Link to={`/iron/product/${product.slug}`}>
-          <h2 className="text-lg">{product.name}</h2>
+          <h2 className="text-lg">{t('productName',{name:product.name})}</h2>
         </Link>
 
-        <p>Rs.{product.price}</p>
+        <p>{t('rs')}.{product.price}</p>
         <button className="primary-button" type="button" onClick={handleCart}>
-          Add to cart
+          {t('addToCart')}
         </button>
       </div>
     </div>

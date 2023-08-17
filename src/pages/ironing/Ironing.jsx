@@ -15,6 +15,8 @@ import ProductItem from "./ironing-utils/ProductItem";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import "./styles.scss";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+
 const siteMetadata = {
   title: "Ironing | Effortless Ironing With Easytym",
   description: "Easytym provides reliable and professional ironing services.",
@@ -31,6 +33,8 @@ export default function Ironing() {
 
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
+  const { t } = useTranslation();
+
 
   const handleToast = () => {
     toast("Ordered successfully 🎉");
@@ -100,22 +104,17 @@ export default function Ironing() {
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-            Hi, Welcome To Easytym Ironing🫡
+            {t('ironingWelcome')}
           </h1>
           <h1 className="text-white md:px-64 px-4 text-md font-bold text-center py-5">
-            Our company provides convenient and reliable salon booking services,
-            connecting customers with top-quality beauty parlours and
-            professional ironing services. With our user-friendly platform,
-            customers can easily book appointments at their favourite salons or
-            parlours and schedule an at-home pickup and delivery ironing
-            service, saving your time and hassle.
+            {t('ironingMessage')}
           </h1>
         </div>
       </div>
       <CarouselBanner />
 
       <div className="px-4 py-14">
-        <h2 className="h2 my-4 text-xl font-semibold">Items</h2>
+        <h2 className="h2 my-4 text-xl font-semibold">{t('items')}</h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
