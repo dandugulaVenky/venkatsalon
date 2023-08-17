@@ -28,7 +28,8 @@ const Reserve = () => {
   const [showInclusions, setShowInclusions] = useState();
   const [category, setCategory] = useState();
 
-  const { state } = useLocation();
+  const location = useLocation();
+  const state = location?.state;
   const {
     shopId,
     shopName,
@@ -39,7 +40,7 @@ const Reserve = () => {
     options,
     mergedServices,
     breakTime,
-  } = useMemo(() => state, [state]);
+  } = state !== null && state;
 
   let w = window.innerWidth;
 

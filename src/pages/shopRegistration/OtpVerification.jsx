@@ -10,8 +10,18 @@ import "../registration/otp.css";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+function setCookieObject(name1, value, daysToExpire) {
+  const expires = new Date();
+  expires.setDate(expires.getDate() + daysToExpire);
 
+  // Serialize the object to JSON and encode it
+  const cookieValue =
+    encodeURIComponent(JSON.stringify(value)) +
+    (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+  document.cookie = `${name1}=${cookieValue}; path=/`;
+}
 const OtpVerification = (props) => {
   const { token, verified, setVerified, number, setNumber, storedUser } =
     useMemo(() => props, [props]);
@@ -20,6 +30,9 @@ const OtpVerification = (props) => {
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
+  const location = useLocation();
+
+  const { state } = location;
 
   let [disablenow, setDisableNow] = useState();
   const navigate = useNavigate();
@@ -78,21 +91,19 @@ const OtpVerification = (props) => {
 
     try {
       // await result.confirm(otp);
+
+      if (state?.phoneNumber) {
+        storedUser.verified = true;
+        storedUser.number = number;
+        setCookieObject("user_info", storedUser, 7);
+        return navigate("/shop-final-registration");
+      }
+
       setVerified(true);
       storedUser.verified = true;
       storedUser.number = number;
       storedUser.step = 1;
-      function setCookieObject(name1, value, daysToExpire) {
-        const expires = new Date();
-        expires.setDate(expires.getDate() + daysToExpire);
 
-        // Serialize the object to JSON and encode it
-        const cookieValue =
-          encodeURIComponent(JSON.stringify(value)) +
-          (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
-        document.cookie = `${name1}=${cookieValue}; path=/`;
-      }
       setCookieObject("user_info", storedUser, 7);
       setDisable(false);
       navigate("/shop-details");

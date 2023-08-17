@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -49,6 +49,9 @@ const RegistrationForm = () => {
   const [storedUser, setStoredUser] = useState();
   const [askOwner, setAskOwner] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { state } = location;
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
@@ -71,9 +74,13 @@ const RegistrationForm = () => {
     requestPermission();
     const storedUser = getCookieObject("user_info");
     // const storedUser1 = getCookieObject("ownerUser_info");
-    console.log(storedUser);
 
     if (storedUser) {
+      setValue("name", storedUser?.name);
+      setValue("email", storedUser?.email);
+      setValue("password", storedUser?.password);
+      setValue("city", storedUser?.city);
+      setAddress(storedUser?.city);
       setStoredUser(storedUser);
       if (storedUser.step === 1) {
         setAskOwner(true);
@@ -130,6 +137,27 @@ const RegistrationForm = () => {
       return toast("Please accept terms and conditions to continue!");
     }
 
+    if (state?.goToStep && !state?.phoneNumber) {
+      storedUser.name = name;
+      storedUser.email = email;
+      storedUser.city = address;
+      storedUser.password = password;
+
+      function setCookieObject(name1, value, daysToExpire) {
+        const expires = new Date();
+        expires.setDate(expires.getDate() + daysToExpire);
+
+        // Serialize the object to JSON and encode it
+        const cookieValue =
+          encodeURIComponent(JSON.stringify(value)) +
+          (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+        document.cookie = `${name1}=${cookieValue}; path=/`;
+      }
+      setCookieObject("user_info", storedUser, 7);
+      return navigate("/shop-final-registration");
+    }
+
     const normalUserData = {
       name,
       city: address,
@@ -177,9 +205,9 @@ const RegistrationForm = () => {
           className="card"
         ></img>
 
-        {!askOwner ? (
+        {!askOwner || state?.goToStep ? (
           <>
-            {canShowNumber ? (
+            {canShowNumber || state?.phoneNumber ? (
               <div className="md:px-10 px-5 pt-10 card text-sm ">
                 <OtpVerification
                   token={token}
@@ -278,7 +306,7 @@ const RegistrationForm = () => {
                     id="city"
                     placeholder={"enter city name."}
                     readOnly
-                    value={address}
+                    value={storedUser?.city || address}
                   />
                 </div>
 
@@ -343,7 +371,7 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default memo(RegistrationForm);
 // try {
 //   const res = await axios.post(`${baseUrl}/api/auth/register`, {
 //     username: name.trim().toLowerCase(),

@@ -42,10 +42,12 @@ const Register = () => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
   const [verified, setVerified] = useState(false);
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { shopId } = location?.state !== null && location?.state;
+  console.log(shopId);
   const [canShowNumber, setCanShowNumber] = useState();
   const [storedUser, setStoredUser] = useState();
-
+  const navigate = useNavigate();
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
@@ -146,7 +148,7 @@ const Register = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
 
-      {pathname.includes("/register") && (
+      {location?.pathname?.includes("/register") && (
         <p className="text-lg underline text-blue-600 pb-2 text-center">
           <Link to="/shop-registration">
             Are you a barber/beautician? Click Here
@@ -286,7 +288,15 @@ const Register = () => {
             </div>
 
             <p className="text-md underline text-blue-600">
-              <Link to="/login">Already have an account? Click Here</Link>
+              <button
+                onClick={() => {
+                  navigate("/login", {
+                    state: { destination: `/shops/${shopId}` },
+                  });
+                }}
+              >
+                Already have an account? Click Here
+              </button>
             </p>
             {errorContext && <span>{errorContext.message}</span>}
           </form>

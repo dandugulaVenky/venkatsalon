@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { memo, useContext, useMemo } from "react";
 import { useState } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -42,7 +42,6 @@ const OtpVerification = (props) => {
         userId: id,
         token,
       });
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -112,7 +111,6 @@ const OtpVerification = (props) => {
   };
 
   const RegisterNow = async () => {
-    console.log("registernow");
     const { name, email, password, city } = storedUser;
 
     try {
@@ -229,4 +227,4 @@ const OtpVerification = (props) => {
   );
 };
 
-export default OtpVerification;
+export default memo(OtpVerification);
