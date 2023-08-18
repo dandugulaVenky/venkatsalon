@@ -19,6 +19,8 @@ import baseUrl from "../../utils/client";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 // import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from 'react-i18next';
+import LanguageContext from "../../context/LanguageContext";
+import i18next from '../../i18n';
 
 
 const shortenString = (inputString) => {
@@ -46,8 +48,12 @@ const Layout = ({ bestRef }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  // const { updateLng } = useLanguage();  
   const { t } = useTranslation();
+  const {locale,setLocale}=useContext(LanguageContext);
+    i18next.on('languageChanged', (ing) => setLocale(i18next.language));
+    const handleChange = (event)=>{
+          i18next.changeLanguage (event.target.value);//fr or
+          }
 
 
   useEffect(() => {
@@ -175,9 +181,9 @@ const Layout = ({ bestRef }) => {
                   </Link>
                   {/* <button onClick={handleLanguageChange}>Change Language</button> */}
                   <div>
-                  <label>Locale Change</label>
+                  <label>Select Language</label>
                   <select
-                  //  value={locale} onChange={handleChange}
+                   value={locale} onChange={handleChange}
                    >
                   <option value="en">English</option>
                   <option value="te">Telugu</option>

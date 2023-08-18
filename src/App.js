@@ -42,7 +42,10 @@ import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
 import FinalRegistration from "./pages/shopRegistration/FinalRegistration";
 import ShopDetails from "./pages/shopRegistration/ShopDetails";
 import Break from "./pages/admin/Break";
-import Telugu from "./pages/translation/Telugu"
+import Telugu from "./pages/translation/Telugu";
+import i18next from "./i18n";
+import LanguageContext from './context/LanguageContext';
+import { useState } from "react";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -54,8 +57,11 @@ function App() {
 
     return children;
   };
+  const [locale, setLocale] = useState(i18next.language); 
 
   return (
+    <>
+    <LanguageContext.Provider value={{locale, setLocale}}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -186,6 +192,8 @@ function App() {
         <Route path="/telugu" element={<Telugu />}/>
       </Routes>
     </BrowserRouter>
+        </LanguageContext.Provider>
+    </>
   );
 }
 
