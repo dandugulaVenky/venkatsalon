@@ -512,11 +512,7 @@ const Hotel = () => {
               <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() =>
-                      w > 820
-                        ? window.scrollTo(0, 200)
-                        : window.scrollTo(0, 100)
-                    }
+                    onClick={() => window.scrollTo(0, 200)}
                     className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
