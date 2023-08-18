@@ -60,10 +60,11 @@
 @media screen and (max-width: 767px) {
   .home-img1 {
     background-image: url("../images/main.webp");
-    height: 45vh;
+    height: 60%;
   }
   .text-container {
-    height: 8vh;
+    height: 5vh;
+    margin-top: 17%;
   }
   .text-container h1 {
     font-size: 35px;
