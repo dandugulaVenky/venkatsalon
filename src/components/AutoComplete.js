@@ -43,7 +43,7 @@ export default class AutoComplete extends React.Component {
 
       setTimeout(() => {
         setHeader(false);
-      }, 200);
+      }, 350);
 
       if (!register) {
         if (bestRef.current) {
@@ -52,18 +52,18 @@ export default class AutoComplete extends React.Component {
 
             // After the initial scrolling is completed, add more scrolling
             setTimeout(() => {
-              // const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
-              // window.scrollBy({
-              //   top: additionalScrollAmount,
-              //   behavior: "smooth",
-              // });
+              const additionalScrollAmount = -200; // Adjust this value to determine how many additional pixels you want to scroll
+              window.scrollBy({
+                top: additionalScrollAmount,
+                behavior: "smooth",
+              });
               if (this.inputRef.current) {
                 this.inputRef.current.blur();
               }
-            }, 1500);
+            }, 1000);
 
             // Adjust the delay as needed
-          }, 1000);
+          }, 800);
         }
       }
     };
