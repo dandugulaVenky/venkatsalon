@@ -349,7 +349,7 @@ const BookingHistory = () => {
               </table>
             </div>
             {filteredArray?.length >= 10 && (
-              <div className="min-w-[90vw] py-4  grid place-items-center">
+              <div className="min-w-[90vw] py-4  grid place-items-center pb-10">
                 {visible >= filteredArray.length ? (
                   <button
                     className="primary-button"

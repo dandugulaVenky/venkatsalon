@@ -6,10 +6,7 @@ import womensOffer from "../pages/images/BP.png";
 import "./styles.scss";
 const Offers = () => {
   return (
-    <div
-      className=" px-1 md:mb-0  text-black "
-      style={{ marginBottom: "2.5rem" }}
-    >
+    <div className=" px-1   text-black md:mb-[2.5rem] mb-20">
       <h1 className="px-4 text-xl font-semibold pb-4">Offers</h1>
       <Carousel cols={3} rows={1} gap={10} loop aubottomlay={8000}>
         <Carousel.Item>

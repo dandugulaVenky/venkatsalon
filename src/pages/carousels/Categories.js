@@ -43,7 +43,7 @@ const Categories = ({ type }) => {
     navigate("/cities");
   };
   return (
-    <div className=" md:mb-0 mb-10 text-black ">
+    <div className=" md:mb-0 mb-8 text-black ">
       <div className="flex flex-row justify-between">
         <h1 className="px-4 text-xl font-semibold pb-4">
           Browse Area Wise{" "}

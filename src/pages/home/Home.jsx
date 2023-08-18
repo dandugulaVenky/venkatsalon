@@ -202,11 +202,8 @@ const Home = () => {
         <Services />
       </div>
 
-      <div className="flex flex-wrap items-center justify-evenly space-y-1">
-        <div
-          className="   flex justify-center items-center "
-          style={{ marginBottom: "2.5rem" }}
-        >
+      <div className="flex flex-wrap items-center justify-evenly ">
+        <div className="   flex justify-center items-center md:mb-[2.5rem]">
           <div className="md:max-w-[1244px] w-full space-y-8  ">
             <div>
               <BestSaloons />
