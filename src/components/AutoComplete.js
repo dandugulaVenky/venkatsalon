@@ -55,10 +55,10 @@ export default class AutoComplete extends React.Component {
           //   //   });
           //   // }, 800); // Adjust the delay as needed
           // }, 1000);
+          bestRef.current.scrollIntoView({ behavior: "smooth" });
           if (this.inputRef.current) {
             this.inputRef.current.blur();
           }
-          bestRef.current.scrollIntoView({ behavior: "smooth" });
         }
       }
     };
