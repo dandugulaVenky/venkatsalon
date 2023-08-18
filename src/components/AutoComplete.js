@@ -37,9 +37,16 @@ export default class AutoComplete extends React.Component {
 
         .catch((error) => console.error("Error", error));
 
-      setTimeout(() => {
-        setHeader(false);
-      }, 350);
+      // setTimeout(() => {
+      //   setHeader(false);
+      //   if (this.inputRef.current) {
+      //     this.inputRef.current.blur();
+      //   }
+      // }, 350);
+      setHeader(false);
+      if (this.inputRef.current) {
+        this.inputRef.current.blur();
+      }
 
       if (!register) {
         if (bestRef.current) {
@@ -56,9 +63,6 @@ export default class AutoComplete extends React.Component {
           //   // }, 800); // Adjust the delay as needed
           // }, 1000);
           bestRef.current.scrollIntoView({ behavior: "smooth" });
-          if (this.inputRef.current) {
-            this.inputRef.current.blur();
-          }
         }
       }
     };
