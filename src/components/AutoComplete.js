@@ -9,6 +9,7 @@ export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = { address: "" };
+    this.inputRef = React.createRef();
   }
 
   handleChange = (address) => {
@@ -35,6 +36,9 @@ export default class AutoComplete extends React.Component {
         })
 
         .catch((error) => console.error("Error", error));
+      if (this.inputRef.current) {
+        this.inputRef.current.blur();
+      }
       setTimeout(() => {
         setHeader(false);
       }, 350);
@@ -76,6 +80,7 @@ export default class AutoComplete extends React.Component {
                   {...getInputProps({
                     placeholder: "Search Places ...",
                     className: "location-search-input",
+                    ref: this.inputRef, // Assign the ref to the input element
                   })}
                   autoFocus
                 />
