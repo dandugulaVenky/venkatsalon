@@ -15,7 +15,7 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
-
+import VideoBackground from "../../components/VideoBackground";
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
   description:
@@ -27,7 +27,8 @@ const Home = () => {
   const { open, city, dispatch } = useContext(SearchContext);
 
   const location = useLocation();
-
+  const videoUrl =
+    "https://res.cloudinary.com/dqupmzcrb/video/upload/v1692353902/An_on_time_services_platform_is0qps.mp4";
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
@@ -192,15 +193,21 @@ const Home = () => {
           </h1>
         </div>
       </div>
+      {/* <div>
+        <VideoBackground videoUrl={videoUrl} />
+      </div> */}
       <CarouselBanner />
 
       <div ref={endRef}>
         <Services />
       </div>
 
-      <div className="flex flex-wrap items-center justify-evenly space-y-2">
-        <div className=" md:mb-2   flex justify-center items-center ">
-          <div className="md:max-w-[1244px] w-full space-y-10 mt-12  ">
+      <div className="flex flex-wrap items-center justify-evenly space-y-1">
+        <div
+          className="   flex justify-center items-center "
+          style={{ marginBottom: "2.5rem" }}
+        >
+          <div className="md:max-w-[1244px] w-full space-y-8  ">
             <div>
               <BestSaloons />
             </div>
@@ -209,7 +216,6 @@ const Home = () => {
             </div>
           </div>
         </div>
-
         <Offers />
       </div>
 

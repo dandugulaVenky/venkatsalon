@@ -51,7 +51,7 @@ const BestSaloons = () => {
 
   return (
     <div className=" md:mb-0  text-black ">
-      <h1 className=" px-4 text-xl font-semibold pb-8">
+      <h1 className=" px-4 text-xl font-semibold pb-4">
         {type1
           ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
           : "loading"}

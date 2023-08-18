@@ -42,13 +42,15 @@ import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
 import FinalRegistration from "./pages/shopRegistration/FinalRegistration";
 import ShopDetails from "./pages/shopRegistration/ShopDetails";
 import Break from "./pages/admin/Break";
+import Login1 from "./components/Login1";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
     if (!user) {
-      return <Navigate to="/login" />;
+      // return <Navigate to="/login" />;
+      return <Login1 />;
     }
 
     return children;

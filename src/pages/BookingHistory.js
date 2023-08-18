@@ -8,7 +8,11 @@ import useFetch from "../hooks/useFetch";
 import { AuthContext } from "../context/AuthContext";
 
 import { toast } from "react-toastify";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleArrowDown,
+  faCircleArrowUp,
+  faClose,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/navbar/Layout";
@@ -28,7 +32,7 @@ const BookingHistory = () => {
   const [shopId, setShopId] = useState(user?.shopId);
   const [userInput, setUserInput] = useState("");
 
-  const [visible, setVisible] = useState(5);
+  const [visible, setVisible] = useState(10);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
   const { data, loading, error } = useFetch(
@@ -62,15 +66,15 @@ const BookingHistory = () => {
     navigate("/login", { state: { destination: `/history` } });
   }
 
-  // const setLoadMore = () => setVisible((prev) => prev + 5);
+  const setLoadMore = () => setVisible((prev) => prev + 10);
 
-  // useEffect(() => {
-  //   if (userInput) {
-  //     return setVisible(5);
-  //   }
+  useEffect(() => {
+    if (userInput) {
+      return setVisible(10);
+    }
 
-  //   // console.log(userInput);
-  // }, [userInput]);
+    // console.log(userInput);
+  }, [userInput]);
 
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -217,8 +221,8 @@ const BookingHistory = () => {
       </div> */}
       {showServices !== null && <GetPushed />}
 
-      <div className="h-[85.5vh]">
-        <div className="flex items-center justify-between max-w-[90vw] mx-auto py-5">
+      <div className="min-h-[85.5vh] max-w-[90vw] mx-auto">
+        <div className="flex items-center justify-between  py-5">
           <p className=" md:text-xl text-xs font-semibold">Booking-History</p>
 
           <input
@@ -235,117 +239,133 @@ const BookingHistory = () => {
             <span className="loader"></span>
           </div>
         )}
+
         {filteredArray?.length > 0 ? (
-          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 min-h-screen">
-            <>
-              <div className="overflow-x-auto  col-span-5">
-                <table className="min-w-full ">
-                  <thead className="border-b bg-gray-400 ">
-                    <tr className="border-b-2 border-gray-200 ">
-                      <th className="text-center md:text-md text-sm md:p-5 py-3">
-                        Reference
+          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 ">
+            <div className="overflow-x-auto  col-span-5 ">
+              <table className="min-w-full ">
+                <thead className="border-b bg-gray-400 ">
+                  <tr className="border-b-2 border-gray-200 ">
+                    <th className="text-center md:text-md text-sm md:p-5 py-3">
+                      Reference
+                    </th>
+                    <th className=" md:p-5 px-10 md:text-md text-sm text-right">
+                      Date
+                    </th>
+                    <th className="md:p-5 px-10  md:text-md text-sm text-right">
+                      Time
+                    </th>
+                    <th className="md:p-5 px-5  md:text-md text-sm text-right">
+                      Amount
+                    </th>
+                    <th className="md:p-5  px-10  md:text-md text-sm text-right">
+                      Shop
+                    </th>
+                    {
+                      <th className="md:p-5  px-10 md:text-md text-sm text-right">
+                        Inclusions
                       </th>
-                      <th className=" md:p-5 px-10 md:text-md text-sm text-right">
-                        Date
-                      </th>
-                      <th className="md:p-5 px-10  md:text-md text-sm text-right">
-                        Time
-                      </th>
-                      <th className="md:p-5 px-5  md:text-md text-sm text-right">
-                        Amount
-                      </th>
-                      <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                        Shop
-                      </th>
-                      {
-                        <th className="md:p-5  px-10 md:text-md text-sm text-right">
-                          Inclusions
-                        </th>
-                      }
-                      <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                        Payment
-                      </th>{" "}
-                      <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                        Done
-                      </th>
-                      <th className="md:p-5 px-5 md:text-md text-sm text-right">
-                        CreatedAt
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredArray?.slice(0, visible)?.map((item, j) => {
-                      return (
-                        <tr key={j} className="border-b-2 border-white">
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label className="text-gray-900 w-full">
-                              {item.referenceNumber}{" "}
-                            </label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label className="text-gray-900 w-full">
-                              {item.date}
-                            </label>
-                          </td>
+                    }
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Payment
+                    </th>{" "}
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Done
+                    </th>
+                    <th className="md:p-5 px-5 md:text-md text-sm text-right">
+                      CreatedAt
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredArray?.slice(0, visible)?.map((item, j) => {
+                    // {filteredArray?.map((item, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-white">
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.referenceNumber}{" "}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.date}
+                          </label>
+                        </td>
 
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label className="text-gray-900">{item.time}</label>
-                          </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900">{item.time}</label>
+                        </td>
 
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label>
-                              <label>&#8377; {item.totalAmount}</label>
-                            </label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label>{item.shop}</label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm underline cursor-pointer">
-                            <label
-                              onClick={() => {
-                                setShowServices(item);
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            <label>&#8377; {item.totalAmount}</label>
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>{item.shop}</label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm underline cursor-pointer">
+                          <label
+                            onClick={() => {
+                              setShowServices(item);
 
-                                setShopId(item.shopId);
-                              }}
-                              className="cursor-pointer"
-                            >
-                              Show Services
-                            </label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label>
-                              {item.isPaid === true ? "paid" : "Not paid"}
-                            </label>
-                          </td>
+                              setShopId(item.shopId);
+                            }}
+                            className="cursor-pointer"
+                          >
+                            Show Services
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {item.isPaid === true ? "paid" : "Not paid"}
+                          </label>
+                        </td>
 
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label>
-                              {" "}
-                              {item.isDone === "false" ? (
-                                <span className="text-red-500">
-                                  Not Yet Done
-                                </span>
-                              ) : item.isDone === "cancelled" ? (
-                                <span className="text-red-500">Cancelled</span>
-                              ) : (
-                                <span className="text-green-500"> Done</span>
-                              )}
-                            </label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label>
-                              {moment(item.createdAt).format(
-                                "MMM Do YY hh:mm:ss A"
-                              )}
-                            </label>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {" "}
+                            {item.isDone === "false" ? (
+                              <span className="text-red-500">Not Yet Done</span>
+                            ) : item.isDone === "cancelled" ? (
+                              <span className="text-red-500">Cancelled</span>
+                            ) : (
+                              <span className="text-green-500"> Done</span>
+                            )}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {moment(item.createdAt).format(
+                              "MMM Do YY hh:mm:ss A"
+                            )}
+                          </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {filteredArray?.length >= 10 && (
+              <div className="min-w-[90vw] py-4  grid place-items-center">
+                {visible >= filteredArray.length ? (
+                  <button
+                    className="primary-button"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCircleArrowUp} />
+                  </button>
+                ) : (
+                  <button className=" primary-button " onClick={setLoadMore}>
+                    <FontAwesomeIcon icon={faCircleArrowDown} />
+                  </button>
+                )}
               </div>
-            </>
+            )}
           </div>
         ) : (
           <div className="min-h-[75vh] flex items-center justify-center">

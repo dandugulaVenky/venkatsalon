@@ -36,7 +36,7 @@ const CarouselBanner = () => {
     return <div className="pagination-dots">{dotElements}</div>;
   };
   return (
-    <div className="px-4 scale-in-center md:mt-0 md:pt-0">
+    <div className=" scale-in-center ">
       <Carousel
         autoplay={true}
         wrapAround={true}
@@ -51,7 +51,7 @@ const CarouselBanner = () => {
               src={banner}
               key={i}
               alt="text"
-              className="rounded-md w-full md:h-48 h-36"
+              className=" w-full md:h-48 h-36"
             />
           );
         })}
