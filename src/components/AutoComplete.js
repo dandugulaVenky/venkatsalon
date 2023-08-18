@@ -16,6 +16,10 @@ export default class AutoComplete extends React.Component {
     this.setState({ address });
   };
 
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
+
   render() {
     const { setHeader, setAddress, dispatch, type, register, bestRef } =
       this.props;
@@ -37,32 +41,29 @@ export default class AutoComplete extends React.Component {
 
         .catch((error) => console.error("Error", error));
 
-      // setTimeout(() => {
-      //   setHeader(false);
-      //   if (this.inputRef.current) {
-      //     this.inputRef.current.blur();
-      //   }
-      // }, 350);
-      setHeader(false);
-      if (this.inputRef.current) {
-        this.inputRef.current.blur();
-      }
+      setTimeout(() => {
+        setHeader(false);
+      }, 200);
 
       if (!register) {
         if (bestRef.current) {
-          // setTimeout(() => {
-          //   bestRef.current.scrollIntoView({ behavior: "smooth" });
+          setTimeout(() => {
+            bestRef.current.scrollIntoView({ behavior: "smooth" });
 
-          //   // After the initial scrolling is completed, add more scrolling
-          //   // setTimeout(() => {
-          //   //   const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
-          //   //   window.scrollBy({
-          //   //     top: additionalScrollAmount,
-          //   //     behavior: "smooth",
-          //   //   });
-          //   // }, 800); // Adjust the delay as needed
-          // }, 1000);
-          bestRef.current.scrollIntoView({ behavior: "smooth" });
+            // After the initial scrolling is completed, add more scrolling
+            setTimeout(() => {
+              // const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
+              // window.scrollBy({
+              //   top: additionalScrollAmount,
+              //   behavior: "smooth",
+              // });
+              if (this.inputRef.current) {
+                this.inputRef.current.blur();
+              }
+            }, 1500);
+
+            // Adjust the delay as needed
+          }, 1000);
         }
       }
     };
@@ -86,9 +87,9 @@ export default class AutoComplete extends React.Component {
                   {...getInputProps({
                     placeholder: "Search Places ...",
                     className: "location-search-input",
+
                     ref: this.inputRef, // Assign the ref to the input element
                   })}
-                  autoFocus
                 />
                 <span onClick={() => setHeader(false)} className="cross">
                   <FontAwesomeIcon
