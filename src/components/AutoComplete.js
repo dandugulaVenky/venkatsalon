@@ -63,7 +63,7 @@ export default class AutoComplete extends React.Component {
             }, 1300);
 
             // Adjust the delay as needed
-          }, 1100);
+          }, 1150);
         }
       }
     };
