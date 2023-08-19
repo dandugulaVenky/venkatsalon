@@ -181,8 +181,8 @@ const Home = () => {
       ])
     : (images = [
         "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
-        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
-        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
       ]);
 
   return (
