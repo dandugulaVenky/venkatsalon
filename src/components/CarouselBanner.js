@@ -38,12 +38,12 @@ const CarouselBanner = () => {
   return (
     <div className=" scale-in-center ">
       <Carousel
-        autoplay={true}
         wrapAround={true}
         slideIndex={currentSlide}
         renderBottomCenterControls={renderPaginationDots}
         afterSlide={setCurrentSlide}
         autoplayInterval={5000}
+        speed={1000}
       >
         {images.map((banner, i) => {
           return (
