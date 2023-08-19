@@ -74,17 +74,17 @@ const Categories = ({ type }) => {
                 alt="images"
                 style={{
                   width: 800,
-                  height: 200,
+                  height: 170,
                   filter: "brightness(70%)",
                   objectFit: "cover",
                   objectPosition: "right bottom",
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
                 Shadnagar
               </p>
-              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[0] : "Loading"} Shops
@@ -109,17 +109,17 @@ const Categories = ({ type }) => {
                 alt="images"
                 style={{
                   width: 800,
-                  height: 200,
+                  height: 170,
                   filter: "brightness(70%)",
                   objectFit: "cover",
                   objectPosition: "right bottom",
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
                 Kothur
               </p>
-              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[1] : "Loading"} Shops
@@ -141,17 +141,17 @@ const Categories = ({ type }) => {
                 alt="images"
                 style={{
                   width: 800,
-                  height: 200,
+                  height: 170,
                   filter: "brightness(70%)",
                   objectFit: "cover",
                   objectPosition: "right bottom",
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
                 Thimmapur
               </p>
-              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[2] : "Loading"} Shops
@@ -173,17 +173,17 @@ const Categories = ({ type }) => {
                 alt="images"
                 style={{
                   width: 800,
-                  height: 200,
+                  height: 170,
                   filter: "brightness(70%)",
                   objectFit: "cover",
                   objectPosition: "right bottom",
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
                 Shamshabad
               </p>
-              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[3] : "Loading"} Shops

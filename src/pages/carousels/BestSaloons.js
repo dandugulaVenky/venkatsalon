@@ -72,17 +72,17 @@ const BestSaloons = () => {
                       alt="images"
                       style={{
                         width: 800,
-                        height: 200,
-                        filter: "brightness(70%)",
+                        height: 170,
+                        filter: "brightness(60%)",
                         objectFit: "cover",
                         objectPosition: "right top",
                         borderRadius: 8,
                       }}
                     />
-                    <p className="absolute bottom-8 left-4 text-white font-bold  text-xl content break-words">
+                    <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl content break-words">
                       {item.name}
                     </p>
-                    <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
+                    <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                       <FontAwesomeIcon icon={faStar} size="lg" />
                       <span className="font-semibold">
                         {Math.ceil(item.rating)}{" "}
