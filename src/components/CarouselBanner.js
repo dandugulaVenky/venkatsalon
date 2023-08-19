@@ -64,7 +64,7 @@ export default function CarouselBanner({
       onTouchEnd={handleTouchEnd}
     >
       <div
-        className="flex transition-transform ease-out duration-500 w-full h-[11.5rem] md:h-auto"
+        className="flex transition-transform ease-out duration-500 w-full  h-auto"
         style={{ transform: `translateX(-${curr * 100}%)` }}
       >
         {slides}

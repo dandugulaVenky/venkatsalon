@@ -180,9 +180,10 @@ const Home = () => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
     : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692464978/A_New_Design_-_Made_with_PosterMyWall_4_gnujwq.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
       ]);
 
   return (
@@ -195,11 +196,11 @@ const Home = () => {
         <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
         <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
-            <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
+            <h1 className=" md:text-6xl text-4xl text-center font-bold ">
               Welcome To Easytym
             </h1>
           </div>
-          <h1 className="text-gray-700  md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
+          <h1 className="md:text-gray-700 text-white md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
             Our company provides convenient and reliable salon booking services,
             connecting customers with top-quality beauty parlours and
             professional ironing services. With our user-friendly platform,
@@ -212,7 +213,7 @@ const Home = () => {
       {/* <div>
         <VideoBackground videoUrl={videoUrl} />
       </div> */}
-      <div className={` w-full mx-auto  md:rounded md:px-4 px-0.5`}>
+      <div className={` w-full mx-auto  md:rounded md:px-4`}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
             return (

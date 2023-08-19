@@ -63,6 +63,7 @@
     height: 100%;
     background-position: center;
     background-attachment: local;
+
     background-color: rgba(0, 0, 0, 33%);
   }
   .text-container {
@@ -72,6 +73,7 @@
   .text-container h1 {
     font-size: 35px;
     line-height: 1;
+    color: wheat;
     background-image: url("https://res.cloudinary.com/dqupmzcrb/image/upload/v1686916563/Untitled_design_222222_lz38ef.png");
   }
 }
