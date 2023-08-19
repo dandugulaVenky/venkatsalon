@@ -80,7 +80,7 @@ const Hotel = () => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
     : (images = [
-        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692463184/A_New_Design_-_Made_with_PosterMyWall_tfcxtb.jpg",
         "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
         "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
       ]);

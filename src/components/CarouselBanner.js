@@ -13,11 +13,36 @@ export default function CarouselBanner({
   const [curr, setCurr] = useState(0);
 
   const [hovered, setHovered] = useState(false);
+  const [startX, setStartX] = useState(null);
+  const [endX, setEndX] = useState(null);
 
   const prev = () =>
     setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
   const next = () =>
     setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+
+  const handleTouchStart = (e) => {
+    setStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (startX !== null && endX !== null) {
+      const deltaX = endX - startX;
+      if (deltaX > 50) {
+        // Swipe left
+        prev();
+      } else if (deltaX < -50) {
+        // Swipe right
+        next();
+      }
+    }
+    setStartX(null);
+    setEndX(null);
+  };
 
   useEffect(() => {
     let slideInterval;
@@ -34,6 +59,9 @@ export default function CarouselBanner({
       className="overflow-hidden relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         className="flex transition-transform ease-out duration-500 w-full h-[11.5rem] md:h-auto"
