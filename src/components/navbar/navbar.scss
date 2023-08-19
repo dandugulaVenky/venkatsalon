@@ -40,3 +40,8 @@
   right: 0;
   z-index: 19;
 }
+@media screen and (max-width: 767px) {
+  .head2 {
+    background-color: #fff;
+  }
+}

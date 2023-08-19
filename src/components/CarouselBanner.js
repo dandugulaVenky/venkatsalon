@@ -12,7 +12,7 @@ const CarouselBanner = () => {
 
   w >= 768
     ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
@@ -43,7 +43,7 @@ const CarouselBanner = () => {
         slideIndex={currentSlide}
         renderBottomCenterControls={renderPaginationDots}
         afterSlide={setCurrentSlide}
-        autoplayInterval={6000}
+        autoplayInterval={5000}
       >
         {images.map((banner, i) => {
           return (
