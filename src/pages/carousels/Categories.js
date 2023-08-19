@@ -62,7 +62,7 @@ const Categories = ({ type }) => {
         <Carousel cols={4} rows={1} gap={15} loop autoplay={15000}>
           <Carousel.Item>
             <div
-              className="relative  h-52 w-full cursor-pointer rounded-md"
+              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
                 handleSearch("shadnagar, telangana 509216, india");
@@ -81,10 +81,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
                 Shadnagar
               </p>
-              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[0] : "Loading"} Shops
@@ -97,7 +97,7 @@ const Categories = ({ type }) => {
 
           <Carousel.Item>
             <div
-              className="relative  h-52 w-full cursor-pointer rounded-md"
+              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
                 handleSearch("kothur, telangana 509228, india");
@@ -116,10 +116,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
                 Kothur
               </p>
-              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[1] : "Loading"} Shops
@@ -129,7 +129,7 @@ const Categories = ({ type }) => {
           </Carousel.Item>
           <Carousel.Item>
             <div
-              className="relative  h-52 w-full cursor-pointer rounded-md"
+              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
                 handleSearch("thimmapur, telangana 509325, india");
@@ -148,10 +148,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
                 Thimmapur
               </p>
-              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[2] : "Loading"} Shops
@@ -161,7 +161,7 @@ const Categories = ({ type }) => {
           </Carousel.Item>
           <Carousel.Item>
             <div
-              className="relative  h-52 w-full cursor-pointer rounded-md"
+              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
               id="section-id"
               onClick={() => {
                 handleSearch("shamshabad, telangana 501218, india");
@@ -180,10 +180,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute bottom-8 left-4 text-white font-bold  text-xl ">
                 Shamshabad
               </p>
-              <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[3] : "Loading"} Shops

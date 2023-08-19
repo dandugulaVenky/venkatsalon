@@ -73,18 +73,18 @@ const Hotel = () => {
   const w = window.innerWidth;
   let images = [];
 
-  w >= 768
+  w >= 539
     ? (images = [
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
     : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692463184/A_New_Design_-_Made_with_PosterMyWall_tfcxtb.jpg",
-        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
-        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
       ]);
-
   const lunch = [24, 25, 26, 27, 28, 29];
   const [breakTime, setBreakTime] = useState();
 

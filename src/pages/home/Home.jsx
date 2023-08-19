@@ -180,10 +180,10 @@ const Home = () => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
     : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692467345/A_New_Design_-_Made_with_PosterMyWall_5_ikq8yk.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
       ]);
 
   return (
@@ -192,7 +192,7 @@ const Home = () => {
       {w < 768 && <Greeting bestRef={endRef} />}
       <Seo props={siteMetadata} />
 
-      <div className="home-img1 mb-5">
+      <div className="home-img1 mb-3">
         <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
         <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
@@ -219,7 +219,7 @@ const Home = () => {
             return (
               <img
                 src={s}
-                className="rounded"
+                className="md:rounded"
                 style={{
                   backgroundPosition: "center",
 

@@ -21,7 +21,7 @@ const Services = ({ refer }) => {
     <div
       className=" px-1  md:mb-0  text-black "
       ref={refer}
-      style={{ marginBottom: "2.5rem", marginTop: "2.5rem" }}
+      style={{ marginBottom: "2.5rem", marginTop: "1.5rem" }}
     >
       <h1 className="px-4 text-xl font-semibold pb-4">Select A Service</h1>
       <Carousel cols={3} rows={1} gap={10}>

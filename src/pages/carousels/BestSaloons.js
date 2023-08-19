@@ -63,7 +63,7 @@ const BestSaloons = () => {
               return (
                 <Carousel.Item key={i}>
                   <div
-                    className="relative  h-52 w-full cursor-pointer rounded-md slide-in-left"
+                    className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md slide-in-left"
                     id="section-id"
                     onClick={() => gotoHotel(item._id)}
                   >
@@ -75,14 +75,14 @@ const BestSaloons = () => {
                         height: 200,
                         filter: "brightness(70%)",
                         objectFit: "cover",
-                        objectPosition: "right bottom",
+                        objectPosition: "right top",
                         borderRadius: 8,
                       }}
                     />
-                    <p className="absolute bottom-10 left-4 text-white font-bold  text-xl content break-words">
+                    <p className="absolute bottom-8 left-4 text-white font-bold  text-xl content break-words">
                       {item.name}
                     </p>
-                    <p className="absolute bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                    <p className="absolute bottom-2 left-4 text-white flex items-center justify-center space-x-2  ">
                       <FontAwesomeIcon icon={faStar} size="lg" />
                       <span className="font-semibold">
                         {Math.ceil(item.rating)}{" "}
