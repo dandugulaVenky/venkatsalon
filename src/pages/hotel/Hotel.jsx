@@ -71,6 +71,20 @@ const Hotel = () => {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const w = window.innerWidth;
+  let images = [];
+
+  w >= 768
+    ? (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+      ])
+    : (images = [
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+      ]);
+
   const lunch = [24, 25, 26, 27, 28, 29];
   const [breakTime, setBreakTime] = useState();
 
@@ -461,7 +475,25 @@ const Hotel = () => {
       {sidebar && <Sidebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <CarouselBanner />
+      <div className={` w-full mx-auto  md:rounded md:px-4 `}>
+        <CarouselBanner autoSlide={true}>
+          {images.map((s) => {
+            return (
+              <img
+                src={s}
+                className="rounded"
+                style={{
+                  backgroundPosition: "center",
+
+                  backgroundSize: "cover",
+                  width: "100%",
+                }}
+                alt="carousel-img"
+              />
+            );
+          })}
+        </CarouselBanner>
+      </div>
       {loginUser && (
         <Login1 setLoginUser={setLoginUser} shopId={shopIdLocation} />
       )}
