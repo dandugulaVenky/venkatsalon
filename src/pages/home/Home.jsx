@@ -16,6 +16,9 @@ import BestSaloons from "../carousels/BestSaloons";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import Seo from "../../utils/Seo";
 import VideoBackground from "../../components/VideoBackground";
+import banner4 from "../images/banner4.jpg";
+import banner5 from "../images/banner5.jpg";
+import banner6 from "../images/banner6.jpg";
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
   description:
@@ -167,7 +170,20 @@ const Home = () => {
     return () => console.log("my effect is destroying");
   }, []);
   const endRef = useRef(null);
-  let w = window.innerWidth;
+  let images = [];
+  const w = window.innerWidth;
+
+  w >= 768
+    ? (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+      ])
+    : (images = [
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+        "https://m.media-amazon.com/images/G/31/AMS/IN/970X250-_desktop_banner.jpg",
+      ]);
 
   return (
     <div className="h-auto">
@@ -196,8 +212,25 @@ const Home = () => {
       {/* <div>
         <VideoBackground videoUrl={videoUrl} />
       </div> */}
-      <CarouselBanner />
+      <div className={` w-full mx-auto  md:rounded md:px-4 `}>
+        <CarouselBanner autoSlide={true}>
+          {images.map((s) => {
+            return (
+              <img
+                src={s}
+                className="rounded"
+                style={{
+                  backgroundPosition: "center",
 
+                  backgroundSize: "cover",
+                  width: "100%",
+                }}
+                alt="carousel-img"
+              />
+            );
+          })}
+        </CarouselBanner>
+      </div>
       <div>
         <Services />
       </div>
