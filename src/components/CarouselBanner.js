@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Carousel from "nuka-carousel";
 // import banner1 from "../pages/images/banner1.png";
 // import banner2 from "../pages/images/banner2.png";
@@ -35,9 +35,38 @@ const CarouselBanner = () => {
     }
     return <div className="pagination-dots">{dotElements}</div>;
   };
+
+  const [autoplay, setAutoplay] = useState(true);
+
+  useEffect(() => {
+    const handleSlideStart = () => {
+      // Disable autoplay when the user starts sliding
+      setAutoplay(false);
+    };
+
+    const handleSlideEnd = () => {
+      // Re-enable autoplay when the user finishes sliding
+      setAutoplay(true);
+    };
+
+    // Add event listeners to detect user-initiated slides
+    document.addEventListener("mousedown", handleSlideStart);
+    document.addEventListener("touchstart", handleSlideStart);
+    document.addEventListener("mouseup", handleSlideEnd);
+    document.addEventListener("touchend", handleSlideEnd);
+
+    return () => {
+      // Cleanup: remove event listeners
+      document.removeEventListener("mousedown", handleSlideStart);
+      document.removeEventListener("touchstart", handleSlideStart);
+      document.removeEventListener("mouseup", handleSlideEnd);
+      document.removeEventListener("touchend", handleSlideEnd);
+    };
+  }, []);
   return (
     <div className=" scale-in-center ">
       <Carousel
+        autoplay={autoplay}
         wrapAround={true}
         slideIndex={currentSlide}
         renderBottomCenterControls={renderPaginationDots}
