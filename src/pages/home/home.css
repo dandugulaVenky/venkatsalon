@@ -59,7 +59,7 @@
 
 @media screen and (max-width: 767px) {
   .home-img1 {
-    background-image: url("https://images.pexels.com/photos/1037993/pexels-photo-1037993.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+    background-image: url("https://res.cloudinary.com/duk9xkcp5/image/upload/v1692466776/Untitled_uihmo2.webp");
     height: 100%;
     background-position: center;
     background-attachment: local;
