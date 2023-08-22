@@ -187,6 +187,7 @@ const Layout = ({ bestRef }) => {
                    >
                   <option value="en">English</option>
                   <option value="te">Telugu</option>
+                  <option value="hi">Hindi</option>
                   </select>
                   </div>
                   {pathname.includes("iron") && (
