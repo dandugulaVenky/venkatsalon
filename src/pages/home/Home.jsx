@@ -5,7 +5,7 @@ import Layout from "../../components/navbar/Layout";
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Greeting from "../../components/navbar/Greeting";
 import Sidebar from "../../components/navbar/SIdebar";
@@ -13,12 +13,12 @@ import { SearchContext } from "../../context/SearchContext";
 import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
-import useEffectOnce from "../../utils/UseEffectOnce";
+
 import Seo from "../../utils/Seo";
-import VideoBackground from "../../components/VideoBackground";
-import banner4 from "../images/banner4.jpg";
-import banner5 from "../images/banner5.jpg";
-import banner6 from "../images/banner6.jpg";
+// import VideoBackground from "../../components/VideoBackground";
+// import banner4 from "../images/banner4.jpg";
+// import banner5 from "../images/banner5.jpg";
+// import banner6 from "../images/banner6.jpg";
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
   description:
@@ -35,13 +35,6 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
-
-  const handleToast = () => {
-    toast("Reserved successfully 🎉");
-
-    navigate("/", { state: null });
-    return null;
-  };
 
   // const handleButton = async () => {
   //   try {
@@ -61,114 +54,129 @@ const Home = () => {
   //   }
   // };
 
-  //prompting user to retrive location if not enabled
+  useEffect(() => {
+    //prompting user to retrive location if not enabled
 
-  const promptEnableLocation = () => {
-    if ("geolocation" in navigator) {
-      if (navigator.permissions && navigator.permissions.query) {
-        navigator.permissions.query({ name: "geolocation" }).then((result) => {
-          if (result.state === "prompt") {
-            // Prompt user to allow or block geolocation permission
-            navigator.geolocation.getCurrentPosition(
-              () => {
-                console.log("Geolocation permission granted.");
-                getCurrentPosition();
-              },
-              () => {
+    //setting users current location
+
+    const getCurrentPosition = () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const geocoder = new window.google.maps.Geocoder();
+          const latlng = { lat: latitude, lng: longitude };
+
+          geocoder.geocode({ location: latlng }, (results, status) => {
+            const addressComponents = results[0].address_components;
+            // Find the colony or locality name
+            const colony = addressComponents.find(
+              (component) =>
+                component.types.includes("sublocality") ||
+                component.types.includes("locality")
+            );
+            if (colony) {
+              console.log(colony.long_name);
+            }
+            console.log(results);
+            if (status === "OK") {
+              if (results[0]) {
+                const city1 = results[2]?.formatted_address
+                  .trim()
+                  .toLowerCase();
+
+                // Dispatch the necessary information
                 dispatch({
                   type: "NEW_SEARCH",
                   payload: {
                     type: "saloon",
-                    destination: "No Location!",
+                    destination: city1,
+                    colony,
                   },
                 });
-                alert(
-                  "Please enable location services to get personalized suggestions!"
-                );
-              },
-              {
-                enableHighAccuracy: true,
-                timeout: 15000,
-                maximumAge: 10000,
+              } else {
+                console.log("No results found");
               }
-            );
-          } else if (result.state === "granted") {
-            console.log("Geolocation permission already granted.");
-            !city && getCurrentPosition();
-          } else if (result.state === "denied") {
-            if (city === "No Location!") {
-              alert(
-                "Please enable location services to get personalized suggestions!"
-              );
-            }
-          }
-        });
-      } else {
-        console.log("Permission API is not supported by your browser.");
-      }
-    } else {
-      console.log("Geolocation is not supported by your browser.");
-    }
-  };
-
-  //setting users current location
-
-  const getCurrentPosition = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const geocoder = new window.google.maps.Geocoder();
-        const latlng = { lat: latitude, lng: longitude };
-
-        geocoder.geocode({ location: latlng }, (results, status) => {
-          const addressComponents = results[0].address_components;
-          // Find the colony or locality name
-          const colony = addressComponents.find(
-            (component) =>
-              component.types.includes("sublocality") ||
-              component.types.includes("locality")
-          );
-          if (colony) {
-            console.log(colony.long_name);
-          }
-          console.log(results);
-          if (status === "OK") {
-            if (results[0]) {
-              const city1 = results[2]?.formatted_address.trim().toLowerCase();
-
-              // Dispatch the necessary information
-              dispatch({
-                type: "NEW_SEARCH",
-                payload: {
-                  type: "saloon",
-                  destination: city1,
-                  colony,
-                },
-              });
             } else {
-              console.log("No results found");
+              console.log("Geocoder failed due to: " + status);
             }
-          } else {
-            console.log("Geocoder failed due to: " + status);
-          }
-        });
-      },
-      (error) => {
-        // Handle any error occurred during geolocation
-        console.log("Error occurred during geolocation:", error);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  };
+          });
+        },
+        (error) => {
+          // Handle any error occurred during geolocation
+          console.log("Error occurred during geolocation:", error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    };
 
-  useEffectOnce(() => {
-    window.scrollTo(0, 0);
+    const promptEnableLocation = () => {
+      if ("geolocation" in navigator) {
+        if (navigator.permissions && navigator.permissions.query) {
+          navigator.permissions
+            .query({ name: "geolocation" })
+            .then((result) => {
+              if (result.state === "prompt") {
+                // Prompt user to allow or block geolocation permission
+                navigator.geolocation.getCurrentPosition(
+                  () => {
+                    console.log("Geolocation permission granted.");
+                    getCurrentPosition();
+                  },
+                  () => {
+                    dispatch({
+                      type: "NEW_SEARCH",
+                      payload: {
+                        type: "saloon",
+                        destination: "No Location!",
+                      },
+                    });
+                    alert(
+                      "Please enable location services to get personalized suggestions!"
+                    );
+                  },
+                  {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 10000,
+                  }
+                );
+              } else if (result.state === "granted") {
+                console.log("Geolocation permission already granted.");
+                !city && getCurrentPosition();
+              } else if (result.state === "denied") {
+                if (city === "No Location!") {
+                  alert(
+                    "Please enable location services to get personalized suggestions!"
+                  );
+                }
+              }
+            });
+        } else {
+          console.log("Permission API is not supported by your browser.");
+        }
+      } else {
+        console.log("Geolocation is not supported by your browser.");
+      }
+    };
 
+    const handleToast = () => {
+      toast("Reserved successfully 🎉");
+
+      navigate("/", { state: null });
+      return null;
+    };
+
+    // let timeout = setTimeout(() => {
+    //   window.scrollTo(0, 0);
+    // }, 1000);
     promptEnableLocation();
 
     reference !== undefined && reference !== null && handleToast();
-    return () => console.log("my effect is destroying");
-  }, []);
+    return () => {
+      // clearTimeout(timeout);
+      console.log("effect");
+    };
+  }, [city, dispatch, navigate, reference]);
   const endRef = useRef(null);
   let images = [];
   const w = window.innerWidth;

@@ -79,10 +79,10 @@ const BestSaloons = () => {
                         borderRadius: 8,
                       }}
                     />
-                    <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl content break-words">
+                    <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
                       {item.name}
                     </p>
-                    <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                    <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                       <FontAwesomeIcon icon={faStar} size="lg" />
                       <span className="font-semibold">
                         {Math.ceil(item.rating)}{" "}

@@ -59,7 +59,7 @@ const Categories = ({ type }) => {
         </button>
       </div>
       <div className="">
-        <Carousel cols={4} rows={1} gap={15} loop autoplay={15000}>
+        <Carousel cols={4} rows={1} gap={15}>
           <Carousel.Item>
             <div
               className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
@@ -81,10 +81,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
                 Shadnagar
               </p>
-              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[0] : "Loading"} Shops
@@ -116,10 +116,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
                 Kothur
               </p>
-              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[1] : "Loading"} Shops
@@ -148,10 +148,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
                 Thimmapur
               </p>
-              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[2] : "Loading"} Shops
@@ -180,10 +180,10 @@ const Categories = ({ type }) => {
                   borderRadius: 8,
                 }}
               />
-              <p className="absolute md:bottom-20 bottom-10 left-4 text-white font-bold  text-xl ">
+              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
                 Shamshabad
               </p>
-              <p className="absolute md:bottom-14 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                 <FontAwesomeIcon icon={faBuilding} size="lg" />
                 <span className="font-semibold">
                   {data?.length > 0 ? data[3] : "Loading"} Shops

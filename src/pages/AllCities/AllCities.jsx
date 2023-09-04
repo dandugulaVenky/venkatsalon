@@ -60,13 +60,13 @@ const AllCities = () => {
           />
         </div>
 
-        <div className=" min-h-screen w-full pb-24 md:pt-0 pt-2">
+        <div className=" min-h-screen w-full md:pt-0 pt-2">
           <>
-            <div className="grid grid-cols-12 gap-5 ">
+            <div className="grid grid-cols-12 gap-6">
               {filteredArray.map((city) => {
                 return (
                   <div
-                    className="flex items-center justify-center h-52  lg:col-span-4 md:col-span-5 col-span-12 mx-4  
+                    className="flex items-center justify-center h-52  lg:col-span-4 md:col-span-5 col-span-12  
                           cursor-pointer
                          rounded-lg hover:shadow-2xl hover:scale-105 transition duration-300
                          bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat
