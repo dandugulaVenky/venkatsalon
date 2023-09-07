@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 import { useState } from "react";
 import Carousel from "react-grid-carousel";
 import { SearchContext } from "../../context/SearchContext";
@@ -9,15 +9,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
 import baseUrl from "../../utils/client";
-import { type } from "@testing-library/user-event/dist/type";
+
+import Skeleton from "../../utils/Skeleton";
+import GetSize from "../../utils/GetSize";
 const BestSaloons = () => {
-  const { type: type1, dispatch, city } = useContext(SearchContext);
-  const [loading, setLoading] = useState(false);
+  const { type: type1, city } = useContext(SearchContext);
+
   const [data, setData] = useState([]);
   const [status, setStatus] = useState();
-
+  const size = GetSize();
   useEffect(() => {
-    setLoading(true);
     console.log(city);
     try {
       const getSaloons = async () => {
@@ -30,8 +31,6 @@ const BestSaloons = () => {
         if (data) {
           setData(data);
           setStatus(status);
-
-          setLoading(false);
         } else {
           return null;
         }
@@ -39,8 +38,6 @@ const BestSaloons = () => {
 
       getSaloons();
     } catch (err) {
-      setLoading(false);
-
       console.log(err);
     }
   }, [type1, city]);
@@ -50,20 +47,24 @@ const BestSaloons = () => {
   };
 
   return (
-    <div className=" md:mb-0  text-black ">
+    <div className="my-5  text-black w-full ">
       <h1 className=" px-4 text-xl font-semibold pb-4">
-        {type1
-          ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
-          : "loading"}
+        {type1 ? (
+          type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
+        ) : (
+          <Skeleton cards={1} />
+        )}
       </h1>
-      {status === 200 && data?.length > 0 ? (
+      {status !== 200 ? (
+        <Skeleton cards={size} />
+      ) : status === 200 && data?.length > 0 ? (
         <div>
           <Carousel cols={4} rows={1} gap={15}>
             {data?.map((item, i) => {
               return (
                 <Carousel.Item key={i}>
                   <div
-                    className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md slide-in-left"
+                    className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
                     id="section-id"
                     onClick={() => gotoHotel(item._id)}
                   >
@@ -79,10 +80,10 @@ const BestSaloons = () => {
                         borderRadius: 8,
                       }}
                     />
-                    <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
+                    <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
                       {item.name}
                     </p>
-                    <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                    <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                       <FontAwesomeIcon icon={faStar} size="lg" />
                       <span className="font-semibold">
                         {Math.ceil(item.rating)}{" "}
@@ -97,7 +98,7 @@ const BestSaloons = () => {
           </Carousel>
         </div>
       ) : (
-        <div className="flex items-center justify-center md:space-x-5 space-x-3">
+        <div className="flex items-center justify-center md:space-x-5 space-x-3 ">
           <img
             src="https://cdn.dribbble.com/userupload/2641500/file/original-b2b4da3f25a13ff275d03cd646d1fec3.png?compress=1&resize=1200x900"
             alt="no results"
@@ -116,4 +117,4 @@ const BestSaloons = () => {
   );
 };
 
-export default BestSaloons;
+export default memo(BestSaloons);

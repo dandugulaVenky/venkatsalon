@@ -244,13 +244,16 @@ const Home = () => {
         <Services />
       </div>
 
-      <div className="flex flex-wrap items-center justify-evenly " ref={endRef}>
-        <div className="   flex justify-center items-center">
-          <div className="md:max-w-[1244px] w-full  space-y-8 md:space-y-0 ">
+      <div
+        className="flex flex-wrap items-center justify-evenly w-full "
+        ref={endRef}
+      >
+        <div className=" w-full  flex justify-center items-center">
+          <div className="md:max-w-[1244px] w-full ">
             <div>
               <BestSaloons />
             </div>
-            <div className="">
+            <div>
               <Categories />
             </div>
           </div>

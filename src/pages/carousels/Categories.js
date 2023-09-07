@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import Carousel from "react-grid-carousel";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
@@ -8,10 +8,13 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import baseUrl from "../../utils/client";
+import Skeleton from "../../utils/Skeleton";
+import GetSize from "../../utils/GetSize";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
   const [data, setData] = useState([]);
+  const size = GetSize();
 
   useEffect(() => {
     try {
@@ -43,7 +46,7 @@ const Categories = ({ type }) => {
     navigate("/cities");
   };
   return (
-    <div className=" md:mb-0 mb-8 text-black ">
+    <div className=" my-5 text-black min-w-full ">
       <div className="flex flex-row justify-between">
         <h1 className="px-4 text-xl font-semibold pb-4">
           Browse Area Wise{" "}
@@ -58,145 +61,149 @@ const Categories = ({ type }) => {
           <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
         </button>
       </div>
-      <div className="">
-        <Carousel cols={4} rows={1} gap={15}>
-          <Carousel.Item>
-            <div
-              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
-              id="section-id"
-              onClick={() => {
-                handleSearch("shadnagar, telangana 509216, india");
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src="https://picsum.photos/800/600?random=5"
-                alt="images"
-                style={{
-                  width: 800,
-                  height: 170,
-                  filter: "brightness(70%)",
-                  objectFit: "cover",
-                  objectPosition: "right bottom",
-                  borderRadius: 8,
+      {data.length > 0 ? (
+        <div className="">
+          <Carousel cols={4} rows={1} gap={15}>
+            <Carousel.Item>
+              <div
+                className="relative   h-44 w-full cursor-pointer rounded-md"
+                id="section-id"
+                onClick={() => {
+                  handleSearch("shadnagar, telangana 509216, india");
                 }}
-              />
-              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                Shadnagar
-              </p>
-              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                <span className="font-semibold">
-                  {data?.length > 0 ? data[0] : "Loading"} Shops
-                </span>
-              </p>
-            </div>
-          </Carousel.Item>
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="https://picsum.photos/800/600?random=5"
+                  alt="images"
+                  style={{
+                    width: 800,
+                    height: 170,
+                    filter: "brightness(70%)",
+                    objectFit: "cover",
+                    objectPosition: "right bottom",
+                    borderRadius: 8,
+                  }}
+                />
+                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                  Shadnagar
+                </p>
+                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                  <FontAwesomeIcon icon={faBuilding} size="lg" />
+                  <span className="font-semibold">
+                    {data?.length > 0 ? data[0] : "Loading"} Shops
+                  </span>
+                </p>
+              </div>
+            </Carousel.Item>
 
-          {/* ... */}
+            {/* ... */}
 
-          <Carousel.Item>
-            <div
-              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
-              id="section-id"
-              onClick={() => {
-                handleSearch("kothur, telangana 509228, india");
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src="https://picsum.photos/800/600?random=4"
-                alt="images"
-                style={{
-                  width: 800,
-                  height: 170,
-                  filter: "brightness(70%)",
-                  objectFit: "cover",
-                  objectPosition: "right bottom",
-                  borderRadius: 8,
+            <Carousel.Item>
+              <div
+                className="relative   h-44 w-full cursor-pointer rounded-md"
+                id="section-id"
+                onClick={() => {
+                  handleSearch("kothur, telangana 509228, india");
                 }}
-              />
-              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                Kothur
-              </p>
-              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                <span className="font-semibold">
-                  {data?.length > 0 ? data[1] : "Loading"} Shops
-                </span>
-              </p>
-            </div>
-          </Carousel.Item>
-          <Carousel.Item>
-            <div
-              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
-              id="section-id"
-              onClick={() => {
-                handleSearch("thimmapur, telangana 509325, india");
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src="https://picsum.photos/800/600?random=3"
-                alt="images"
-                style={{
-                  width: 800,
-                  height: 170,
-                  filter: "brightness(70%)",
-                  objectFit: "cover",
-                  objectPosition: "right bottom",
-                  borderRadius: 8,
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="https://picsum.photos/800/600?random=4"
+                  alt="images"
+                  style={{
+                    width: 800,
+                    height: 170,
+                    filter: "brightness(70%)",
+                    objectFit: "cover",
+                    objectPosition: "right bottom",
+                    borderRadius: 8,
+                  }}
+                />
+                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                  Kothur
+                </p>
+                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                  <FontAwesomeIcon icon={faBuilding} size="lg" />
+                  <span className="font-semibold">
+                    {data?.length > 0 ? data[1] : "Loading"} Shops
+                  </span>
+                </p>
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div
+                className="relative   h-44 w-full cursor-pointer rounded-md"
+                id="section-id"
+                onClick={() => {
+                  handleSearch("thimmapur, telangana 509325, india");
                 }}
-              />
-              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                Thimmapur
-              </p>
-              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                <span className="font-semibold">
-                  {data?.length > 0 ? data[2] : "Loading"} Shops
-                </span>
-              </p>
-            </div>
-          </Carousel.Item>
-          <Carousel.Item>
-            <div
-              className="relative  md:h-52 h-44 w-full cursor-pointer rounded-md"
-              id="section-id"
-              onClick={() => {
-                handleSearch("shamshabad, telangana 501218, india");
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <img
-                src="https://picsum.photos/800/600?random=2"
-                alt="images"
-                style={{
-                  width: 800,
-                  height: 170,
-                  filter: "brightness(70%)",
-                  objectFit: "cover",
-                  objectPosition: "right bottom",
-                  borderRadius: 8,
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="https://picsum.photos/800/600?random=3"
+                  alt="images"
+                  style={{
+                    width: 800,
+                    height: 170,
+                    filter: "brightness(70%)",
+                    objectFit: "cover",
+                    objectPosition: "right bottom",
+                    borderRadius: 8,
+                  }}
+                />
+                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                  Thimmapur
+                </p>
+                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                  <FontAwesomeIcon icon={faBuilding} size="lg" />
+                  <span className="font-semibold">
+                    {data?.length > 0 ? data[2] : "Loading"} Shops
+                  </span>
+                </p>
+              </div>
+            </Carousel.Item>
+            <Carousel.Item>
+              <div
+                className="relative   h-44 w-full cursor-pointer rounded-md"
+                id="section-id"
+                onClick={() => {
+                  handleSearch("shamshabad, telangana 501218, india");
                 }}
-              />
-              <p className="absolute md:bottom-[4.5rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                Shamshabad
-              </p>
-              <p className="absolute md:bottom-12 bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                <FontAwesomeIcon icon={faBuilding} size="lg" />
-                <span className="font-semibold">
-                  {data?.length > 0 ? data[3] : "Loading"} Shops
-                </span>
-              </p>
-            </div>
-          </Carousel.Item>
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="https://picsum.photos/800/600?random=2"
+                  alt="images"
+                  style={{
+                    width: 800,
+                    height: 170,
+                    filter: "brightness(70%)",
+                    objectFit: "cover",
+                    objectPosition: "right bottom",
+                    borderRadius: 8,
+                  }}
+                />
+                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                  Shamshabad
+                </p>
+                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                  <FontAwesomeIcon icon={faBuilding} size="lg" />
+                  <span className="font-semibold">
+                    {data?.length > 0 ? data[3] : "Loading"} Shops
+                  </span>
+                </p>
+              </div>
+            </Carousel.Item>
 
-          {/* ... */}
-        </Carousel>
-      </div>
+            {/* ... */}
+          </Carousel>
+        </div>
+      ) : (
+        <Skeleton cards={size} />
+      )}
     </div>
   );
 };
 
-export default Categories;
+export default memo(Categories);

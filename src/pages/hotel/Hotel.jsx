@@ -481,7 +481,7 @@ const Hotel = () => {
             return (
               <img
                 src={s}
-                className="rounded"
+                className="md:rounded rounded-sm"
                 style={{
                   backgroundPosition: "center",
 
