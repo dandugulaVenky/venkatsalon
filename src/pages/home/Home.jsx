@@ -15,6 +15,7 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 
 import Seo from "../../utils/Seo";
+import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
@@ -54,7 +55,7 @@ const Home = () => {
   //   }
   // };
 
-  useEffect(() => {
+  useEffectOnce(() => {
     //prompting user to retrive location if not enabled
 
     //setting users current location

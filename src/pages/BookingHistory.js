@@ -228,7 +228,7 @@ const BookingHistory = () => {
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            className="bg-slate-100 text-black  rounded-md md:w-[14.3rem] w-[9.3rem]  "
+            className="  rounded-md md:w-[14.3rem] w-[9.3rem]  "
             placeholder="Filter by date,time,ref.."
           />
 
@@ -242,8 +242,8 @@ const BookingHistory = () => {
 
         {filteredArray?.length > 0 ? (
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 ">
-            <div className="overflow-x-auto  col-span-5 ">
-              <table className="min-w-full ">
+            <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
+              <table className="min-w-full  ">
                 <thead className="border-b bg-gray-400 ">
                   <tr className="border-b-2 border-gray-200 ">
                     <th className="text-center md:text-md text-sm md:p-5 py-3">
@@ -281,7 +281,7 @@ const BookingHistory = () => {
                   {filteredArray?.slice(0, visible)?.map((item, j) => {
                     // {filteredArray?.map((item, j) => {
                     return (
-                      <tr key={j} className="border-b-2 border-white">
+                      <tr key={j} className="border-b-2 border-gray-500">
                         <td className="p-3 text-right md:text-md text-sm">
                           <label className="text-gray-900 w-full">
                             {item.referenceNumber}{" "}

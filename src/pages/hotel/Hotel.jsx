@@ -544,7 +544,7 @@ const Hotel = () => {
               <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() => window.scrollTo(0, 200)}
+                    onClick={() => window.scrollTo(0, 250)}
                     className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
@@ -590,15 +590,27 @@ const Hotel = () => {
                   leaveTo="transform opacity-0 scale-95"
                 >
                   <Menu.Items className="h-96  overflow-auto absolute z-10 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
+                    <div className="">
                       <Menu.Item>
                         {({ active }) => (
                           <p
                             className={classNames(
-                              `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
+                              `text-white block px-4  text-md font-bold cursor-pointer bg-[#5151c0b8]  py-0.5`
                             )}
                           >
-                            Select Time
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              color="green "
+                              size="sm"
+                            />{" "}
+                            - <span className="text-sm">Seats Left</span> &nbsp;{" "}
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              color="red "
+                              size="sm"
+                            />{" "}
+                            -{" "}
+                            <span className="text-sm">Booked/Unavailable</span>
                           </p>
                         )}
                       </Menu.Item>
@@ -661,7 +673,7 @@ const Hotel = () => {
                                             <FontAwesomeIcon
                                               icon={faCircle}
                                               color="green "
-                                              size="sm"
+                                              size="xs"
                                             />
                                             &nbsp;&nbsp;
                                           </span>
