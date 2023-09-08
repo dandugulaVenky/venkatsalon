@@ -544,7 +544,7 @@ const Hotel = () => {
               <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() => window.scrollTo(0, 250)}
+                    onClick={() => window.scrollTo(0, 230)}
                     className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
@@ -602,15 +602,21 @@ const Hotel = () => {
                               icon={faCircle}
                               color="green "
                               size="sm"
-                            />{" "}
-                            - <span className="text-sm">Seats Left</span> &nbsp;{" "}
+                            />
+                            -
+                            <span className=" text-xs md:text-sm">
+                              Seats Left
+                            </span>
+                            &nbsp;
                             <FontAwesomeIcon
                               icon={faCircle}
                               color="red "
                               size="sm"
                             />{" "}
                             -{" "}
-                            <span className="text-sm">Booked/Unavailable</span>
+                            <span className="text-xs md:text-sm">
+                              Booked/Unavailable
+                            </span>
                           </p>
                         )}
                       </Menu.Item>
