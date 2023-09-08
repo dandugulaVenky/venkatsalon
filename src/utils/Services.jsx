@@ -20,8 +20,8 @@ const Services = ({ refer }) => {
   };
 
   return (
-    <div className=" px-1 pt-5 md:mb-0  text-black " ref={refer}>
-      <h1 className="px-4 text-xl font-semibold py-5">Select A Service</h1>
+    <div className=" px-1  mt-5  text-black " ref={refer}>
+      <h1 className="px-4 text-xl font-semibold pb-4">Select A Service</h1>
       <Carousel cols={3} rows={1} gap={10}>
         <Carousel.Item>
           <div

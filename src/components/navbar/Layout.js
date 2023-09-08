@@ -68,7 +68,7 @@ const Layout = ({ bestRef }) => {
 
     scrollTimeoutIdRef.current = setTimeout(() => {
       window.addEventListener("scroll", handleScroll);
-    }, 800);
+    }, 500);
 
     // Clean up the event listener and clear the timeout on component unmount
     return () => {

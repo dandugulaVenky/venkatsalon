@@ -1,63 +1,95 @@
-import React, { useRef, useState } from "react";
-import Carousel from "nuka-carousel";
-// import banner1 from "../pages/images/banner1.png";
-// import banner2 from "../pages/images/banner2.png";
-// import banner3 from "../pages/images/banner3.png";
-import banner4 from "../pages/images/banner4.jpg";
-import banner5 from "../pages/images/banner5.jpg";
-import banner6 from "../pages/images/banner6.jpg";
-const CarouselBanner = () => {
-  let images = [];
-  const w = window.innerWidth;
+import {
+  faCircleArrowLeft,
+  faCircleArrowRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState, useEffect } from "react";
 
-  w >= 768
-    ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
-      ])
-    : (images = [banner4, banner5, banner6]);
-  const [currentSlide, setCurrentSlide] = useState(0);
+export default function CarouselBanner({
+  children: slides,
+  autoSlide = false,
+  autoSlideInterval = 4000,
+}) {
+  const [curr, setCurr] = useState(0);
 
-  const renderPaginationDots = ({ currentSlide, slideCount }) => {
-    const dotElements = [];
-    for (let i = 0; i < slideCount; i++) {
-      dotElements.push(
-        <button
-          key={i}
-          onClick={() => setCurrentSlide(i)}
-          className={currentSlide === i ? "active " : ""}
-          aria-label={`Slide ${i + 1}`}
-        >
-          .
-        </button>
-      );
-    }
-    return <div className="pagination-dots">{dotElements}</div>;
+  const [hovered, setHovered] = useState(false);
+  const [startX, setStartX] = useState(null);
+  const [endX, setEndX] = useState(null);
+
+  const prev = () =>
+    setCurr((curr) => (curr === 0 ? slides.length - 1 : curr - 1));
+  const next = () =>
+    setCurr((curr) => (curr === slides.length - 1 ? 0 : curr + 1));
+
+  const handleTouchStart = (e) => {
+    setStartX(e.touches[0].clientX);
   };
+
+  const handleTouchMove = (e) => {
+    setEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (startX !== null && endX !== null) {
+      const deltaX = endX - startX;
+      if (deltaX > 50) {
+        // Swipe left
+        prev();
+      } else if (deltaX < -50) {
+        // Swipe right
+        next();
+      }
+    }
+    setStartX(null);
+    setEndX(null);
+  };
+
+  useEffect(() => {
+    let slideInterval;
+
+    if (autoSlide && !hovered) {
+      slideInterval = setInterval(next, autoSlideInterval);
+    }
+
+    return () => clearInterval(slideInterval);
+  }, [autoSlide, autoSlideInterval, hovered]);
+
   return (
-    <div className="px-4 scale-in-center md:mt-0 md:pt-0">
-      <Carousel
-        autoplay={true}
-        wrapAround={true}
-        slideIndex={currentSlide}
-        renderBottomCenterControls={renderPaginationDots}
-        afterSlide={setCurrentSlide}
-        autoplayInterval={5000}
+    <div
+      className="overflow-hidden relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div
+        className="flex transition-transform ease-out duration-500 w-full  h-auto"
+        style={{ transform: `translateX(-${curr * 100}%)` }}
       >
-        {images.map((banner, i) => {
-          return (
-            <img
-              src={banner}
-              key={i}
-              alt="text"
-              className="rounded-md w-full md:h-48 h-36"
+        {slides}
+      </div>
+      <div className="absolute inset-0 flex items-center justify-between p-4">
+        <button onClick={prev} className="p-1 rounded-full   ">
+          <FontAwesomeIcon icon={faCircleArrowLeft} size="lg" color="white" />
+        </button>
+        <button onClick={next} className="p-1 rounded-full  ">
+          <FontAwesomeIcon icon={faCircleArrowRight} size="lg" color="white" />
+        </button>
+      </div>
+
+      <div className="absolute bottom-4 right-0 left-0">
+        <div className="flex items-center justify-center gap-2">
+          {slides.map((_, i) => (
+            <div
+              className={`
+              transition-all w-2 h-2 bg-white rounded-full
+              ${curr === i ? "p-1 bg-gray-900" : "bg-opacity-50"}
+            `}
             />
-          );
-        })}
-      </Carousel>
+          ))}
+        </div>
+      </div>
     </div>
   );
-};
-
-export default CarouselBanner;
+}

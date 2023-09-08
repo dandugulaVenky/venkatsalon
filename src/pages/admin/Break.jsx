@@ -616,6 +616,16 @@ function Break() {
           </div>
         </div>
       </div>
+      <div className="w-full mx-auto my-10">
+        <iframe
+          src="https://calendar.google.com/calendar/embed?src=venkatdandugulayou%40gmail.com&ctz=Asia%2FKolkata"
+          width="100%"
+          height="800"
+          frameborder="0"
+          scrolling="no"
+          title="myCalender"
+        ></iframe>
+      </div>
       <Footer />
     </div>
   );

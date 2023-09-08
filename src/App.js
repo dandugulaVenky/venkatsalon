@@ -46,13 +46,15 @@ import Telugu from "./pages/translation/Telugu";
 import i18next from "./i18n";
 import LanguageContext from './context/LanguageContext';
 import { useState } from "react";
+import Login1 from "./components/Login1";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
     if (!user) {
-      return <Navigate to="/login" />;
+      // return <Navigate to="/login" />;
+      return <Login1 />;
     }
 
     return children;

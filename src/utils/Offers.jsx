@@ -6,8 +6,8 @@ import womensOffer from "../pages/images/BP.png";
 import "./styles.scss";
 const Offers = () => {
   return (
-    <div className="  md:py-10 px-1 pb-20 md:mb-0  text-black ">
-      <h1 className="px-4 text-xl font-semibold pb-8">Offers</h1>
+    <div className=" px-1   text-black md:mb-10 mb-20">
+      <h1 className="px-4 text-xl font-semibold pb-4">Offers</h1>
       <Carousel cols={3} rows={1} gap={10} loop aubottomlay={8000}>
         <Carousel.Item>
           <div className="  h-44 w-full">

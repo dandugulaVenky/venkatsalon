@@ -12,7 +12,14 @@ import {
   faScissors,
   faSpa,
 } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useEffect, useState, useCallback, Fragment } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  Fragment,
+  memo,
+} from "react";
 import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
@@ -64,6 +71,20 @@ const Hotel = () => {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const w = window.innerWidth;
+  let images = [];
+
+  w >= 539
+    ? (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+      ])
+    : (images = [
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+      ]);
   const lunch = [24, 25, 26, 27, 28, 29];
   const [breakTime, setBreakTime] = useState();
 
@@ -252,7 +273,7 @@ const Hotel = () => {
     };
 
     scroll();
-  }, []);
+  }, [loginUser]);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -459,13 +480,31 @@ const Hotel = () => {
       {sidebar && <Sidebar />}
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
-      <CarouselBanner />
+      <div className={` w-full mx-auto  md:rounded md:px-4 `}>
+        <CarouselBanner autoSlide={true}>
+          {images.map((s) => {
+            return (
+              <img
+                src={s}
+                className="md:rounded rounded-sm"
+                style={{
+                  backgroundPosition: "center",
+
+                  backgroundSize: "cover",
+                  width: "100%",
+                }}
+                alt="carousel-img"
+              />
+            );
+          })}
+        </CarouselBanner>
+      </div>
       {loginUser && (
         <Login1 setLoginUser={setLoginUser} shopId={shopIdLocation} />
       )}
-      <div className="px-4 scrollable-container ">
-        <div className="w-full bg-[#00ccbb] rounded-md  p-5 flex items-center justify-center flex-col mt-4 ">
-          <div className="flex items-center justify-center space-x-5 pt-5 md:-ml-0 -ml-2.5 text-white ">
+      <div className="md:px-4 px-2 ">
+        <div className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col mt-4 ">
+          <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
             <div
               className={
                 type === "saloon"
@@ -492,9 +531,9 @@ const Hotel = () => {
             </div>
           </div>
 
-          <div className="pt-5 pb-5 space-y-2 flex md:flex-row flex-col md:space-x-2 md:-ml-0 -ml-3">
-            <div>
-              <div className="-mt-1 ">
+          <div className="grid grid-cols-12 gap-5 pb-5">
+            <div className="md:col-span-4 col-span-12">
+              <div className="">
                 <DatePicker
                   // onClick={() => w > 820 && window.scrollTo(0, 100)}
                   onChange={handleChange}
@@ -502,20 +541,16 @@ const Hotel = () => {
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded md:w-[12.3rem] w-[14.3rem]  mt-3  "
+                  className="bg-slate-100 text-blue-400 p-2.5 rounded w-full    "
                 />
               </div>
             </div>
-            <div className="flex md:flex-row flex-col md:space-y-0 md:space-x-2 space-y-2  items-center">
-              <Menu as="div" className="relative inline-block text-left">
+            <div className="md:col-span-4 col-span-12">
+              <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() =>
-                      w > 820
-                        ? window.scrollTo(0, 200)
-                        : window.scrollTo(0, 100)
-                    }
-                    className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]"
+                    onClick={() => window.scrollTo(0, 200)}
+                    className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
                       <span className="md:text-md ">
@@ -647,15 +682,14 @@ const Hotel = () => {
                   </Menu.Items>
                 </Transition>
               </Menu>
-
-              <div className="">
-                <button
-                  className="headerBtn md:p-3 p-2.5 lg:ml-1 jello-horizontal"
-                  onClick={handleClick}
-                >
-                  {t('checkServices')}
-                </button>
-              </div>
+            </div>
+            <div className="md:col-span-4 col-span-12">
+              <button
+                className="headerBtn w-full p-[0.71rem] jello-horizontal"
+                onClick={handleClick}
+              >
+                {t('checkServices')}
+              </button>
             </div>
           </div>
         </div>
@@ -833,4 +867,4 @@ const Hotel = () => {
   );
 };
 
-export default Hotel;
+export default memo(Hotel);

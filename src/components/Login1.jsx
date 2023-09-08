@@ -90,9 +90,10 @@ export default function Login1({ setLoginUser, shopId }) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
 
         // token !== "" && saveToken(res.data.details._id, token);
-        setLoginUser(true);
+        setLoginUser(false);
       } catch (err) {
         dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+        // setLoginUser(false);
       }
     } catch (err) {
       toast.error(err);
@@ -115,7 +116,10 @@ export default function Login1({ setLoginUser, shopId }) {
         >
           <h1 className="mb-4 text-2xl font-semibold">Login</h1>
 
-          <div className="absolute top-2 right-5">
+          <div
+            className="absolute top-2 right-5 cursor-pointer"
+            onClick={() => setLoginUser(false)}
+          >
             <FontAwesomeIcon icon={faClose} size="lg" />
           </div>
           <div className="mb-4">

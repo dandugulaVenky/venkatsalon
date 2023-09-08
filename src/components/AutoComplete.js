@@ -9,11 +9,16 @@ export default class AutoComplete extends React.Component {
   constructor(props) {
     super(props);
     this.state = { address: "" };
+    this.inputRef = React.createRef();
   }
 
   handleChange = (address) => {
     this.setState({ address });
   };
+
+  componentDidMount() {
+    this.inputRef.current.focus();
+  }
 
   render() {
     const { setHeader, setAddress, dispatch, type, register, bestRef } =
@@ -35,9 +40,10 @@ export default class AutoComplete extends React.Component {
         })
 
         .catch((error) => console.error("Error", error));
+
       setTimeout(() => {
         setHeader(false);
-      }, 350);
+      }, 450);
 
       if (!register) {
         if (bestRef.current) {
@@ -46,13 +52,18 @@ export default class AutoComplete extends React.Component {
 
             // After the initial scrolling is completed, add more scrolling
             setTimeout(() => {
-              const additionalScrollAmount = 200; // Adjust this value to determine how many additional pixels you want to scroll
+              if (this.inputRef.current) {
+                this.inputRef.current.blur();
+              }
+              const additionalScrollAmount = -200; // Adjust this value to determine how many additional pixels you want to scroll
               window.scrollBy({
                 top: additionalScrollAmount,
                 behavior: "smooth",
               });
-            }, 800); // Adjust the delay as needed
-          }, 1000);
+            }, 1300);
+
+            // Adjust the delay as needed
+          }, 1150);
         }
       }
     };
@@ -76,8 +87,9 @@ export default class AutoComplete extends React.Component {
                   {...getInputProps({
                     placeholder: "Search Places ...",
                     className: "location-search-input",
+
+                    ref: this.inputRef, // Assign the ref to the input element
                   })}
-                  autoFocus
                 />
                 <span onClick={() => setHeader(false)} className="cross">
                   <FontAwesomeIcon
