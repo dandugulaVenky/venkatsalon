@@ -607,7 +607,7 @@ const Hotel = () => {
                             <span className=" text-xs md:text-sm">
                               Seats Left
                             </span>
-                            &nbsp;
+                            &nbsp;&nbsp;&nbsp;
                             <FontAwesomeIcon
                               icon={faCircle}
                               color="red "
