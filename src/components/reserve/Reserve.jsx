@@ -444,181 +444,181 @@ const Reserve = () => {
       }
     }
 
-    const check1 = durationBySeat.map((duration) =>
-      duration.value > (lunchStart - lunchEnd) * 10
+    const check = durationBySeat.map((duration) =>
+      duration.value > (num1 - num2) * 10
         ? { seatNo: duration.seatNo, isReachedEnd: true }
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
-
-    // lunchStart - lunchEnd > 0  because lunch timeat 1pm will be - if we select at 2pm
-    if (check1) {
-      const lunch = check1.map((item) => {
-        if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
+    if (check) {
+      const showEnd = check.map((item) => {
+        if (item.isReachedEnd) {
           // alert(
-          //   `You can only book2 until ${
-          //     options[selectedValue + 1].value
-          //   } because it is lunch time for owner in this shop, so please select only ${
-          //     (lunchStart - lunchEnd) * 10
+          // `You can only book until ${
+          //     options[options.length - 1].value
+          //   }, so please select only ${
+          //     (num1 - num2) * 10
           //   } mins in Seat No.${item.seatNo + 1} `
-          // );
-          alert(
-            t("ownerLunchTime", {
-              time: options[lunchStart].value,
-              mins: (lunchStart - lunchEnd) * 10,
-              seatNum: item.seatNo + 1,
-            })
-          );
+          // )
+
+          alert("lessTimeLeft", {
+            time: options[options.length - 1].value,
+            mins: (num1 - num2) * 10,
+            seatNum: item.seatNo + 1,
+          });
           return true;
         } else {
           return false;
         }
       });
 
-      if (lunch.includes(true)) {
+      if (showEnd.includes(true)) {
         return null; // Stop execution of the whole function
       } else {
-        const check = durationBySeat.map((duration) =>
-          duration.value > (num1 - num2) * 10
+        const getReturn = (item1, item2) => {
+          const minutes = item1;
+          const hours = Math.floor(minutes / 60);
+          const remainingMinutes = minutes % 60;
+          item1 > 60
+            ? alert(
+                t("reachingOthersTime", {
+                  time: options[selectedValue + item1 / 10].value,
+                  hours: hours,
+                  mins: remainingMinutes,
+                  seatNum: item2 + 1,
+                })
+              )
+            : //  alert(
+              //   `Others have a booking at ${
+              //     options[selectedValue + item1 / 10].value
+              //   }. Please choose only a option which is of ${item1} minutes in seat${
+              //     item2 + 1
+              //   } `
+              // );
+              alert(
+                t("reachingOthersTime1", {
+                  time: options[selectedValue + item1 / 10].value,
+                  mins: item1,
+                  seatNum: item2 + 1,
+                })
+              );
+
+          return 0;
+        };
+
+        const error = seats?.map((item) => {
+          const output = durationBySeat?.map((item1) => {
+            return item?.id === item1?.id
+              ? item1?.value > durations[item?.index]
+                ? getReturn(durations[item?.index], item?.index)
+                : null
+              : null;
+          });
+          return output;
+        });
+        const mergedArr = [].concat(...error);
+
+        if (mergedArr.includes(0)) {
+          return;
+        }
+        const check1 = durationBySeat.map((duration) =>
+          duration.value > (lunchStart - lunchEnd) * 10
             ? { seatNo: duration.seatNo, isReachedEnd: true }
             : { seatNo: duration.seatNo, isReachedEnd: false }
         );
-        if (check) {
-          const showEnd = check.map((item) => {
-            if (item.isReachedEnd) {
+
+        // lunchStart - lunchEnd > 0  because lunch timeat 1pm will be - if we select at 2pm
+        if (check1) {
+          const lunch = check1.map((item) => {
+            if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
               // alert(
-              // `You can only book until ${
-              //     options[options.length - 1].value
-              //   }, so please select only ${
-              //     (num1 - num2) * 10
+              //   `You can only book2 until ${
+              //     options[selectedValue + 1].value
+              //   } because it is lunch time for owner in this shop, so please select only ${
+              //     (lunchStart - lunchEnd) * 10
               //   } mins in Seat No.${item.seatNo + 1} `
-              // )
-              alert();
-              alert("lessTimeLeft", {
-                time: options[options.length - 1].value,
-                mins: (num1 - num2) * 10,
-                seatNum: item.seatNo + 1,
-              });
+              // );
+              alert(
+                t("ownerLunchTime", {
+                  time: options[lunchStart].value,
+                  mins: (lunchStart - lunchEnd) * 10,
+                  seatNum: item.seatNo + 1,
+                })
+              );
               return true;
             } else {
               return false;
             }
           });
-
-          if (showEnd.includes(true)) {
-            return null; // Stop execution of the whole function
-          } else {
-            const getReturn = (item1, item2) => {
-              const minutes = item1;
-              const hours = Math.floor(minutes / 60);
-              const remainingMinutes = minutes % 60;
-              item1 > 60
-                ? alert(
-                    t("reachingOthersTime", {
-                      time: options[selectedValue + item1 / 10].value,
-                      hours: hours,
-                      mins: remainingMinutes,
-                      seatNum: item2 + 1,
-                    })
-                  )
-                : //  alert(
-                  //   `Others have a booking at ${
-                  //     options[selectedValue + item1 / 10].value
-                  //   }. Please choose only a option which is of ${item1} minutes in seat${
-                  //     item2 + 1
-                  //   } `
-                  // );
-                  alert(
-                    t("reachingOthersTime1", {
-                      time: options[selectedValue + item1 / 10].value,
-                      mins: item1,
-                      seatNum: item2 + 1,
-                    })
-                  );
-
-              return 0;
-            };
-            const error = seats?.map((item) => {
-              const output = durationBySeat?.map((item1) => {
-                return item?.id === item1?.id
-                  ? item1?.value > durations[item?.index]
-                    ? getReturn(durations[item?.index], item?.index)
-                    : null
-                  : null;
-              });
-              return output;
-            });
-            const mergedArr = [].concat(...error);
-
-            if (mergedArr.includes(0)) {
-              return;
-            }
-
-            //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
-            //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
-
-            const generateUpdatedDurationBySeat = () => {
-              const minLookup = {};
-
-              for (let i = 1; i <= Object.keys(minValuesObj).length; i++) {
-                minLookup[i * 10] = minValuesObj[`min${i * 10}`];
-              }
-
-              const updatedDurationBySeat = durationBySeat.map((item) => {
-                const minValue = minLookup[item.value];
-
-                return minValue ? { ...item, value: minValue } : item;
-              });
-
-              return updatedDurationBySeat;
-            };
-
-            const updatedDurationBySeat = generateUpdatedDurationBySeat();
-
-            // updates dates with all the options to send to room unavilableDates with all the options to backend.
-
-            const dates = updatedDurationBySeat?.map((item, i) => {
-              return {
-                time: time,
-                date: moment(dater).format("MMM Do YY"),
-                isAccepted: "false",
-                bookId: id,
-                findId: item.id,
-                options: seats
-                  .filter((ikem) => {
-                    if (ikem.id === item.id) {
-                      return true;
-                    }
-                  })
-                  .map((ikem) => ikem.options)
-                  .flat(),
-                values: updatedDurationBySeat[i]?.value,
-
-                createdAt: new Date().toISOString(),
-              };
-            });
-            console.log("done");
-            if (dates) {
-              setReserveState({
-                selectedSeats: seats,
-                totalAmount,
-                roomId: data[0]?._id,
-                shopOwner,
-                shopId,
-                shopName,
-                ownerEmail,
-                ownerNumber,
-                bookId: id,
-                user,
-                link: "https://easytym.com/history",
-                dates,
-                previewServices,
-              });
-              setSalonPreview(true);
-            } else {
-              toast("something wrong!");
-              return;
-            }
+          if (lunch.includes(true)) {
+            return null;
           }
+        }
+
+        console.log("I am coming!sd");
+        //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
+        //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
+
+        const generateUpdatedDurationBySeat = () => {
+          const minLookup = {};
+
+          for (let i = 1; i <= Object.keys(minValuesObj).length; i++) {
+            minLookup[i * 10] = minValuesObj[`min${i * 10}`];
+          }
+
+          const updatedDurationBySeat = durationBySeat.map((item) => {
+            const minValue = minLookup[item.value];
+
+            return minValue ? { ...item, value: minValue } : item;
+          });
+
+          return updatedDurationBySeat;
+        };
+
+        const updatedDurationBySeat = generateUpdatedDurationBySeat();
+
+        // updates dates with all the options to send to room unavilableDates with all the options to backend.
+
+        const dates = updatedDurationBySeat?.map((item, i) => {
+          return {
+            time: time,
+            date: moment(dater).format("MMM Do YY"),
+            isAccepted: "false",
+            bookId: id,
+            findId: item.id,
+            options: seats
+              .filter((ikem) => {
+                if (ikem.id === item.id) {
+                  return true;
+                }
+              })
+              .map((ikem) => ikem.options)
+              .flat(),
+            values: updatedDurationBySeat[i]?.value,
+
+            createdAt: new Date().toISOString(),
+          };
+        });
+        console.log("doneRajaDan");
+        if (dates) {
+          setReserveState({
+            selectedSeats: seats,
+            totalAmount,
+            roomId: data[0]?._id,
+            shopOwner,
+            shopId,
+            shopName,
+            ownerEmail,
+            ownerNumber,
+            bookId: id,
+            user,
+            link: "https://easytym.com/history",
+            dates,
+            previewServices,
+          });
+          setSalonPreview(true);
+        } else {
+          toast("something wrong!");
+          return;
         }
       }
     }
