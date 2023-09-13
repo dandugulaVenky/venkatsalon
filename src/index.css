@@ -35,7 +35,7 @@ body {
 
 input,
 select {
-  @apply rounded border p-1  outline-none border-blue-900 ring-white bg-white text-black font-rubik   focus:ring;
+  @apply rounded border-2 p-1  outline-none border-[#00ccbb] ring-white bg-white text-black focus:ring;
 }
 
 input::placeholder {

@@ -27,22 +27,26 @@ const Test = ({ services }) => {
   }, [services]);
 
   return (
-    <div className="   py-5 md:mb-0  text-white ">
+    <div className="   pt-5 md:mb-0  text-white ">
       <Carousel cols={7} rows={1} gap={8}>
         {mergedServices?.map((item, i) => {
           return (
             <Carousel.Item key={i}>
-              <div className="relative md:h-28 md:w-52 h-44 w-full">
+              <div className="relative md:h-28 md:w-52 h-32 w-full">
                 <img
                   src={
                     type === "saloon"
                       ? image
                       : "https://img.freepik.com/premium-psd/top-view-beauty-salon-concept_23-2148600664.jpg?w=2000"
                   }
+                  style={{
+                    width: 700,
+                    height: 110,
+                  }}
                   alt="images"
                   className="rounded-md img"
                 />
-                <p className="absolute bottom-4 left-4 text-white font-bold  text-lg ">
+                <p className="absolute md:bottom-3 bottom-6 left-4 text-white font-bold  text-lg ">
                   {item?.service}
                 </p>
                 <p className="absolute top-0 right-2 text-white font-bold  text-xl space-x-4 ">

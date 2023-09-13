@@ -44,9 +44,8 @@ import ShopDetails from "./pages/shopRegistration/ShopDetails";
 import Break from "./pages/admin/Break";
 import Telugu from "./pages/translation/Telugu";
 import i18next from "./i18n";
-import LanguageContext from './context/LanguageContext';
+import LanguageContext from "./context/LanguageContext";
 import { useState } from "react";
-import Login1 from "./components/Login1";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -54,147 +53,150 @@ function App() {
 
     if (!user) {
       // return <Navigate to="/login" />;
-      return <Login1 />;
+      return <Login />;
     }
 
     return children;
   };
-  const [locale, setLocale] = useState(i18next.language); 
+  const [locale, setLocale] = useState(i18next.language);
 
   return (
     <>
-    <LanguageContext.Provider value={{locale, setLocale}}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/get-started" element={<Home />} /> */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/shop-registration" element={<RegistrationForm />} />
-        <Route path="/shop-details" element={<ShopDetails />} />
-        <Route
-          path="/shop-final-registration"
-          element={<FinalRegistration />}
-        />
+      <LanguageContext.Provider value={{ locale, setLocale }}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            {/* <Route path="/get-started" element={<Home />} /> */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/shop-registration" element={<RegistrationForm />} />
+            <Route path="/shop-details" element={<ShopDetails />} />
+            <Route
+              path="/shop-final-registration"
+              element={<FinalRegistration />}
+            />
 
-        <Route path="/shops" element={<List />} />
-        <Route path="/cities" element={<AllCities />} />
-        <Route path="/test" element={<Test />} />
+            <Route path="/shops" element={<List />} />
+            <Route path="/cities" element={<AllCities />} />
+            <Route path="/test" element={<Test />} />
 
-        <Route path="/shops/:id" element={<Hotel />} />
-        <Route path="/shops/:id/salon-reserve" element={<Reserve />} />
+            <Route path="/shops/:id" element={<Hotel />} />
+            <Route path="/shops/:id/salon-reserve" element={<Reserve />} />
 
-        <Route path="/shops/:id/parlour-reserve" element={<Test1 />} />
+            <Route path="/shops/:id/parlour-reserve" element={<Test1 />} />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/history"
-          element={
-            <ProtectedRoute>
-              <BookingHistory />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/transactions"
-          element={
-            <ProtectedRoute>
-              <Transactions />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/orders"
-          element={
-            <ProtectedRoute>
-              <AdminOrders />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/packages"
-          element={
-            <ProtectedRoute>
-              <Packages />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/my-services"
-          element={
-            <ProtectedRoute>
-              <MyServices />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <ProtectedRoute>
+                  <BookingHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/transactions"
+              element={
+                <ProtectedRoute>
+                  <Transactions />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute>
+                  <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/packages"
+              element={
+                <ProtectedRoute>
+                  <Packages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-services"
+              element={
+                <ProtectedRoute>
+                  <MyServices />
+                </ProtectedRoute>
+              }
+            />
 
-        <Route
-          path="/admin/add-services"
-          element={
-            <ProtectedRoute>
-              <AddServices />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/compare"
-          element={
-            <ProtectedRoute>
-              <Compare />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin/break"
-          element={
-            <ProtectedRoute>
-              <Break />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/payment-success"
-          element={
-            <ProtectedRoute>
-              <PaymentSuccess />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-        <Route path="/about-us" element={<About />} />
-        <Route path="/contact-us" element={<Contact />} />
-        <Route path="/failure" element={<BookingFailure />} />
-        <Route path="/iron" element={<Ironing />} />
-        <Route path="/iron/product/:slug" element={<Slug />} />
-        <Route path="/iron/cart" element={<Cart />} />
-        <Route path="/iron/shipping" element={<Shipping />} />
-        <Route path="/iron/place-order" element={<PlaceOrder />} />
-        <Route path="/iron-orders" element={<Orders />} />
-        <Route path="/iron/order/:orderid" element={<OrderDetails />} />
-        <Route
-          path="/iron/iron-payment-success"
-          element={<IronPaymentSuccess />}
-        />
-        <Route path="/telugu" element={<Telugu />}/>
-      </Routes>
-    </BrowserRouter>
-        </LanguageContext.Provider>
+            <Route
+              path="/admin/add-services"
+              element={
+                <ProtectedRoute>
+                  <AddServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/compare"
+              element={
+                <ProtectedRoute>
+                  <Compare />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/break"
+              element={
+                <ProtectedRoute>
+                  <Break />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment-success"
+              element={
+                <ProtectedRoute>
+                  <PaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditions />}
+            />
+            <Route path="/about-us" element={<About />} />
+            <Route path="/contact-us" element={<Contact />} />
+            <Route path="/failure" element={<BookingFailure />} />
+            <Route path="/iron" element={<Ironing />} />
+            <Route path="/iron/product/:slug" element={<Slug />} />
+            <Route path="/iron/cart" element={<Cart />} />
+            <Route path="/iron/shipping" element={<Shipping />} />
+            <Route path="/iron/place-order" element={<PlaceOrder />} />
+            <Route path="/iron-orders" element={<Orders />} />
+            <Route path="/iron/order/:orderid" element={<OrderDetails />} />
+            <Route
+              path="/iron/iron-payment-success"
+              element={<IronPaymentSuccess />}
+            />
+            <Route path="/telugu" element={<Telugu />} />
+          </Routes>
+        </BrowserRouter>
+      </LanguageContext.Provider>
     </>
   );
 }

@@ -80,7 +80,7 @@ export default function CarouselBanner({
 
       <div className="absolute bottom-4 right-0 left-0">
         <div className="flex items-center justify-center gap-2">
-          {slides.map((_, i) => (
+          {slides?.map((_, i) => (
             <div
               className={`
               transition-all w-2 h-2 bg-white rounded-full

@@ -24,7 +24,7 @@ import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
 import axios from "axios";
 import { useEffect } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
@@ -225,16 +225,20 @@ const BookingHistory = () => {
 
       <div className="min-h-[85.5vh] max-w-[90vw] mx-auto">
         <div className="flex items-center justify-between  py-5">
-          <p className=" md:text-xl text-xs font-semibold">{t('bookingHistory')}</p>
+          <p className=" md:text-xl text-xs font-semibold">
+            {t("bookingHistory")}
+          </p>
 
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            className="bg-slate-100 text-black  rounded-md md:w-[14.3rem] w-[9.3rem]  "
+            className="  rounded-md md:w-[14.3rem] w-[9.3rem]  "
             placeholder="Filter by date,time,ref.."
           />
 
-          <p className="md:text-lg text-xs">{t('count')} : {filteredArray.length}</p>
+          <p className="md:text-lg text-xs">
+            {t("count")} : {filteredArray.length}
+          </p>
         </div>
         {loading && filteredArray?.length === 0 && (
           <div className="min-h-[75vh] flex items-center justify-center">
@@ -243,57 +247,57 @@ const BookingHistory = () => {
         )}
 
         {filteredArray?.length > 0 ? (
-          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 min-h-screen">
-            <>
-              <div className="overflow-x-auto  col-span-5">
-                <table className="min-w-full ">
-                  <thead className="border-b bg-gray-400 ">
-                    <tr className="border-b-2 border-gray-200 ">
-                      <th className="text-center md:text-md text-sm md:p-5 py-3">
-                        {t('reference')}
+          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 ">
+            <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
+              <table className="min-w-full  ">
+                <thead className="border-b bg-gray-400 ">
+                  <tr className="border-b-2 border-gray-200 ">
+                    <th className="text-center md:text-md text-sm md:p-5 py-3">
+                      Reference
+                    </th>
+                    <th className=" md:p-5 px-10 md:text-md text-sm text-right">
+                      Date
+                    </th>
+                    <th className="md:p-5 px-10  md:text-md text-sm text-right">
+                      Time
+                    </th>
+                    <th className="md:p-5 px-5  md:text-md text-sm text-right">
+                      Amount
+                    </th>
+                    <th className="md:p-5  px-10  md:text-md text-sm text-right">
+                      Shop
+                    </th>
+                    {
+                      <th className="md:p-5  px-10 md:text-md text-sm text-right">
+                        Inclusions
                       </th>
-                      <th className=" md:p-5 px-10 md:text-md text-sm text-right">
-                        {t('date')}
-                      </th>
-                      <th className="md:p-5 px-10  md:text-md text-sm text-right">
-                      {t('time')}
-                      </th>
-                      <th className="md:p-5 px-5  md:text-md text-sm text-right">
-                      {t('amount')}
-                      </th>
-                      <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                      {t('shop')}
-                      </th>
-                      {
-                        <th className="md:p-5  px-10 md:text-md text-sm text-right">
-                          {t('inclusions')}
-                        </th>
-                      }
-                      <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                        {t('payment')}
-                      </th>{" "}
-                      <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                      {t('done')}
-                      </th>
-                      <th className="md:p-5 px-5 md:text-md text-sm text-right">
-                        {t('createdAt')}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredArray?.slice(0, visible)?.map((item, j) => {
-                      return (
-                        <tr key={j} className="border-b-2 border-white">
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label className="text-gray-900 w-full">
-                              {item.referenceNumber}{" "}
-                            </label>
-                          </td>
-                          <td className="p-3 text-right md:text-md text-sm">
-                            <label className="text-gray-900 w-full">
-                              {item.date}
-                            </label>
-                          </td>
+                    }
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Payment
+                    </th>{" "}
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Done
+                    </th>
+                    <th className="md:p-5 px-5 md:text-md text-sm text-right">
+                      CreatedAt
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredArray?.slice(0, visible)?.map((item, j) => {
+                    // {filteredArray?.map((item, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-gray-500">
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.referenceNumber}{" "}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.date}
+                          </label>
+                        </td>
 
                         <td className="p-3 text-right md:text-md text-sm">
                           <label className="text-gray-900">{item.time}</label>

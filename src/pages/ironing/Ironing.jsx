@@ -15,7 +15,7 @@ import ProductItem from "./ironing-utils/ProductItem";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import "./styles.scss";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Ironing | Effortless Ironing With Easytym",
@@ -34,7 +34,6 @@ export default function Ironing() {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
   const { t } = useTranslation();
-
 
   const handleToast = () => {
     toast("Ordered successfully 🎉");
@@ -94,7 +93,19 @@ export default function Ironing() {
       price: "50",
     },
   ];
-
+  let images = [];
+  w >= 539
+    ? (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+      ])
+    : (images = [
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+      ]);
   return (
     <>
       {open && <SIdebar />}
@@ -104,17 +115,35 @@ export default function Ironing() {
         <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
-            {t('ironingWelcome')}
+            {t("ironingWelcome")}
           </h1>
           <h1 className="text-white md:px-64 px-4 text-md font-bold text-center py-5">
-            {t('ironingMessage')}
+            {t("ironingMessage")}
           </h1>
         </div>
       </div>
-      <CarouselBanner />
+      <div className={` w-full mx-auto  md:rounded md:px-4 md:py-3`}>
+        <CarouselBanner autoSlide={true}>
+          {images.map((s) => {
+            return (
+              <img
+                src={s}
+                className="md:rounded"
+                style={{
+                  backgroundPosition: "center",
 
-      <div className="px-4 py-14">
-        <h2 className="h2 my-4 text-xl font-semibold">{t('items')}</h2>
+                  backgroundSize: "cover",
+                  width: "100%",
+                }}
+                alt="carousel-img"
+              />
+            );
+          })}
+        </CarouselBanner>
+      </div>
+
+      <div className="px-4 pb-14">
+        <h2 className="h2 my-4 text-xl font-semibold">{t("items")}</h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (

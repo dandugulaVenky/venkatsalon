@@ -10,7 +10,9 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronCircleDown,
+  faLanguage,
   faLocation,
+  faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../header/Header";
@@ -18,10 +20,9 @@ import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 // import { useLanguage } from "../../context/LanguageContext";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
-import i18next from '../../i18n';
-
+import i18next from "../../i18n";
 
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
@@ -49,12 +50,11 @@ const Layout = ({ bestRef }) => {
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
-  const {locale,setLocale}=useContext(LanguageContext);
-    i18next.on('languageChanged', (ing) => setLocale(i18next.language));
-    const handleChange = (event)=>{
-          i18next.changeLanguage (event.target.value);//fr or
-          }
-
+  const { locale, setLocale } = useContext(LanguageContext);
+  i18next.on("languageChanged", (ing) => setLocale(i18next.language));
+  const handleChange = (event) => {
+    i18next.changeLanguage(event.target.value); //fr or
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,7 +102,7 @@ const Layout = ({ bestRef }) => {
   useEffect(() => {
     setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
   }, [cart.cartItems]);
-  
+
   // const handleLanguageChange = () => {
   //   console.log("update");
   //   updateLng('te'); // Change language to English
@@ -133,9 +133,9 @@ const Layout = ({ bestRef }) => {
       <div className="pb-[6.3rem]">
         <div className="mainHead">
           <div
-            className={`flex items-center justify-between px-10  ${
-              isScrolled ? "head1" : "head2"
-            }`}
+            className={`flex items-center justify-between px-10 ${
+              pathname.includes("/shops") ? "bg-white" : "bg-transparent"
+            } ${isScrolled ? "head1 " : "head2"}`}
           >
             <div className="flex items-center justify-center">
               <Link to="/" onClick={scrollNow}>
@@ -162,38 +162,65 @@ const Layout = ({ bestRef }) => {
             <div className="flex items-center justify-between ">
               {user ? (
                 <div className="flex items-center justify-center md:space-x-8 space-x-3 ">
-                  {(pathname.includes("/cart") ||
-                    pathname.includes("/shipping") ||
-                    pathname.includes("/place-order")) && (
+                  {
                     <Link to="/iron" className="transition-all delay-300">
-                      <h1 className=" font-semibold md:text-lg text-xs">
-                        {t('ironHome')}
+                      <h1
+                        className={`font-semibold md:text-lg text-xs ${
+                          pathname?.includes("/iron") ? "text-[#00ccbb]" : ""
+                        } `}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTShirt}
+                          size="lg"
+                          className="mr-1"
+                        />
+                        {t("ironHome")}
                       </h1>
                     </Link>
-                  )}
+                  }
                   <Link to="/about-us">
-                    <h1 className=" font-semibold md:text-lg text-xs">{t('about')}</h1>
+                    <h1
+                      className={` font-semibold md:text-lg text-xs ${
+                        pathname?.includes("/about") ? "text-[#00ccbb]" : ""
+                      }`}
+                    >
+                      {t("about")}
+                    </h1>
                   </Link>
                   <Link to="/contact-us">
-                    <h1 className=" font-semibold md:text-lg text-xs">
-                    {t('contact')}
+                    <h1
+                      className={` font-semibold md:text-lg text-xs ${
+                        pathname?.includes("/contact-us")
+                          ? "text-[#00ccbb]"
+                          : ""
+                      }`}
+                    >
+                      {t("contact")}
                     </h1>
                   </Link>
                   {/* <button onClick={handleLanguageChange}>Change Language</button> */}
                   <div>
-                  <label>Select Language</label>
-                  <select
-                   value={locale} onChange={handleChange}
-                   >
-                  <option value="en">English</option>
-                  <option value="te">Telugu</option>
-                  <option value="hi">Hindi</option>
-                  </select>
+                    <label className="mr-2">
+                      <FontAwesomeIcon
+                        icon={faLanguage}
+                        size="xl"
+                        color="black"
+                      />
+                    </label>
+                    <select value={locale} onChange={handleChange}>
+                      <option value="en">English</option>
+                      <option value="te">Telugu</option>
+                      <option value="hi">Hindi</option>
+                    </select>
                   </div>
                   {pathname.includes("iron") && (
                     <Link to="/iron/cart">
-                      <a className=" font-semibold md:text-lg text-xs">
-                       {t('cart')}
+                      <a
+                        className={` font-semibold md:text-lg text-xs ${
+                          pathname?.includes("/cart") ? "text-[#00ccbb]" : ""
+                        }`}
+                      >
+                        {t("cart")}
                         {cartItemsCount > 0 && (
                           <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
                             {cartItemsCount}
@@ -217,24 +244,24 @@ const Layout = ({ bestRef }) => {
                     <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1 mt-2">
-                          <Link to="/profile">{t('profile')}</Link>
+                          <Link to="/profile">{t("profile")}</Link>
                         </DropdownLink>
                       </Menu.Item>
 
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1">
-                          <Link to="/history">{t('bookingHistory')}</Link>
+                          <Link to="/history">{t("bookingHistory")}</Link>
                         </DropdownLink>
                       </Menu.Item>
                       <Menu.Item>
                         <DropdownLink className="dropdown-link p-1">
-                          <Link to="/iron-orders">{t('ironOrders')}</Link>
+                          <Link to="/iron-orders">{t("ironOrders")}</Link>
                         </DropdownLink>
                       </Menu.Item>
                       {isAdmin && (
                         <Menu.Item>
                           <DropdownLink className="dropdown-link p-1">
-                            <Link to="/admin">{t('aAdminDashboard')}</Link>
+                            <Link to="/admin">{t("aAdminDashboard")}</Link>
                           </DropdownLink>
                         </Menu.Item>
                       )}
@@ -247,7 +274,7 @@ const Layout = ({ bestRef }) => {
                             navigate("/login");
                           }}
                         >
-                         {t('logout')}
+                          {t("logout")}
                         </Link>
                       </Menu.Item>
                     </Menu.Items>

@@ -49,8 +49,8 @@ const AllCities = () => {
       {w < 768 && <Greeting />}
 
       <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
-        <div className="flex flex-col py-10 space-y-2 md:mx-0 mx-3">
-          <label> City </label>
+        <div className="flex items-center py-10 space-x-2 md:mx-0 mx-3">
+          <label> City :</label>
           <input
             type="text"
             className="w-64 rounded-md"

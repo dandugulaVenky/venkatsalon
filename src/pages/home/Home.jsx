@@ -15,8 +15,9 @@ import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 
 import Seo from "../../utils/Seo";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
+import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
@@ -39,7 +40,6 @@ const Home = () => {
   const [reference, setReference] = useState(location?.state?.referenceNum);
   const { t } = useTranslation();
 
-
   // const handleButton = async () => {
   //   try {
   //     const res = await axios.post(
@@ -58,7 +58,7 @@ const Home = () => {
   //   }
   // };
 
-  useEffect(() => {
+  useEffectOnce(() => {
     //prompting user to retrive location if not enabled
 
     //setting users current location
@@ -185,7 +185,6 @@ const Home = () => {
   let images = [];
   const w = window.innerWidth;
 
-
   w >= 539
     ? (images = [
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
@@ -210,11 +209,11 @@ const Home = () => {
         <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className=" md:text-6xl text-4xl text-center font-bold ">
-              {t('welcome')}
+              {t("welcome")}
             </h1>
           </div>
           <h1 className="md:text-gray-700 text-white md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
-            {t('welcomeMessage')}
+            {t("welcomeMessage")}
           </h1>
         </div>
       </div>

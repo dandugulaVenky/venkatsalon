@@ -12,7 +12,8 @@ import baseUrl from "../../utils/client";
 
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import useEffectOnce from "../../utils/UseEffectOnce";
 const BestSaloons = () => {
   const { type: type1, city } = useContext(SearchContext);
 
@@ -85,7 +86,7 @@ const BestSaloons = () => {
                     />
                     <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
                       {/* {item.name} */}
-                      {t('salonName',{name:item.name})}
+                      {t("salonName", { name: item.name })}
                     </p>
                     <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                       <span className="font-semibold">

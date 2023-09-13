@@ -1,5 +1,5 @@
 import "./hotel.css";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import Footer from "../../components/footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -41,9 +41,8 @@ import options from "../../utils/time";
 import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 import { Menu, Transition } from "@headlessui/react";
-import Test1 from "../Test1";
-import Login from "../../components/Login1";
-import Login1 from "../../components/Login1";
+import useEffectOnce from "../../utils/UseEffectOnce";
+import GetSize from "../../utils/GetSize";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -60,12 +59,12 @@ const Hotel = () => {
   const [mergedServices, setMergedServices] = useState();
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
-  const [loginUser, setLoginUser] = useState(false);
+
   const { user } = useContext(AuthContext);
   const { city, date, time } = useContext(SearchContext);
   const [value, setValue] = useState(new Date());
   const [timeReserve, setTimeReserve] = useState();
-
+  const size = GetSize();
   const { type, dispatch } = useContext(SearchContext);
   const { open: sidebar } = useContext(SearchContext);
   const [services, setServices] = useState([]);
@@ -93,8 +92,9 @@ const Hotel = () => {
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
   const { t } = useTranslation();
-
-
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
@@ -108,7 +108,7 @@ const Hotel = () => {
       return;
     } else if (isTuesday(value)) {
       // alert("Tuesdays are not selectable!");
-      alert(t('tuesdaysNotSelectable'));
+      alert(t("tuesdaysNotSelectable"));
       return;
     } else {
       if (block.length > 0) {
@@ -267,14 +267,6 @@ const Hotel = () => {
     fetchData();
   }, [fetchReviews, navigate, shopIdLocation, today, type, value]);
 
-  useEffect(() => {
-    const scroll = () => {
-      window.scrollTo(0, 0);
-    };
-
-    scroll();
-  }, [loginUser]);
-
   const handleOpen = (i) => {
     setSlideNumber(i);
     setOpen(true);
@@ -328,14 +320,14 @@ const Hotel = () => {
       );
       if (isBlockedDate) {
         // alert("Owner is not available");
-        alert(t('ownerNotAvailable'))
+        alert(t("ownerNotAvailable"));
         return null;
       }
     }
 
     if (isTuesday(value)) {
       // alert("Tuesdays are not selectable!");
-      alert(t('tuesdaysNotSelectable'))
+      alert(t("tuesdaysNotSelectable"));
       return;
     }
 
@@ -390,10 +382,9 @@ const Hotel = () => {
         },
       });
     } else {
-      // navigate("/login", {
-      //   state: { destination: `/shops/${shopIdLocation}` },
-      // });
-      setLoginUser(true);
+      navigate("/login", {
+        state: { destination: `/shops/${shopIdLocation}` },
+      });
     }
   };
 
@@ -499,9 +490,7 @@ const Hotel = () => {
           })}
         </CarouselBanner>
       </div>
-      {loginUser && (
-        <Login1 setLoginUser={setLoginUser} shopId={shopIdLocation} />
-      )}
+
       <div className="md:px-4 px-2 ">
         <div className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col mt-4 ">
           <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
@@ -514,7 +503,7 @@ const Hotel = () => {
             >
               <FontAwesomeIcon icon={faScissors} />
               <span className="text-xs md:text-lg font-bold ">
-                {t('saloonShops')}
+                {t("saloonShops")}
               </span>
             </div>
             <div
@@ -526,7 +515,7 @@ const Hotel = () => {
             >
               <FontAwesomeIcon icon={faSpa} />
               <span className="text-xs md:text-lg font-bold">
-                {t('beautyParlours')}
+                {t("beautyParlours")}
               </span>
             </div>
           </div>
@@ -535,7 +524,7 @@ const Hotel = () => {
             <div className="md:col-span-4 col-span-12">
               <div className="">
                 <DatePicker
-                  // onClick={() => w > 820 && window.scrollTo(0, 100)}
+                  onClick={() => w > 820 && window.scrollTo(0, 100)}
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
@@ -549,7 +538,11 @@ const Hotel = () => {
               <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() => window.scrollTo(0, 200)}
+                    onClick={() =>
+                      size === 4
+                        ? window.scrollTo(0, 260)
+                        : window.scrollTo(0, 135)
+                    }
                     className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
@@ -564,7 +557,7 @@ const Hotel = () => {
                             {timeReserve}
                           </p>
                         ) : (
-                          t('selectTime')
+                          t("selectTime")
                         )}
                       </span>
                       <svg
@@ -594,16 +587,34 @@ const Hotel = () => {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="h-96  overflow-auto absolute z-10 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
+                  <Menu.Items className="h-[26rem]  overflow-auto absolute z-10 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="">
                       <Menu.Item>
                         {({ active }) => (
                           <p
                             className={classNames(
-                              `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
+                              `text-white block px-4  text-md font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-0.5 sticky top-0`
                             )}
                           >
-                          { t('selectTime')}
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              color="green "
+                              size="sm"
+                            />{" "}
+                            -{" "}
+                            <span className=" text-xs md:text-sm">
+                              Seats Left
+                            </span>
+                            &nbsp;&nbsp;&nbsp;
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              color="red "
+                              size="sm"
+                            />{" "}
+                            -{" "}
+                            <span className="text-xs md:text-sm">
+                              Booked/Unavailable
+                            </span>
                           </p>
                         )}
                       </Menu.Item>
@@ -666,7 +677,7 @@ const Hotel = () => {
                                             <FontAwesomeIcon
                                               icon={faCircle}
                                               color="green "
-                                              size="sm"
+                                              size="xs"
                                             />
                                             &nbsp;&nbsp;
                                           </span>
@@ -688,13 +699,13 @@ const Hotel = () => {
                 className="headerBtn w-full p-[0.71rem] jello-horizontal"
                 onClick={handleClick}
               >
-                {t('checkServices')}
+                {t("checkServices")}
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div />
+
       {services?.length > 0 ? <Test services={services} /> : ""}
       {loading ? (
         <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
@@ -730,21 +741,23 @@ const Hotel = () => {
               </div>
             </>
           )}
-          <div className="hotelWrapper mt-2">
+          <div className="hotelWrapper">
             <div className="md:flex space-y-4 items-center justify-between">
               <div className="hotelWrapper">
-                <h1 className="hotelTitle">{t('salonName',{name : data.name})}</h1>
+                <h1 className="hotelTitle">
+                  {t("salonName", { name: data.name })}
+                </h1>
                 <div className="hotelAddress">
                   <FontAwesomeIcon icon={faLocationDot} />
                   <span>{data.address}</span>
                 </div>
                 <span className="hotelDistance">
                   {/* Excellent location – {data.distance}m from center */}
-                  {t('shopDistance',{distance : data.distance})}
+                  {t("shopDistance", { distance: data.distance })}
                 </span>
                 <span className="hotelPriceHighlight">
                   {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
-                  {t('shopAbovePrice',{price :data.cheapestPrice })}
+                  {t("shopAbovePrice", { price: data.cheapestPrice })}
                 </span>
               </div>
               <img
@@ -770,8 +783,10 @@ const Hotel = () => {
                 id="reviews"
                 className="mt-5 space-y-3 p-5 bg-gray-100 shadow-md"
               >
-                <h2 className="font-semibold text-xl mb-3">{t('customerReviews')}</h2>
-                {reviews?.length === 0 && t('/noReviews')}
+                <h2 className="font-semibold text-xl mb-3">
+                  {t("customerReviews")}
+                </h2>
+                {reviews?.length === 0 && t("/noReviews")}
 
                 {reviews?.map((review, i) => {
                   return (
@@ -781,16 +796,27 @@ const Hotel = () => {
                     >
                       <div className="space-y-2.5 border-r-2 px-5">
                         {/* <strong>{review.name}</strong> */}
-                        <strong>{t('reviewName',{name:review.name})}</strong>
+                        <strong>
+                          {t("reviewName", { name: review.name })}
+                        </strong>
                         {/* <h3>{review.createdAt.substring(0, 10)}</h3> */}
-                        <h3>{t('reviewCreated',{created:review.createdAt.substring(0, 10)})}</h3>
+                        <h3>
+                          {t("reviewCreated", {
+                            created: review.createdAt.substring(0, 10),
+                          })}
+                        </h3>
                       </div>
 
                       <div>
                         {/* <Rating value={review.rating} readOnly></Rating> */}
-                        <Rating value={t('reviewRating',{rating:review.rating})} readOnly></Rating>
+                        <Rating
+                          value={t("reviewRating", { rating: review.rating })}
+                          readOnly
+                        ></Rating>
                         {/* <h3>{review.comment}</h3> */}
-                        <h3>{t('reviewComment',{comment:review.comment})}</h3>
+                        <h3>
+                          {t("reviewComment", { comment: review.comment })}
+                        </h3>
                       </div>
                     </div>
                   );
@@ -801,7 +827,7 @@ const Hotel = () => {
                     onSubmit={reviewHandler}
                     className="text-black  bg-white rounded-md p-3"
                   >
-                    <h1 className="font-semibold ">{t('leaveReview')}</h1>
+                    <h1 className="font-semibold ">{t("leaveReview")}</h1>
                     <ListItem>
                       <TextField
                         multiline
@@ -825,16 +851,16 @@ const Hotel = () => {
                       className="primary-button ml-5"
                       disabled={loading}
                     >
-                      {t('submit')}
+                      {t("submit")}
                     </button>
                   </form>
                 ) : (
                   <h1 className="font-semibold text-xl">
-                    {t('please')}{" "}
+                    {t("please")}{" "}
                     <Link to={`/login?redirect=/shops/${shopIdLocation}`}>
-                      <span className="text-blue-500">{t('login')}</span>
+                      <span className="text-blue-500">{t("login")}</span>
                     </Link>{" "}
-                    {t('toWriteReview')}
+                    {t("toWriteReview")}
                   </h1>
                 )}
               </div>

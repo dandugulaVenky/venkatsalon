@@ -13,7 +13,7 @@
 }
 
 .head1 {
-  background-color: #ffffffde;
+  background-color: white !important;
   max-height: 130px;
   transition: max-height 0.3s ease;
 
@@ -25,7 +25,6 @@
 }
 
 .head2 {
-  background-color: transparent;
   max-height: 200px;
   transition: max-height 0.3s ease;
   transition: background-color 0.5s ease-out;
