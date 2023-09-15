@@ -117,7 +117,7 @@ const Hotel = () => {
         );
 
         if (isBlockedDate) {
-          alert("Owner is not available!");
+          alert(t("ownerNotAvailable"));
           return;
         }
       }
@@ -603,7 +603,7 @@ const Hotel = () => {
                             />{" "}
                             -{" "}
                             <span className=" text-xs md:text-sm">
-                              Seats Left
+                              {t('seatsAvailable')}
                             </span>
                             &nbsp;&nbsp;&nbsp;
                             <FontAwesomeIcon
@@ -613,7 +613,7 @@ const Hotel = () => {
                             />{" "}
                             -{" "}
                             <span className="text-xs md:text-sm">
-                              Booked/Unavailable
+                              {t('bookedUnavailable')}
                             </span>
                           </p>
                         )}

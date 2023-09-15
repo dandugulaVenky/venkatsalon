@@ -135,7 +135,7 @@ const Home = () => {
                       },
                     });
                     alert(
-                      "Please enable location services to get personalized suggestions!"
+                      t("enableLocationServices")
                     );
                   },
                   {
@@ -150,7 +150,7 @@ const Home = () => {
               } else if (result.state === "denied") {
                 if (city === "No Location!") {
                   alert(
-                    "Please enable location services to get personalized suggestions!"
+                    t("enableLocationServices")
                   );
                 }
               }

@@ -209,8 +209,8 @@ const Layout = ({ bestRef }) => {
                     </label>
                     <select value={locale} onChange={handleChange}>
                       <option value="en">English</option>
-                      <option value="te">Telugu</option>
-                      <option value="hi">Hindi</option>
+                      <option value="te">తెలుగు</option>
+                      <option value="hi">हिंदी</option>
                     </select>
                   </div>
                   {pathname.includes("iron") && (
@@ -243,26 +243,34 @@ const Layout = ({ bestRef }) => {
                     </Menu.Button>
                     <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
                       <Menu.Item>
-                        <DropdownLink className="dropdown-link p-1 mt-2">
-                          <Link to="/profile">{t("profile")}</Link>
-                        </DropdownLink>
+                        {/* <DropdownLink className="dropdown-link p-1 mt-2"> */}
+                          <Link  
+                          className="dropdown-link p-1 mt-2"
+                          to="/profile">{t("profile")}</Link>
+                        {/* </DropdownLink> */}
                       </Menu.Item>
 
                       <Menu.Item>
-                        <DropdownLink className="dropdown-link p-1">
-                          <Link to="/history">{t("bookingHistory")}</Link>
-                        </DropdownLink>
+                        {/* <DropdownLink className="dropdown-link p-1"> */}
+                          <Link
+                          className="dropdown-link p-1"
+                          to="/history">{t("bookingHistory")}</Link>
+                        {/* </DropdownLink> */}
                       </Menu.Item>
                       <Menu.Item>
-                        <DropdownLink className="dropdown-link p-1">
-                          <Link to="/iron-orders">{t("ironOrders")}</Link>
-                        </DropdownLink>
+                        {/* <DropdownLink className="dropdown-link p-1"> */}
+                          <Link
+                          className="dropdown-link p-1"
+                          to="/iron-orders">{t("ironOrders")}</Link>
+                        {/* </DropdownLink> */}
                       </Menu.Item>
                       {isAdmin && (
                         <Menu.Item>
-                          <DropdownLink className="dropdown-link p-1">
-                            <Link to="/admin">{t("aAdminDashboard")}</Link>
-                          </DropdownLink>
+                          {/* <DropdownLink className="dropdown-link p-1"> */}
+                            <Link 
+                            className="dropdown-link p-1"
+                            to="/admin">{t("aAdminDashboard")}</Link>
+                          {/* </DropdownLink> */}
                         </Menu.Item>
                       )}
                       <Menu.Item>

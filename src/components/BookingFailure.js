@@ -12,11 +12,13 @@ import { AuthContext } from "../context/AuthContext";
 
 import useEffectOnce from "../utils/UseEffectOnce";
 import baseUrl from "../utils/client";
+import { useTranslation } from "react-i18next";
 
 const BookingFailure = () => {
   const location = useLocation();
   const { user: mainUser } = useContext(AuthContext);
   const [reference, setReference] = useState(location?.state?.referenceNum);
+  const { t } = useTranslation();
 
   const handleToast = () => {
     toast("Sorry for the inconvenience!");
@@ -81,7 +83,7 @@ const BookingFailure = () => {
       reference !== undefined && reference !== null && handleToast();
       sendMail(finalBookingDetails);
     } else {
-      return alert("Something went wrong!");
+      return alert(t("somethingWentWrong"));
     }
 
     return () => console.log("my effect is destroying");

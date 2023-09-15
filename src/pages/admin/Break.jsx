@@ -231,7 +231,7 @@ function Break() {
 
     console.log(selectedOption.id - selectedOption1.id);
     if (selectedOption.id - selectedOption1.id < 0) {
-      return alert('plsEnsureToSelectInOrder!');
+      return alert(t('plsEnsureToSelectInOrder!'));
     } else if (
       (selectedOption.id - selectedOption1.id) * 10 < 59 ||
       (selectedOption.id - selectedOption1.id) * 10 === 0

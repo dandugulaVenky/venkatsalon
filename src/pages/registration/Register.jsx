@@ -62,7 +62,7 @@ const Register = () => {
       setToken(token);
       // Send this token  to server ( db)
     } else if (permission === "denied") {
-      alert("You denied for the notification");
+      alert(t("deniedForNotification"));
     }
   }
 
@@ -98,7 +98,7 @@ const Register = () => {
 
   const submitHandler = async ({ name, email, password }) => {
     if (!name || !email || !password || !address) {
-      return alert("Please enter all details!");
+      return alert(t("enterAllDetails"));
     }
 
     if (!termsAccepted) {

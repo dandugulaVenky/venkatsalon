@@ -16,6 +16,7 @@ import { SearchContext } from "../context/SearchContext";
 
 import { AuthContext } from "../context/AuthContext";
 import baseUrl from "../utils/client";
+import { useTranslation } from "react-i18next";
 
 const useEffectOnce = (effect) => {
   const destroyFunc = useRef();
@@ -55,6 +56,7 @@ export const PaymentSuccess = () => {
   const { user: mainUser } = useContext(AuthContext);
   const referenceNum = seachQuery.get("reference");
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const getFinalBookingDetails = async () => {
     try {
@@ -80,7 +82,7 @@ export const PaymentSuccess = () => {
     if (finalBookingDetails) {
       handleBooking(finalBookingDetails);
     } else {
-      return alert("Something went wrong!");
+      return alert(t("somethingWentWrong"));
     }
 
     return () => console.log("My effect is destroying");

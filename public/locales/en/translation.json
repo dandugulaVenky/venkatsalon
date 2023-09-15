@@ -239,7 +239,16 @@
       "privacyPolicy":"Privacy Policy",
       "termscondi":"Terms & Conditions..",
       "careers":"Careers",
-      "joinUs":"Join Us"
+      "joinUs":"Join Us",
+      "seatsAvailable":"Seats Available",
+      "bookedUnavailable":"Booked/Unavailable",
+      "generic":"genericTranslations",
+      "somethingWentWrong":"Something went wrong!",
+      "pleaseIncludeAllFields":"Please include all fields!",
+      "servicesAlreadyPresent":"This services are already present {{show}}",
+      "enableLocationServices":"Please enable location services to get personalized suggestions!",
+      "deniedForNotification":"You denied for the notification!",
+      "enterAllDetails":"Please enter all details!"
   
   
   

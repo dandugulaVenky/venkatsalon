@@ -138,7 +138,7 @@ const AddServices = () => {
     if (shopServices?.length === 0) {
       setIsDisabled(false);
 
-      return alert("Please include all fields!");
+      return alert(t("pleaseIncludeAllFields"));
     }
 
     let a = shopServices;
@@ -200,7 +200,8 @@ const AddServices = () => {
       setIsDisabled(false);
 
       const show = message.map((res) => res.service);
-      alert(`This services are already present { ${show} }`);
+      // alert(`This services are already present { ${show} }`);
+      alert(t('servicesAlreadyPresent',{show : show}));
       //   alert(err);
     }
   };
