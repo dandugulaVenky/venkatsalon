@@ -69,20 +69,22 @@ const List = () => {
           </div>
         ) : (
           <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl pb-24">
-            <div className="flex  items-center justify-center py-10 space-x-2 mx-3">
-              <label className="font-semibold md:text-md text-sm">
-                Find Shop:{" "}
-              </label>
+            <div className="flex  items-center justify-start py-7 md:py-9 space-x-2 mx-3">
               <input
                 type="text"
-                className="w-64 rounded-md"
+                className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
                 onChange={(e) => setUserInput(e.target.value)}
                 value={userInput}
-                placeholder="Search shop name"
+                placeholder="Search shop name..."
+                style={{
+                  filter: " drop-shadow(0px 0px 0.35px gray)",
+                  border: "2.4px solid gray",
+                  caretColor: "#00ccbb",
+                }}
               />
             </div>
             <div className="w-full ">
-              <div className=" min-h-screen w-full  md:pt-0 pt-2">
+              <div className=" min-h-screen w-full  md:pt-0 ">
                 {!loading && (
                   <>
                     <div className="grid grid-cols-12  gap-8 mx-auto">

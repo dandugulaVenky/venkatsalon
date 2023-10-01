@@ -69,8 +69,11 @@ const AllCities = () => {
                     className="flex items-center justify-center md:h-52 h-24 lg:col-span-4 md:col-span-5 col-span-6 
                           cursor-pointer
                          rounded-lg hover:shadow-2xl hover:scale-105 transition duration-300
-                         bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat
+                         bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat 
                          "
+                    style={{
+                      filter: "drop-shadow(0px 0px 2px black)",
+                    }}
                     onClick={() => handleNavigateCity(city.cityName)}
                   >
                     <p className="text-white font-bold  text-xl w-full text-center content break-words ">

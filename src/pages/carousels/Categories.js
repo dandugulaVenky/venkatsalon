@@ -18,7 +18,6 @@ const Categories = ({ type }) => {
   const [data, setData] = useState([]);
   const { t } = useTranslation();
 
-
   const size = GetSize();
 
   useEffect(() => {
@@ -51,13 +50,16 @@ const Categories = ({ type }) => {
     navigate("/cities");
   };
   return (
-    <div className=" my-5 text-black min-w-full ">
+    <div className=" mt-5 text-black min-w-full ">
       <div className="flex flex-row justify-between">
         <h1 className="px-4 text-xl font-semibold pb-4">
-          {t('browseAreaWise')}{" "}
+          {t("browseAreaWise")}{" "}
           {type1
-            // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
-            ? t('browseAreaWiseType',{type1: type1?.charAt(0)?.toUpperCase(), type2:  type1?.slice(1)}) + "s"
+            ? // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
+              t("browseAreaWiseType", {
+                type1: type1?.charAt(0)?.toUpperCase(),
+                type2: type1?.slice(1),
+              }) + "s"
             : "loading"}
         </h1>
         <button
@@ -69,10 +71,10 @@ const Categories = ({ type }) => {
       </div>
       {data.length > 0 ? (
         <div className="">
-          <Carousel cols={4} rows={1} gap={15}>
+          <Carousel cols={4} rows={1} gap={7}>
             <Carousel.Item>
               <div
-                className="relative   h-44 w-full cursor-pointer rounded-md"
+                className="relative   h-auto w-full cursor-pointer rounded-md"
                 id="section-id"
                 onClick={() => {
                   handleSearch("shadnagar, telangana 509216, india");
@@ -83,21 +85,23 @@ const Categories = ({ type }) => {
                   src="https://picsum.photos/800/600?random=5"
                   alt="images"
                   style={{
-                    width: 800,
+                    width: "98%",
                     height: 170,
-                    filter: "brightness(70%)",
+                    // filter: "brightness(70%) drop-shadow(0px 0px 2px black)",
+                    boxShadow: "1px 1.5px 2px black",
+
                     objectFit: "cover",
                     objectPosition: "right bottom",
-                    borderRadius: 8,
+                    borderRadius: 7,
                   }}
                 />
                 <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                  {t('shadnagar')}
+                  {t("shadnagar")}
                 </p>
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[0] : "Loading"} {t('shops')}
+                    {data?.length > 0 ? data[0] : "Loading"} {t("shops")}
                   </span>
                 </p>
               </div>
@@ -118,22 +122,22 @@ const Categories = ({ type }) => {
                   src="https://picsum.photos/800/600?random=4"
                   alt="images"
                   style={{
-                    width: 800,
+                    width: "98%",
                     height: 170,
-                    filter: "brightness(70%)",
+                    boxShadow: "1px 1.5px 2px black",
+
                     objectFit: "cover",
                     objectPosition: "right bottom",
                     borderRadius: 8,
                   }}
                 />
                 <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                {t('kothur')}
-
+                  {t("kothur")}
                 </p>
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[1] : "Loading"} {t('shops')}
+                    {data?.length > 0 ? data[1] : "Loading"} {t("shops")}
                   </span>
                 </p>
               </div>
@@ -151,21 +155,22 @@ const Categories = ({ type }) => {
                   src="https://picsum.photos/800/600?random=3"
                   alt="images"
                   style={{
-                    width: 800,
+                    width: "98%",
                     height: 170,
-                    filter: "brightness(70%)",
+                    boxShadow: "1px 1.5px 2px black",
+
                     objectFit: "cover",
                     objectPosition: "right bottom",
                     borderRadius: 8,
                   }}
                 />
                 <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                  {t('thimmapur')}
+                  {t("thimmapur")}
                 </p>
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[2] : "Loading"} {t('shops')}
+                    {data?.length > 0 ? data[2] : "Loading"} {t("shops")}
                   </span>
                 </p>
               </div>
@@ -183,21 +188,22 @@ const Categories = ({ type }) => {
                   src="https://picsum.photos/800/600?random=2"
                   alt="images"
                   style={{
-                    width: 800,
+                    width: "98%",
                     height: 170,
-                    filter: "brightness(70%)",
+                    boxShadow: "1px 1.5px 2px black",
+
                     objectFit: "cover",
                     objectPosition: "right bottom",
                     borderRadius: 8,
                   }}
                 />
                 <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
-                  {t('shamshabad')}
+                  {t("shamshabad")}
                 </p>
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[3] : "Loading"} {t('shops')}
+                    {data?.length > 0 ? data[3] : "Loading"} {t("shops")}
                   </span>
                 </p>
               </div>

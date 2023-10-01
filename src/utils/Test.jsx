@@ -42,6 +42,8 @@ const Test = ({ services }) => {
                   style={{
                     width: 700,
                     height: 110,
+                    boxShadow: "1px 1.5px 2px black",
+                    filter: "brightness(70%)",
                   }}
                   alt="images"
                   className="rounded-md img"

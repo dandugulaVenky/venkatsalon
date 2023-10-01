@@ -41,6 +41,7 @@ const Reserve = () => {
     options,
     mergedServices,
     breakTime,
+    type,
   } = state !== null && state;
 
   let w = window.innerWidth;
@@ -460,11 +461,13 @@ const Reserve = () => {
           //   } mins in Seat No.${item.seatNo + 1} `
           // )
 
-          alert(t("lessTimeLeft", {
-            time: options[options.length - 1].value,
-            mins: (num1 - num2) * 10,
-            seatNum: item.seatNo + 1,
-          }));
+          alert(
+            t("lessTimeLeft", {
+              time: options[options.length - 1].value,
+              mins: (num1 - num2) * 10,
+              seatNum: item.seatNo + 1,
+            })
+          );
           return true;
         } else {
           return false;
@@ -614,6 +617,7 @@ const Reserve = () => {
             link: "https://easytym.com/history",
             dates,
             previewServices,
+            type,
           });
           setSalonPreview(true);
         } else {

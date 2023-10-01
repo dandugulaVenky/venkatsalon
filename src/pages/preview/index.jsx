@@ -9,7 +9,7 @@ import axios from "axios";
 import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
@@ -91,6 +91,7 @@ const Preview = (props) => {
       user,
       link,
       dates,
+      type,
     } = state;
 
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
@@ -122,6 +123,7 @@ const Preview = (props) => {
           user,
           link,
           dates,
+          type,
         },
         { withCredentials: true }
       );
@@ -219,7 +221,7 @@ const Preview = (props) => {
         }}
       >
         <h2 className=" text-lg  py-5 md:pl-[4.2rem] pl-4 text-left text-white font-extrabold">
-          {t('orderPreview')}
+          {t("orderPreview")}
         </h2>
 
         <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:w-[90vw] w-[95.5vw] mx-auto">
@@ -230,20 +232,20 @@ const Preview = (props) => {
                   <div className="card overflow-x-auto p-5" key={i}>
                     <h2 className="mb-2 text-lg">
                       {/* Selected Items - Seat {seat.index + 1} */}
-                    {t('selectedSeats',{seatNum :seat.index + 1})}
+                      {t("selectedSeats", { seatNum: seat.index + 1 })}
                     </h2>
                     <table className="min-w-full ">
                       <thead className="border-b bg-gray-300 ">
                         <tr className="border-b-2 border-gray-200">
                           <th className="text-left md:text-md text-sm md:p-5 p-4">
-                           {t('serviceName')}
+                            {t("serviceName")}
                           </th>
                           <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                            {t('price')}
+                            {t("price")}
                           </th>
 
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                          {t('duration')}
+                            {t("duration")}
                           </th>
                         </tr>
                       </thead>
@@ -254,14 +256,14 @@ const Preview = (props) => {
                             className="border-b-2 border-gray-200"
                           >
                             <td className="md:text-md text-sm p-5">
-                              {t('service',{name:item.service})}
+                              {t("service", { name: item.service })}
                             </td>
                             <td className="p-5 text-right md:text-md text-sm">
-                              &#8377; {t('price1',{price:item.price})}
+                              &#8377; {t("price1", { price: item.price })}
                             </td>
 
                             <td className="p-5 text-right md:text-md text-sm">
-                            {t('duration1',{duration:item.duration})} min
+                              {t("duration1", { duration: item.duration })} min
                             </td>
                           </tr>
                         ))}
@@ -280,36 +282,36 @@ const Preview = (props) => {
                   : ""
               }`}
             >
-              <h2 className="mb-2 text-lg">{t('orderSummary')}</h2>
+              <h2 className="mb-2 text-lg">{t("orderSummary")}</h2>
               <ul>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('date')}</div>
+                    <div>{t("date")}</div>
                     <div>{state?.dates[0]?.date}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('time')}</div>
+                    <div>{t("time")}</div>
                     <div>{state?.dates[0]?.time}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('totalAmount')}</div>
+                    <div>{t("totalAmount")}</div>
                     <div>&#8377; {state?.totalAmount}</div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('tax')}</div>
+                    <div>{t("tax")}</div>
                     <div>&#8377; 30</div>
                   </div>
                 </li>
 
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('total')}</div>
+                    <div>{t("total")}</div>
                     <div>&#8377; 700</div>
                   </div>
                 </li>
@@ -321,12 +323,12 @@ const Preview = (props) => {
                       onClick={placeOrderHandler}
                       className="primary-button flex items-center justify-center  w-full"
                     >
-                      <>{t('placeOrder')}</>
+                      <>{t("placeOrder")}</>
                     </button>
                   ) : (
                     <button className="primary-button flex items-center justify-center  w-full">
                       {" "}
-                      {t('placeOrder')}{" "}
+                      {t("placeOrder")}{" "}
                       {loading && <span className="buttonloader ml-2"></span>}
                     </button>
                   )}
@@ -336,7 +338,7 @@ const Preview = (props) => {
                     onClick={() => setPreview(false)}
                     className="primary-button w-full my-2"
                   >
-                    {t('forgotSomething')}
+                    {t("forgotSomething")}
                   </button>
                 </li>
               </ul>

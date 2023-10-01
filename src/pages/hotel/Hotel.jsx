@@ -364,6 +364,7 @@ const Hotel = () => {
           value: value,
           options: options,
           breakTime,
+          type: data.type,
         },
       });
     } else if (user && type === "parlour") {
@@ -378,7 +379,8 @@ const Hotel = () => {
           minValuesObj: minutesValues.minValuesObj,
           value: value,
           options: options,
-          breakTime: breakTime,
+          breakTime,
+          type: data.type,
         },
       });
     } else {
@@ -492,7 +494,12 @@ const Hotel = () => {
       </div>
 
       <div className="md:px-4 px-2 ">
-        <div className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col mt-4 ">
+        <div
+          className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col mt-4 "
+          style={{
+            boxShadow: "1px 0.75px 1.5px black",
+          }}
+        >
           <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
             <div
               className={
@@ -603,7 +610,7 @@ const Hotel = () => {
                             />{" "}
                             -{" "}
                             <span className=" text-xs md:text-sm">
-                              {t('seatsAvailable')}
+                              {t("seatsAvailable")}
                             </span>
                             &nbsp;&nbsp;&nbsp;
                             <FontAwesomeIcon
@@ -613,7 +620,7 @@ const Hotel = () => {
                             />{" "}
                             -{" "}
                             <span className="text-xs md:text-sm">
-                              {t('bookedUnavailable')}
+                              {t("bookedUnavailable")}
                             </span>
                           </p>
                         )}

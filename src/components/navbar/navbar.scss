@@ -25,6 +25,15 @@
 }
 
 .head2 {
+  background-color: white;
+
+  max-height: 200px;
+  transition: max-height 0.3s ease;
+  transition: background-color 0.5s ease-out;
+}
+.head3 {
+  background-color: white;
+
   max-height: 200px;
   transition: max-height 0.3s ease;
   transition: background-color 0.5s ease-out;

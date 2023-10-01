@@ -6,9 +6,9 @@ import womensOffer from "../pages/images/BP.png";
 import "./styles.scss";
 const Offers = () => {
   return (
-    <div className=" px-1   text-black md:mb-10 mb-20">
+    <div className=" mt-5  text-black md:mb-10 mb-20">
       <h1 className="px-4 text-xl font-semibold pb-4">Offers</h1>
-      <Carousel cols={3} rows={1} gap={10} loop aubottomlay={8000}>
+      <Carousel cols={3} rows={1} gap={7}>
         <Carousel.Item>
           <div className="  h-44 w-full">
             <img
@@ -16,8 +16,9 @@ const Offers = () => {
               alt="images"
               className="rounded-md image"
               style={{
-                width: 800,
+                width: "98%",
                 height: 170,
+                boxShadow: "1px 1.5px 2px black",
 
                 borderRadius: 8,
                 objectFit: "cover",
@@ -33,8 +34,9 @@ const Offers = () => {
               alt="images"
               className="rounded-md image"
               style={{
-                width: 800,
+                width: "98%",
                 height: 170,
+                boxShadow: "1px 1.5px 2px black",
 
                 borderRadius: 8,
                 objectFit: "cover",
@@ -50,8 +52,9 @@ const Offers = () => {
               alt="images"
               className="rounded-md image"
               style={{
-                width: 800,
+                width: "98%",
                 height: 170,
+                boxShadow: "1px 1.5px 2px black",
 
                 borderRadius: 8,
                 objectFit: "cover",

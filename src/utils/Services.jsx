@@ -3,7 +3,7 @@ import { useState } from "react";
 import Carousel from "react-grid-carousel";
 import { SearchContext } from "../context/SearchContext";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
@@ -20,12 +20,12 @@ const Services = ({ refer }) => {
   };
 
   return (
-    <div className=" px-1  mt-5  text-black " ref={refer}>
+    <div className=" mt-6  text-black " ref={refer}>
       <h1 className="px-4 text-xl font-semibold pb-4">Select A Service</h1>
-      <Carousel cols={3} rows={1} gap={10}>
+      <Carousel cols={4} rows={1} gap={7}>
         <Carousel.Item>
           <div
-            className="relative  h-44 w-full cursor-pointer rounded-md"
+            className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"
             id="section-id"
             onClick={() => handler("saloon")}
           >
@@ -33,8 +33,9 @@ const Services = ({ refer }) => {
               src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
               alt="images"
               style={{
-                width: 800,
-                height: 170,
+                width: "98%",
+                height: 132,
+                boxShadow: "1px 1.5px 2px black",
                 filter: "brightness(70%)",
                 borderRadius: 8,
                 objectFit: "cover",
@@ -42,7 +43,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              {t('saloons')}
+              {t("saloons")}
             </p>
             <span
               className={`${
@@ -53,15 +54,16 @@ const Services = ({ refer }) => {
         </Carousel.Item>
         <Carousel.Item>
           <div
-            className="relative  h-44 w-full cursor-pointer rounded-md"
+            className="relative  h-auto w-full cursor-pointer rounded-md"
             onClick={() => handler("parlour")}
           >
             <img
               src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678881963/beauty2_nttutx.webp"
               alt="images"
               style={{
-                width: 800,
-                height: 170,
+                width: "98%",
+                height: 132,
+                boxShadow: "1px 1.5px 2px black",
                 filter: "brightness(70%)",
                 borderRadius: 8,
                 objectFit: "cover",
@@ -69,7 +71,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              {t('beautyParlours')}
+              {t("beautyParlours")}
             </p>
             <span
               className={`${
@@ -80,15 +82,16 @@ const Services = ({ refer }) => {
         </Carousel.Item>
         <Carousel.Item>
           <div
-            className="relative h-44 w-full cursor-pointer"
+            className="relative h-auto w-full cursor-pointer"
             onClick={() => navigate("/iron")}
           >
             <img
               src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/drycleaning_r4y1uo.webp"
               alt="images"
               style={{
-                width: 800,
-                height: 170,
+                width: "98%",
+                height: 132,
+                boxShadow: "1px 1.5px 2px black",
                 filter: "brightness(70%)",
                 borderRadius: 8,
                 objectFit: "cover",
@@ -96,7 +99,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              {t('ironing')}
+              {t("ironing")}
             </p>
             <span
               className={`${
@@ -106,13 +109,14 @@ const Services = ({ refer }) => {
           </div>
         </Carousel.Item>
         <Carousel.Item>
-          <div className="relative h-44 w-full cursor-pointer">
+          <div className="relative h-auto w-full cursor-pointer">
             <img
               src="https://picsum.photos/800/600?random=1"
               alt="images"
               style={{
-                width: 800,
-                height: 170,
+                width: "98%",
+                height: 132,
+                boxShadow: "1px 1.5px 2px black",
                 filter: "brightness(70%)",
                 borderRadius: 8,
                 objectFit: "cover",
@@ -120,7 +124,7 @@ const Services = ({ refer }) => {
               }}
             />
             <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              {t('dryCleaning')}
+              {t("dryCleaning")}
             </p>
           </div>
         </Carousel.Item>

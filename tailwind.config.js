@@ -6,6 +6,9 @@ module.exports = {
       curs: ["cursive"],
       rubik: ["Rubik", "sans-serif"],
     },
+    boxShadow: {
+      custom: "1px 1.5px 2px gray", // Define your custom boxShadow value
+    },
   },
   plugins: [],
 };

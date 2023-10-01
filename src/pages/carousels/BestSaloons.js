@@ -13,14 +13,14 @@ import baseUrl from "../../utils/client";
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
-import useEffectOnce from "../../utils/UseEffectOnce";
+
 const BestSaloons = () => {
   const { type: type1, city } = useContext(SearchContext);
 
   const [data, setData] = useState([]);
   const [status, setStatus] = useState();
   const { t } = useTranslation();
-  const isSalon = true;
+
   const size = GetSize();
   useEffect(() => {
     console.log(city);
@@ -51,7 +51,7 @@ const BestSaloons = () => {
   };
 
   return (
-    <div className="my-5  text-black w-full ">
+    <div className="mt-5  text-black w-full ">
       <h1 className=" px-4 text-xl font-semibold pb-4">
         {type1 ? (
           type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
@@ -63,7 +63,7 @@ const BestSaloons = () => {
         <Skeleton cards={size} />
       ) : status === 200 && data?.length > 0 ? (
         <div>
-          <Carousel cols={4} rows={1} gap={15}>
+          <Carousel cols={4} rows={1} gap={7}>
             {data?.map((item, i) => {
               return (
                 <Carousel.Item key={i}>
@@ -76,9 +76,11 @@ const BestSaloons = () => {
                       src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
                       alt="images"
                       style={{
-                        width: 800,
+                        width: "98%",
                         height: 170,
-                        filter: "brightness(60%)",
+                        boxShadow: "1px 1.5px 2px black",
+                        filter: "brightness(70%)",
+
                         objectFit: "cover",
                         objectPosition: "right top",
                         borderRadius: 8,
@@ -111,6 +113,8 @@ const BestSaloons = () => {
             width={200}
             style={{
               borderRadius: 8,
+              boxShadow: "1px 1.5px 2px black",
+              filter: "brightness(70%)",
             }}
           ></img>
           <p className="text-black md:text-xl text-xs font-semibold">

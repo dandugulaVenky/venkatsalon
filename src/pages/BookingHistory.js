@@ -223,8 +223,8 @@ const BookingHistory = () => {
       </div> */}
       {showServices !== null && <GetPushed />}
 
-      <div className="min-h-[85.5vh] max-w-[90vw] mx-auto">
-        <div className="flex items-center justify-between  py-5">
+      <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
+        <div className="flex items-center justify-around  py-5">
           <p className=" md:text-xl text-xs font-semibold">
             {t("bookingHistory")}
           </p>
@@ -247,7 +247,7 @@ const BookingHistory = () => {
         )}
 
         {filteredArray?.length > 0 ? (
-          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[96vw] mx-auto pt-5 pb-10 ">
+          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[98vw] mx-auto pt-5 pb-10 ">
             <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
               <table className="min-w-full  ">
                 <thead className="border-b bg-gray-400 ">

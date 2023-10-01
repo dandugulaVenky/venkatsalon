@@ -134,9 +134,7 @@ const Home = () => {
                         destination: "No Location!",
                       },
                     });
-                    alert(
-                      t("enableLocationServices")
-                    );
+                    alert(t("enableLocationServices"));
                   },
                   {
                     enableHighAccuracy: true,
@@ -149,9 +147,7 @@ const Home = () => {
                 !city && getCurrentPosition();
               } else if (result.state === "denied") {
                 if (city === "No Location!") {
-                  alert(
-                    t("enableLocationServices")
-                  );
+                  alert(t("enableLocationServices"));
                 }
               }
             });
@@ -239,7 +235,7 @@ const Home = () => {
           })}
         </CarouselBanner>
       </div>
-      <div>
+      <div className="md:max-w-[1244px] w-full mx-auto">
         <Services />
       </div>
 
@@ -255,9 +251,11 @@ const Home = () => {
             <div>
               <Categories />
             </div>
+            <div>
+              <Offers />
+            </div>
           </div>
         </div>
-        <Offers />
       </div>
 
       {/* <button onClick={handleButton} className="mb-20">

@@ -9,7 +9,9 @@ import "./navbar.scss";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBagShopping,
   faChevronCircleDown,
+  faGlobe,
   faLanguage,
   faLocation,
   faTShirt,
@@ -51,12 +53,19 @@ const Layout = ({ bestRef }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
+  const [ironing, setIroning] = useState(false);
   i18next.on("languageChanged", (ing) => setLocale(i18next.language));
   const handleChange = (event) => {
     i18next.changeLanguage(event.target.value); //fr or
   };
 
   useEffect(() => {
+    let timeout =
+      pathname.includes("/shops") || pathname.includes("/iron/product")
+        ? 750
+        : pathname.includes("/iron")
+        ? 135
+        : 100;
     const handleScroll = () => {
       const scrollY = window.scrollY;
       if (scrollY >= 1) {
@@ -68,14 +77,16 @@ const Layout = ({ bestRef }) => {
 
     scrollTimeoutIdRef.current = setTimeout(() => {
       window.addEventListener("scroll", handleScroll);
-    }, 500);
+      pathname.includes("/iron") && setIroning(true);
+    }, timeout);
 
     // Clean up the event listener and clear the timeout on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeoutIdRef.current);
+      setIroning(false);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     const getAdmin = async () => {
@@ -200,27 +211,33 @@ const Layout = ({ bestRef }) => {
                   </Link>
                   {/* <button onClick={handleLanguageChange}>Change Language</button> */}
                   <div>
-                    <label className="mr-2">
-                      <FontAwesomeIcon
-                        icon={faLanguage}
-                        size="xl"
-                        color="black"
-                      />
-                    </label>
-                    <select value={locale} onChange={handleChange}>
+                    {/* <label className="mr-1">
+                      <FontAwesomeIcon icon={faGlobe} size="xl" color="black" />
+                    </label> */}
+                    <select
+                      value={locale}
+                      onChange={handleChange}
+                      className="border-none font-semibold md:text-lg text-xs bg-transparent cursor-pointer"
+                    >
                       <option value="en">English</option>
                       <option value="te">తెలుగు</option>
                       <option value="hi">हिंदी</option>
                     </select>
                   </div>
-                  {pathname.includes("iron") && (
+                  {ironing && (
                     <Link to="/iron/cart">
+                      <label className="mr-1">
+                        <FontAwesomeIcon
+                          icon={faBagShopping}
+                          size="xl"
+                          color="black"
+                        />
+                      </label>
                       <a
-                        className={` font-semibold md:text-lg text-xs ${
+                        className={` font-semibold md:text-lg text-xs slide-in-right ${
                           pathname?.includes("/cart") ? "text-[#00ccbb]" : ""
                         }`}
                       >
-                        {t("cart")}
                         {cartItemsCount > 0 && (
                           <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
                             {cartItemsCount}
@@ -237,39 +254,39 @@ const Layout = ({ bestRef }) => {
                       <h1 className="md:text-lg text-xs "> {user.username}</h1>
                       <FontAwesomeIcon
                         icon={faChevronCircleDown}
-                        size="lg"
-                        color="black"
+                        size="sm"
+                        color={"black"}
                       />
                     </Menu.Button>
                     <Menu.Items className="absolute right-0 w-56 origin-top-right bg-gray-100  shadow-lg ">
                       <Menu.Item>
                         {/* <DropdownLink className="dropdown-link p-1 mt-2"> */}
-                          <Link  
-                          className="dropdown-link p-1 mt-2"
-                          to="/profile">{t("profile")}</Link>
+                        <Link className="dropdown-link p-1 mt-2" to="/profile">
+                          {t("profile")}
+                        </Link>
                         {/* </DropdownLink> */}
                       </Menu.Item>
 
                       <Menu.Item>
                         {/* <DropdownLink className="dropdown-link p-1"> */}
-                          <Link
-                          className="dropdown-link p-1"
-                          to="/history">{t("bookingHistory")}</Link>
+                        <Link className="dropdown-link p-1" to="/history">
+                          {t("bookingHistory")}
+                        </Link>
                         {/* </DropdownLink> */}
                       </Menu.Item>
                       <Menu.Item>
                         {/* <DropdownLink className="dropdown-link p-1"> */}
-                          <Link
-                          className="dropdown-link p-1"
-                          to="/iron-orders">{t("ironOrders")}</Link>
+                        <Link className="dropdown-link p-1" to="/iron-orders">
+                          {t("ironOrders")}
+                        </Link>
                         {/* </DropdownLink> */}
                       </Menu.Item>
                       {isAdmin && (
                         <Menu.Item>
                           {/* <DropdownLink className="dropdown-link p-1"> */}
-                            <Link 
-                            className="dropdown-link p-1"
-                            to="/admin">{t("aAdminDashboard")}</Link>
+                          <Link className="dropdown-link p-1" to="/admin">
+                            {t("aAdminDashboard")}
+                          </Link>
                           {/* </DropdownLink> */}
                         </Menu.Item>
                       )}

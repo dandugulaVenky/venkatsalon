@@ -12,7 +12,12 @@ const SearchItem = ({ item }) => {
   return (
     <>
       <Link to={`/shops/${item._id}`}>
-        <div className=" hover:shadow-2xl hover:scale-105 transition duration-300 cursor-pointer mx-4">
+        <div
+          className=" hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer mx-4"
+          style={{
+            filter: " drop-shadow(0px 0px 0.3px gray)",
+          }}
+        >
           <div className=" list rounded-md">
             <div className="w-full">
               <img src={item.photos[0]} alt="" className="siImg w-full h-52" />

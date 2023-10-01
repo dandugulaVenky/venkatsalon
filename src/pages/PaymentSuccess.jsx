@@ -100,7 +100,7 @@ export const PaymentSuccess = () => {
           dates: finalBookingDetails.dates,
           user: finalBookingDetails?.user,
           selectedSeats: selectedSeats1,
-
+          type: finalBookingDetails?.type,
           totalAmount: finalBookingDetails?.totalAmount,
           shopId: finalBookingDetails?.shopId,
           shopName: finalBookingDetails?.shopName,
@@ -120,6 +120,7 @@ export const PaymentSuccess = () => {
           shopName: finalBookingDetails?.shopName,
           bookId: finalBookingDetails?.bookId,
           selectedSeats: selectedSeats1,
+          type: finalBookingDetails?.type,
 
           totalAmount: finalBookingDetails?.totalAmount,
           isPaid: true,
