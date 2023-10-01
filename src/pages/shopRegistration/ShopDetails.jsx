@@ -7,6 +7,7 @@ import Footer from "../../components/footer/Footer";
 import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +24,7 @@ const ShopDetails = () => {
   } = useForm();
   const navigate = useNavigate();
   const { open } = useContext(SearchContext);
-
+  const { t } = useTranslation();
   const [selectedStartTime, setSelectedStartTime] = useState("");
   const [selectedShopStartTime, setSelectedShopStartTime] = useState("");
   const [storedUser, setStoredUser] = useState();
@@ -76,11 +77,11 @@ const ShopDetails = () => {
     address,
   }) => {
     if (!latLong) {
-      return alert("Please select address in map");
+      return alert(t("selectAddressInMap"));
     } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
-      return alert("Select Shop start time and end time correctly!");
+      return alert(t("selectShopStartEndTimeCorrectly"));
     } else if (selectedStartTime === "" || selectedEndTime === "") {
-      return alert("Select lunch start time and end time correctly!");
+      return alert(t("selectLunchStartEndTimeCorrectly"));
     } else if (
       selectedStartTime !== selectedEndTime &&
       selectedShopStartTime !== selectedShopEndTime
@@ -88,7 +89,7 @@ const ShopDetails = () => {
       const existingUserData = getCookieObject("user_info");
       const x = existingUserData.number.includes(phone);
       if (x) {
-        alert("Alternate should be different from already given number!");
+        alert(t("alternateNumberShouldBeDifferent"));
         return;
       }
       const selectedShopStartIndex = options.find((option) => {
@@ -107,11 +108,11 @@ const ShopDetails = () => {
 
       if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
         return alert(
-          "Minimum of 8 hrs is needed between opening and closing time!"
+          t("min8HrsNeededBetweenOpeningClosingTime")
         );
       }
       if (selectedEndIndex * 10 - selectedStartIndex * 10 > 60) {
-        return alert("Lunch time should be maximum 1 hour only!");
+        return alert(t("lunchTimeMax1HrOnly"));
       }
 
       const shopTime = options.filter((option) => {
@@ -164,7 +165,7 @@ const ShopDetails = () => {
 
       console.log("done");
     } else {
-      alert("Something wrong!");
+      alert(t("somethingWrong"));
     }
   };
 

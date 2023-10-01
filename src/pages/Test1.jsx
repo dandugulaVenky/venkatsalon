@@ -7,6 +7,7 @@ import { faClock, faClose } from "@fortawesome/free-solid-svg-icons";
 import { SearchContext } from "../context/SearchContext";
 import { AuthContext } from "../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import moment from "moment";
 import axios from "axios";
 import baseUrl from "../utils/client";
@@ -23,6 +24,7 @@ const Test1 = (props) => {
   const [parlourPreview, setParlourPreview] = useState(false);
 
   const { state } = useLocation();
+  const { t } = useTranslation();
   const {
     shopId,
     shopName,
@@ -379,7 +381,7 @@ const Test1 = (props) => {
   const previewHandler = async (amount, e) => {
     e.preventDefault();
     if (amount < 10) {
-      return alert("Please select atleast an option!");
+      return alert(t("SelectOption"));
     }
     //getting end value from optiond and checking wetherr user is booking beyond the time limit given by owner
     const num1 = Number(options[options.length - 1].id);
@@ -396,13 +398,18 @@ const Test1 = (props) => {
     if (check) {
       const showEnd = check.map((item) => {
         if (item.isReachedEnd) {
-          alert(
-            `You can only book until ${
-              options[options.length - 1].value
-            }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
-              item.seatNo + 1
-            } `
-          );
+          // alert(
+          //   `You can only book until ${
+          //     options[options.length - 1].value
+          //   }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
+          //     item.seatNo + 1
+          //   } `
+          // );
+          alert(t("lessTimeLeft", {
+            time: options[options.length - 1].value,
+            mins: (num1 - num2) * 10,
+            seatNum: item.seatNo + 1,
+          }));
           return true;
         } else {
           return false;
@@ -417,20 +424,33 @@ const Test1 = (props) => {
           const hours = Math.floor(minutes / 60);
           const remainingMinutes = minutes % 60;
           item1 > 60
-            ? alert(
-                `Others have a booking at ${
-                  options[selectedValue + item1 / 10].value
-                }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
-                  item2 + 1
-                } `
-              )
-            : alert(
-                `Others have a booking at ${
-                  options[selectedValue + item1 / 10].value
-                }. Please choose only a option which is of ${item1} minutes in seat${
-                  item2 + 1
-                } `
-              );
+            ? 
+            // alert(
+            //     `Others have a booking at ${
+            //       options[selectedValue + item1 / 10].value
+            //     }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+            //       item2 + 1
+            //     } `
+            //   )
+            alert(t("reachingOthersTime", {
+              time: options[selectedValue + item1 / 10].value,
+              hours:hours,
+              mins: remainingMinutes,
+              seatNum: item2 + 1,
+            }))
+            : 
+            // alert(
+            //     `Others have a booking at ${
+            //       options[selectedValue + item1 / 10].value
+            //     }. Please choose only a option which is of ${item1} minutes in seat${
+            //       item2 + 1
+            //     } `
+            //   );
+            alert(t("reachingOthersTime1", {
+              time: options[selectedValue + item1 / 10].value,
+              mins: item1,
+              seatNum: item2 + 1,
+            }))
 
           return 0;
         };

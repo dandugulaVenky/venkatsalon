@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { memo, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer";
 import Layout from "../../components/navbar/Layout";
@@ -65,7 +66,7 @@ const RegistrationForm = () => {
       setToken(token);
       // Send this token  to server ( db)
     } else if (permission === "denied") {
-      alert("You denied for the notification");
+      alert(t("deniedForTheNotification"));
     }
   }
 
@@ -127,10 +128,11 @@ const RegistrationForm = () => {
     setValue,
     formState: { errors },
   } = useForm();
+  const { t } = useTranslation();
 
   const submitHandler = async ({ name, email, password }) => {
     if (!name || !email || !password || !address) {
-      return alert("Please enter all details!");
+      return alert(t("pleaseEnterAllDetails"));
     }
 
     if (!termsAccepted) {

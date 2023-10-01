@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import SIdebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
 
@@ -21,6 +22,7 @@ const FinalRegistration = () => {
   const [storedUser, setStoredUser] = useState();
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   function getCookieObject(name) {
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -37,10 +39,10 @@ const FinalRegistration = () => {
 
   const handleRegister = async () => {
     if (seats > 10) {
-      return alert("Maximum 10 seats are allowed currently!");
+      return alert(t("max10SeatsAllowed"));
     }
     if (!storedUser) {
-      return alert("Details are not up to the mark! Please fill again!");
+      return alert(t("detailsAreNotUpToTheMark"));
     }
     const arrayOfObjects = [];
     for (let i = 1; i <= seats; i++) {
@@ -79,7 +81,7 @@ const FinalRegistration = () => {
         shopId: hotelId,
       });
 
-      alert("We will contact you shortly! Thanks for choosing EASYTYM");
+      alert(t("willContactYouShortly"));
       // Usage example
       removeCookie("user_info");
       navigate("/login");
