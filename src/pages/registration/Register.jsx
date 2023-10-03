@@ -98,7 +98,7 @@ const Register = () => {
 
   const submitHandler = async ({ name, email, password }) => {
     if (!name || !email || !password || !address) {
-      return alert(t("enterAllDetails"));
+      return alert(t("pleaseEnterAllDetails"));
     }
 
     if (!termsAccepted) {

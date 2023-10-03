@@ -241,6 +241,24 @@
       "careers":"करियर",
       "joinUs":"हमसे जुड़ें",
       "seatsAvailable":"सीट उपलब्ध है",
-      "bookedUnavailable":"बुक किया गया/अनुपलब्ध"
-
+      "bookedUnavailable":"बुक किया गया/अनुपलब्ध",
+      "generic":"genericTranslations",
+      "somethingWentWrong":"कुछ गलत हो गया!",
+      "pleaseIncludeAllFields":"कृपया सभी फ़ील्ड शामिल करें!",
+      "servicesAlreadyPresent":"यह सेवाएँ पहले से ही मौजूद हैं {{show}}",
+      "enableLocationServices":"वैयक्तिकृत सुझाव प्राप्त करने के लिए कृपया स्थान सेवाएँ सक्षम करें!",
+      "deniedForNotification":"आपने अधिसूचना के लिए मना कर दिया!",
+      "finalRegistration":"अंतिम पंजीकरण",
+      "max10SeatsAllowed":"वर्तमान में अधिकतम 10 सीटों की अनुमति है!",
+      "detailsAreNotUpToTheMark":"विवरण मानक के अनुरूप नहीं हैं! कृपया पुनः भरें!",
+      "willContactYouShortly":"हम आपसे शीघ्र ही संपर्क करेंगे! EASYTYM चुनने के लिए धन्यवाद",
+      "deniedForTheNotification":"आपने अधिसूचना के लिए मना कर दिया",
+      "pleaseEnterAllDetails":"कृपया सभी विवरण दर्ज करें!",
+      "selectAddressInMap":"कृपया मानचित्र में पता चुनें",
+      "selectShopStartEndTimeCorrectly":"दुकान प्रारंभ समय और समाप्ति समय सही ढंग से चुनें!",
+      "selectLunchStartEndTimeCorrectly":"दोपहर के भोजन के प्रारंभ समय और समाप्ति समय का सही चयन करें!",
+      "alternateNumberShouldBeDifferent":"वैकल्पिक पहले से दिए गए नंबर से अलग होना चाहिए!",
+      "min8HrsNeededBetweenOpeningClosingTime":"खुलने और बंद होने के समय के बीच कम से कम 8 घंटे का समय आवश्यक है!",
+      "lunchTimeMax1HrOnly":"दोपहर के भोजन का समय अधिकतम 1 घंटा ही होना चाहिए!",
+      "somethingWrong":"कुछ गड़बड़ है क्या!"
     }
