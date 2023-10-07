@@ -27,10 +27,9 @@ import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
 import Orders from "./pages/ironing/iron-pages/Orders";
 import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
-import Test from "./pages/Test1";
 
 import Reserve from "./components/reserve/Reserve";
-import Test1 from "./pages/Test1";
+import ParlorReserve from "./components/reserve/ParlorReserve";
 import Transactions from "./pages/admin/Transactions";
 import AdminOrders from "./pages/admin/AdminOrders";
 import Packages from "./pages/admin/Packages";
@@ -78,12 +77,14 @@ function App() {
 
             <Route path="/shops" element={<List />} />
             <Route path="/cities" element={<AllCities />} />
-            <Route path="/test" element={<Test />} />
 
             <Route path="/shops/:id" element={<Hotel />} />
             <Route path="/shops/:id/salon-reserve" element={<Reserve />} />
 
-            <Route path="/shops/:id/parlour-reserve" element={<Test1 />} />
+            <Route
+              path="/shops/:id/parlour-reserve"
+              element={<ParlorReserve />}
+            />
 
             <Route
               path="/profile"

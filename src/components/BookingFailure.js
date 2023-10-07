@@ -98,7 +98,7 @@ const BookingFailure = () => {
         {reference !== undefined && (
           <div className="flex flex-col items-center justify-center md:min-h-[70vh] min-h-[80vh]">
             <p>Reference : {reference}</p>
-            <p className="ml-2 bg-red-500 p-4 mt-2">
+            <p className="ml-2 bg-red-500 p-4 mt-2 ">
               This seat and time are booked by someone else jusy by few seconds
               ago!. The reference Number and other details were mailed to you.
               We will refund your amount with in short time!

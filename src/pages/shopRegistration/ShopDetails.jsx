@@ -131,8 +131,8 @@ const ShopDetails = () => {
       const lunchTimeArray = lunchTime.map((option) => {
         return option.id;
       });
-      console.log(lunchTimeArray, "lunch array in shop-details");
-      console.log(shopTimeArray, "Shop array in shop-details");
+      // console.log(lunchTimeArray, "lunch array in shop-details");
+      // console.log(shopTimeArray, "Shop array in shop-details");
 
       existingUserData.hotelInfo = {
         name: shopName,
@@ -140,7 +140,7 @@ const ShopDetails = () => {
         alternatePhone: phone,
         city: selectedCity.toLowerCase(),
         desc: description,
-        type,
+        type: type.toLowerCase(),
 
         lunchTimeArray,
         shopTimeArray,

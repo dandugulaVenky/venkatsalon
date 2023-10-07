@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useCallback, useContext } from "react";
 
 import { useState, useEffect } from "react";
 
@@ -18,10 +18,10 @@ import Layout from "../navbar/Layout";
 import Greeting from "../navbar/Greeting";
 import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
-import SalonPreview from "../../pages/preview";
+import ParlorPreview from "../../pages/preview";
 
-const Reserve = () => {
-  const [salonPreview, setSalonPreview] = useState(false);
+const ParlorReserve = () => {
+  const [parlorPreview, setParlorPreview] = useState(false);
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
   const [reserveState, setReserveState] = useState(null);
@@ -43,6 +43,8 @@ const Reserve = () => {
     breakTime,
     type,
   } = state !== null && state;
+
+  console.log(shopOwner, "shopOwneer");
 
   let w = window.innerWidth;
 
@@ -80,7 +82,7 @@ const Reserve = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [salonPreview]);
+  }, [parlorPreview]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -619,7 +621,7 @@ const Reserve = () => {
             previewServices,
             type,
           });
-          setSalonPreview(true);
+          setParlorPreview(true);
         } else {
           toast("something wrong!");
           return;
@@ -723,11 +725,11 @@ const Reserve = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
       <ShowInclusions />
-      {salonPreview && reserveState !== null ? (
+      {parlorPreview && reserveState !== null ? (
         <div className="min-h-screen">
-          <SalonPreview
+          <ParlorPreview
             state={reserveState}
-            setPreview={setSalonPreview}
+            setPreview={setParlorPreview}
             mergedServices={mergedServices}
           />
         </div>
@@ -919,4 +921,4 @@ const Reserve = () => {
   );
 };
 
-export default Reserve;
+export default ParlorReserve;

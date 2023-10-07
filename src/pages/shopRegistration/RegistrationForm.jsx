@@ -147,7 +147,7 @@ const RegistrationForm = () => {
 
       function setCookieObject(name1, value, daysToExpire) {
         const expires = new Date();
-        expires.setDate(expires.getDate() + daysToExpire);
+        expires.setTime(expires.getTime() + daysToExpire * 24 * 60 * 60 * 1000);
 
         // Serialize the object to JSON and encode it
         const cookieValue =
@@ -156,7 +156,7 @@ const RegistrationForm = () => {
 
         document.cookie = `${name1}=${cookieValue}; path=/`;
       }
-      setCookieObject("user_info", storedUser, 7);
+      setCookieObject("user_info", storedUser, 1);
       return navigate("/shop-final-registration");
     }
 

@@ -98,20 +98,9 @@ const BookingHistory = () => {
   const { open } = useContext(SearchContext);
 
   const GetPushed = () => {
-    // console.log(item);
     const item = showServices;
 
     let seats = [];
-    console.log(roomData);
-    // roomData?.map((seat, i) => {
-    //   console.log(seat, i);
-    //   console.log(item.selectedSeats);
-    //   if (seat._id === item.selectedSeats[i]?.id) {
-    //     seats.push(seat.number);
-    //   } else if (seat._id === item.selectedSeats[i]?.id) {
-    //     seats.push(seat.number);
-    //   }
-    // });
 
     if (item && roomData) {
       item.selectedSeats.map((seat, i) => {
@@ -138,7 +127,9 @@ const BookingHistory = () => {
               {item.selectedSeats.map((seat, i) => {
                 return (
                   <div className="py-2">
-                    <p className="font-semibold">Seat - {seats[i]}</p>
+                    <p className="font-semibold">
+                      Seat - {seats[i] || "Any Seat"}
+                    </p>
                     <span key={i}>
                       Services :{" "}
                       {seat.options.map((option, i) => {
@@ -168,59 +159,6 @@ const BookingHistory = () => {
       {w >= 768 && <Layout />}
       {w < 768 && <Greeting />}
 
-      {/* <div className="flex min-h-screen flex-col ">
-        {loading ? (
-          <div className="min-h-[75vh] flex items-center justify-center">
-            <span className="loader "></span>
-          </div>
-        ) : (
-          <div className="lg:px-44 px-5  md:pt-5 pt-5 md:mb-32 pb-20 ">
-            <div className="flex items-start justify-between mb-5">
-              <h1 className="">Booking History</h1>
-
-              <div className="flex flex-col items-center">
-                <input
-                  onChange={(e) => setUserInput(e.target.value)}
-                  value={userInput}
-                  className="bg-slate-100 text-black  rounded-md md:w-[14.3rem] w-[10.3rem]  mb-5"
-                  placeholder="Filter by date,time,ref.."
-                />
-                <p className="md:text-md text-xs">
-                  Count : {filteredArray.length}
-                </p>
-              </div>
-            </div>
-
-            <div className="">
-              {filteredArray?.slice(0, visible).map((item, i) => {
-                let k = i;
-                return <BookingHistoryItem item={item} k={k} key={k} />;
-              })}
-            </div>
-            {filteredArray?.length === 0 && (
-              <h1 className="text-center min-h-screen">No Bookings</h1>
-            )}
-            {filteredArray?.length >= 5 && (
-              <div className="flex items-center justify-center mt-10 mb-10">
-                {visible >= filteredArray.length ? (
-                  <button
-                    className="primary-button"
-                    onClick={() => {
-                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faCircleArrowUp} />
-                  </button>
-                ) : (
-                  <button className=" primary-button " onClick={setLoadMore}>
-                    <FontAwesomeIcon icon={faCircleArrowDown} />
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        )}
-      </div> */}
       {showServices !== null && <GetPushed />}
 
       <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
@@ -232,7 +170,7 @@ const BookingHistory = () => {
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            className="  rounded-md md:w-[14.3rem] w-[9.3rem]  "
+            className="  rounded-md md:w-[14.3rem] w-[9.3rem]"
             placeholder="Filter by date,time,ref.."
           />
 

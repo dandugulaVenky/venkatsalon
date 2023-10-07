@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import SIdebar from "../../components/navbar/SIdebar";
 import Greeting from "../../components/navbar/Greeting";
@@ -18,7 +18,7 @@ const FinalRegistration = () => {
 
   const [seats, setSeats] = useState("");
   const { open } = useContext(SearchContext);
-
+  const [loading, setLoading] = useState(false);
   const [storedUser, setStoredUser] = useState();
 
   const navigate = useNavigate();
@@ -44,6 +44,7 @@ const FinalRegistration = () => {
     if (!storedUser) {
       return alert(t("detailsAreNotUpToTheMark"));
     }
+    setLoading(true);
     const arrayOfObjects = [];
     for (let i = 1; i <= seats; i++) {
       const newObj = {
@@ -58,15 +59,6 @@ const FinalRegistration = () => {
     }
 
     try {
-      const res = await axios.post(`${baseUrl}/api/auth/register`, {
-        username: storedUser?.name.trim().toLowerCase(),
-        email: storedUser?.email.trim().toLowerCase(),
-        password: storedUser?.password.trim(),
-
-        city: storedUser?.city.toLowerCase(),
-        phone: storedUser?.number,
-      });
-
       const newhotel = {
         ...storedUser.hotelInfo,
         city: storedUser.hotelInfo.city.toLowerCase(),
@@ -81,12 +73,33 @@ const FinalRegistration = () => {
         shopId: hotelId,
       });
 
+      let res = await axios.post(`${baseUrl}/api/auth/register`, {
+        username: storedUser?.name.trim().toLowerCase(),
+        email: storedUser?.email.trim().toLowerCase(),
+        password: storedUser?.password.trim(),
+        shopId: hotelId,
+        city: storedUser?.city.toLowerCase(),
+        phone: storedUser?.number,
+        isAdmin: true,
+      });
+
+      await axios.put(
+        `${baseUrl}/api/hotels/${hotelId}`,
+        {
+          shopOwnerId: res.data,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setLoading(false);
       alert(t("willContactYouShortly"));
       // Usage example
       removeCookie("user_info");
       navigate("/login");
     } catch (err) {
       alert(err.response.data.message);
+      setLoading(false);
       if (err.response.status === 409) {
         navigate("/shop-registration", { state: { goToStep: true } });
       } else if (err.response.status === 400) {
@@ -97,8 +110,8 @@ const FinalRegistration = () => {
       console.log(err);
     }
 
-    // console.log(storedUser);
-    // console.log(arrayOfObjects);
+    console.log(storedUser);
+    console.log(arrayOfObjects);
   };
 
   useEffect(() => {
@@ -158,7 +171,11 @@ const FinalRegistration = () => {
                 }`}
                 onClick={handleRegister}
               >
-                Register
+                {loading ? (
+                  <span className="buttonloader ml-2"></span>
+                ) : (
+                  "Register"
+                )}
               </button>
             </div>
           </div>

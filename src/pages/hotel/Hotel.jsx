@@ -98,6 +98,7 @@ const Hotel = () => {
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
+
   function isSpecificDate(value, targetDate) {
     return value.toString() === targetDate.toString();
   }
@@ -531,7 +532,6 @@ const Hotel = () => {
             <div className="md:col-span-4 col-span-12">
               <div className="">
                 <DatePicker
-                  onClick={() => w > 820 && window.scrollTo(0, 100)}
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}

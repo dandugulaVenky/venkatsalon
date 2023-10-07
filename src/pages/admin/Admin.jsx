@@ -13,9 +13,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
-import { useTranslation } from 'react-i18next';
-
-
+import { useTranslation } from "react-i18next";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -32,6 +30,7 @@ const Admin = () => {
         let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
           withCredentials: true,
         });
+
         setIsAdmin(isAdmin.data);
         setLoading(false);
       } catch (err) {
@@ -86,45 +85,46 @@ const Admin = () => {
         </div>
       ) : isAdmin ? (
         <div className="min-h-[85vh] flex flex-col  justify-center md:w-[30vw] w-[80vw] mx-auto cursor-pointer">
+          <p>{isAdmin?.shopName}</p>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("transactions")}
           >
-            <p>{t('transactions')}</p>
+            <p>{t("transactions")}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("orders")}
           >
-            <p>{t('viewOrders')}</p>
+            <p>{t("viewOrders")}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("services")}
           >
-            <p>{t('myServices')}</p>
+            <p>{t("myServices")}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("addServices")}
           >
-            <p>{t('addServices')}</p>
+            <p>{t("addServices")}</p>
           </div>
           <div
             className="card p-5 w-full"
             onClick={() => handleClick("packages")}
           >
-            <p>{t('addPackages')}</p>
+            <p>{t("addPackages")}</p>
           </div>
           <div className="card p-5 w-full" onClick={() => handleClick("block")}>
-            <p>{t('takeBreak')} </p>
+            <p>{t("takeBreak")} </p>
           </div>
         </div>
       ) : (
         <div className="min-h-screen flex items-center justify-center px-10">
           <p>
-            {t('notAnAdmintoRegisterYourSaloonPlease')}
-            <Link to="/contactus">{t('contactUs')}</Link>
+            {t("notAnAdmintoRegisterYourSaloonPlease")}
+            <Link to="/contactus">{t("contactUs")}</Link>
           </p>
         </div>
       )}

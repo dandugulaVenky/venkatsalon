@@ -12,7 +12,7 @@ const Services = ({ refer }) => {
   const { t } = useTranslation();
   const handler = (service) => {
     setActive(service);
-    window.scrollTo(0, 1200);
+
     dispatch({
       type: "NEW_SEARCH",
       payload: { type: service, destination: city },
