@@ -609,17 +609,17 @@ const Hotel = () => {
                               size="sm"
                             />{" "}
                             -{" "}
-                            <span className=" text-xs md:text-sm">
+                            <span className=" text-xs ">
                               {t("seatsAvailable")}
                             </span>
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;
                             <FontAwesomeIcon
                               icon={faCircle}
                               color="red "
                               size="sm"
                             />{" "}
                             -{" "}
-                            <span className="text-xs md:text-sm">
+                            <span className="text-xs">
                               {t("bookedUnavailable")}
                             </span>
                           </p>

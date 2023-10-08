@@ -17,8 +17,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -88,7 +87,6 @@ function Break() {
   );
   const { t } = useTranslation();
 
-
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get(
@@ -155,7 +153,7 @@ function Break() {
     setSelectedDates([ranges.selection]);
   };
   const submit = async () => {
-    let confirm = window.confirm(t('sureToBlockTheseDates?'));
+    let confirm = window.confirm(t("sureToBlockTheseDates?"));
 
     if (!confirm) {
       return;
@@ -182,11 +180,16 @@ function Break() {
           },
           { withCredentials: true }
         );
+        toast("Successfully Blocked!");
       } catch (err) {
         if (err.response.status === 401) {
           navigate("/login", {
             state: { destination: `/admin/break` },
           });
+        } else if (err.response.status === 505) {
+          alert(
+            `You have bookings on this days. ${err.response.data.toString()}`
+          );
         }
         console.log(err);
       }
@@ -196,7 +199,7 @@ function Break() {
   };
 
   const submitTimings = async () => {
-    let confirm = window.confirm(t('sureToBlockTheseTimings?'));
+    let confirm = window.confirm(t("sureToBlockTheseTimings?"));
 
     if (!confirm) {
       return;
@@ -223,7 +226,12 @@ function Break() {
       lunch.includes(selectedOption1.id) ||
       lunch.includes(selectedOption.id)
     ) {
-      return alert(t('messingUpYourLunchTime!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+      return alert(
+        t("messingUpYourLunchTime!", {
+          time1: selectedOption1.value,
+          time2: selectedOption.value,
+        })
+      );
       //  alert(
       //   `You cannot select ${selectedOption1.value}- ${selectedOption.value} because it is messing up your lunch time!`
       // );
@@ -231,12 +239,12 @@ function Break() {
 
     console.log(selectedOption.id - selectedOption1.id);
     if (selectedOption.id - selectedOption1.id < 0) {
-      return alert(t('plsEnsureToSelectInOrder!'));
+      return alert(t("plsEnsureToSelectInOrder!"));
     } else if (
       (selectedOption.id - selectedOption1.id) * 10 < 59 ||
       (selectedOption.id - selectedOption1.id) * 10 === 0
     ) {
-      return alert(t('selectMoreThanOrEqualToAnHour!'));
+      return alert(t("selectMoreThanOrEqualToAnHour!"));
     }
 
     //finnaly
@@ -259,17 +267,32 @@ function Break() {
         for (const item1 of item) {
           if (item1 === selectedOption.id) {
             matchFound = true;
-           alert(t('cannotSelectBczOfAppointment!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+            alert(
+              t("cannotSelectBczOfAppointment!", {
+                time1: selectedOption1.value,
+                time2: selectedOption.value,
+              })
+            );
             // alert(`You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment!`);
             break; // Exit from the innermost loop
           } else if (item1 === selectedOption1.id) {
             matchFound = true;
-           alert(t('cannotSelectBczOfAppointment!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+            alert(
+              t("cannotSelectBczOfAppointment!", {
+                time1: selectedOption1.value,
+                time2: selectedOption.value,
+              })
+            );
             // alert(`You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment!`);
             break; // Exit from the innermost loop
           } else if (blockArray.includes(item1)) {
             matchFound = true;
-            alert(t('cannotSelectBczOfAppointmentBetween!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+            alert(
+              t("cannotSelectBczOfAppointmentBetween!", {
+                time1: selectedOption1.value,
+                time2: selectedOption.value,
+              })
+            );
 
             // alert(
             //   `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
@@ -277,7 +300,12 @@ function Break() {
             break; // Exit from the innermost loop
           } else if (lunch.includes(item1)) {
             matchFound = true;
-            alert(t('cannotSelectBczOfAppointmentBetween!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+            alert(
+              t("cannotSelectBczOfAppointmentBetween!", {
+                time1: selectedOption1.value,
+                time2: selectedOption.value,
+              })
+            );
             // alert(
             //   `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
             // );
@@ -293,7 +321,12 @@ function Break() {
     for (let i = 0; i < timeBlockArray?.block.length; i++) {
       if (blockArray.includes(timeBlockArray.block[i])) {
         blockageFound = true;
-        alert(t('cannotSelectBczOfAppointmentBetween!',{time1:selectedOption1.value, time2 : selectedOption.value}))
+        alert(
+          t("cannotSelectBczOfAppointmentBetween!", {
+            time1: selectedOption1.value,
+            time2: selectedOption.value,
+          })
+        );
         // alert(
         //   `You cannot select ${selectedOption1.value} - ${selectedOption.value} because there might be something blocking in between!`
         // );
@@ -348,10 +381,10 @@ function Break() {
         <div className="grid grid-cols-6  gap-2">
           <div className=" md:col-span-3 col-span-6">
             <div className="grid place-items-center gap-5">
-              <p className="text-2xl font-bold">{t('onlyForToday')}</p>
+              <p className="text-2xl font-bold">{t("onlyForToday")}</p>
               <div>
                 <div className="pb-6">
-                  <p>{t('startTimingToBlock')}</p>
+                  <p>{t("startTimingToBlock")}</p>
                   <div className="flex md:flex-row flex-col    items-start">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
@@ -361,7 +394,7 @@ function Break() {
                               {timeReserve ? (
                                 <p>{timeReserve}</p>
                               ) : (
-                                t('selectTime')
+                                t("selectTime")
                               )}
                             </span>
                             <svg
@@ -400,7 +433,7 @@ function Break() {
                                     `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
                                   )}
                                 >
-                                {t('selectTime')}
+                                  {t("selectTime")}
                                 </p>
                               )}
                             </Menu.Item>
@@ -467,7 +500,7 @@ function Break() {
                   </div>
                 </div>
                 <div className="pb-6">
-                  <p>{t('endTimingToBlock')}</p>
+                  <p>{t("endTimingToBlock")}</p>
                   <div className="flex md:flex-row flex-col    items-start">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
@@ -477,7 +510,7 @@ function Break() {
                               {timeReserve1 ? (
                                 <p>{timeReserve1}</p>
                               ) : (
-                                t('selectTime')
+                                t("selectTime")
                               )}
                             </span>
                             <svg
@@ -516,7 +549,7 @@ function Break() {
                                     `text-gray-400 block px-4 py-0.5 text-md font-bold cursor-pointer`
                                   )}
                                 >
-                                  {t('selectTime')}
+                                  {t("selectTime")}
                                 </p>
                               )}
                             </Menu.Item>
@@ -555,7 +588,7 @@ function Break() {
                                           </span>
                                           <span className="w-auto overflow-x-auto">
                                             {isbooked.includes(true) &&
-                                              t('appointment')}
+                                              t("appointment")}
 
                                             {timeBlockArray?.block.includes(
                                               option.id
@@ -565,7 +598,7 @@ function Break() {
                                               timeBlockArray.block[
                                                 timeBlockArray.block.length - 1
                                               ] === option.id ? (
-                                                t('blocked')
+                                                t("blocked")
                                               ) : (
                                                 <span>&nbsp;&nbsp; .</span>
                                               ))}
@@ -575,7 +608,7 @@ function Break() {
                                     </Menu.Item>
                                   );
                                 })
-                              : t('loading')}
+                              : t("loading")}
                           </div>
                         </Menu.Items>
                       </Transition>
@@ -588,7 +621,7 @@ function Break() {
                     className="headerBtn  jello-horizontal px-5"
                     onClick={submitTimings}
                   >
-                    {t('submit')}
+                    {t("submit")}
                   </button>
                 </div>
               </div>
@@ -596,9 +629,9 @@ function Break() {
           </div>
           <div className="  md:col-span-3 col-span-6 md:border-l-2 md:border-t-0 border-t-2  border-black">
             <div className="grid place-items-center gap-3 mt-5 md:mt-0">
-              <p className="text-2xl font-bold">{t('onlyFromTomorrow')}</p>
+              <p className="text-2xl font-bold">{t("onlyFromTomorrow")}</p>
               <div>
-                <p>{t('datesYouWantToBlock?')}</p>
+                <p>{t("datesYouWantToBlock?")}</p>
               </div>
               <div className="flex md:flex-row flex-col items-start md:space-x-3 space-x-0 space-y-4 md:space-y-0">
                 <DateRange
@@ -609,7 +642,7 @@ function Break() {
                   disabledDates={disabledDates}
                 />
                 <button onClick={submit} className="primary-button">
-                {t('submit')}
+                  {t("submit")}
                 </button>
               </div>
             </div>
