@@ -52,7 +52,7 @@ const Categories = ({ type }) => {
   return (
     <div className=" mt-8 text-black min-w-full ">
       <div className="flex flex-row justify-between">
-        <h1 className="px-4 md:text-xl font-semibold pb-3">
+        <h1 className="px-3 md:px-5  md:text-xl font-semibold ">
           {t("browseAreaWise")}{" "}
           {type1
             ? // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
@@ -63,7 +63,7 @@ const Categories = ({ type }) => {
             : "loading"}
         </h1>
         <button
-          className="px-4 text-2xl font-semibold pb-4"
+          className="px-5 text-2xl font-semibold pb-3"
           onClick={handleAllCities}
         >
           <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
