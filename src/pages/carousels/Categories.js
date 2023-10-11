@@ -50,9 +50,9 @@ const Categories = ({ type }) => {
     navigate("/cities");
   };
   return (
-    <div className=" mt-5 text-black min-w-full ">
+    <div className=" mt-8 text-black min-w-full ">
       <div className="flex flex-row justify-between">
-        <h1 className="px-4 text-xl font-semibold pb-4">
+        <h1 className="px-4 md:text-xl font-semibold pb-3">
           {t("browseAreaWise")}{" "}
           {type1
             ? // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"

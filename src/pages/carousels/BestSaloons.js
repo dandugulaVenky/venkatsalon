@@ -51,8 +51,8 @@ const BestSaloons = () => {
   };
 
   return (
-    <div className="mt-5  text-black w-full ">
-      <h1 className=" px-4 text-xl font-semibold pb-4">
+    <div className="mt-8  text-black w-full ">
+      <h1 className=" px-4 md:text-xl font-semibold pb-3">
         {type1 ? (
           type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
         ) : (
