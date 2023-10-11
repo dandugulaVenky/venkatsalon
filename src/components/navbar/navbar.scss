@@ -20,8 +20,7 @@
   color: #000000 !important;
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  box-shadow: 0 9px 23px rgba(0, 0, 0, 0.15), 0 5px 5px rgba(0, 0, 0, 0.22);
 }
 
 .head2 {
