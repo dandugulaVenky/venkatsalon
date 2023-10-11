@@ -1,18 +1,16 @@
 import React, { memo, useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
-import DropdownLink from "../DropdownLink";
+
 import "./navbar.scss";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBagShopping,
   faChevronCircleDown,
-  faGlobe,
-  faLanguage,
   faLocation,
   faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
