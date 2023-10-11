@@ -10,8 +10,7 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { SearchContext } from "../../context/SearchContext";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   let w = window.innerWidth;
@@ -23,54 +22,40 @@ const Footer = () => {
     navigate(-1); // Navigates back to the previous page
   }
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth <= 768) {
-  //       setHideScrollbar(true);
-  //     } else {
-  //       setHideScrollbar(false);
-  //     }
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   handleResize();
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
   return w >= 768 ? (
-    <div className=" w-full">
+    <div className=" w-full ">
       <div className="flex items-center justify-center space-x-24 md:space-x-96  bg-[#00ccbb] text-white text-sm pt-10 ">
         <ul className="space-y-2">
-          <li className="">{t('shadnagar')}</li>
-          <li className="">{t('kothur')}</li>
-          <li className="">{t('thimmapur')}</li>
-          <li className="">{t('shamshabad')}</li>
-          <li className="">{t('attapur')}</li>
-          <li className="">{t('katedan')}</li>
+          <li className="">{t("shadnagar")}</li>
+          <li className="">{t("kothur")}</li>
+          <li className="">{t("thimmapur")}</li>
+          <li className="">{t("shamshabad")}</li>
+          <li className="">{t("attapur")}</li>
+          <li className="">{t("katedan")}</li>
         </ul>
         <ul className="space-y-2">
           <li className="">
             <Link to="/about-us" className="text-white">
-              {t('aboutUs')}
+              {t("aboutUs")}
             </Link>{" "}
           </li>
           <li className="">
             <Link to="/contact-us" className="text-white">
-              {t('contactUs')}
+              {t("contactUs")}
             </Link>{" "}
           </li>
           <li className="text-white">
             <Link to="/privacy-policy" className="text-white">
-              {t('privacyPolicy')}{" "}
+              {t("privacyPolicy")}{" "}
             </Link>
           </li>
           <li className="text-white">
             <Link to="/terms-and-conditions" className="text-white">
-              {t('termscondi')}
+              {t("termscondi")}
             </Link>
           </li>
-          <li className="">{t('careers')}</li>
-          <li className="">{t('joinUs')}</li>
+          <li className="">{t("careers")}</li>
+          <li className="">{t("joinUs")}</li>
           <Link to="/test">
             <li>Test</li>
           </Link>

@@ -141,7 +141,7 @@ const Layout = ({ bestRef }) => {
         <Header header={null} />
       )}
 
-      <div className="pb-[6.3rem]">
+      <div className="mb-[6rem]">
         <div className="mainHead">
           <div
             className={`flex items-center justify-between px-10 ${

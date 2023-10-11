@@ -13,7 +13,7 @@ import { SearchContext } from "../../context/SearchContext";
 import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
-
+import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
 
@@ -200,8 +200,8 @@ const Home = () => {
       {w < 768 && <Greeting bestRef={endRef} />}
       <Seo props={siteMetadata} />
 
-      <div className="home-img1 mb-3">
-        <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
+      <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
+      {/* <div className="home-img1 mb-3">
         <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
             <h1 className=" md:text-6xl text-4xl text-center font-bold ">
@@ -212,10 +212,32 @@ const Home = () => {
             {t("welcomeMessage")}
           </h1>
         </div>
-      </div>
+      </div> */}
       {/* <div>
         <VideoBackground videoUrl={videoUrl} />
       </div> */}
+      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
+        <div className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5">
+          <div className="">
+            <h1 className=" text-6xl text-center text-[#00ccbb] font-extrabold leading-[4rem]">
+              {t("welcome")}
+            </h1>
+            <h1 className="md:text-gray-700 font-bold  py-3">
+              {t("welcomeMessage")}
+            </h1>
+          </div>
+        </div>
+        <div className="col-span-12 md:col-span-6 ">
+          <img
+            src={Giffer}
+            alt="gif"
+            style={{
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        </div>
+      </div>
       <div className={` w-full mx-auto  md:rounded md:px-4`}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {

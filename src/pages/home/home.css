@@ -9,6 +9,12 @@
 .slider-control-centerright {
   margin-right: 2.5px;
 }
+.home-imgs {
+  background-image: url("../images/svgType1.jpeg");
+
+  background-position: center;
+  background-size: cover;
+}
 .home-img1 {
   background-image: url("../images/main.webp");
   height: 100vh;
