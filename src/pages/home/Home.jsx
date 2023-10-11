@@ -219,7 +219,7 @@ const Home = () => {
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
         <div className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5">
           <div className="">
-            <h1 className=" text-4xl md:text-6xl text-center text-[#00ccbb] font-extrabold leading-[4rem]">
+            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem]">
               {t("welcome")}
             </h1>
             <h1 className="md:text-gray-700 font-bold  py-3">
@@ -227,7 +227,7 @@ const Home = () => {
             </h1>
           </div>
         </div>
-        <div className="col-span-12 md:col-span-6 ">
+        <div className="col-span-12 md:col-span-6">
           <img
             src={Giffer}
             alt="gif"
