@@ -10,7 +10,7 @@ const Offers = () => {
       <h1 className="px-3 md:px-5 md:text-xl font-semibold pb-3">Offers</h1>
       <Carousel cols={3} rows={1} gap={7}>
         <Carousel.Item>
-          <div className="  h-44 w-full">
+          <div className="h-44 w-full">
             <img
               src={saloonOffer}
               alt="images"
