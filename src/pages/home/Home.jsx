@@ -30,11 +30,11 @@ const siteMetadata = {
 };
 
 const Home = () => {
-  const { open, city, dispatch } = useContext(SearchContext);
+  const { city, dispatch } = useContext(SearchContext);
 
   const location = useLocation();
-  const videoUrl =
-    "https://res.cloudinary.com/dqupmzcrb/video/upload/v1692353902/An_on_time_services_platform_is0qps.mp4";
+  // const videoUrl =
+  //   "https://res.cloudinary.com/dqupmzcrb/video/upload/v1692353902/An_on_time_services_platform_is0qps.mp4";
   const navigate = useNavigate();
 
   const [reference, setReference] = useState(location?.state?.referenceNum);
@@ -180,8 +180,21 @@ const Home = () => {
   const endRef = useRef(null);
   let images = [];
   const w = window.innerWidth;
+  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 540);
 
-  w >= 539
+  const handleResize = (e) => {
+    setSmallScreen(window.innerWidth < 768);
+  };
+
+  console.log(window.innerWidth < 768);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  !smallScreen
     ? (images = [
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
@@ -196,11 +209,10 @@ const Home = () => {
 
   return (
     <div className="h-auto">
-      {open && <Sidebar />}
-      {w < 768 && <Greeting bestRef={endRef} />}
+      {/* {w < 768 && <Greeting bestRef={endRef} />} */}
       <Seo props={siteMetadata} />
 
-      <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div>
+      {/* <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div> */}
       {/* <div className="home-img1 mb-3">
         <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
           <div className="text-container">
@@ -217,7 +229,10 @@ const Home = () => {
         <VideoBackground videoUrl={videoUrl} />
       </div> */}
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
-        <div className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5">
+        <div
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5"
+          style={{ minHeight: "430px" }}
+        >
           <div className="">
             <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem]">
               {t("welcome")}
@@ -283,7 +298,6 @@ const Home = () => {
       {/* <button onClick={handleButton} className="mb-20">
         press me
       </button> */}
-      <Footer />
     </div>
   );
 };

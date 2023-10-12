@@ -75,10 +75,6 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen">
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       {loading ? (
         <div className="min-h-[85vh]  flex items-center justify-center">
           <span className="loader "></span>
@@ -128,8 +124,6 @@ const Admin = () => {
           </p>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 };

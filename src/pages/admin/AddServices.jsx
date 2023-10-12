@@ -4,8 +4,7 @@ import {
   parlourServices,
 } from "../../utils/parlourServices";
 import { salonCategories, salonServices } from "../../utils/salonServices";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 import axios from "axios";
 import { useState } from "react";
@@ -35,7 +34,6 @@ const AddServices = () => {
     shopType === "parlour" ? parlourCategories : salonCategories;
   const services = shopType === "parlour" ? parlourServices : salonServices;
   const { t } = useTranslation();
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -201,20 +199,19 @@ const AddServices = () => {
 
       const show = message.map((res) => res.service);
       // alert(`This services are already present { ${show} }`);
-      alert(t('servicesAlreadyPresent',{show : show}));
+      alert(t("servicesAlreadyPresent", { show: show }));
       //   alert(err);
     }
   };
   let w = window.innerWidth;
   return (
     <div>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       <div className="md:py-10 pb-20 md:px-5 px-2.5 min-h-screen">
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around pb-4 md:space-y-0 space-y-3">
           <div className="md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">{t('category')} </p>
+              <p className="py-2 font-semibold text-lg  ">{t("category")} </p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 1
               </span>
@@ -225,7 +222,7 @@ const AddServices = () => {
               value={category}
             >
               <option selected value="">
-              {t('selectCategory')}
+                {t("selectCategory")}
               </option>
               {services.map((service, i) => {
                 return <option key={i}>{service}</option>;
@@ -234,7 +231,9 @@ const AddServices = () => {
           </div>
           <div className="text-lg  text-left text-black md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">{t('serviceTitle')} </p>
+              <p className="py-2 font-semibold text-lg  ">
+                {t("serviceTitle")}{" "}
+              </p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 2
               </span>
@@ -244,7 +243,7 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb] w-full md:w-auto"
               value={allServices?.service}
             >
-              <option selected>{t('selectService')}</option>
+              <option selected>{t("selectService")}</option>
               {categoriesOptions?.map((service, i) => {
                 return <option key={i}>{service.name}</option>;
               })}
@@ -253,7 +252,7 @@ const AddServices = () => {
 
           <div className="text-lg  text-left text-black md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">{t('price')} </p>
+              <p className="py-2 font-semibold text-lg  ">{t("price")} </p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 3
               </span>
@@ -263,7 +262,7 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb] w-full md:w-auto"
               value={allServices?.price}
             >
-              <option selected>{t('selectPrice')}</option>
+              <option selected>{t("selectPrice")}</option>
               {[
                 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
                 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
@@ -275,7 +274,7 @@ const AddServices = () => {
 
           <div className="text-lg  text-left text-black md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">{t('duration')} </p>
+              <p className="py-2 font-semibold text-lg  ">{t("duration")} </p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 4
               </span>
@@ -285,7 +284,7 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb] w-full md:w-auto"
               value={allServices?.duration}
             >
-              <option selected>{t('selectDurationMinutes')}</option>
+              <option selected>{t("selectDurationMinutes")}</option>
               {[
                 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140,
                 150,
@@ -296,7 +295,7 @@ const AddServices = () => {
           </div>
           <div className=" md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold md:text-lg ">{t('add')}</p>
+              <p className="py-2 font-semibold md:text-lg ">{t("add")}</p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-1 text-white">
                 5
               </span>
@@ -305,7 +304,7 @@ const AddServices = () => {
               className="primary-button md:w-auto w-full "
               onClick={handleSubmit}
             >
-              {t('addToTable')}
+              {t("addToTable")}
             </button>
           </div>
         </div>
@@ -314,16 +313,16 @@ const AddServices = () => {
             <thead class="text-xs text-white uppercase bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
-                  {t('categoryName')}{" "}
+                  {t("categoryName")}{" "}
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  {t('serviceName')}
+                  {t("serviceName")}
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  {t('price')}
+                  {t("price")}
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  {t('duration')}
+                  {t("duration")}
                 </th>
               </tr>
             </thead>
@@ -345,7 +344,7 @@ const AddServices = () => {
                   );
                 })
               ) : (
-                <td className="p-5">{t('notFound')}</td>
+                <td className="p-5">{t("notFound")}</td>
               )}
             </tbody>
           </table>
@@ -355,10 +354,9 @@ const AddServices = () => {
           onClick={handleClick}
           disabled={disabled}
         >
-          {t('confirm')}
+          {t("confirm")}
         </button>
       </div>
-      <Footer />
     </div>
   );
 };

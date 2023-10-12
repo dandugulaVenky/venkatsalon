@@ -59,9 +59,6 @@ const List = () => {
 
   return (
     <>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
       <div className="min-h-[85.5vh]">
         {loading ? (
           <div className=" flex items-center justify-center h-[70vh]">
@@ -106,7 +103,6 @@ const List = () => {
           </div>
         )}
       </div>
-      <Footer />
     </>
   );
 };

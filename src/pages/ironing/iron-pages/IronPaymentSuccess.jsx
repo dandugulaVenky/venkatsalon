@@ -129,10 +129,6 @@ export const IronPaymentSuccess = () => {
 
   return (
     <div className="">
-      {open && <SIdebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <div className="md:h-[75vh] h-[65vh] flex flex-col items-center justify-center">
         Reference No.{referenceNum}
         <img
@@ -141,8 +137,6 @@ export const IronPaymentSuccess = () => {
           className="mt-2"
         />
       </div>
-
-      <Footer />
     </div>
   );
 };

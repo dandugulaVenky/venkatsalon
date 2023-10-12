@@ -722,8 +722,7 @@ const ParlorReserve = () => {
 
   return (
     <>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       <ShowInclusions />
       {parlorPreview && reserveState !== null ? (
         <div className="min-h-screen">

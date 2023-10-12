@@ -14,7 +14,7 @@ import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
 import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
 import About from "./pages/staticpages/About";
 import Contact from "./pages/staticpages/Contact";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { AuthContext } from "./context/AuthContext";
 
 import BookingFailure from "./components/BookingFailure";
@@ -45,6 +45,12 @@ import Telugu from "./pages/translation/Telugu";
 import i18next from "./i18n";
 import LanguageContext from "./context/LanguageContext";
 import { useState } from "react";
+import Layout from "./components/navbar/Layout";
+import Greeting from "./components/navbar/Greeting";
+import MobileFooter from "./components/footer/MobileFooter";
+import Footer from "./components/footer/Footer";
+import { SearchContext } from "./context/SearchContext";
+import SIdebar from "./components/navbar/SIdebar";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -58,11 +64,35 @@ function App() {
     return children;
   };
   const [locale, setLocale] = useState(i18next.language);
+  const { open } = useContext(SearchContext);
+  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
+
+  const handleResize = (e) => {
+    setSmallScreen(window.innerWidth < 1064);
+  };
+
+  console.log(window.innerWidth < 1064);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const endRef = useRef(null);
 
   return (
     <>
       <LanguageContext.Provider value={{ locale, setLocale }}>
         <BrowserRouter>
+          {smallScreen ? (
+            <Greeting bestRef={endRef} />
+          ) : (
+            <Layout bestRef={endRef} />
+          )}
+
+          {open && <SIdebar />}
           <Routes>
             <Route path="/" element={<Home />} />
             {/* <Route path="/get-started" element={<Home />} /> */}
@@ -196,6 +226,7 @@ function App() {
             />
             <Route path="/telugu" element={<Telugu />} />
           </Routes>
+          {smallScreen ? <MobileFooter /> : <Footer />}
         </BrowserRouter>
       </LanguageContext.Provider>
     </>

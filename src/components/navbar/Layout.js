@@ -58,6 +58,8 @@ const Layout = ({ bestRef }) => {
   };
 
   useEffect(() => {
+    setIsScrolled(false);
+
     let timeout =
       pathname.includes("/shops") || pathname.includes("/iron/product")
         ? 750

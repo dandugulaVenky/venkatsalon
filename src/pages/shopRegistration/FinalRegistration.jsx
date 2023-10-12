@@ -135,10 +135,10 @@ const FinalRegistration = () => {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
+
       {/*<Seo props={siteMetadata} />*/}
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
+
       <div className="min-h-[85.5vh]">
         <div className="md:py-0.5 py-5">
           <RegistrationWizard activeStep={2} />
@@ -182,7 +182,6 @@ const FinalRegistration = () => {
           <img src={Select} alt="select category" className="h-72" />
         </div>
       </div>
-      <Footer />
     </>
   );
 };

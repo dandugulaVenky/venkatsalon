@@ -44,10 +44,6 @@ const AllCities = () => {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <div className="flex items-center py-10 space-x-2 md:mx-0 mx-3">
           <label> City :</label>
@@ -86,7 +82,6 @@ const AllCities = () => {
           </>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

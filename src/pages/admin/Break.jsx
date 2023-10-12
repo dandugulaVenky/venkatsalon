@@ -374,9 +374,6 @@ function Break() {
 
   return (
     <div className="">
-      {open && <SIdebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
       <div className="p-10 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
         <div className="grid grid-cols-6  gap-2">
           <div className=" md:col-span-3 col-span-6">
@@ -659,7 +656,6 @@ function Break() {
           title="myCalender"
         ></iframe>
       </div>
-      <Footer />
     </div>
   );
 }

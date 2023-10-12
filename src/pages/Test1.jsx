@@ -405,11 +405,13 @@ const Test1 = (props) => {
           //     item.seatNo + 1
           //   } `
           // );
-          alert(t("lessTimeLeft", {
-            time: options[options.length - 1].value,
-            mins: (num1 - num2) * 10,
-            seatNum: item.seatNo + 1,
-          }));
+          alert(
+            t("lessTimeLeft", {
+              time: options[options.length - 1].value,
+              mins: (num1 - num2) * 10,
+              seatNum: item.seatNo + 1,
+            })
+          );
           return true;
         } else {
           return false;
@@ -424,33 +426,35 @@ const Test1 = (props) => {
           const hours = Math.floor(minutes / 60);
           const remainingMinutes = minutes % 60;
           item1 > 60
-            ? 
-            // alert(
-            //     `Others have a booking at ${
-            //       options[selectedValue + item1 / 10].value
-            //     }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
-            //       item2 + 1
-            //     } `
-            //   )
-            alert(t("reachingOthersTime", {
-              time: options[selectedValue + item1 / 10].value,
-              hours:hours,
-              mins: remainingMinutes,
-              seatNum: item2 + 1,
-            }))
-            : 
-            // alert(
-            //     `Others have a booking at ${
-            //       options[selectedValue + item1 / 10].value
-            //     }. Please choose only a option which is of ${item1} minutes in seat${
-            //       item2 + 1
-            //     } `
-            //   );
-            alert(t("reachingOthersTime1", {
-              time: options[selectedValue + item1 / 10].value,
-              mins: item1,
-              seatNum: item2 + 1,
-            }))
+            ? // alert(
+              //     `Others have a booking at ${
+              //       options[selectedValue + item1 / 10].value
+              //     }. Please choose only a option which is of ${hours} hours and ${remainingMinutes} minutes in seat${
+              //       item2 + 1
+              //     } `
+              //   )
+              alert(
+                t("reachingOthersTime", {
+                  time: options[selectedValue + item1 / 10].value,
+                  hours: hours,
+                  mins: remainingMinutes,
+                  seatNum: item2 + 1,
+                })
+              )
+            : // alert(
+              //     `Others have a booking at ${
+              //       options[selectedValue + item1 / 10].value
+              //     }. Please choose only a option which is of ${item1} minutes in seat${
+              //       item2 + 1
+              //     } `
+              //   );
+              alert(
+                t("reachingOthersTime1", {
+                  time: options[selectedValue + item1 / 10].value,
+                  mins: item1,
+                  seatNum: item2 + 1,
+                })
+              );
 
           return 0;
         };
@@ -631,8 +635,7 @@ const Test1 = (props) => {
 
   return (
     <>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       <ShowInclusions />
       {parlourPreview && reserveState !== null ? (
         <div className="min-h-screen">

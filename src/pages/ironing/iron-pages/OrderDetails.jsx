@@ -63,10 +63,8 @@ export default function OrderDetails() {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
 
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
       <h1 className="mb-4 text-xl md:px-10 px-4 py-3 font-bold">{`Order ${orderId}`}</h1>
 
       {loading && data[0]?.length > 0 ? (
@@ -184,7 +182,6 @@ export default function OrderDetails() {
           </div>
         </div>
       )}
-      <Footer />
     </>
   );
 }

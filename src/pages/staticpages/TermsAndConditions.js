@@ -25,10 +25,6 @@ const TermsAndConditions = () => {
 
   return (
     <div>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <Seo props={siteMetadata} />
 
       <div className="min-h-screen flex flex-col justify-start items-start px-10 overflow-auto md:pt-5 pt-5 md:mb-10 pb-20">
@@ -358,7 +354,6 @@ const TermsAndConditions = () => {
           damage of any nature.
         </p>
       </div>
-      <Footer />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 
 import "../components/searchItem/searchItem.css";
-import Footer from "../components/footer/Footer";
 
 import useFetch from "../hooks/useFetch";
 
@@ -15,10 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import Layout from "../components/navbar/Layout";
+
 import { SearchContext } from "../context/SearchContext";
-import Sidebar from "../components/navbar/SIdebar";
-import Greeting from "../components/navbar/Greeting";
+
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
@@ -155,10 +153,6 @@ const BookingHistory = () => {
 
   return (
     <div className="">
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       {showServices !== null && <GetPushed />}
 
       <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
@@ -317,8 +311,6 @@ const BookingHistory = () => {
           </div>
         )}
       </div>
-
-      <Footer />
     </div>
   );
 };

@@ -13,8 +13,7 @@ import Sidebar from "../components/navbar/SIdebar";
 import Greeting from "../components/navbar/Greeting";
 import { SearchContext } from "../context/SearchContext";
 import baseUrl from "../utils/client";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export default function Profile() {
   //   const { data: session } = useSession();
@@ -83,19 +82,15 @@ export default function Profile() {
 
   return (
     <div>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <div className="px-8 py-8 md:min-h-[60vh] md:flex justify-center md:mb-20 min-h-screen">
         <form
           className="px-10 py-5 card h-auto mt-10"
           onSubmit={handleSubmit(submitHandler)}
         >
-          <h1 className="mb-4 text-2xl font-semibold">{t('updateProfile')}</h1>
+          <h1 className="mb-4 text-2xl font-semibold">{t("updateProfile")}</h1>
 
           <div className="mb-4">
-            <label htmlFor="name">{t('name')}</label>
+            <label htmlFor="name">{t("name")}</label>
             <input
               type="text"
               className="w-full"
@@ -111,7 +106,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="email">{t('emailTitle')}</label>
+            <label htmlFor="email">{t("emailTitle")}</label>
             <input
               type="email"
               className="w-full"
@@ -130,7 +125,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password">{t('password')}</label>
+            <label htmlFor="password">{t("password")}</label>
             <input
               className="w-full"
               type="password"
@@ -148,7 +143,7 @@ export default function Profile() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="confirmPassword">{t('confirmPassword')}</label>
+            <label htmlFor="confirmPassword">{t("confirmPassword")}</label>
             <input
               className="w-full"
               type="password"
@@ -168,15 +163,14 @@ export default function Profile() {
             )}
             {errors.confirmPassword &&
               errors.confirmPassword.type === "validate" && (
-                <div className="text-red-500 ">{t('passwordDoNotMatch')}</div>
+                <div className="text-red-500 ">{t("passwordDoNotMatch")}</div>
               )}
           </div>
           <div className="mb-4">
-            <button className="primary-button">{t('updateProfile')}</button>
+            <button className="primary-button">{t("updateProfile")}</button>
           </div>
         </form>
       </div>
-      <Footer />
     </div>
   );
 }

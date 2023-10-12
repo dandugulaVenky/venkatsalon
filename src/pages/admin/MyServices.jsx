@@ -353,8 +353,7 @@ const MyServices = () => {
 
   return (
     <>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       {showInclusions?.inclusions?.length > 0 ? (
         <div className="reserve relative">
           <div className="overflow-auto  ">
@@ -764,7 +763,6 @@ const MyServices = () => {
           </div>
         </div>
       )}
-      <Footer />
     </>
   );
 };

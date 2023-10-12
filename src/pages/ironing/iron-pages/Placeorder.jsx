@@ -14,8 +14,7 @@ import Footer from "../../../components/footer/Footer";
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../utils/client";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -51,7 +50,6 @@ export default function PlaceOrder() {
 
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
-
 
   const placeOrderHandler = async () => {
     setLoading(true);
@@ -121,42 +119,42 @@ export default function PlaceOrder() {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
+
       <Seo props={siteMetadata} />
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
+
       <CheckoutWizard activeStep={2} />
-      <h1 className="mb-4 text-xl px-10 pt-5">{t('placeOrder')}</h1>
+      <h1 className="mb-4 text-xl px-10 pt-5">{t("placeOrder")}</h1>
       {cartItems.length === 0 ? (
         <div className="px-10 pt-10">
-          {t('emptyCart')}{" "}
+          {t("emptyCart")}{" "}
           <Link to="/iron" className="primary-button ">
-            {t('goShopping')}
+            {t("goShopping")}
           </Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5  h-auto px-4  md:px-10  pb-16">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
-              <h2 className="mb-2 text-lg">{t('shippingAddress')}</h2>
+              <h2 className="mb-2 text-lg">{t("shippingAddress")}</h2>
               <div>
                 {shippingAddress.fullName}, {shippingAddress.address},{" "}
                 {shippingAddress.city}
               </div>
               <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
-                <Link to="/iron/shipping">{t('edit')}</Link>
+                <Link to="/iron/shipping">{t("edit")}</Link>
               </div>
             </div>
 
             <div className="card overflow-x-auto p-5">
-              <h2 className="mb-2 text-lg">{t('orderItems')}</h2>
+              <h2 className="mb-2 text-lg">{t("orderItems")}</h2>
               <table className="min-w-full">
                 <thead className="border-b">
                   <tr className="border-b-2 border-white">
-                    <th className="px-5 text-left">{t('item')}</th>
-                    <th className="    p-5 text-right">{t('quantity')}</th>
-                    <th className="  p-5 text-right">{t('price')}</th>
-                    <th className="p-5 text-right">{t('Subtotal')}</th>
+                    <th className="px-5 text-left">{t("item")}</th>
+                    <th className="    p-5 text-right">{t("quantity")}</th>
+                    <th className="  p-5 text-right">{t("price")}</th>
+                    <th className="p-5 text-right">{t("Subtotal")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,45 +175,55 @@ export default function PlaceOrder() {
                         </Link>
                       </td>
                       <td className=" p-5 text-right">{item.quantity}</td>
-                      <td className="p-5 text-right">{t('rs')}.{item.price}</td>
                       <td className="p-5 text-right">
-                        {t('rs')}.{item.quantity * item.price}
+                        {t("rs")}.{item.price}
+                      </td>
+                      <td className="p-5 text-right">
+                        {t("rs")}.{item.quantity * item.price}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               <div className="bg-gray-400 text-white px-3 py-2 w-14 rounded-md my-2">
-                <Link to="/iron/cart">{t('edit')}</Link>
+                <Link to="/iron/cart">{t("edit")}</Link>
               </div>
             </div>
           </div>
           <div>
             <div className="card  p-5">
-              <h2 className="mb-2 text-lg">{t('orderSummary')}</h2>
+              <h2 className="mb-2 text-lg">{t("orderSummary")}</h2>
               <ul>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('items')}</div>
-                    <div>{t('rs')}.{itemsPrice}</div>
+                    <div>{t("items")}</div>
+                    <div>
+                      {t("rs")}.{itemsPrice}
+                    </div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('tax')}</div>
-                    <div>{t('rs')}.{taxPrice}</div>
+                    <div>{t("tax")}</div>
+                    <div>
+                      {t("rs")}.{taxPrice}
+                    </div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('shipping')}</div>
-                    <div>{t('rs')}.{shippingPrice}</div>
+                    <div>{t("shipping")}</div>
+                    <div>
+                      {t("rs")}.{shippingPrice}
+                    </div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t('total')}</div>
-                    <div>{t('rs')}.{totalPrice}</div>
+                    <div>{t("total")}</div>
+                    <div>
+                      {t("rs")}.{totalPrice}
+                    </div>
                   </div>
                 </li>
                 <li>
@@ -225,11 +233,11 @@ export default function PlaceOrder() {
                     className="primary-button w-full"
                   >
                     {loading ? (
-                      t('loading')
+                      t("loading")
                     ) : buttonLoad ? (
                       <span className="buttonloader"></span>
                     ) : (
-                      t('placeOrder')
+                      t("placeOrder")
                     )}
                   </button>
                 </li>
@@ -238,7 +246,6 @@ export default function PlaceOrder() {
           </div>
         </div>
       )}
-      <Footer />
     </>
   );
 }

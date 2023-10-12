@@ -107,9 +107,7 @@ const ShopDetails = () => {
       })?.id;
 
       if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
-        return alert(
-          t("min8HrsNeededBetweenOpeningClosingTime")
-        );
+        return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
       }
       if (selectedEndIndex * 10 - selectedStartIndex * 10 > 60) {
         return alert(t("lunchTimeMax1HrOnly"));
@@ -213,10 +211,8 @@ const ShopDetails = () => {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
 
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
       <div className="md:py-0.5 py-5">
         <RegistrationWizard activeStep={1} />
       </div>
@@ -466,7 +462,6 @@ const ShopDetails = () => {
           <button className="primary-button">Next</button>
         </div>
       </form>
-      <Footer />
     </>
   );
 };

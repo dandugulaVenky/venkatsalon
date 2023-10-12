@@ -25,10 +25,6 @@ const PrivacyPolicy = () => {
 
   return (
     <>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <Seo props={siteMetadata} />
       <div className="min-h-screen flex flex-col justify-start items-start md:px-20 px-14 overflow-auto space-y-2 pt-5 pb-32">
         <h1 className="text-2xl font-bold mb-5 mt-5">EasyTym Privacy Policy</h1>
@@ -177,7 +173,6 @@ const PrivacyPolicy = () => {
           </li>
         </ul>
       </div>
-      <Footer />
     </>
   );
 };

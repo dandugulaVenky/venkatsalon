@@ -92,7 +92,6 @@ const BookingFailure = () => {
 
   return (
     <>
-      {w < 768 && <Greeting />}
       {w >= 768 && <Layout />}
       <div className=" flex flex-col items-center justify-center pb-40">
         {reference !== undefined && (
@@ -109,7 +108,6 @@ const BookingFailure = () => {
           </div>
         )}
       </div>
-      <Footer />
     </>
   );
 };

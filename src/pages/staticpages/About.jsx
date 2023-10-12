@@ -7,8 +7,7 @@ import Layout from "../../components/navbar/Layout";
 import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Discover EasyTym | Know About Us",
@@ -25,66 +24,62 @@ const About = () => {
   const { open } = useContext(SearchContext);
   const { t } = useTranslation();
 
-
   return (
     <>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <Seo props={siteMetadata} />
 
       <div className="py-10 px-20 flex flex-col space-y-3 justify-center">
         <div>
-          <h1 className="text-2xl font-bold">{t('introduction')}</h1>
+          <h1 className="text-2xl font-bold">{t("introduction")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-            {t('aboutIntroMessage')}
+            {t("aboutIntroMessage")}
           </p>
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold">{t('commitmentToConvenience')}</h1>
+          <h1 className="text-2xl font-bold">{t("commitmentToConvenience")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-           {t('commitmentToConvenienceMessage')}
+            {t("commitmentToConvenienceMessage")}
           </p>
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold">{t('extensiveServiceNetwork')}</h1>
+          <h1 className="text-2xl font-bold">{t("extensiveServiceNetwork")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-            {t('extensiveServiceNetworkMessage')}
+            {t("extensiveServiceNetworkMessage")}
           </p>
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{t('seamlessBookingExperience')}</h1>
+          <h1 className="text-2xl font-bold">
+            {t("seamlessBookingExperience")}
+          </h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-           {t('seamlessBookingExperienceMessage')}
+            {t("seamlessBookingExperienceMessage")}
           </p>
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{t('empoweringYourChoices')}</h1>
+          <h1 className="text-2xl font-bold">{t("empoweringYourChoices")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-           {t('empoweringYourChoicesMessage')}
+            {t("empoweringYourChoicesMessage")}
           </p>
         </div>
 
         <div>
-          <h1 className="text-2xl font-bold">{t('commitmenttoExcellence')}</h1>
+          <h1 className="text-2xl font-bold">{t("commitmenttoExcellence")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-            {t('commitmenttoExcellenceMessage')}
+            {t("commitmenttoExcellenceMessage")}
           </p>
         </div>
         <div>
-          <h1 className="text-2xl font-bold">{t('conclusion')}</h1>
+          <h1 className="text-2xl font-bold">{t("conclusion")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
-            {t('conclusionMessage')}
+            {t("conclusionMessage")}
           </p>
         </div>
-        <p>{t('aboutAddress')}</p>
-        <p>{t('callUs')}</p>
-        <p>{t('aboutUsEmail')}</p>
+        <p>{t("aboutAddress")}</p>
+        <p>{t("callUs")}</p>
+        <p>{t("aboutUsEmail")}</p>
       </div>
-      <Footer />
     </>
   );
 };

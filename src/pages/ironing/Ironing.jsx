@@ -1,11 +1,8 @@
 import React from "react";
-import SIdebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
 
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
-import Footer from "../../components/footer/Footer";
-import Layout from "../../components/navbar/Layout";
+
 import CarouselBanner from "../../components/CarouselBanner";
 import { useState, useContext } from "react";
 
@@ -108,11 +105,8 @@ export default function Ironing() {
       ]);
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
       <Seo props={siteMetadata} />
       <div className="home-img mb-5">
-        <div className=" px-4">{w >= 768 && <Layout />}</div>
         <div className="md:h-[75vh] h-[90vh] flex  flex-col items-center justify-center ">
           <h1 className="text-[#00ccbb] md:text-6xl text-4xl text-center font-bold">
             {t("ironingWelcome")}
@@ -155,8 +149,6 @@ export default function Ironing() {
           ))}
         </div>
       </div>
-
-      <Footer />
     </>
   );
 }

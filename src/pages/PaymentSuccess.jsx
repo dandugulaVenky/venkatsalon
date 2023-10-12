@@ -7,12 +7,6 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../components/footer/Footer";
-import Greeting from "../components/navbar/Greeting";
-import Layout from "../components/navbar/Layout";
-import Sidebar from "../components/navbar/SIdebar";
-
-import { SearchContext } from "../context/SearchContext";
 
 import { AuthContext } from "../context/AuthContext";
 import baseUrl from "../utils/client";
@@ -207,15 +201,8 @@ export const PaymentSuccess = () => {
     );
   };
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   return (
     <div className="">
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
-
       <div className="md:h-[75vh] h-[65vh] flex flex-col items-center justify-center">
         Reference No.{referenceNum}
         <img
@@ -224,8 +211,6 @@ export const PaymentSuccess = () => {
           className="mt-2"
         />
       </div>
-
-      <Footer />
     </div>
   );
 };

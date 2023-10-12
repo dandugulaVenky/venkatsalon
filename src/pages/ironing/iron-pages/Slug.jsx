@@ -14,8 +14,7 @@ import { SearchContext } from "../../../context/SearchContext";
 import Layout from "../../../components/navbar/Layout";
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import Footer from "../../../components/footer/Footer";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -79,7 +78,6 @@ export default function Slug() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-
   if (!product) {
     return <p>Produt Not Found</p>;
   }
@@ -95,10 +93,9 @@ export default function Slug() {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
+
       <Seo props={siteMetadata} />
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
 
       <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12 mt-2 mb-10">
         <div className="md:col-span-2">
@@ -117,19 +114,21 @@ export default function Slug() {
           <ul className="space-y-1 card p-5">
             <li>
               <h1 className="text-lg">
-                <span className="text-[#00ccbb]">{t('category')}:</span> {t('productName',{name:product.name})}
+                <span className="text-[#00ccbb]">{t("category")}:</span>{" "}
+                {t("productName", { name: product.name })}
               </h1>
             </li>
 
             <li>
-              <span className="text-[#00ccbb]">{t('description')}:</span> {t('productDescription')}
+              <span className="text-[#00ccbb]">{t("description")}:</span>{" "}
+              {t("productDescription")}
             </li>
           </ul>
         </div>
         <div>
           <div className="card p-5">
             <div className="mb-2 flex justify-between">
-              <div>{t('price')}</div>
+              <div>{t("price")}</div>
               <div>${product.price}</div>
             </div>
 
@@ -137,15 +136,14 @@ export default function Slug() {
               className="primary-button w-full"
               onClick={addToCartHandler}
             >
-             {t('addToCart')}
+              {t("addToCart")}
             </button>
             <div className="default-button text-center  my-2">
-              <Link to="/iron">{t('backToIroning')}</Link>
+              <Link to="/iron">{t("backToIroning")}</Link>
             </div>
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

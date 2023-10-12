@@ -49,6 +49,9 @@ function classNames(...classes) {
 }
 
 const Hotel = () => {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const location = useLocation();
   const shopIdLocation = location.pathname.split("/")[2];
   const [comment, setComment] = useState();
@@ -61,12 +64,12 @@ const Hotel = () => {
   const [open, setOpen] = useState(false);
 
   const { user } = useContext(AuthContext);
-  const { city, date, time } = useContext(SearchContext);
+  const { city } = useContext(SearchContext);
   const [value, setValue] = useState(new Date());
   const [timeReserve, setTimeReserve] = useState();
   const size = GetSize();
   const { type, dispatch } = useContext(SearchContext);
-  const { open: sidebar } = useContext(SearchContext);
+
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const w = window.innerWidth;
@@ -92,9 +95,7 @@ const Hotel = () => {
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
   const { t } = useTranslation();
-  useEffectOnce(() => {
-    window.scrollTo(0, 0);
-  }, []);
+
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
@@ -471,9 +472,6 @@ const Hotel = () => {
 
   return (
     <div>
-      {sidebar && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
       <div className={` w-full mx-auto  md:rounded md:px-4 `}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
@@ -895,7 +893,6 @@ const Hotel = () => {
           </div>
         </div>
       )}
-      <Footer />
     </div>
   );
 };

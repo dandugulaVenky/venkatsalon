@@ -12,7 +12,7 @@ import Layout from "../../../components/navbar/Layout";
 import { SearchContext } from "../../../context/SearchContext";
 import Footer from "../../../components/footer/Footer";
 import useEffectOnce from "../../../utils/UseEffectOnce";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -72,10 +72,10 @@ export default function Shipping() {
 
   return (
     <>
-      {open && <SIdebar />}
-      {w < 768 && <Greeting />}
+      {""}
+
       <Seo props={siteMetadata} />
-      <div className=" px-4">{w >= 768 && <Layout />}</div>
+
       <div className="md:py-0.5 py-5">
         <CheckoutWizard activeStep={1} />
       </div>
@@ -83,9 +83,9 @@ export default function Shipping() {
         className="card mx-auto max-w-screen-md py-12 md:px-12 px-7 h-[90vh]"
         onSubmit={handleSubmit(submitHandler)}
       >
-        <h1 className="mb-4 text-xl">{t('shippingAddress')}</h1>
+        <h1 className="mb-4 text-xl">{t("shippingAddress")}</h1>
         <div className="mb-4">
-          <label htmlFor="fullName">{t('fullName')}</label>
+          <label htmlFor="fullName">{t("fullName")}</label>
           <input
             className="w-full"
             id="fullName"
@@ -99,7 +99,7 @@ export default function Shipping() {
           )}
         </div>
         <div className="mb-4">
-          <label htmlFor="address">{t('exactAddress')}</label>
+          <label htmlFor="address">{t("exactAddress")}</label>
           <input
             className="w-full"
             id="address"
@@ -116,7 +116,7 @@ export default function Shipping() {
           )}
         </div>
         <div className="mb-4">
-          <label htmlFor="city">{t('cityTown')}</label>
+          <label htmlFor="city">{t("cityTown")}</label>
           <input
             className="w-full"
             id="city"
@@ -129,7 +129,7 @@ export default function Shipping() {
           )}
         </div>
         <div className="mb-4">
-          <label htmlFor="phone">{t('currentPhoneNumber')}</label>
+          <label htmlFor="phone">{t("currentPhoneNumber")}</label>
           <input
             className="w-full"
             type="number"
@@ -156,10 +156,9 @@ export default function Shipping() {
           )}
         </div> */}
         <div className="mb-4 flex justify-between">
-          <button className="primary-button">{t('next')}</button>
+          <button className="primary-button">{t("next")}</button>
         </div>
       </form>
-      <Footer />
     </>
   );
 }

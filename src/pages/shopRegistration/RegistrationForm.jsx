@@ -191,9 +191,7 @@ const RegistrationForm = () => {
       ) : (
         <Header header={header} />
       )}
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+
       <div className="md:py-0.5 py-5">
         <RegistrationWizard activeStep={0} />
       </div>
@@ -367,8 +365,6 @@ const RegistrationForm = () => {
           </div>
         )}
       </div>
-
-      <Footer />
     </div>
   );
 };

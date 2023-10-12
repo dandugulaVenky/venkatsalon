@@ -18,8 +18,7 @@ import Greeting from "../../components/navbar/Greeting";
 import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
 import secureLocalStorage from "react-secure-storage";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   const location = useLocation();
@@ -29,7 +28,6 @@ export default function Login() {
 
   const [token, setToken] = useState("");
   const { t } = useTranslation();
-
 
   async function requestPermission() {
     const permission = await Notification.requestPermission();
@@ -104,9 +102,6 @@ export default function Login() {
   };
   return (
     <div>
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
       <div className="px-8 py-8 md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 md:pt-8 pt-5">
         <img
           src={LoginImage}
@@ -116,10 +111,10 @@ export default function Login() {
           className="card"
         ></img>
         <form className="px-10 py-5 card h-auto" onSubmit={handleSubmit1}>
-          <h1 className="mb-4 text-2xl font-semibold">{t('loginTitle')}</h1>
+          <h1 className="mb-4 text-2xl font-semibold">{t("loginTitle")}</h1>
 
           <div className="mb-4">
-            <label htmlFor="name">{t('phoneTitle')}</label>
+            <label htmlFor="name">{t("phoneTitle")}</label>
             <PhoneInput
               defaultCountry="IN"
               id="number"
@@ -130,7 +125,7 @@ export default function Login() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password">{t('password')}</label>
+            <label htmlFor="password">{t("password")}</label>
             <input
               className="w-full"
               type="password"
@@ -142,11 +137,11 @@ export default function Login() {
 
           <div className="mb-1">
             <button className="primary-button" disabled={loading}>
-            {t('loginTitle')}
+              {t("loginTitle")}
             </button>
           </div>
           <p className="text-md underline text-blue-600 mt-3">
-            <Link to="/register">{t('dontHaveAccountClickHere')}</Link>
+            <Link to="/register">{t("dontHaveAccountClickHere")}</Link>
           </p>
           {errorContext && (
             <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
@@ -155,7 +150,6 @@ export default function Login() {
           )}
         </form>
       </div>
-      <Footer />
     </div>
   );
 }

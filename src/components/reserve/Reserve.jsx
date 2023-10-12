@@ -720,8 +720,7 @@ const Reserve = () => {
 
   return (
     <>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       <ShowInclusions />
       {salonPreview && reserveState !== null ? (
         <div className="min-h-screen">

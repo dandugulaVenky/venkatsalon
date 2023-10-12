@@ -10,8 +10,7 @@ import Greeting from "../../components/navbar/Greeting";
 import { toast } from "react-toastify";
 import PackagePreview from "../../components/admin/PackagePreview";
 import Footer from "../../components/footer/Footer";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const Packages = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -122,8 +121,7 @@ const Packages = () => {
   };
   return (
     <>
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
+      {""}
       {preview ? (
         <div>
           <PackagePreview
@@ -141,7 +139,9 @@ const Packages = () => {
           <div className="mb-2 py-5  flex items-center justify-around flex-wrap flex-grow basis-full">
             <div className="md:w-auto w-full">
               <div className="flex items-center justify-between">
-                <p className="py-2 font-semibold text-lg  ">{t('packageName')} </p>
+                <p className="py-2 font-semibold text-lg  ">
+                  {t("packageName")}{" "}
+                </p>
                 <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   1
                 </span>
@@ -157,7 +157,7 @@ const Packages = () => {
             <div className="text-lg  text-left text-black md:w-auto w-full">
               <div className="flex items-center justify-between py-1">
                 <p className="py-1 text-md text-black font-semibold">
-                  {t('categories')}
+                  {t("categories")}
                 </p>
                 <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   2
@@ -165,7 +165,7 @@ const Packages = () => {
               </div>
 
               <select className="w-full" onChange={handleChange}>
-                <option selected>{t('selectCategory')}</option>
+                <option selected>{t("selectCategory")}</option>
                 {services?.map((service, i) => {
                   return <option key={i}>{service}</option>;
                 })}
@@ -174,7 +174,9 @@ const Packages = () => {
 
             <div className="text-lg font-bold  text-left text-black md:w-auto w-full">
               <div className="flex items-center justify-between py-1">
-                <p className=" text-md text-black font-semibold">{t('price')}</p>
+                <p className=" text-md text-black font-semibold">
+                  {t("price")}
+                </p>
                 <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   3
                 </span>
@@ -188,7 +190,9 @@ const Packages = () => {
               ></input>
             </div>
             <div className="text-lg font-bold  text-left text-black md:w-auto w-full">
-              <p className="py-1 text-md text-black font-semibold">{t('duration')}</p>
+              <p className="py-1 text-md text-black font-semibold">
+                {t("duration")}
+              </p>
 
               <input
                 readOnly
@@ -204,17 +208,17 @@ const Packages = () => {
                 <thead className="border-b bg-gray-300 ">
                   <tr className="border-b-2 border-gray-200">
                     <th className="text-left md:text-md text-sm md:p-5 p-4">
-                    {t('serviceName')}
+                      {t("serviceName")}
                     </th>
                     <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                    {t('price')}
+                      {t("price")}
                     </th>
                     {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
                                     Category
                                   </th> */}
 
                     <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                    {t('duration')}
+                      {t("duration")}
                     </th>
                   </tr>
                 </thead>
@@ -247,7 +251,7 @@ const Packages = () => {
                                           {option.category}
                                         </td> */}
                         <td className="p-5 text-right md:text-md text-sm">
-                          {option.duration} {t('min')}
+                          {option.duration} {t("min")}
                         </td>
                       </tr>
                     );
@@ -263,29 +267,36 @@ const Packages = () => {
                     : ""
                 }`}
               >
-                <h2 className="mb-2 text-lg font-bold">{t('selectedServices')}</h2>
+                <h2 className="mb-2 text-lg font-bold">
+                  {t("selectedServices")}
+                </h2>
                 <ul>
                   <li>
                     <div className="mb-2 flex justify-between">
-                      <div>{t('count')}</div>
-                      <div>{all?.length} {t('services')}</div>
+                      <div>{t("count")}</div>
+                      <div>
+                        {all?.length} {t("services")}
+                      </div>
                     </div>
                   </li>
                   <li>
                     <div className="mb-2 flex justify-between bg-[#00ccbb] p-2 rounded text-white font-bold">
-                      <div>{t('costOfServices')}</div>
+                      <div>{t("costOfServices")}</div>
                       <div>
                         {all?.length > 0
                           ? all?.reduce((acc, option) => acc + option.price, 0)
                           : 0}{" "}
-                        {t('rs')}/-
+                        {t("rs")}/-
                       </div>
                     </div>
                   </li>
                   <li>
                     <div className="mb-2 flex justify-between bg-green-500 rounded text-white font-bold p-2">
-                      <div>{t('packagePrice')}</div>
-                      <div>{price}{t('rs')}/-</div>
+                      <div>{t("packagePrice")}</div>
+                      <div>
+                        {price}
+                        {t("rs")}/-
+                      </div>
                     </div>
                   </li>
 
@@ -295,7 +306,7 @@ const Packages = () => {
                       onClick={previewHandler}
                       className="primary-button flex items-center justify-center  w-full"
                     >
-                      {t('preview')}{" "}
+                      {t("preview")}{" "}
                       {/* {buttonLoad && <span className="buttonloader"></span>} */}
                     </button>
                   </li>
@@ -305,7 +316,6 @@ const Packages = () => {
           </div>
         </div>
       )}
-      <Footer />
     </>
   );
 };

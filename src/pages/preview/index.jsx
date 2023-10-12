@@ -346,7 +346,6 @@ const Preview = (props) => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

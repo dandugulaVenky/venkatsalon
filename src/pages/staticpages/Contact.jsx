@@ -16,8 +16,7 @@ import Greeting from "../../components/navbar/Greeting";
 import { useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
-import { useTranslation } from 'react-i18next';
-
+import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
@@ -67,14 +66,12 @@ export default function Contact() {
   const { open } = useContext(SearchContext);
   const { t } = useTranslation();
 
-
   let w = window.innerWidth;
   return (
     <>
       <div>
-        {open && <Sidebar />}
+        {""}
         {w >= 768 && <Layout />}
-        {w < 768 && <Greeting />}
 
         <Seo props={siteMetadata} />
 
@@ -83,10 +80,10 @@ export default function Contact() {
             className="px-10 py-2.5 card h-auto  "
             onSubmit={handleSubmit(submitHandler)}
           >
-            <h1 className="mb-4 text-2xl font-semibold">{t('contactUs')}</h1>
+            <h1 className="mb-4 text-2xl font-semibold">{t("contactUs")}</h1>
 
             <div className="mb-4">
-              <label htmlFor="name">{t('fullName')}</label>
+              <label htmlFor="name">{t("fullName")}</label>
               <input
                 type="text"
                 className="w-full"
@@ -106,7 +103,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email">{t('emailTitle')}</label>
+              <label htmlFor="email">{t("emailTitle")}</label>
               <input
                 className="w-full"
                 type="email"
@@ -119,7 +116,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="phone">{t('phoneTitle')}</label>
+              <label htmlFor="phone">{t("phoneTitle")}</label>
               <input
                 type="text"
                 className="w-full"
@@ -138,7 +135,7 @@ export default function Contact() {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="message">{t('messageTitle')}</label>
+              <label htmlFor="message">{t("messageTitle")}</label>
               <textarea
                 type="text"
                 className="w-full"
@@ -157,20 +154,16 @@ export default function Contact() {
             </div>
             <div className="mb-1">
               <button className="primary-button" disabled={loading}>
-                {t('submit')}
+                {t("submit")}
               </button>
             </div>
           </form>
           <div className="card h-auto  w-96 p-8 flex items-center justify-center">
-            <p>
-              {t('aboutAddress')}{" "}
-            </p>
-            <p>{t('callUs')}</p>
-            <p>{t('aboutUsEmail')}</p>
+            <p>{t("aboutAddress")} </p>
+            <p>{t("callUs")}</p>
+            <p>{t("aboutUsEmail")}</p>
           </div>
         </div>
-
-        <Footer />
       </div>
     </>
   );

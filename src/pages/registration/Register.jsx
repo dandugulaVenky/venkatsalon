@@ -21,7 +21,7 @@ import Select from "../images/select.png";
 
 import OtpVerification from "./OtpVerification";
 import baseUrl from "../../utils/client";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -95,7 +95,6 @@ const Register = () => {
 
   const { t } = useTranslation();
 
-
   const submitHandler = async ({ name, email, password }) => {
     if (!name || !email || !password || !address) {
       return alert(t("pleaseEnterAllDetails"));
@@ -149,15 +148,10 @@ const Register = () => {
       ) : (
         <Header header={header} />
       )}
-      {open && <Sidebar />}
-      {w >= 768 && <Layout />}
-      {w < 768 && <Greeting />}
 
       {location?.pathname?.includes("/register") && (
         <p className="text-lg underline text-blue-600 pb-2 text-center">
-          <Link to="/shop-registration">
-            {t('barber/beauticianClickHere')}
-          </Link>
+          <Link to="/shop-registration">{t("barber/beauticianClickHere")}</Link>
         </p>
       )}
       <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 pt-5">
@@ -188,10 +182,10 @@ const Register = () => {
             className="md:px-10 px-5 py-2.5 card text-sm "
             onSubmit={handleSubmit(submitHandler)}
           >
-            <h1 className="mb-4 text-2xl font-semibold">{t('register')}</h1>
+            <h1 className="mb-4 text-2xl font-semibold">{t("register")}</h1>
 
             <div className="mb-4 ">
-              <label htmlFor="name">{t('username')}</label>
+              <label htmlFor="name">{t("username")}</label>
               <input
                 type="text"
                 className="w-full"
@@ -214,7 +208,7 @@ const Register = () => {
               )}
             </div>
             <div className="mb-4">
-              <label htmlFor="email">{t('emailTitle')}</label>
+              <label htmlFor="email">{t("emailTitle")}</label>
               <input
                 type="email"
                 className="w-full"
@@ -233,7 +227,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="password">{t('password')}</label>
+              <label htmlFor="password">{t("password")}</label>
               <input
                 className="w-full"
                 type="password"
@@ -256,7 +250,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4" onClick={handleLocation}>
-              <label htmlFor="city">{t('address')}</label>
+              <label htmlFor="city">{t("address")}</label>
 
               <input
                 type="text"
@@ -279,16 +273,16 @@ const Register = () => {
               </div>
               <div>
                 <label htmlFor="terms" className="text-[10px] ">
-                  {t('agreeAllThetermsAndConditions')}
+                  {t("agreeAllThetermsAndConditions")}
                 </label>
                 <p className="text-[10px]">
-                  {t('haveReadPrivacyAndCancellationPolicy')}
+                  {t("haveReadPrivacyAndCancellationPolicy")}
                 </p>
               </div>
             </div>
             <div className="mb-4">
               <button className="primary-button" disabled={loading}>
-              {t('next')}
+                {t("next")}
               </button>
             </div>
 
@@ -300,15 +294,13 @@ const Register = () => {
                   });
                 }}
               >
-                {t('alreadyHaveAccountClickHere')}
+                {t("alreadyHaveAccountClickHere")}
               </button>
             </p>
             {errorContext && <span>{errorContext.message}</span>}
           </form>
         )}
       </div>
-
-      <Footer />
     </div>
   );
 };
