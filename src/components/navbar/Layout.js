@@ -68,7 +68,7 @@ const Layout = ({ bestRef }) => {
         : 100;
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY >= 1) {
+      if (scrollY >= 40) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);

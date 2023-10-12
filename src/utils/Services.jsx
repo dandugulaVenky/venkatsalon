@@ -38,7 +38,9 @@ const Services = ({ refer }) => {
                 width: "98%",
                 height: 132,
                 boxShadow: "1px 1.5px 2px black",
-                filter: "brightness(70%)",
+                filter: `${
+                  active === "saloon" ? "brightness(40%)" : "brightness(70%)"
+                }`,
                 borderRadius: 8,
                 objectFit: "cover",
                 objectPosition: "right top",
@@ -66,7 +68,9 @@ const Services = ({ refer }) => {
                 width: "98%",
                 height: 132,
                 boxShadow: "1px 1.5px 2px black",
-                filter: "brightness(70%)",
+                filter: `${
+                  active === "parlour" ? "brightness(40%)" : "brightness(70%)"
+                }`,
                 borderRadius: 8,
                 objectFit: "cover",
                 objectPosition: "right top",
@@ -94,7 +98,9 @@ const Services = ({ refer }) => {
                 width: "98%",
                 height: 132,
                 boxShadow: "1px 1.5px 2px black",
-                filter: "brightness(70%)",
+                filter: `${
+                  active === "iron" ? "brightness(40%)" : "brightness(70%)"
+                }`,
                 borderRadius: 8,
                 objectFit: "cover",
                 objectPosition: "right top",
@@ -119,7 +125,11 @@ const Services = ({ refer }) => {
                 width: "98%",
                 height: 132,
                 boxShadow: "1px 1.5px 2px black",
-                filter: "brightness(70%)",
+                filter: `${
+                  active === "dryCleaning"
+                    ? "brightness(40%)"
+                    : "brightness(70%)"
+                }`,
                 borderRadius: 8,
                 objectFit: "cover",
                 objectPosition: "right top",
