@@ -1,14 +1,11 @@
-import Footer from "../../components/footer/Footer";
-
 import "./home.css";
-import Layout from "../../components/navbar/Layout";
+
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import Greeting from "../../components/navbar/Greeting";
-import Sidebar from "../../components/navbar/SIdebar";
+
 import { SearchContext } from "../../context/SearchContext";
 import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
@@ -16,6 +13,8 @@ import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
+import BannerImg1 from "../images/mobileBanner1.webp";
+import BannerImg2 from "../images/mobileBanner2.webp";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
@@ -200,12 +199,7 @@ const Home = () => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
-    : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-      ]);
+    : (images = [BannerImg1, BannerImg2]);
 
   return (
     <div className="h-auto">
@@ -272,24 +266,26 @@ const Home = () => {
           })}
         </CarouselBanner>
       </div>
-      <div className="md:max-w-[1244px] w-full mx-auto">
-        <Services />
-      </div>
+      <div className=" md:my-10 xl:my-4">
+        <div className="md:max-w-[1244px] w-full mx-auto">
+          <Services />
+        </div>
 
-      <div
-        className="flex flex-wrap items-center justify-evenly w-full "
-        ref={endRef}
-      >
-        <div className=" w-full  flex justify-center items-center">
-          <div className="md:max-w-[1244px] w-full ">
-            <div>
-              <BestSaloons />
-            </div>
-            <div>
-              <Categories />
-            </div>
-            <div>
-              <Offers />
+        <div
+          className="flex flex-wrap items-center justify-evenly w-full"
+          ref={endRef}
+        >
+          <div className=" w-full  flex justify-center items-center">
+            <div className="md:max-w-[1244px] w-full ">
+              <div>
+                <BestSaloons />
+              </div>
+              <div>
+                <Categories />
+              </div>
+              <div>
+                <Offers />
+              </div>
             </div>
           </div>
         </div>

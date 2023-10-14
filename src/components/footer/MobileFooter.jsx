@@ -21,7 +21,7 @@ const MobileFooter = () => {
     <div>
       <div>
         <div className="h-14  flex items-center justify-center   fixed bottom-0 left-0 right-0  ">
-          <div className="bg-gray-200 flex items-center justify-between px-10 py-3  rounded-full w-11/12">
+          <div className="bg-gray-200 flex items-center justify-between px-10 py-3  rounded-full md:w-6/12 w-11/12">
             <Link to="/">
               <FontAwesomeIcon icon={faHome} size="xl" />
             </Link>

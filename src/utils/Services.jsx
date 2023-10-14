@@ -46,13 +46,19 @@ const Services = ({ refer }) => {
                 objectPosition: "right top",
               }}
             />
-            <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
+            <p
+              className={`absolute  ${
+                active === "saloon"
+                  ? "inset-0 flex items-center justify-center"
+                  : "bottom-4 left-4"
+              }  text-white font-bold  text-2xl `}
+            >
               {t("saloons")}
             </p>
             <span
               className={`${
                 active === "saloon" ? "service-loader" : ""
-              } absolute top-3 right-4`}
+              } absolute top-1 right-4`}
             ></span>
           </div>
         </Carousel.Item>
@@ -76,13 +82,19 @@ const Services = ({ refer }) => {
                 objectPosition: "right top",
               }}
             />
-            <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
+            <p
+              className={`absolute  ${
+                active === "parlour"
+                  ? "inset-0 flex items-center justify-center"
+                  : "bottom-4 left-4"
+              }  text-white font-bold  text-2xl `}
+            >
               {t("beautyParlours")}
             </p>
             <span
               className={`${
                 active === "parlour" ? "service-loader" : ""
-              } absolute top-3 right-4`}
+              } absolute top-1 right-4`}
             ></span>
           </div>
         </Carousel.Item>
@@ -112,12 +124,19 @@ const Services = ({ refer }) => {
             <span
               className={`${
                 active === "iron" ? "service-loader" : ""
-              } absolute top-3 right-4`}
+              } absolute top-1 right-4`}
             ></span>
           </div>
         </Carousel.Item>
         <Carousel.Item>
-          <div className="relative h-auto w-full cursor-pointer">
+          <div
+            className="relative h-auto w-full cursor-pointer"
+            onClick={() =>
+              alert(
+                "Easytym Dry Cleaning is still under development. We hope to deliver dry cleaning services as soon as poosible!"
+              )
+            }
+          >
             <img
               src="https://picsum.photos/800/600?random=1"
               alt="images"
