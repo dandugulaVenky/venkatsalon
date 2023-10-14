@@ -66,12 +66,11 @@ function App() {
   const [locale, setLocale] = useState(i18next.language);
   const { open } = useContext(SearchContext);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
-
+  const [smallBanners, setSmallBanners] = useState(window.innerWidth < 540);
   const handleResize = (e) => {
     setSmallScreen(window.innerWidth < 1064);
+    setSmallBanners(window.innerWidth < 540);
   };
-
-  console.log(window.innerWidth < 1064);
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
@@ -94,7 +93,10 @@ function App() {
 
           {open && <SIdebar />}
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={<Home endRef={endRef} smallBanners={smallBanners} />}
+            />
             {/* <Route path="/get-started" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

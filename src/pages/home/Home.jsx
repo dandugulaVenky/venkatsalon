@@ -28,7 +28,7 @@ const siteMetadata = {
   canonical: "https://easytym.com",
 };
 
-const Home = () => {
+const Home = ({ endRef, smallBanners }) => {
   const { city, dispatch } = useContext(SearchContext);
 
   const location = useLocation();
@@ -176,24 +176,10 @@ const Home = () => {
       console.log("effect");
     };
   }, [city, dispatch, navigate, reference]);
-  const endRef = useRef(null);
+
   let images = [];
-  const w = window.innerWidth;
-  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 540);
 
-  const handleResize = (e) => {
-    setSmallScreen(window.innerWidth < 768);
-  };
-
-  console.log(window.innerWidth < 768);
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  !smallScreen
+  !smallBanners
     ? (images = [
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
