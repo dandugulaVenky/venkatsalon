@@ -142,7 +142,7 @@ const Hotel = () => {
       return "red-tuesday";
     }
 
-    if (block.length > 0) {
+    if (block?.length > 0) {
       const isBlockedDate = block.find((blockedDate) =>
         isSpecificDate(formattedDate, blockedDate)
       );
@@ -193,81 +193,88 @@ const Hotel = () => {
   }, [shopIdLocation]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get(
-        `${baseUrl}/api/hotels/room/${shopIdLocation}`
-      );
-      setServices(data[0]?.services);
+    setLoadingg(true);
+    try {
+      const fetchData = async () => {
+        const { data } = await axios.get(
+          `${baseUrl}/api/hotels/room/${shopIdLocation}`
+        );
+        setServices(data[0]?.services);
 
-      const mergedPreviewServices = data[0]?.services
-        ?.reduce((arr, item) => {
-          arr.push(item.services);
-          return arr;
-        }, [])
-        .reduce((arr, item) => {
-          return arr.concat(item);
-        }, []);
+        const mergedPreviewServices = data[0]?.services
+          ?.reduce((arr, item) => {
+            arr.push(item.services);
+            return arr;
+          }, [])
+          .reduce((arr, item) => {
+            return arr.concat(item);
+          }, []);
 
-      const totalTimeOfServices = mergedPreviewServices.reduce(
-        (acc, service) => {
-          return (acc += service.duration);
-        },
-        0
-      );
+        const totalTimeOfServices = mergedPreviewServices.reduce(
+          (acc, service) => {
+            return (acc += service.duration);
+          },
+          0
+        );
 
-      const res =
-        data &&
-        data[0]?.roomNumbers?.map((id, i) => {
-          return {
-            id: id._id,
+        const res =
+          data &&
+          data[0]?.roomNumbers?.map((id, i) => {
+            return {
+              id: id._id,
 
-            dates: id.unavailableDates?.map((item) => {
-              return { date: item.date, values: item.values };
-            }),
-          };
+              dates: id.unavailableDates?.map((item) => {
+                return { date: item.date, values: item.values };
+              }),
+            };
+          });
+
+        let filter = [];
+        res.forEach((date) => {
+          const answer = date.dates.filter((item) => today === item.date);
+          filter.push(answer);
         });
 
-      let filter = [];
-      res.forEach((date) => {
-        const answer = date.dates.filter((item) => today === item.date);
-        filter.push(answer);
-      });
-
-      const mergedReady = [];
-      filter.forEach((item, i) => {
-        const allValues = item.map((date) => {
-          return date.values;
+        const mergedReady = [];
+        filter.forEach((item, i) => {
+          const allValues = item.map((date) => {
+            return date.values;
+          });
+          mergedReady.push(allValues);
         });
-        mergedReady.push(allValues);
-      });
-      // console.log(mergedReady, "mergeready");
+        // console.log(mergedReady, "mergeready");
 
-      function findMatchingArrays(arr) {
-        const matchedArrays = [];
-        for (let i = 0; i < arr?.length; i++) {
-          const mergedDates = [...new Set(arr[i].flat())];
+        function findMatchingArrays(arr) {
+          const matchedArrays = [];
+          for (let i = 0; i < arr?.length; i++) {
+            const mergedDates = [...new Set(arr[i].flat())];
 
-          matchedArrays.push(mergedDates);
+            matchedArrays.push(mergedDates);
+          }
+          return matchedArrays;
         }
-        return matchedArrays;
-      }
 
-      const matchedArrays = findMatchingArrays(mergedReady);
+        const matchedArrays = findMatchingArrays(mergedReady);
 
-      setMatchedArrays(matchedArrays);
-      setMergedServices(mergedPreviewServices);
-      setTotalTime(totalTimeOfServices);
-      setBreakTime(
-        data[0]?.blockTimings.find(
-          (item) => item.date === moment(value).format("MMM Do YY")
-        )
-      );
-      setBlock(data[0]?.blockDays);
-    };
+        setMatchedArrays(matchedArrays);
+        setMergedServices(mergedPreviewServices);
+        setTotalTime(totalTimeOfServices);
+        setBreakTime(
+          data[0]?.blockTimings.find(
+            (item) => item.date === moment(value).format("MMM Do YY")
+          )
+        );
+        setBlock(data[0]?.blockDays);
+        setLoadingg(false);
+      };
+
+      fetchReviews();
+      fetchData();
+    } catch (err) {
+      console.log(err);
+      setLoadingg(false);
+    }
     // filterOptions();
-
-    fetchReviews();
-    fetchData();
   }, [fetchReviews, navigate, shopIdLocation, today, type, value]);
 
   const handleOpen = (i) => {
@@ -488,82 +495,87 @@ const Hotel = () => {
           className="absolute md:top-10 top-5 lg:right-72 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
-        <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
-          <p
-            className={classNames(
-              `text-white text-center block   text-lg font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
-            )}
-          >
-            <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
-            <span className=" text-[1rem] ">{t("seatsAvailable")}</span>
-            &nbsp;&nbsp;
-            <FontAwesomeIcon icon={faCircle} color="red " size="sm" /> -{" "}
-            <span className="text-[1rem]">{t("bookedUnavailable")}</span>
-          </p>
+        {!loadingg ? (
+          <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+            <p
+              className={classNames(
+                `text-white text-center block   text-lg font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
+              )}
+            >
+              <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
+              <span className=" text-[1rem] ">{t("seatsAvailable")}</span>
+              &nbsp;&nbsp;
+              <FontAwesomeIcon icon={faCircle} color="red " size="sm" /> -{" "}
+              <span className="text-[1rem]">{t("bookedUnavailable")}</span>
+            </p>
 
-          <div className="pl-6 pt-2 pb-2 w-[100%]">
-            {matchedArrays?.length > 0 &&
-              options.map((option, i) => {
-                const isbooked = matchedArrays?.map((item) =>
-                  // console.log(item?.includes(i))
-                  item?.includes(i)
-                );
-                const finalBooked = isbooked.includes(false);
-                const falseIndexes = [];
+            <div className="pl-6 pt-2 pb-2 w-[100%]">
+              {matchedArrays?.length > 0 &&
+                options.map((option, i) => {
+                  const isbooked = matchedArrays?.map((item) =>
+                    // console.log(item?.includes(i))
+                    item?.includes(i)
+                  );
+                  const finalBooked = isbooked.includes(false);
+                  const falseIndexes = [];
 
-                for (let i = 0; i < isbooked.length; i++) {
-                  if (!isbooked[i]) {
-                    falseIndexes.push(i);
+                  for (let i = 0; i < isbooked.length; i++) {
+                    if (!isbooked[i]) {
+                      falseIndexes.push(i);
+                    }
                   }
-                }
-                return (
-                  <div
-                    onClick={() => handleTime(option)}
-                    className={classNames(
-                      timeReserve === option.value
-                        ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
-                        : "text-gray-700",
-                      ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 hover:bg-gray-200 w-[100%]`
-                    )}
-                  >
-                    <span
-                      className={`${!finalBooked && " text-red-500"}  ${
-                        lunch.includes(option.id) && ` text-red-500 `
-                      } ${
-                        breakTime?.block.includes(option.id) && ` text-red-500 `
-                      }`}
+                  return (
+                    <div
+                      onClick={() => handleTime(option)}
+                      className={classNames(
+                        timeReserve === option.value
+                          ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
+                          : "text-gray-700",
+                        ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 hover:bg-gray-200 w-[100%]`
+                      )}
                     >
-                      {option.value}
-                      {breakTime?.block.includes(option.id) &&
-                        (breakTime.block[0] === option.id ||
-                        breakTime.block[breakTime.block.length - 1] ===
-                          option.id ? (
-                          <span>&nbsp;&nbsp; blocked</span>
-                        ) : (
-                          <span>&nbsp;&nbsp; .</span>
-                        ))}
-                    </span>
-                    <span className="w-auto overflow-x-auto">
-                      {isbooked?.includes(true) &&
-                        falseIndexes?.map((item) => {
-                          return (
-                            <span>
-                              S{item + 1}&nbsp;
-                              <FontAwesomeIcon
-                                icon={faCircle}
-                                color="green "
-                                size="xs"
-                              />
-                              &nbsp;&nbsp;&nbsp;&nbsp;
-                            </span>
-                          );
-                        })}
-                    </span>
-                  </div>
-                );
-              })}
+                      <span
+                        className={`${!finalBooked && " text-red-500"}  ${
+                          lunch.includes(option.id) && ` text-red-500 `
+                        } ${
+                          breakTime?.block.includes(option.id) &&
+                          ` text-red-500 `
+                        }`}
+                      >
+                        {option.value}
+                        {breakTime?.block.includes(option.id) &&
+                          (breakTime.block[0] === option.id ||
+                          breakTime.block[breakTime.block.length - 1] ===
+                            option.id ? (
+                            <span>&nbsp;&nbsp; blocked</span>
+                          ) : (
+                            <span>&nbsp;&nbsp; .</span>
+                          ))}
+                      </span>
+                      <span className="w-auto overflow-x-auto">
+                        {isbooked?.includes(true) &&
+                          falseIndexes?.map((item) => {
+                            return (
+                              <span>
+                                S{item + 1}&nbsp;
+                                <FontAwesomeIcon
+                                  icon={faCircle}
+                                  color="green "
+                                  size="xs"
+                                />
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                              </span>
+                            );
+                          })}
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-        </div>
+        ) : (
+          <span className="service-loader flex items-center  justify-center"></span>
+        )}
       </div>
     );
   };
