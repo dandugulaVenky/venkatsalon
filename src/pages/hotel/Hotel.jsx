@@ -499,7 +499,7 @@ const Hotel = () => {
           <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
             <p
               className={classNames(
-                `text-white text-center block   text-lg font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
+                `text-white text-center block   md:text-lg font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
               )}
             >
               <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
