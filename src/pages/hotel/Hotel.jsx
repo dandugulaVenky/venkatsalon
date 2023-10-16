@@ -8,6 +8,7 @@ import {
   faCircleArrowRight,
   faCircleArrowUp,
   faCircleXmark,
+  faClose,
   faLocationDot,
   faScissors,
   faSpa,
@@ -468,6 +469,103 @@ const Hotel = () => {
       (option) => option.value === item.value
     );
     setselectValue(selectedOption.id);
+    setShowTimings(false);
+    document.body.style.overflow = "unset";
+  };
+  const [showTimings, setShowTimings] = useState(false);
+  const ShowTheTimings = () => {
+    document.body.style.overflow = "hidden";
+    return (
+      <div className="reserve  overscroll-none">
+        <FontAwesomeIcon
+          icon={faClose}
+          size="xl"
+          color="black"
+          onClick={() => {
+            setShowTimings(false);
+            document.body.style.overflow = "unset";
+          }}
+          className="absolute md:top-10 top-5 lg:right-72 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+        />
+
+        <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+          <p
+            className={classNames(
+              `text-white text-center block   text-lg font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
+            )}
+          >
+            <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
+            <span className=" text-[1rem] ">{t("seatsAvailable")}</span>
+            &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faCircle} color="red " size="sm" /> -{" "}
+            <span className="text-[1rem]">{t("bookedUnavailable")}</span>
+          </p>
+
+          <div className="pl-6 pt-2 pb-2 w-[100%]">
+            {matchedArrays?.length > 0 &&
+              options.map((option, i) => {
+                const isbooked = matchedArrays?.map((item) =>
+                  // console.log(item?.includes(i))
+                  item?.includes(i)
+                );
+                const finalBooked = isbooked.includes(false);
+                const falseIndexes = [];
+
+                for (let i = 0; i < isbooked.length; i++) {
+                  if (!isbooked[i]) {
+                    falseIndexes.push(i);
+                  }
+                }
+                return (
+                  <div
+                    onClick={() => handleTime(option)}
+                    className={classNames(
+                      timeReserve === option.value
+                        ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
+                        : "text-gray-700",
+                      ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 hover:bg-gray-200 w-[100%]`
+                    )}
+                  >
+                    <span
+                      className={`${!finalBooked && " text-red-500"}  ${
+                        lunch.includes(option.id) && ` text-red-500 `
+                      } ${
+                        breakTime?.block.includes(option.id) && ` text-red-500 `
+                      }`}
+                    >
+                      {option.value}
+                      {breakTime?.block.includes(option.id) &&
+                        (breakTime.block[0] === option.id ||
+                        breakTime.block[breakTime.block.length - 1] ===
+                          option.id ? (
+                          <span>&nbsp;&nbsp; blocked</span>
+                        ) : (
+                          <span>&nbsp;&nbsp; .</span>
+                        ))}
+                    </span>
+                    <span className="w-auto overflow-x-auto">
+                      {isbooked?.includes(true) &&
+                        falseIndexes?.map((item) => {
+                          return (
+                            <span>
+                              S{item + 1}&nbsp;
+                              <FontAwesomeIcon
+                                icon={faCircle}
+                                color="green "
+                                size="xs"
+                              />
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                          );
+                        })}
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -540,14 +638,45 @@ const Hotel = () => {
               </div>
             </div>
             <div className="md:col-span-4 col-span-12">
-              <Menu as="div" className="relative inline-block text-left w-full">
+              <button
+                onClick={() => setShowTimings(true)}
+                className="inline-flex justify-start w-full p-[0.8rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+              >
+                <div className="w-full flex items-center justify-between">
+                  <span className="md:text-md">
+                    {timeReserve ? (
+                      <p
+                        className={
+                          lunch.includes(options[selectValue].id) &&
+                          ` text-red-500 `
+                        }
+                      >
+                        {timeReserve}
+                      </p>
+                    ) : (
+                      t("selectTime")
+                    )}
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 ml-2 -mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </button>
+              {/* <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
-                    onClick={() =>
-                      size === 4
-                        ? window.scrollTo(0, 260)
-                        : window.scrollTo(0, 135)
-                    }
+                    onClick={() => setShowTimings(true)}
                     className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                   >
                     <div className="w-full flex items-center justify-between">
@@ -582,123 +711,9 @@ const Hotel = () => {
                     </div>
                   </Menu.Button>
                 </div>
-
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="h-[26rem]  overflow-auto absolute z-10 md:right-0  md:w-[20rem] w-[16rem] mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <p
-                            className={classNames(
-                              `text-white block px-4  text-md font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-0.5 sticky top-0`
-                            )}
-                          >
-                            <FontAwesomeIcon
-                              icon={faCircle}
-                              color="green "
-                              size="sm"
-                            />{" "}
-                            -{" "}
-                            <span className=" text-xs ">
-                              {t("seatsAvailable")}
-                            </span>
-                            &nbsp;&nbsp;
-                            <FontAwesomeIcon
-                              icon={faCircle}
-                              color="red "
-                              size="sm"
-                            />{" "}
-                            -{" "}
-                            <span className="text-xs">
-                              {t("bookedUnavailable")}
-                            </span>
-                          </p>
-                        )}
-                      </Menu.Item>
-
-                      {matchedArrays?.length > 0 &&
-                        options?.map((option, i) => {
-                          const isbooked = matchedArrays?.map((item) =>
-                            // console.log(item?.includes(i))
-                            item?.includes(i)
-                          );
-                          const finalBooked = isbooked.includes(false);
-                          const falseIndexes = [];
-
-                          for (let i = 0; i < isbooked.length; i++) {
-                            if (!isbooked[i]) {
-                              falseIndexes.push(i);
-                            }
-                          }
-
-                          return (
-                            <Menu.Item key={i} id={option.id}>
-                              {({ active }) => (
-                                <div
-                                  onClick={() => handleTime(option)}
-                                  className={classNames(
-                                    active
-                                      ? "bg-gray-100 text-black py-0.5 text-md font-bold cursor-pointer "
-                                      : "text-gray-700",
-                                    ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5`
-                                  )}
-                                >
-                                  <span
-                                    className={`${
-                                      !finalBooked && " text-red-500"
-                                    }  ${
-                                      lunch.includes(option.id) &&
-                                      ` text-red-500 `
-                                    } ${
-                                      breakTime?.block.includes(option.id) &&
-                                      ` text-red-500 `
-                                    }`}
-                                  >
-                                    {option.value}
-                                    {breakTime?.block.includes(option.id) &&
-                                      (breakTime.block[0] === option.id ||
-                                      breakTime.block[
-                                        breakTime.block.length - 1
-                                      ] === option.id ? (
-                                        <span>&nbsp;&nbsp; blocked</span>
-                                      ) : (
-                                        <span>&nbsp;&nbsp; .</span>
-                                      ))}
-                                  </span>
-                                  <span className="w-auto overflow-x-auto">
-                                    {isbooked?.includes(true) &&
-                                      falseIndexes?.map((item) => {
-                                        return (
-                                          <span>
-                                            S{item + 1}&nbsp;
-                                            <FontAwesomeIcon
-                                              icon={faCircle}
-                                              color="green "
-                                              size="xs"
-                                            />
-                                            &nbsp;&nbsp;
-                                          </span>
-                                        );
-                                      })}
-                                  </span>
-                                </div>
-                              )}
-                            </Menu.Item>
-                          );
-                        })}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+              </Menu> */}
             </div>
+            {showTimings && <ShowTheTimings />}
             <div className="md:col-span-4 col-span-12">
               <button
                 className="headerBtn w-full p-[0.71rem] jello-horizontal"

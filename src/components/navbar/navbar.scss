@@ -40,11 +40,12 @@
 .mainHead {
   // height: 6.35rem;
   position: fixed;
-
+  max-width: 1920px;
   top: 0;
   left: 0;
   right: 0;
   z-index: 19;
+  margin: auto;
 }
 @media screen and (max-width: 767px) {
   .head2 {
