@@ -503,10 +503,14 @@ const Hotel = () => {
               )}
             >
               <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
-              <span className=" text-[1rem] ">{t("seatsAvailable")}</span>
+              <span className=" md:text-[1rem] text-xs">
+                {t("seatsAvailable")}
+              </span>
               &nbsp;&nbsp;
               <FontAwesomeIcon icon={faCircle} color="red " size="sm" /> -{" "}
-              <span className="text-[1rem]">{t("bookedUnavailable")}</span>
+              <span className="md:text-[1rem] text-xs">
+                {t("bookedUnavailable")}
+              </span>
             </p>
 
             <div className="pl-6 pt-2 pb-2 w-[100%]">
