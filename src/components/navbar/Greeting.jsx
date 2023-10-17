@@ -1,7 +1,7 @@
 import {
   faCartShopping,
   faChevronCircleDown,
-  faLocation,
+  faLocationPinLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef } from "react";
@@ -15,15 +15,14 @@ import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { ToastContainer } from "react-toastify";
 import "./greeting.scss";
-import "./navbar.scss";
 
-const shortenString = (inputString) => {
-  if (inputString.length > 20) {
-    return inputString.substr(0, 20) + "..";
-  } else {
-    return inputString;
-  }
-};
+// const shortenString = (inputString) => {
+//   if (inputString.length > 20) {
+//     return inputString.substr(0, 20) + "..";
+//   } else {
+//     return inputString;
+//   }
+// };
 
 const scrollNow = () => {
   return window.scrollTo(0, 0);
@@ -100,14 +99,14 @@ const Greeting = ({ bestRef }) => {
         <Header header={null} />
       )}
 
-      <div className={"h-20"}>
+      <div className={"h-[4.2rem]"}>
         <div className="mainHead">
           <div
-            className={`flex items-center justify-between px-4 p-2 ${
+            className={`px-2  grid grid-cols-12  ${
               isScrolled ? "head1" : "head2"
             }`}
           >
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center col-span-2">
               <Link to="/">
                 <img
                   src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
@@ -119,11 +118,13 @@ const Greeting = ({ bestRef }) => {
                 />
               </Link>
             </div>
-            <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
-              <FontAwesomeIcon icon={faLocation} size="lg" color="#00ccbb" />
-              <p className="text-xs">
-                {city ? shortenString(city).toUpperCase() : "loading"}
-              </p>
+            <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-8">
+              <FontAwesomeIcon
+                icon={faLocationPinLock}
+                size="lg"
+                color="#00ccbb"
+              />
+              <p className="text-sm truncate">{city ? city : "loading"}</p>
               {pathname === "/" && (
                 <FontAwesomeIcon
                   icon={faChevronCircleDown}
@@ -133,25 +134,27 @@ const Greeting = ({ bestRef }) => {
                 />
               )}
             </div>
-            {pathname.includes("iron") && (
-              <Link to="/iron/cart">
-                <a className=" font-semibold md:text-lg text-xs " href="###">
-                  <FontAwesomeIcon icon={faCartShopping} color="black" />
-                  {cartItemsCount > 0 && (
-                    <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
-                      {cartItemsCount}
-                    </span>
-                  )}
-                </a>
-              </Link>
-            )}
-            {user ? (
-              ""
-            ) : (
-              <Link to="/login" className="ml-5 text-sm font-bold">
-                Login
-              </Link>
-            )}
+            <div className="col-span-2 flex items-center justify-center ">
+              {pathname.includes("iron") && (
+                <Link to="/iron/cart">
+                  <a className=" font-semibold md:text-lg text-xs " href="###">
+                    <FontAwesomeIcon icon={faCartShopping} color="black" />
+                    {cartItemsCount > 0 && (
+                      <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                        {cartItemsCount}
+                      </span>
+                    )}
+                  </a>
+                </Link>
+              )}
+              {user ? (
+                ""
+              ) : (
+                <Link to="/login" className="ml-5 text-sm font-bold">
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

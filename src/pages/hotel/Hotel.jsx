@@ -513,7 +513,7 @@ const Hotel = () => {
               </span>
             </p>
 
-            <div className="pl-6 pt-2 pb-2 w-[100%]">
+            <div className="px-6 pt-2 pb-2 w-[100%]">
               {matchedArrays?.length > 0 &&
                 options.map((option, i) => {
                   const isbooked = matchedArrays?.map((item) =>
@@ -656,7 +656,7 @@ const Hotel = () => {
             <div className="md:col-span-4 col-span-12">
               <button
                 onClick={() => setShowTimings(true)}
-                className="inline-flex justify-start w-full p-[0.8rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+                className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
               >
                 <div className="w-full flex items-center justify-between">
                   <span className="md:text-md">
