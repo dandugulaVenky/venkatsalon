@@ -192,7 +192,7 @@ const Hotel = () => {
     fetchReviews();
   }, [fetchReviews]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     setLoadingg(true);
 
     try {
@@ -470,7 +470,7 @@ const Hotel = () => {
     };
   }, [timeReserve, totalTime]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     const minValues1 = minValues();
 
     setMinutesvalues(minValues1);
