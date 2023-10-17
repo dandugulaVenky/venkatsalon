@@ -371,7 +371,8 @@ const Hotel = () => {
         destination: city,
         value,
         time: timeReserve,
-        timeDifferenceInDays,
+        timeDifferenceInDays:
+          timeDifferenceInDays > 0 ? timeDifferenceInDays : 0,
       },
     });
 
@@ -545,9 +546,9 @@ const Hotel = () => {
                   <div
                     onClick={() => handleTime(option)}
                     className={classNames(
-                      timeReserve === option.value
-                        ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
-                        : "text-gray-700",
+                      // timeReserve === option.value
+                      //   ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
+                      //   : "text-gray-700",
                       `grid grid-cols-10 px-4  text-md font-bold cursor-pointer  space-x-5 hover:bg-gray-200 w-[100%] rounded-full relative ${
                         isbooked?.includes(true) &&
                         falseIndexes.length > 0 &&
