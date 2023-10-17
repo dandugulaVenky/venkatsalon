@@ -1,6 +1,6 @@
 import "./hotel.css";
 import { useTranslation } from "react-i18next";
-import Footer from "../../components/footer/Footer";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle,
@@ -26,8 +26,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 import { AuthContext } from "../../context/AuthContext";
 
-import Layout from "../../components/navbar/Layout";
-
 import { ListItem, TextField } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import DatePicker from "react-date-picker";
@@ -35,24 +33,17 @@ import CarouselBanner from "../../components/CarouselBanner";
 import moment from "moment";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-import Greeting from "../../components/navbar/Greeting";
-import Sidebar from "../../components/navbar/SIdebar";
 import options from "../../utils/time";
 import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
-import { Menu, Transition } from "@headlessui/react";
+
 import useEffectOnce from "../../utils/UseEffectOnce";
-import GetSize from "../../utils/GetSize";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const Hotel = () => {
-  useEffectOnce(() => {
-    window.scrollTo(0, 0);
-  }, []);
   const location = useLocation();
   const shopIdLocation = location.pathname.split("/")[2];
   const [comment, setComment] = useState();
@@ -65,10 +56,13 @@ const Hotel = () => {
   const [open, setOpen] = useState(false);
 
   const { user } = useContext(AuthContext);
-  const { city } = useContext(SearchContext);
-  const [value, setValue] = useState(new Date());
-  const [timeReserve, setTimeReserve] = useState();
-  const size = GetSize();
+  const { city, timeDifferenceInDays, time } = useContext(SearchContext);
+  const [value, setValue] = useState(
+    moment().add(timeDifferenceInDays, "days").toDate()
+  );
+
+  const [timeReserve, setTimeReserve] = useState(time ? time : "");
+
   const { type, dispatch } = useContext(SearchContext);
 
   const [services, setServices] = useState([]);
@@ -114,7 +108,7 @@ const Hotel = () => {
       alert(t("tuesdaysNotSelectable"));
       return;
     } else {
-      if (block.length > 0) {
+      if (block?.length > 0) {
         const isBlockedDate = block.find((blockedDate) =>
           isSpecificDate(moment(value).format("MMM Do YY"), blockedDate)
         );
@@ -124,6 +118,7 @@ const Hotel = () => {
           return;
         }
       }
+
       setValue(value);
     }
   };
@@ -192,8 +187,14 @@ const Hotel = () => {
       .catch((err) => toast.error(err));
   }, [shopIdLocation]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
+    window.scrollTo(0, 0);
+    fetchReviews();
+  }, [fetchReviews]);
+
+  useEffectOnce(() => {
     setLoadingg(true);
+
     try {
       const fetchData = async () => {
         const { data } = await axios.get(
@@ -268,14 +269,14 @@ const Hotel = () => {
         setLoadingg(false);
       };
 
-      fetchReviews();
       fetchData();
     } catch (err) {
       console.log(err);
+
       setLoadingg(false);
     }
     // filterOptions();
-  }, [fetchReviews, navigate, shopIdLocation, today, type, value]);
+  }, [navigate, shopIdLocation, today, type, value]);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -356,10 +357,22 @@ const Hotel = () => {
     if (day1 === day2 && result2 >= 0) {
       return toast("Please select a valid time!");
     }
+    const timeDifferenceInMilliseconds = value - new Date();
+
+    // Calculate the time difference in days
+    const timeDifferenceInDays = Math.ceil(
+      timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24)
+    );
 
     dispatch({
       type: "NEW_SEARCH",
-      payload: { type, destination: city, value, time: timeReserve },
+      payload: {
+        type,
+        destination: city,
+        value,
+        time: timeReserve,
+        timeDifferenceInDays,
+      },
     });
 
     if (user && type === "saloon") {
@@ -457,7 +470,7 @@ const Hotel = () => {
     };
   }, [timeReserve, totalTime]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     const minValues1 = minValues();
 
     setMinutesvalues(minValues1);
@@ -480,6 +493,7 @@ const Hotel = () => {
     document.body.style.overflow = "unset";
   };
   const [showTimings, setShowTimings] = useState(false);
+
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
     return (
@@ -495,76 +509,79 @@ const Hotel = () => {
           className="absolute md:top-10 top-5 lg:right-72 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
-        {!loadingg ? (
-          <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
-            <p
-              className={classNames(
-                `text-white text-center block   md:text-lg text-[1rem] font-bold cursor-pointer bg-[#6262c7e9] slide-in-left  py-2 sticky top-0 w-[100%]`
-              )}
-            >
-              <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
-              <span className=" md:text-[1rem] text-xs">
-                {t("seatsAvailable")}
-              </span>
-              &nbsp;&nbsp;
-              <FontAwesomeIcon icon={faCircle} color="red " size="sm" /> -{" "}
-              <span className="md:text-[1rem] text-xs">
-                {t("bookedUnavailable")}
-              </span>
-            </p>
+        <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+          <p
+            className={classNames(
+              `text-white text-center block z-10  md:text-lg text-[1rem] font-bold cursor-pointer bg-[#6262c7e5] slide-in-left  py-2 sticky top-0 w-[100%]`
+            )}
+          >
+            <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
+            <span className="md:text-[1rem] text-xs">
+              {"All Seats Available"}
+            </span>
+            &nbsp;&nbsp; &nbsp;&nbsp;
+            <FontAwesomeIcon icon={faCircle} color="orange " size="sm" /> -{" "}
+            <span className=" md:text-[1rem] text-xs">
+              {t("seatsAvailable")}
+            </span>
+          </p>
 
-            <div className="px-6 pt-2 pb-2 w-[100%]">
-              {matchedArrays?.length > 0 &&
-                options.map((option, i) => {
-                  const isbooked = matchedArrays?.map((item) =>
-                    // console.log(item?.includes(i))
-                    item?.includes(i)
-                  );
-                  const finalBooked = isbooked.includes(false);
-                  const falseIndexes = [];
+          <div className="px-6 pt-2 pb-2 w-[100%] z-0">
+            {matchedArrays?.length > 0 &&
+              options.map((option, i) => {
+                const isbooked = matchedArrays?.map((item) =>
+                  // console.log(item?.includes(i))
+                  item?.includes(i)
+                );
+                const finalBooked = isbooked.includes(false);
+                const falseIndexes = [];
 
-                  for (let i = 0; i < isbooked.length; i++) {
-                    if (!isbooked[i]) {
-                      falseIndexes.push(i);
-                    }
+                for (let i = 0; i < isbooked.length; i++) {
+                  if (!isbooked[i]) {
+                    falseIndexes.push(i);
                   }
-                  return (
-                    <div
-                      onClick={() => handleTime(option)}
-                      className={classNames(
-                        timeReserve === option.value
-                          ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
-                          : "text-gray-700",
-                        ` px-4 py-0.5 text-md font-bold cursor-pointer flex space-x-5 hover:bg-gray-200 w-[100%]`
-                      )}
+                }
+                return (
+                  <div
+                    onClick={() => handleTime(option)}
+                    className={classNames(
+                      timeReserve === option.value
+                        ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
+                        : "text-gray-700",
+                      `grid grid-cols-10 px-4  text-md font-bold cursor-pointer  space-x-5 hover:bg-gray-200 w-[100%] rounded-full relative ${
+                        isbooked?.includes(true) &&
+                        falseIndexes.length > 0 &&
+                        "bg-gray-400  my-2"
+                      }`
+                    )}
+                  >
+                    <span
+                      className={`${!finalBooked && " text-red-500"}  ${
+                        lunch.includes(option.id) && ` text-red-500 `
+                      } ${
+                        breakTime?.block.includes(option.id) && ` text-red-500 `
+                      } col-span-3 py-1`}
                     >
-                      <span
-                        className={`${!finalBooked && " text-red-500"}  ${
-                          lunch.includes(option.id) && ` text-red-500 `
-                        } ${
-                          breakTime?.block.includes(option.id) &&
-                          ` text-red-500 `
-                        }`}
-                      >
-                        {option.value}
-                        {breakTime?.block.includes(option.id) &&
-                          (breakTime.block[0] === option.id ||
-                          breakTime.block[breakTime.block.length - 1] ===
-                            option.id ? (
-                            <span>&nbsp;&nbsp; blocked</span>
-                          ) : (
-                            <span>&nbsp;&nbsp; .</span>
-                          ))}
-                      </span>
-                      <span className="w-auto overflow-x-auto">
+                      {option.value}
+                      {breakTime?.block.includes(option.id) &&
+                        (breakTime.block[0] === option.id ||
+                        breakTime.block[breakTime.block.length - 1] ===
+                          option.id ? (
+                          <span>&nbsp;&nbsp; blocked</span>
+                        ) : (
+                          <span>&nbsp;&nbsp; .</span>
+                        ))}
+                    </span>
+                    <section className="text-white py-1 col-span-7 overflow-auto">
+                      <span>
                         {isbooked?.includes(true) &&
                           falseIndexes?.map((item) => {
                             return (
-                              <span>
+                              <span className={``}>
                                 S{item + 1}&nbsp;
                                 <FontAwesomeIcon
                                   icon={faCircle}
-                                  color="green "
+                                  color="orange "
                                   size="xs"
                                 />
                                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -572,14 +589,24 @@ const Hotel = () => {
                             );
                           })}
                       </span>
-                    </div>
-                  );
-                })}
-            </div>
+                      <span className="">
+                        {finalBooked &&
+                          !isbooked?.includes(true) &&
+                          !lunch.includes(option.id) &&
+                          !breakTime?.block.includes(option.id) && (
+                            <FontAwesomeIcon
+                              icon={faCircle}
+                              color="green "
+                              size="xs"
+                            />
+                          )}
+                      </span>
+                    </section>
+                  </div>
+                );
+              })}
           </div>
-        ) : (
-          <span className="service-loader flex items-center  justify-center"></span>
-        )}
+        </div>
       </div>
     );
   };
@@ -654,41 +681,47 @@ const Hotel = () => {
               </div>
             </div>
             <div className="md:col-span-4 col-span-12">
-              <button
-                onClick={() => setShowTimings(true)}
-                className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
-              >
-                <div className="w-full flex items-center justify-between">
-                  <span className="md:text-md">
-                    {timeReserve ? (
-                      <p
-                        className={
-                          lunch.includes(options[selectValue].id) &&
-                          ` text-red-500 `
-                        }
-                      >
-                        {timeReserve}
-                      </p>
-                    ) : (
-                      t("selectTime")
-                    )}
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-5 h-5 ml-2 -mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </div>
-              </button>
+              {loading || loadingg ? (
+                <p className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none ">
+                  Loading....
+                </p>
+              ) : (
+                <button
+                  onClick={() => setShowTimings(true)}
+                  className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+                >
+                  <div className="w-full flex items-center justify-between">
+                    <span className="md:text-md">
+                      {timeReserve ? (
+                        <p
+                          className={
+                            lunch.includes(options[selectValue].id) &&
+                            ` text-red-500 `
+                          }
+                        >
+                          {timeReserve}
+                        </p>
+                      ) : (
+                        t("selectTime")
+                      )}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5 ml-2 -mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              )}
               {/* <Menu as="div" className="relative inline-block text-left w-full">
                 <div>
                   <Menu.Button
