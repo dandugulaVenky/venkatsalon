@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
+import { useQuery } from "@tanstack/react-query";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
@@ -20,21 +21,18 @@ const Categories = ({ type }) => {
 
   const size = GetSize();
 
-  useEffect(() => {
-    try {
-      const getCount = async () => {
-        const { data } = await axios.get(
-          `${baseUrl}/api/hotels/countByCity?cities=shadnagar, telangana 509216, india-kothur, telangana 509228, india-thimmapur, telangana 509325, india-shamshabad, telangana 501218, india&&type=${type1}`
-        );
+  // Queries
 
-        setData(data);
-      };
+  const shopsCount = async () => {
+    return await axios.get(
+      `${baseUrl}/api/hotels/countByCity?cities=shadnagar, telangana 509216, india-kothur, telangana 509228, india-thimmapur, telangana 509325, india-shamshabad, telangana 501218, india&&type=${type1}`
+    );
+  };
 
-      getCount();
-    } catch (err) {
-      console.log(err);
-    }
-  }, [type1]);
+  const query = useQuery({
+    queryKey: ["countshops", { type: type1 }],
+    queryFn: shopsCount,
+  });
 
   const navigate = useNavigate();
 
@@ -69,7 +67,7 @@ const Categories = ({ type }) => {
           <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
         </button>
       </div>
-      {data.length > 0 ? (
+      {query?.data?.data?.length > 0 ? (
         <div className="">
           <Carousel cols={4} rows={1} gap={7}>
             <Carousel.Item>
@@ -101,7 +99,10 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[0] : "Loading"} {t("shops")}
+                    {query?.data?.data?.length > 0
+                      ? query?.data?.data[0]
+                      : "Loading"}{" "}
+                    {t("shops")}
                   </span>
                 </p>
               </div>
@@ -137,7 +138,10 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[1] : "Loading"} {t("shops")}
+                    {query?.data?.data?.length > 0
+                      ? query?.data?.data[1]
+                      : "Loading"}{" "}
+                    {t("shops")}
                   </span>
                 </p>
               </div>
@@ -170,7 +174,10 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[2] : "Loading"} {t("shops")}
+                    {query?.data?.data?.length > 0
+                      ? query?.data?.data[2]
+                      : "Loading"}{" "}
+                    {t("shops")}
                   </span>
                 </p>
               </div>
@@ -203,7 +210,10 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {data?.length > 0 ? data[3] : "Loading"} {t("shops")}
+                    {query?.data?.data?.length > 0
+                      ? query?.data?.data[3]
+                      : "Loading"}{" "}
+                    {t("shops")}
                   </span>
                 </p>
               </div>
@@ -212,8 +222,10 @@ const Categories = ({ type }) => {
             {/* ... */}
           </Carousel>
         </div>
-      ) : (
+      ) : !query?.isError ? (
         <Skeleton cards={size} />
+      ) : (
+        "Fetching Error!"
       )}
     </div>
   );

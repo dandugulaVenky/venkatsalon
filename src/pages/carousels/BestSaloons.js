@@ -13,38 +13,28 @@ import baseUrl from "../../utils/client";
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
 
 const BestSaloons = () => {
   const { type: type1, city } = useContext(SearchContext);
 
-  const [data, setData] = useState([]);
-  const [status, setStatus] = useState();
   const { t } = useTranslation();
 
+  const getBestSalons = async () => {
+    return await axios.get(
+      `${baseUrl}/api/hotels?type=${type1 ? type1 : "saloon"}&city=${
+        city ? city : "shadnagar"
+      }`
+    );
+  };
   const size = GetSize();
-  useEffect(() => {
-    console.log(city);
-    try {
-      const getSaloons = async () => {
-        const { data, status } = await axios.get(
-          `${baseUrl}/api/hotels?type=${type1 ? type1 : "saloon"}&city=${
-            city ? city : "shadnagar"
-          }`
-        );
 
-        if (data) {
-          setData(data);
-          setStatus(status);
-        } else {
-          return null;
-        }
-      };
+  // Queries
+  const query = useQuery({
+    queryKey: ["bestsalons", { type: type1, city }],
+    queryFn: getBestSalons,
+  });
 
-      getSaloons();
-    } catch (err) {
-      console.log(err);
-    }
-  }, [type1, city]);
   const navigate = useNavigate();
   const gotoHotel = (hotel) => {
     navigate(`/shops/${hotel}`);
@@ -59,13 +49,13 @@ const BestSaloons = () => {
           <Skeleton cards={1} />
         )}
       </h1>
-      {status !== 200 ? (
+      {query.isLoading ? (
         <Skeleton cards={size} />
-      ) : status === 200 && data?.length > 0 ? (
+      ) : query?.data?.data?.length > 0 ? (
         <div>
           <Carousel cols={4} rows={1} gap={7}>
-            {data &&
-              data?.map((item, i) => {
+            {query?.data?.data &&
+              query?.data?.data?.map((item, i) => {
                 return (
                   <Carousel.Item key={i}>
                     <div
