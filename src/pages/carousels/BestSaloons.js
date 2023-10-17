@@ -64,42 +64,43 @@ const BestSaloons = () => {
       ) : status === 200 && data?.length > 0 ? (
         <div>
           <Carousel cols={4} rows={1} gap={7}>
-            {data?.map((item, i) => {
-              return (
-                <Carousel.Item key={i}>
-                  <div
-                    className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
-                    id="section-id"
-                    onClick={() => gotoHotel(item._id)}
-                  >
-                    <img
-                      src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
-                      alt="images"
-                      style={{
-                        width: "98%",
-                        height: 170,
-                        boxShadow: "1px 1.5px 2px black",
-                        filter: "brightness(70%)",
+            {data &&
+              data?.map((item, i) => {
+                return (
+                  <Carousel.Item key={i}>
+                    <div
+                      className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
+                      id="section-id"
+                      onClick={() => gotoHotel(item._id)}
+                    >
+                      <img
+                        src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
+                        alt="images"
+                        style={{
+                          width: "98%",
+                          height: 170,
+                          boxShadow: "1px 1.5px 2px black",
+                          filter: "brightness(70%)",
 
-                        objectFit: "cover",
-                        objectPosition: "right top",
-                        borderRadius: 8,
-                      }}
-                    />
-                    <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
-                      {/* {item.name} */}
-                      {t("salonName", { name: item.name })}
-                    </p>
-                    <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                      <span className="font-semibold">
-                        {Math.ceil(item.rating)}{" "}
-                      </span>
-                      <FontAwesomeIcon icon={faStar} size="lg" />
-                    </p>
-                  </div>
-                </Carousel.Item>
-              );
-            })}
+                          objectFit: "cover",
+                          objectPosition: "right top",
+                          borderRadius: 8,
+                        }}
+                      />
+                      <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
+                        {/* {item.name} */}
+                        {t("salonName", { name: item.name })}
+                      </p>
+                      <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                        <span className="font-semibold">
+                          {Math.ceil(item.rating)}{" "}
+                        </span>
+                        <FontAwesomeIcon icon={faStar} size="lg" />
+                      </p>
+                    </div>
+                  </Carousel.Item>
+                );
+              })}
 
             {/* ... */}
           </Carousel>
