@@ -1,13 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import SIdebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
 
-import Layout from "../../components/navbar/Layout";
-
-import Footer from "../../components/footer/Footer";
-import { SearchContext } from "../../context/SearchContext";
 import RegistrationWizard from "./RegistrationWizard";
 import Select from "../images/select.png";
 import baseUrl from "../../utils/client";
@@ -17,7 +11,6 @@ const FinalRegistration = () => {
   let w = window.innerWidth;
 
   const [seats, setSeats] = useState("");
-  const { open } = useContext(SearchContext);
   const [loading, setLoading] = useState(false);
   const [storedUser, setStoredUser] = useState();
 

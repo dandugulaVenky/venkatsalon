@@ -3,14 +3,6 @@ import { useContext, useEffect, useState } from "react";
 
 import SearchItem from "../../components/searchItem/SearchItem";
 import useFetch from "../../hooks/useFetch";
-
-import Layout from "../../components/navbar/Layout";
-
-import axios from "axios";
-import Footer from "../../components/footer/Footer";
-
-import Greeting from "../../components/navbar/Greeting";
-import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
@@ -20,7 +12,6 @@ const List = () => {
 
   const min = useState(0);
   const max = useState(999);
-  const w = window.innerWidth;
 
   city = city.toLowerCase().trim();
 
@@ -44,8 +35,6 @@ const List = () => {
     scroll();
   }, [city, navigate, type]);
 
-  const { open } = useContext(SearchContext);
-
   const [userInput, setUserInput] = useState("");
   function filterArray(array, userInput) {
     if (!userInput) {
@@ -55,8 +44,25 @@ const List = () => {
       return shop.name.toLowerCase().includes(userInput.toLowerCase());
     });
   }
-  const filteredArray = filterArray(data, userInput);
 
+  const [filteredArray, setFilteredArray] = useState();
+
+  useEffect(() => {
+    let filteredArray = filterArray(data, userInput);
+    setFilteredArray(filteredArray);
+  }, [data, userInput]);
+
+  const filteredType = (e) => {
+    console.log(e.target.value);
+    if (e.target.value === "null") {
+      setFilteredArray(data);
+      return;
+    }
+    const matter = data.filter((item) => item.parlourType === e.target.value);
+    setFilteredArray(matter);
+
+    return;
+  };
   return (
     <>
       <div className="min-h-[85.5vh]">
@@ -65,11 +71,15 @@ const List = () => {
             <span className="loader "></span>
           </div>
         ) : (
-          <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl pb-24">
-            <div className="flex  items-center justify-start py-7 md:py-9 space-x-2 mx-3">
+          <div className="w-full  mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl pb-24">
+            <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 py-8 ">
               <input
                 type="text"
-                className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                className={`${
+                  type === "parlour"
+                    ? " col-span-6 md:col-span-7"
+                    : "col-span-full"
+                }  rounded-full p-2 text-center`}
                 onChange={(e) => setUserInput(e.target.value)}
                 value={userInput}
                 placeholder="Search shop name..."
@@ -79,6 +89,25 @@ const List = () => {
                   caretColor: "#00ccbb",
                 }}
               />
+              {type === "parlour" && (
+                <div className="col-span-4 md:col-span-3">
+                  <select
+                    className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                    onChange={filteredType}
+                    style={{
+                      filter: " drop-shadow(0px 0px 0.35px gray)",
+                      border: "2.4px solid gray",
+                      caretColor: "#00ccbb",
+                    }}
+                    // value={parlourType}
+                  >
+                    <option value="null">Sort By All</option>
+                    <option value="women">women</option>
+                    <option value="men">men</option>
+                    <option value="unisex">unisex</option>
+                  </select>
+                </div>
+              )}
             </div>
             <div className="w-full ">
               <div className=" min-h-screen w-full  md:pt-0 ">

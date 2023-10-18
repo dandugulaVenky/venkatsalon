@@ -41,7 +41,7 @@ const Categories = ({ type }) => {
       type: "NEW_SEARCH",
       payload: { type: type1, destination },
     });
-    navigate("/shops", { state: { destination } });
+    navigate("/shops");
   };
 
   const handleAllCities = () => {

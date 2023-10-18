@@ -103,7 +103,7 @@ const Greeting = ({ bestRef }) => {
         <div className="mainHead">
           <div
             className={`px-2  grid grid-cols-12  ${
-              isScrolled ? "head1" : "head2"
+              isScrolled ? "head1-greeting" : "head2-greeting"
             }`}
           >
             <div className="flex items-center justify-center col-span-2">

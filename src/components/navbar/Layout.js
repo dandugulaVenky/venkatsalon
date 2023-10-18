@@ -141,7 +141,7 @@ const Layout = ({ bestRef }) => {
         <Header header={null} />
       )}
 
-      <div className="mb-[6rem]">
+      <div className="mb-[5.85rem]">
         <div className="mainHead">
           <div
             className={`flex items-center justify-between px-10 ${
@@ -171,85 +171,81 @@ const Layout = ({ bestRef }) => {
               </div>
             </div>
             <div className="flex items-center justify-between ">
-              {user ? (
-                <div className="flex items-center justify-center md:space-x-8 space-x-3 ">
-                  {
-                    <Link to="/iron" className="transition-all delay-300">
-                      <h1
-                        className={`font-semibold md:text-lg text-xs ${
-                          pathname?.includes("/iron") ? "text-[#00ccbb]" : ""
-                        } `}
-                      >
-                        <FontAwesomeIcon
-                          icon={faTShirt}
-                          size="lg"
-                          className="mr-1"
-                        />
-                        {t("ironHome")}
-                      </h1>
-                    </Link>
-                  }
-                  <Link to="/about-us">
+              <div className="flex items-center justify-center md:space-x-8 space-x-3 ">
+                {
+                  <Link to="/iron" className="transition-all delay-300">
                     <h1
-                      className={` font-semibold md:text-lg text-xs ${
-                        pathname?.includes("/about") ? "text-[#00ccbb]" : ""
-                      }`}
+                      className={`font-semibold md:text-lg text-xs ${
+                        pathname?.includes("/iron") ? "text-[#00ccbb]" : ""
+                      } `}
                     >
-                      {t("about")}
+                      <FontAwesomeIcon
+                        icon={faTShirt}
+                        size="lg"
+                        className="mr-1"
+                      />
+                      {t("ironHome")}
                     </h1>
                   </Link>
-                  <Link to="/contact-us">
-                    <h1
-                      className={` font-semibold md:text-lg text-xs ${
-                        pathname?.includes("/contact-us")
-                          ? "text-[#00ccbb]"
-                          : ""
-                      }`}
-                    >
-                      {t("contact")}
-                    </h1>
-                  </Link>
-                  {/* <button onClick={handleLanguageChange}>Change Language</button> */}
-                  <div>
-                    {/* <label className="mr-1">
+                }
+                <Link to="/about-us">
+                  <h1
+                    className={` font-semibold md:text-lg text-xs ${
+                      pathname?.includes("/about") ? "text-[#00ccbb]" : ""
+                    }`}
+                  >
+                    {t("about")}
+                  </h1>
+                </Link>
+                <Link to="/contact-us">
+                  <h1
+                    className={` font-semibold md:text-lg ${
+                      pathname?.includes("/contact-us") ? "text-[#00ccbb]" : ""
+                    }`}
+                  >
+                    {t("contact")}
+                  </h1>
+                </Link>
+                {/* <button onClick={handleLanguageChange}>Change Language</button> */}
+                <div>
+                  {/* <label className="mr-1">
                       <FontAwesomeIcon icon={faGlobe} size="xl" color="black" />
                     </label> */}
-                    <select
-                      value={locale}
-                      onChange={handleChange}
-                      className="border-none font-semibold md:text-lg text-xs bg-transparent cursor-pointer"
-                    >
-                      <option value="en">English</option>
-                      <option value="te">తెలుగు</option>
-                      <option value="hi">हिंदी</option>
-                    </select>
-                  </div>
-                  {ironing && (
-                    <Link to="/iron/cart">
-                      <label className="mr-1">
-                        <FontAwesomeIcon
-                          icon={faBagShopping}
-                          size="xl"
-                          color="black"
-                        />
-                      </label>
-                      <a
-                        className={` font-semibold md:text-lg text-xs slide-in-right ${
-                          pathname?.includes("/cart") ? "text-[#00ccbb]" : ""
-                        }`}
-                      >
-                        {cartItemsCount > 0 && (
-                          <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
-                            {cartItemsCount}
-                          </span>
-                        )}
-                      </a>
-                    </Link>
-                  )}
-                  <Menu
-                    as="div"
-                    className="relative inline-block  z-10 -mt-0.4"
+                  <select
+                    value={locale}
+                    onChange={handleChange}
+                    className="border-none font-semibold md:text-lg bg-transparent cursor-pointer"
                   >
+                    <option value="en">English</option>
+                    <option value="te">తెలుగు</option>
+                    <option value="hi">हिंदी</option>
+                  </select>
+                </div>
+                {ironing && (
+                  <Link to="/iron/cart">
+                    <label className="mr-1">
+                      <FontAwesomeIcon
+                        icon={faBagShopping}
+                        size="xl"
+                        color="black"
+                      />
+                    </label>
+                    <a
+                      className={` font-semibold md:text-lg text-xs slide-in-right ${
+                        pathname?.includes("/cart") ? "text-[#00ccbb]" : ""
+                      }`}
+                    >
+                      {cartItemsCount > 0 && (
+                        <span className="ml-1 rounded-full bg-[#00ccbb] px-2 py-1 text-xs font-bold text-white">
+                          {cartItemsCount}
+                        </span>
+                      )}
+                    </a>
+                  </Link>
+                )}
+
+                {user ? (
+                  <Menu as="div" className="relative inline-block  z-10 ">
                     <Menu.Button className="flex items-center space-x-2 justify-center font-semibold capitalize mr-1">
                       <h1 className="md:text-lg text-xs "> {user.username}</h1>
                       <FontAwesomeIcon
@@ -304,12 +300,12 @@ const Layout = ({ bestRef }) => {
                       </Menu.Item>
                     </Menu.Items>
                   </Menu>
-                </div>
-              ) : (
-                <Link to="/login">
-                  <p className="p-2">Login</p>
-                </Link>
-              )}
+                ) : (
+                  <Link to="/login">
+                    <p className=" md:text-lg font-bold">Login</p>
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
         </div>

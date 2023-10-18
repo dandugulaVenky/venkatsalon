@@ -23,18 +23,18 @@ const ShopDetails = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { open } = useContext(SearchContext);
+
   const { t } = useTranslation();
   const [selectedStartTime, setSelectedStartTime] = useState("");
   const [selectedShopStartTime, setSelectedShopStartTime] = useState("");
-  const [storedUser, setStoredUser] = useState();
 
   const [selectedEndTime, setSelectedEndTime] = useState("");
   const [selectedShopEndTime, setSelectedShopEndTime] = useState("");
 
   const [latLong, setLatLong] = useState(null);
+  const [type, setType] = useState(null);
+  const [parlourType, setParlourType] = useState(null);
   const [map, setMap] = useState(false);
-  let w = window.innerWidth;
 
   function getCookieObject(name) {
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -71,12 +71,19 @@ const ShopDetails = () => {
     shopName,
 
     phone,
-    city,
+
     description,
-    type,
-    address,
   }) => {
-    if (!latLong) {
+    console.log(type);
+    console.log(parlourType);
+    if (!type || type === "undefined") {
+      return alert("Please select type of the shop!");
+    } else if (
+      (type === "parlour" && !parlourType) ||
+      (type === "parlour" && parlourType === "undefined")
+    ) {
+      return alert("Please select category of the parlour!");
+    } else if (!latLong) {
       return alert(t("selectAddressInMap"));
     } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
       return alert(t("selectShopStartEndTimeCorrectly"));
@@ -109,8 +116,19 @@ const ShopDetails = () => {
       if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
         return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
       }
-      if (selectedEndIndex * 10 - selectedStartIndex * 10 > 60) {
+      console.log(selectedEndIndex * 10);
+      console.log(selectedStartIndex * 10 > 60);
+      console.log(selectedEndIndex * 10 - selectedStartIndex * 10 > 60);
+
+      let diff = selectedEndIndex * 10 - selectedStartIndex * 10;
+
+      if (diff > 60) {
         return alert(t("lunchTimeMax1HrOnly"));
+      }
+      if (diff < 10) {
+        return alert(
+          "Select lunch time correctly! and it must be atleast 10min"
+        );
       }
 
       const shopTime = options.filter((option) => {
@@ -140,6 +158,9 @@ const ShopDetails = () => {
         desc: description,
         type: type.toLowerCase(),
 
+        parlourType:
+          type === "parlour" && parlourType ? parlourType.toLowerCase() : null,
+
         lunchTimeArray,
         shopTimeArray,
         latLong,
@@ -159,25 +180,36 @@ const ShopDetails = () => {
       }
       setCookieObject("user_info", existingUserData, 7);
 
-      navigate("/shop-final-registration");
-
       console.log("done");
+      navigate("/shop-final-registration");
     } else {
       alert(t("somethingWrong"));
     }
   };
 
   const handleStartTimeChange = (event) => {
+    if (event.target.value === "null") {
+      return;
+    }
     setSelectedStartTime(event.target.value);
   };
   const handleEndTimeChange = (event) => {
+    if (event.target.value === "null") {
+      return;
+    }
     setSelectedEndTime(event.target.value);
   };
 
   const handleShopStartTimeChange = (event) => {
+    if (event.target.value === "null") {
+      return;
+    }
     setSelectedShopStartTime(event.target.value);
   };
   const handleShopEndTimeChange = (event) => {
+    if (event.target.value === "null") {
+      return;
+    }
     setSelectedShopEndTime(event.target.value);
   };
 
@@ -190,6 +222,20 @@ const ShopDetails = () => {
     setMap(!map);
   };
 
+  const handleType = (e) => {
+    if (e.target.value === "null") {
+      return;
+    }
+    setType(e.target.value);
+  };
+
+  const handleParlourType = (e) => {
+    if (e.target.value === "null") {
+      return;
+    }
+    setParlourType(e.target.value);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
 
@@ -197,11 +243,10 @@ const ShopDetails = () => {
     const storedUser = getCookieObject("user_info");
 
     if (storedUser) {
-      setStoredUser(storedUser);
       if (storedUser.step === 1) {
         return;
       } else if (storedUser.step === 2) {
-        navigate("/shop-final-registration");
+        // navigate("/shop-final-registration");
       }
     } else {
       console.log("User info not found in the cookie.");
@@ -211,8 +256,6 @@ const ShopDetails = () => {
 
   return (
     <>
-      {""}
-
       <div className="md:py-0.5 py-5">
         <RegistrationWizard activeStep={1} />
       </div>
@@ -266,7 +309,7 @@ const ShopDetails = () => {
               value={selectedShopStartTime}
               onChange={(e) => handleShopStartTimeChange(e)}
             >
-              <option selected value="">
+              <option selected value="null">
                 Select Time
               </option>
               {options.map((option, index) => (
@@ -283,7 +326,7 @@ const ShopDetails = () => {
               value={selectedShopEndTime}
               onChange={(e) => handleShopEndTimeChange(e)}
             >
-              <option selected value="">
+              <option selected value="null">
                 Select Time
               </option>
               {options.map((option, index) => (
@@ -303,7 +346,7 @@ const ShopDetails = () => {
               value={selectedStartTime}
               onChange={(e) => handleStartTimeChange(e)}
             >
-              <option selected value="">
+              <option selected value="null">
                 Select Time
               </option>
               {options.map((option, index) => (
@@ -320,7 +363,7 @@ const ShopDetails = () => {
               value={selectedEndTime}
               onChange={(e) => handleEndTimeChange(e)}
             >
-              <option selected value="">
+              <option selected value="null">
                 Select Time
               </option>
               {options.map((option, index) => (
@@ -411,20 +454,28 @@ const ShopDetails = () => {
           </div>
           <div className="mb-4 w-full">
             <label htmlFor="type">Type</label>
-            <select
-              className="w-full p-1.5"
-              id="type"
-              {...register("type", {
-                required: "Please select a type",
-              })}
-            >
-              <option>Salon</option>
-              <option>Parlour</option>
+            <select className="w-full p-1.5" onChange={handleType} value={type}>
+              <option value="null">Select Type </option>
+              <option value="salon">salon</option>
+              <option value="parlour">parlour</option>
             </select>
-            {errors.type && (
-              <div className="text-red-500 ">{errors.type.message}</div>
-            )}
           </div>
+
+          {type === "parlour" && (
+            <div className="mb-4 w-full">
+              <label htmlFor="parlourType">Parlour Type</label>
+              <select
+                className="w-full p-1.5"
+                onChange={handleParlourType}
+                value={parlourType}
+              >
+                <option value="null">Select Parlour Type</option>
+                <option value="women">women</option>
+                <option value="men">men</option>
+                <option value="unisex">unisex</option>
+              </select>
+            </div>
+          )}
         </div>
 
         <div className="mb-4">

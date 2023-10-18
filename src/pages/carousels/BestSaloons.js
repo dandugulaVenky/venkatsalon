@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
 import baseUrl from "../../utils/client";
 
@@ -40,22 +40,34 @@ const BestSaloons = () => {
     navigate(`/shops/${hotel}`);
   };
 
+  const handleAllShops = () => {
+    navigate(`/shops`);
+  };
+
   return (
-    <div className="mt-8  text-black w-full ">
-      <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
-        {type1 ? (
-          type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
-        ) : (
-          <Skeleton cards={1} />
-        )}
-      </h1>
+    <div className="mt-8  text-black w-full  ">
+      <div className="flex flex-row justify-between">
+        <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
+          {type1 ? (
+            type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s For You"
+          ) : (
+            <Skeleton cards={1} />
+          )}
+        </h1>
+        <button
+          className="px-5 text-2xl font-semibold pb-2.5"
+          onClick={handleAllShops}
+        >
+          <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
+        </button>
+      </div>
       {query.isLoading ? (
         <Skeleton cards={size} />
       ) : query?.data?.data?.length > 0 ? (
         <div>
           <Carousel cols={4} rows={1} gap={7}>
             {query?.data?.data &&
-              query?.data?.data?.map((item, i) => {
+              query?.data?.data?.slice(0, 4)?.map((item, i) => {
                 return (
                   <Carousel.Item key={i}>
                     <div
