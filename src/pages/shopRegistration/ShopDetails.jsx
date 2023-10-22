@@ -33,7 +33,7 @@ const ShopDetails = () => {
 
   const [latLong, setLatLong] = useState(null);
   const [type, setType] = useState(null);
-  const [parlourType, setParlourType] = useState(null);
+  const [salonOrParlourType, setParlourOrSalonType] = useState(null);
   const [map, setMap] = useState(false);
 
   function getCookieObject(name) {
@@ -75,13 +75,10 @@ const ShopDetails = () => {
     description,
   }) => {
     console.log(type);
-    console.log(parlourType);
+    console.log(salonOrParlourType);
     if (!type || type === "undefined") {
       return alert("Please select type of the shop!");
-    } else if (
-      (type === "parlour" && !parlourType) ||
-      (type === "parlour" && parlourType === "undefined")
-    ) {
+    } else if (!salonOrParlourType || salonOrParlourType === "undefined") {
       return alert("Please select category of the parlour!");
     } else if (!latLong) {
       return alert(t("selectAddressInMap"));
@@ -158,8 +155,7 @@ const ShopDetails = () => {
         desc: description,
         type: type.toLowerCase(),
 
-        parlourType:
-          type === "parlour" && parlourType ? parlourType.toLowerCase() : null,
+        subType: salonOrParlourType.toLowerCase(),
 
         lunchTimeArray,
         shopTimeArray,
@@ -233,7 +229,7 @@ const ShopDetails = () => {
     if (e.target.value === "null") {
       return;
     }
-    setParlourType(e.target.value);
+    setParlourOrSalonType(e.target.value);
   };
 
   useEffect(() => {
@@ -457,25 +453,29 @@ const ShopDetails = () => {
             <select className="w-full p-1.5" onChange={handleType} value={type}>
               <option value="null">Select Type </option>
               <option value="salon">salon</option>
+              <option value="salon&spa">salon and spa</option>
+
               <option value="parlour">parlour</option>
+              <option value="parlour&spa">parlour and spa</option>
+              <option value="spa">spa</option>
             </select>
           </div>
 
-          {type === "parlour" && (
+          {
             <div className="mb-4 w-full">
-              <label htmlFor="parlourType">Parlour Type</label>
+              <label htmlFor="salonOrParlourType">{type} Type</label>
               <select
                 className="w-full p-1.5"
                 onChange={handleParlourType}
-                value={parlourType}
+                value={salonOrParlourType}
               >
-                <option value="null">Select Parlour Type</option>
+                <option value="null">Select {type} Type</option>
                 <option value="women">women</option>
                 <option value="men">men</option>
                 <option value="unisex">unisex</option>
               </select>
             </div>
-          )}
+          }
         </div>
 
         <div className="mb-4">

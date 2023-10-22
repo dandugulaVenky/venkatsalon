@@ -95,6 +95,8 @@ export const PaymentSuccess = () => {
           user: finalBookingDetails?.user,
           selectedSeats: selectedSeats1,
           type: finalBookingDetails?.type,
+          subCategory: finalBookingDetails?.subCategory,
+
           totalAmount: finalBookingDetails?.totalAmount,
           shopId: finalBookingDetails?.shopId,
           shopName: finalBookingDetails?.shopName,
@@ -115,6 +117,7 @@ export const PaymentSuccess = () => {
           bookId: finalBookingDetails?.bookId,
           selectedSeats: selectedSeats1,
           type: finalBookingDetails?.type,
+          subCategory: finalBookingDetails?.subCategory,
 
           totalAmount: finalBookingDetails?.totalAmount,
           isPaid: true,

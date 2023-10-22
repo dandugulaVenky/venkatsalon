@@ -6,26 +6,22 @@ import { useEffect } from "react";
 import baseUrl from "../../utils/client";
 import axios from "axios";
 import { toast } from "react-toastify";
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import Footer from "../../components/footer/Footer";
+
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 
 const MyServices = () => {
-  const [categoriesOptions, setCategoriesOptions] = useState();
-  const [categories, setCategories] = useState();
+  const [shopAllServices, setShopAllServices] = useState();
+  const [allMergedServices, setAllMergedServices] = useState();
   const [disabled, setIsDisabled] = useState(false);
   const [deleteItemLoader, setDeleteItemLoader] = useState("");
   const { user } = useContext(AuthContext);
-
-  let w = window.innerWidth;
-
-  const [shopServices, setShopServices] = useState();
+  const [currentCategory, setCurrentCategory] = useState();
+  const [categoriesOfServices, setCategoriesOfServices] = useState();
 
   const [edit, setEdit] = useState(false);
   const [roomData, setRoomData] = useState([]);
@@ -41,6 +37,7 @@ const MyServices = () => {
   const [roomId, setRoomId] = useState();
   const [deleted, setDeleted] = useState(false);
   const { t } = useTranslation();
+  const [typeOfPerson, setTypeOfPerson] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -54,10 +51,6 @@ const MyServices = () => {
         );
 
         setRoomData(data[0]?.roomNumbers);
-        const services = (data[0]?.services || []).reduce((arr, item) => {
-          arr.push(item.category);
-          return arr;
-        }, []);
 
         const mergedServices = data[0]?.services
           ?.reduce((arr, item) => {
@@ -70,22 +63,26 @@ const MyServices = () => {
 
         setRoomId(data[0]?._id);
         setAllServices(mergedServices);
-        setCategoriesOptions(mergedServices);
-        setShopServices(services);
-        setCategories(data[0]?.services);
+        setShopAllServices(mergedServices);
+
+        setAllMergedServices(data[0]?.services);
       } catch (err) {
         console.log(err);
         toast("something wrong!");
       }
     };
     fetchData();
-  }, [user?.shopId, showInclusions, edit, deleted, seatsShow]);
+  }, [user?.shopId, showInclusions, deleted, seatsShow]);
 
   const handleChange = (e) => {
-    const result = categories.filter((category, i) =>
-      category.category === e.target.value ? category.services : null
+    setCurrentCategory(e.target.value);
+    const result = allMergedServices.filter((category, i) =>
+      category.category === e.target.value &&
+      category.subCategory === typeOfPerson
+        ? category.services
+        : null
     );
-    setCategoriesOptions(result[0]?.services);
+    setShopAllServices(result[0]?.services);
   };
 
   const handleInput = (e, option) => {
@@ -104,6 +101,7 @@ const MyServices = () => {
       price: option.price,
       duration: option.duration,
       category: option.category,
+      subCategory: option.subCategory,
     });
   };
   const [editedService, setEditedService] = useState({});
@@ -149,7 +147,7 @@ const MyServices = () => {
 
   // to add edited service data to backend
 
-  const handleAdd = async (e) => {
+  const handleAddEditing = async (e) => {
     e.preventDefault();
     setIsDisabled(true);
 
@@ -167,6 +165,8 @@ const MyServices = () => {
         toast("Service edited successfully!");
         setEdit(null);
         setDeleted(!deleted);
+        setTypeOfPerson("Select Type");
+        setCategoriesOfServices(null);
         setIsDisabled(false);
       } else {
         toast("something went wrong!");
@@ -185,13 +185,16 @@ const MyServices = () => {
 
     const inclusions = option.inclusions.map((inclusion) => {
       return allServices.filter(
-        (service) => service.service === inclusion.service
+        (service) =>
+          service.service === inclusion.service &&
+          service.subCategory === option.subCategory
       )[0];
     });
 
     setShowInclusions({
       inclusions: inclusions,
       package: option.service,
+      // subCategory: option.subCategory,
     });
   };
 
@@ -199,13 +202,19 @@ const MyServices = () => {
 
   //this function is used to remove all the packages and show only the services which admin can add from list of services from his services
 
-  const handleAddOrRemove = () => {
+  const EditingOrRemove = () => {
     setAddRemoveServices(showInclusions.inclusions);
 
     const result = [...allServices, ...showInclusions.inclusions];
-    const uniqueServices = result.reduce((unique, service) => {
+
+    const filterType = result.filter(
+      (item) => item.subCategory === showInclusions.inclusions[0].subCategory
+    );
+
+    const uniqueServices = filterType.reduce((unique, service) => {
       const existingService = showInclusions.inclusions.find(
-        (s) => s.service === service.service
+        (s) =>
+          s.service === service.service && s.subCategory === service.subCategory
       );
       if (!existingService) {
         unique.push(service);
@@ -252,7 +261,7 @@ const MyServices = () => {
           toast("Edited Successfully!");
           setShowInclusions(null);
           setAddRemoveServices(null);
-          setCategoriesOptions(null);
+          setShopAllServices(null);
           setCanAddServices(null);
           setIsDisabled(false);
         }
@@ -351,9 +360,55 @@ const MyServices = () => {
     );
   };
 
+  const handleTypeOfPerson = (e) => {
+    setTypeOfPerson(e.target.value);
+    setCurrentCategory(null);
+    setCategoriesOfServices(null);
+    setShopAllServices(null);
+  };
+
+  useEffect(() => {
+    if (typeOfPerson === "Select Type") {
+      const mergedServices = allMergedServices
+        ?.reduce((arr, item) => {
+          arr.push(item.services);
+          return arr;
+        }, [])
+        .reduce((arr, item) => {
+          return arr.concat(item);
+        }, []);
+
+      // setCategoriesOfServices(mergedServices);
+      console.log(mergedServices);
+      setShopAllServices(mergedServices);
+      return;
+    }
+
+    const categories1 = allMergedServices?.filter(
+      (item) => item.subCategory === typeOfPerson
+    );
+
+    console.log(categories1);
+
+    let matter = categories1?.reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = item.category;
+      }
+      return acc;
+    }, {});
+    let merged = categories1
+      ?.reduce((acc, item) => acc.concat(item.services), [])
+      .flat();
+
+    if (typeOfPerson && currentCategory === null) {
+      setShopAllServices(merged);
+    }
+
+    setCategoriesOfServices(matter ? Object?.keys(matter) : null);
+  }, [allMergedServices, currentCategory, typeOfPerson]);
+
   return (
     <>
-      {""}
       {showInclusions?.inclusions?.length > 0 ? (
         <div className="reserve relative">
           <div className="overflow-auto  ">
@@ -475,7 +530,7 @@ const MyServices = () => {
                 <div className="flex md:flex-row flex-col py-2 items-center justify-around ">
                   <button
                     className="primary-button my-3"
-                    onClick={handleAddOrRemove}
+                    onClick={EditingOrRemove}
                   >
                     {t("addRemoveService")}
                   </button>
@@ -519,9 +574,6 @@ const MyServices = () => {
                             </label>
                           </td>
 
-                          {/* <td className="p-5 text-right md:text-md text-sm">
-                                          {option.category}
-                                        </td> */}
                           <td className="p-5 text-right md:text-md text-sm">
                             <label className="text-white">
                               {option?.duration} {t("min")}
@@ -539,27 +591,45 @@ const MyServices = () => {
       ) : (
         <div className="pb-20 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
           <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
-            {t("totalServices")} : {allServices?.length}
+            {t("totalServices")} :{" "}
+            {shopAllServices?.length
+              ? shopAllServices?.length
+              : allServices?.length}
           </p>
           <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
-            Total Seats : {roomData?.length}
+            Total Seats : {roomData?.length || 0}
           </p>
-          <div className="mb-2 py-5 flex items-center justify-start flex-wrap min-w-full">
-            <h2 className="text-lg font-bold  text-left text-black ml-2 space-x-3">
-              <select className="w-52" onChange={handleChange}>
-                <option selected>{t("selectCategory")}</option>
-                {shopServices?.map((service, i) => {
-                  return <option key={i}>{service}</option>;
-                })}
-              </select>
 
-              <button
-                className="primary-button"
-                onClick={() => setSeatsShow(true)}
-              >
-                Add / Remove Seats
-              </button>
-            </h2>
+          <div className="md:w-auto md:py-10 py-1">
+            <select
+              onChange={handleTypeOfPerson}
+              className="border-2 border-[#00ccbb]"
+              value={typeOfPerson}
+            >
+              <option selected defaultValue={null}>
+                Select Type
+              </option>
+              <option value="men">men</option>
+              <option value="women">women</option>
+            </select>
+
+            <select className="w-auto my-2 mx-2" onChange={handleChange}>
+              <option selected>{t("selectCategory")}</option>
+              {categoriesOfServices?.map((service, i) => {
+                return (
+                  <option key={i} value={service}>
+                    {service}
+                  </option>
+                );
+              })}
+            </select>
+
+            <button
+              className="primary-button my-2"
+              onClick={() => setSeatsShow(true)}
+            >
+              Add / Remove Seats
+            </button>
           </div>
 
           {seatsShow ? <AddRemoveSeats /> : ""}
@@ -597,113 +667,116 @@ const MyServices = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {categoriesOptions?.map((option, j) => {
-                        return (
-                          <tr key={j} className="border-b-2 border-white">
-                            <td className="md:text-md text-sm flex items-center justify-start p-5">
-                              {edit === j ? (
-                                <input
-                                  type="text"
-                                  value={editedService.service}
-                                  onChange={(e) => handleInput(e, "service")}
-                                  readOnly={option.category !== "packages"}
-                                />
-                              ) : (
-                                <label className="text-gray-900">
-                                  {option.service}
-                                </label>
-                              )}
-                            </td>
-                            <td className="p-5 text-right md:text-md text-sm">
-                              {edit === j ? (
-                                <input
-                                  type="text"
-                                  value={editedService.price}
-                                  onChange={(e) => handleInput(e, "price")}
-                                />
-                              ) : (
-                                <label className="text-gray-900 w-full">
-                                  &#8377;{option.price}
-                                </label>
-                              )}
-                            </td>
+                      {shopAllServices &&
+                        shopAllServices?.map((option, j) => {
+                          return (
+                            <tr key={j} className="border-b-2 border-white">
+                              <td className="md:text-md text-sm flex items-center justify-start p-5">
+                                {edit === j ? (
+                                  <input
+                                    type="text"
+                                    value={editedService.service}
+                                    onChange={(e) => handleInput(e, "service")}
+                                    readOnly={option.category !== "packages"}
+                                  />
+                                ) : (
+                                  <label className="text-gray-900">
+                                    {option.service}
+                                  </label>
+                                )}
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                {edit === j ? (
+                                  <input
+                                    type="text"
+                                    value={editedService.price}
+                                    onChange={(e) => handleInput(e, "price")}
+                                  />
+                                ) : (
+                                  <label className="text-gray-900 w-full">
+                                    &#8377;{option.price}
+                                  </label>
+                                )}
+                              </td>
 
-                            {/* <td className="p-5 text-right md:text-md text-sm">
+                              {/* <td className="p-5 text-right md:text-md text-sm">
                                         {option.category}
                                       </td> */}
-                            <td className="p-5 text-right md:text-md text-sm">
-                              {edit === j ? (
-                                <input
-                                  type="text"
-                                  readOnly={option.category === "packages"}
-                                  value={editedService.duration}
-                                  onChange={(e) => handleInput(e, "duration")}
-                                />
-                              ) : (
-                                <label className="text-gray-900">
-                                  {option.duration} {t("min")}
-                                </label>
-                              )}
-                            </td>
-                            {option.category === "packages" ? (
                               <td className="p-5 text-right md:text-md text-sm">
-                                {
-                                  <label
-                                    className="text-gray-900 underline cursor-pointer"
-                                    onClick={(e) => handleInclusions(e, option)}
-                                  >
-                                    {t("showInclusions")}
+                                {edit === j ? (
+                                  <input
+                                    type="text"
+                                    readOnly={option.category === "packages"}
+                                    value={editedService.duration}
+                                    onChange={(e) => handleInput(e, "duration")}
+                                  />
+                                ) : (
+                                  <label className="text-gray-900">
+                                    {option.duration} {t("min")}
                                   </label>
-                                }
+                                )}
                               </td>
-                            ) : (
+                              {option.category === "packages" ? (
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  {
+                                    <label
+                                      className="text-gray-900 underline cursor-pointer"
+                                      onClick={(e) =>
+                                        handleInclusions(e, option)
+                                      }
+                                    >
+                                      {t("showInclusions")}
+                                    </label>
+                                  }
+                                </td>
+                              ) : (
+                                <td className="p-5 text-right md:text-md text-sm">
+                                  <label>{t("noInclusions")}</label>
+                                </td>
+                              )}
                               <td className="p-5 text-right md:text-md text-sm">
-                                <label>{t("noInclusions")}</label>
+                                {edit === j ? (
+                                  <div className="flex items-center justify-end space-x-1">
+                                    <button
+                                      className="px-3 py-1.5 bg-blue-600 rounded-md"
+                                      onClick={handleAddEditing}
+                                    >
+                                      {disabled ? (
+                                        <span className="buttonloader ml-2"></span>
+                                      ) : (
+                                        "Save"
+                                      )}
+                                    </button>
+                                    <button
+                                      onClick={() => setEdit(null)}
+                                      className="px-3 py-1.5 bg-red-400 rounded-md"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <FontAwesomeIcon
+                                    icon={faEdit}
+                                    size="lg"
+                                    onClick={(e) => handleEdit(j, option)}
+                                  />
+                                )}
                               </td>
-                            )}
-                            <td className="p-5 text-right md:text-md text-sm">
-                              {edit === j ? (
-                                <div className="flex items-center justify-end space-x-1">
-                                  <button
-                                    className="px-3 py-1.5 bg-blue-600 rounded-md"
-                                    onClick={handleAdd}
-                                  >
-                                    {disabled ? (
-                                      <span className="buttonloader ml-2"></span>
-                                    ) : (
-                                      "Save"
-                                    )}
-                                  </button>
-                                  <button
-                                    onClick={() => setEdit(null)}
-                                    className="px-3 py-1.5 bg-red-400 rounded-md"
-                                  >
-                                    Cancel
-                                  </button>
-                                </div>
-                              ) : (
-                                <FontAwesomeIcon
-                                  icon={faEdit}
-                                  size="lg"
-                                  onClick={(e) => handleEdit(j, option)}
-                                />
-                              )}
-                            </td>
-                            <td className="p-5 text-right md:text-md text-sm">
-                              {disabled &&
-                              deleteItemLoader === option.service ? (
-                                <span className="buttonloader ml-2"></span>
-                              ) : (
-                                <FontAwesomeIcon
-                                  icon={faTrash}
-                                  size="lg"
-                                  onClick={() => handleDelete(option)}
-                                />
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                              <td className="p-5 text-right md:text-md text-sm">
+                                {disabled &&
+                                deleteItemLoader === option.service ? (
+                                  <span className="buttonloader ml-2"></span>
+                                ) : (
+                                  <FontAwesomeIcon
+                                    icon={faTrash}
+                                    size="lg"
+                                    onClick={() => handleDelete(option)}
+                                  />
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
                     </tbody>
                   </table>
                 </div>

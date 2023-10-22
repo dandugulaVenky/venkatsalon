@@ -24,7 +24,7 @@ const Services = ({ refer }) => {
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
         Select A Service
       </h1>
-      <Carousel cols={4} rows={1} gap={7}>
+      <Carousel cols={4} autoplay={6000} loop={true} rows={1} gap={7}>
         <Carousel.Item>
           <div
             className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"
@@ -62,6 +62,7 @@ const Services = ({ refer }) => {
             ></span>
           </div>
         </Carousel.Item>
+
         <Carousel.Item>
           <div
             className="relative  h-auto w-full cursor-pointer rounded-md"
@@ -94,6 +95,43 @@ const Services = ({ refer }) => {
             <span
               className={`${
                 active === "parlour" ? "service-loader" : ""
+              } absolute top-1 right-4`}
+            ></span>
+          </div>
+        </Carousel.Item>
+
+        <Carousel.Item>
+          <div
+            className="relative  h-auto w-full cursor-pointer rounded-md"
+            onClick={() => handler("spa")}
+          >
+            <img
+              src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678881963/beauty2_nttutx.webp"
+              alt="images"
+              style={{
+                width: "98%",
+                height: 132,
+                boxShadow: "1px 1.5px 2px black",
+                filter: `${
+                  active === "spa" ? "brightness(40%)" : "brightness(70%)"
+                }`,
+                borderRadius: 8,
+                objectFit: "cover",
+                objectPosition: "right top",
+              }}
+            />
+            <p
+              className={`absolute  ${
+                active === "spa"
+                  ? "inset-0 flex items-center justify-center"
+                  : "bottom-4 left-4"
+              }  text-white font-bold  text-2xl `}
+            >
+              Spa
+            </p>
+            <span
+              className={`${
+                active === "spa" ? "service-loader" : ""
               } absolute top-1 right-4`}
             ></span>
           </div>

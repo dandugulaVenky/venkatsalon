@@ -8,9 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import axios from "axios";
 import { useState } from "react";
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
-import Footer from "../../components/footer/Footer";
+
 import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -29,10 +27,19 @@ const AddServices = () => {
   const [disabled, setIsDisabled] = useState(false);
   const [shopType, setShopType] = useState();
   const [roomId, setRoomId] = useState();
+  const [typeOfPerson, setTypeOfPerson] = useState(null);
   const navigate = useNavigate();
-  const categories =
-    shopType === "parlour" ? parlourCategories : salonCategories;
-  const services = shopType === "parlour" ? parlourServices : salonServices;
+  const [categories, setCategories] = useState();
+
+  useEffect(() => {
+    const categories =
+      shopType === "parlour"
+        ? parlourCategories.filter((item) => item.subCategory === typeOfPerson)
+        : salonCategories.filter((item) => item.subCategory === typeOfPerson);
+
+    setCategories(categories);
+  }, [shopType, typeOfPerson]);
+
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -96,12 +103,16 @@ const AddServices = () => {
 
     let result = {
       category: category,
+      subCategory: typeOfPerson,
       services: allServices,
     };
 
     if (shopServices.length > 0) {
       const res = shopServices.map((shopService) => {
-        if (shopService.category === category) {
+        if (
+          shopService.category === category &&
+          shopService.subCategory === typeOfPerson
+        ) {
           const existing = shopService.services.service === allServices.service;
 
           if (existing) {
@@ -139,36 +150,42 @@ const AddServices = () => {
       return alert(t("pleaseIncludeAllFields"));
     }
 
+    console.log(shopServices);
+
     let a = shopServices;
 
-    let groupedServices = a.reduce((accumulator, item) => {
-      const { category, services } = item;
+    const mergedObj = {};
 
-      if (!accumulator[category]) {
-        accumulator[category] = {
-          category: category,
-          services: [],
-        };
+    a.forEach((item) => {
+      const key = JSON.stringify({
+        category: item.category,
+        subCategory: item.subCategory,
+      });
+      if (mergedObj[key]) {
+        mergedObj[key].services.push(item.services);
+      } else {
+        mergedObj[key] = { ...item, services: [item.services] };
       }
+    });
 
-      accumulator[category].services.push(services);
+    const mergedArray = Object.values(mergedObj).map((item) => {
+      item.services = item.services.flat(); // Flatten the services array
+      return item;
+    });
 
-      return accumulator;
-    }, {});
-
-    // Step 2: Convert the grouped services object into an array
-    let mergedServices = Object.values(groupedServices);
-
-    const finalMergedServices = mergedServices.map((mergedService) => {
+    const finalMergedServices = mergedArray.map((mergedService) => {
       const ans = mergedService.services.map((service) => {
         return {
           ...service,
-          category: mergedService.category, // Add a new key-value pair
+          category: mergedService.category,
+          subCategory: mergedService.subCategory,
         };
       });
 
       return {
         category: mergedService.category,
+        subCategory: mergedService.subCategory,
+
         services: ans,
       };
     });
@@ -203,12 +220,41 @@ const AddServices = () => {
       //   alert(err);
     }
   };
-  let w = window.innerWidth;
+
+  const handleTypeOfPerson = (e) => {
+    setTypeOfPerson(e.target.value);
+    setCategories(null);
+    setCategory(null);
+    setCategoriesOptions(null);
+    setAllServices({
+      service: "",
+      price: 0,
+      duration: 0,
+    });
+  };
+
   return (
     <div>
       {""}
       <div className="md:py-10 pb-20 md:px-5 px-2.5 min-h-screen">
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around pb-4 md:space-y-0 space-y-3">
+          <div className="md:w-auto w-full">
+            <div className="flex items-center justify-between">
+              <p className="py-2 font-semibold text-lg  ">Gender</p>
+              <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                0
+              </span>
+            </div>
+            <select
+              onChange={handleTypeOfPerson}
+              className="border-2 border-[#00ccbb]  md:w-auto w-full"
+              value={typeOfPerson}
+            >
+              <option selected>Select Type</option>
+              <option value="men">men</option>
+              <option value="women">women</option>
+            </select>
+          </div>
           <div className="md:w-auto w-full">
             <div className="flex items-center justify-between">
               <p className="py-2 font-semibold text-lg  ">{t("category")} </p>
@@ -224,8 +270,8 @@ const AddServices = () => {
               <option selected value="">
                 {t("selectCategory")}
               </option>
-              {services.map((service, i) => {
-                return <option key={i}>{service}</option>;
+              {categories?.map((category, i) => {
+                return <option key={i}>{category.category}</option>;
               })}
             </select>
           </div>
@@ -313,6 +359,9 @@ const AddServices = () => {
             <thead class="text-xs text-white uppercase bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
+                  Gender
+                </th>
+                <th scope="col" class="px-6 py-3">
                   {t("categoryName")}{" "}
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -335,8 +384,9 @@ const AddServices = () => {
                         scope="row"
                         class="px-6 py-4 font-medium  whitespace-nowrap text-white"
                       >
-                        {service.category}
+                        {service.subCategory}
                       </th>
+                      <th class="px-6 py-4 ">{service.category}</th>
                       <td class="px-6 py-4 ">{service.services.service}</td>
                       <td class="px-6 py-4">{service.services.price}</td>
                       <td class="px-6 py-4">{service.services.duration}</td>
@@ -352,7 +402,7 @@ const AddServices = () => {
         <button
           className="primary-button my-4"
           onClick={handleClick}
-          disabled={disabled}
+          // disabled={disabled}
         >
           {t("confirm")}
         </button>

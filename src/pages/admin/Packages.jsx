@@ -5,11 +5,9 @@ import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
 import axios from "axios";
 
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
 import { toast } from "react-toastify";
 import PackagePreview from "../../components/admin/PackagePreview";
-import Footer from "../../components/footer/Footer";
+
 import { useTranslation } from "react-i18next";
 
 const Packages = () => {
@@ -18,7 +16,7 @@ const Packages = () => {
   const [price, setPrice] = useState(0);
   const { user } = useContext(AuthContext);
   const [duration, setDuration] = useState(0);
-  let w = window.innerWidth;
+  const [typeOfPerson, setTypeOfPerson] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -59,16 +57,16 @@ const Packages = () => {
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
-        const services = (data[0]?.services || []).reduce((arr, item) => {
-          arr.push(item.category);
-          return arr;
-        }, []);
-        const packageRemovedServices = services.filter(
-          (service) => service !== "packages"
-        );
+        // const services = (data[0]?.services || []).reduce((arr, item) => {
+        //   arr.push(item.category);
+        //   return arr;
+        // }, []);
+        // const packageRemovedServices = services.filter(
+        //   (service) => service !== "packages"
+        // );
 
         setRoomId(data[0]?._id);
-        setServices(packageRemovedServices);
+        // setServices(packageRemovedServices);
         setCategories(data[0]?.services);
         setLoading(true);
       } catch (err) {
@@ -83,7 +81,10 @@ const Packages = () => {
   //this function is used to change the services according to user selected category
   const handleChange = (e) => {
     const result = categories.filter((category, i) =>
-      category.category === e.target.value ? category.services : null
+      category.category === e.target.value &&
+      category.subCategory === typeOfPerson
+        ? category.services
+        : null
     );
     setCategoriesOptions(result[0]?.services);
   };
@@ -115,10 +116,37 @@ const Packages = () => {
     }
   };
 
+  useEffect(() => {
+    const categories1 = categories?.filter(
+      (item) => item.subCategory === typeOfPerson
+    );
+    const services = (categories1 || []).reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = item.category;
+      }
+      return acc;
+    }, {});
+
+    const arr = Object.keys(services);
+
+    const packageRemovedServices = arr.filter(
+      (service) => service !== "packages"
+    );
+
+    setServices(packageRemovedServices);
+  }, [typeOfPerson]);
+
   const getTotalDuration = () => {
     const duration = all?.reduce((acc, service) => acc + service.duration, 0);
     return duration ? duration : 0;
   };
+
+  const handleTypeOfPerson = (e) => {
+    setTypeOfPerson(e.target.value);
+    setCategoriesOptions(null);
+    setServices(null);
+  };
+
   return (
     <>
       {""}
@@ -137,6 +165,23 @@ const Packages = () => {
       ) : (
         <div className="pb-10 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
           <div className="mb-2 py-5  flex items-center justify-around flex-wrap flex-grow basis-full">
+            <div className="md:w-auto w-full">
+              <div className="flex items-center justify-between">
+                <p className="py-2 font-semibold text-lg  ">Gender</p>
+                <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
+                  0
+                </span>
+              </div>
+              <select
+                onChange={handleTypeOfPerson}
+                className="border-2 border-[#00ccbb]  md:w-auto w-full"
+                value={typeOfPerson}
+              >
+                <option selected>Select Type</option>
+                <option value="men">men</option>
+                <option value="women">women</option>
+              </select>
+            </div>
             <div className="md:w-auto w-full">
               <div className="flex items-center justify-between">
                 <p className="py-2 font-semibold text-lg  ">

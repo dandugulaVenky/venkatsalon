@@ -2,46 +2,38 @@ export const salonServices = ["regular", "massages"];
 export const salonCategories = [
   {
     category: "regular",
+    subCategory: "men",
     services: [
       {
         name: "haircut",
-        price: 50,
         category: "regular",
-        inclusions: [],
-        duration: 50,
+        subCategory: "men",
       },
       {
         name: "shaving",
-        price: 50,
         category: "regular",
-        inclusions: [],
-        duration: 50,
+        subCategory: "men",
       },
       {
         name: "hair-color",
-        price: 50,
         category: "regular",
-        inclusions: [],
-        duration: 50,
+        subCategory: "men",
       },
     ],
   },
   {
     category: "massages",
+    subCategory: "men",
     services: [
       {
         name: "head-massage",
-        price: 30,
         category: "massages",
-        inclusions: [],
-        duration: 30,
+        subCategory: "men",
       },
       {
         name: "body-massage",
-        price: 150,
         category: "nailing",
-        inclusions: [],
-        duration: 20,
+        subCategory: "men",
       },
     ],
   },

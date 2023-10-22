@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const PackagePreview = (props) => {
+  console.log(props);
   const { services, setPreview, packageName, price, duration, roomId } = props;
   const [disabled, setIsDisabled] = useState(false);
 
@@ -37,11 +38,14 @@ const PackagePreview = (props) => {
 
     let finalArr = {
       category: "packages",
+      subCategory: services[0]?.subCategory,
       services: {
         service: packageName,
         price: price,
         duration,
         category: "packages",
+        subCategory: services[0]?.subCategory,
+
         inclusions: serviceNames,
       },
     };

@@ -14,8 +14,7 @@ import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
-import Layout from "../navbar/Layout";
-import Greeting from "../navbar/Greeting";
+
 import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import ParlorPreview from "../../pages/preview";
@@ -28,7 +27,7 @@ const ParlorReserve = () => {
   const [allServices, setAllServices] = useState();
   const [showInclusions, setShowInclusions] = useState();
   const [category, setCategory] = useState();
-
+  const [gender, setGender] = useState();
   const location = useLocation();
   const state = location?.state;
   const {
@@ -44,10 +43,6 @@ const ParlorReserve = () => {
     type,
   } = state !== null && state;
 
-  console.log(shopOwner, "shopOwneer");
-
-  let w = window.innerWidth;
-
   const [loading, setLoading] = useState(false);
 
   const [height, setHeight] = useState(false);
@@ -57,6 +52,7 @@ const ParlorReserve = () => {
   const [show, setShow] = useState(false);
   const [durations, setDurations] = useState([]);
 
+  const [sortBy, setSortBy] = useState(null);
   const [previewServices, setPreviewServices] = useState();
 
   const [seats, setSeats] = useState();
@@ -116,10 +112,10 @@ const ParlorReserve = () => {
       setSeats(res);
       setPreviewServices(data[0]?.services);
 
-      const services = (data[0]?.services || []).reduce((arr, item) => {
-        arr.push(item.category);
-        return arr;
-      }, []);
+      // const services = (data[0]?.services || []).reduce((arr, item) => {
+      //   arr.push(item.category);
+      //   return arr;
+      // }, []);
 
       const mergedPreviewServices = data[0]?.services
         ?.reduce((arr, item) => {
@@ -128,7 +124,8 @@ const ParlorReserve = () => {
         }, [])
         .reduce((arr, item) => {
           return arr.concat(item);
-        }, []);
+        }, [])
+        .filter((item) => item.subCategory === gender);
 
       const totalTimeOfServices = mergedPreviewServices.reduce(
         (acc, service) => {
@@ -137,15 +134,17 @@ const ParlorReserve = () => {
         0
       );
 
+      console.log(totalTimeOfServices);
+
       setTotalTime(totalTimeOfServices);
       setAllServices(mergedPreviewServices);
 
-      setSalonServices(services);
+      // setSalonServices(services);
       setCategories(data[0]?.services);
       setLoading(true);
     };
-    !loading && fetchData();
-  }, [loading, shopId]);
+    !loading && gender && fetchData();
+  }, [gender, loading, shopId]);
 
   //Second Step----------------------------------------------------------------------------->
   //finding wether there is booking in front of this selected time here
@@ -188,16 +187,16 @@ const ParlorReserve = () => {
           for (let k = 0; k <= totalTime / 10; k++) {
             conditions.push(options[selectedValue + k]);
           }
-
+          // console.log(conditions, "conditions");
           conditions?.some((condition, index) => {
             if (condition?.value === item.time) {
-              // console.log({ condition, item, index, selectedValue });
+              console.log({ condition, item, index, selectedValue });
               matchedIndexes.push(index);
               return true; // break out of loop
             }
           });
         });
-
+        // console.log(matchedIndexes, "matchedIndexes");
         //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
         //  finding smallest number because if 10min found from options[selectedValue + 1]
 
@@ -206,7 +205,7 @@ const ParlorReserve = () => {
         // dynamically declare and assign boolean variables
 
         minFound[i] = {};
-
+        console.log(totalTime);
         for (let l = 1; l < totalTime / 10; l++) {
           minFound[i][`min${l * 10}found${i + 1}`] = smallestNumber === l;
         }
@@ -226,6 +225,7 @@ const ParlorReserve = () => {
       };
 
       const filteredKeys = getFilteredKeys();
+      // console.log(filteredKeys, "filteredKeys");
 
       const getDurations = () => {
         return filteredKeys
@@ -234,7 +234,7 @@ const ParlorReserve = () => {
       };
 
       const durations = getDurations();
-
+      // console.log(durations, "durations");
       setDurations(durations);
       setShow(true);
 
@@ -266,13 +266,54 @@ const ParlorReserve = () => {
 
   //update the options with ids corrospondingly with inputs
 
+  useEffect(() => {
+    const filtered = categories?.filter((item) => item.subCategory === gender);
+
+    const services = (filtered || []).reduce((arr, item) => {
+      arr.push(item.category);
+      return arr;
+    }, []);
+
+    setSalonServices(services);
+  }, [categories, gender]);
+
   const handleChange = (e) => {
     setCategory(e.target.value);
     const result = categories.filter((category, i) =>
-      category.category === e.target.value ? category.services : null
+      category.category === e.target.value && category.subCategory === gender
+        ? category.services
+        : null
     );
     setCategoriesOptions(result[0].services);
   };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setSalonServices(null);
+
+    setCategoriesOptions(null);
+
+    // setAllServices()
+  };
+
+  useEffect(() => {
+    let result = [];
+    const filtered = categories?.filter((item) => item.subCategory === gender);
+
+    const services = (filtered || []).reduce((arr, item) => {
+      arr.push(item.category);
+      return arr;
+    }, []);
+    if (sortBy === "spa") {
+      result = services?.filter((category, i) => category.includes("spa"));
+    } else if (sortBy === "parlour") {
+      result = services?.filter((category, i) => !category.includes("spa"));
+    } else {
+      result = services?.filter((category, i) => !category.includes(sortBy));
+    }
+    setSalonServices(result);
+  }, [sortBy]); //this id wantedly kept missing dependencies
+
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
@@ -559,7 +600,6 @@ const ParlorReserve = () => {
           }
         }
 
-        console.log("I am coming!sd");
         //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
         //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
 
@@ -620,6 +660,7 @@ const ParlorReserve = () => {
             dates,
             previewServices,
             type,
+            subCategory: gender,
           });
           setParlorPreview(true);
         } else {
@@ -635,7 +676,9 @@ const ParlorReserve = () => {
 
     const inclusions = option.inclusions.map((inclusion) => {
       return allServices.filter(
-        (service) => service.service === inclusion.service
+        (service) =>
+          service.service === inclusion.service &&
+          service.subCategory === option.subCategory
       )[0];
     });
 
@@ -722,7 +765,6 @@ const ParlorReserve = () => {
 
   return (
     <>
-      {""}
       <ShowInclusions />
       {parlorPreview && reserveState !== null ? (
         <div className="min-h-screen">
@@ -734,18 +776,65 @@ const ParlorReserve = () => {
         </div>
       ) : (
         <div className="pb-10">
-          <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
-            <p className="py-1 text-md text-black font-semibold">
-              {t("categories")}
-            </p>
+          <div className="px-4 flex items-center md:justify-start  justify-center md:space-x-3 space-x-1 md:pl-[3rem] lg:pl-[4.5rem]">
+            {!categoriesOptions?.length > 0 && sortBy === null && (
+              <h2 className="mb-2 text-lg font-bold py-5   text-left text-black">
+                <p className="py-1 text-md text-black font-semibold">
+                  Select Gender
+                </p>
 
-            <select className="w-52" onChange={handleChange}>
-              <option selected>{t("selectCategory")}</option>
-              {salonServices?.map((service, i) => {
-                return <option key={i}>{service}</option>;
-              })}
-            </select>
-          </h2>
+                <select
+                  className="md:w-52 w-full"
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                    setLoading(false);
+                    setCategoriesOptions(null);
+                    setSalonServices(null);
+                  }}
+                >
+                  <option value={null} selected disabled>
+                    Select Gender
+                  </option>
+                  <option value={"men"}>men</option>
+                  <option value={"women"}>women</option>
+                </select>
+              </h2>
+            )}
+            <h2
+              className={`mb-2 text-lg font-bold py-5
+                 text-left text-black`}
+            >
+              <p className="py-1 text-md text-black font-semibold">
+                {t("categories")}
+              </p>
+
+              <select className="md:w-52 w-full" onChange={handleChange}>
+                <option selected>{t("selectCategory")}</option>
+                {salonServices?.map((service, i) => {
+                  return <option key={i}>{service}</option>;
+                })}
+              </select>
+            </h2>
+            {(sortBy !== null || categoriesOptions?.length > 0) && (
+              <h2 className={`mb-2 text-lg font-bold py-5text-left text-black`}>
+                <p className="py-1 text-md text-black font-semibold">Sort</p>
+
+                <select className="md:w-52 w-full" onChange={handleSortChange}>
+                  <option selected>Sort By</option>
+                  <option value="parlour">parlour services</option>
+                  <option value="spa">spa services</option>
+                </select>
+              </h2>
+            )}
+
+            {(sortBy !== null || categoriesOptions?.length > 0) && (
+              <h2 className={`mt-7 text-lg font-bold text-left text-white`}>
+                <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
+                  {gender ? gender : ""}
+                </p>
+              </h2>
+            )}
+          </div>
 
           {categoriesOptions?.length > 0 ? (
             <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
@@ -908,10 +997,16 @@ const ParlorReserve = () => {
             </div>
           ) : (
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
-              <img src={Select} alt="select category" className="h-72" />
-              <p className="font-semibold">
-                {t("selectCategoryToViewServices")}
-              </p>
+              {!(salonServices?.length <= 0 && gender) ? (
+                <>
+                  <img src={Select} alt="select category" className="h-72" />
+                  <p className="font-semibold">
+                    {t("selectCategoryToViewServices")}
+                  </p>
+                </>
+              ) : (
+                "Oops no services found !"
+              )}
             </div>
           )}
         </div>

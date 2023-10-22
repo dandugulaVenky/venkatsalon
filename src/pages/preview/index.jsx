@@ -1,6 +1,5 @@
 import React from "react";
 
-import Footer from "../../components/footer/Footer";
 import { useEffect } from "react";
 
 import { useState } from "react";
@@ -36,7 +35,8 @@ const Preview = (props) => {
       }, [])
       .reduce((arr, item) => {
         return arr.concat(item);
-      }, []);
+      }, [])
+      .filter((item) => item.subCategory === state.subCategory);
 
     const showPreviewServicess = state?.selectedSeats.map((seat, i) => {
       const push = mergedPreviewServices.filter((item) =>
@@ -92,6 +92,7 @@ const Preview = (props) => {
       link,
       dates,
       type,
+      subCategory,
     } = state;
 
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
@@ -124,6 +125,7 @@ const Preview = (props) => {
           link,
           dates,
           type,
+          subCategory,
         },
         { withCredentials: true }
       );
@@ -247,6 +249,9 @@ const Preview = (props) => {
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
                             {t("duration")}
                           </th>
+                          <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                            Gender
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -264,6 +269,9 @@ const Preview = (props) => {
 
                             <td className="p-5 text-right md:text-md text-sm">
                               {t("duration1", { duration: item.duration })} min
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              {state?.subCategory}
                             </td>
                           </tr>
                         ))}
