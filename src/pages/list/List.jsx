@@ -160,7 +160,7 @@ const List = () => {
                   className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
                   onChange={filteredType}
                   style={{
-                    filter: " drop-shadow(0px 0px 0.35px gray)",
+                    filter: "drop-shadow(0px 0px 0.35px gray)",
                     border: "2.4px solid gray",
                     caretColor: "#00ccbb",
                   }}
