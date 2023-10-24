@@ -777,63 +777,42 @@ const Reserve = () => {
           />
         </div>
       ) : (
-        <div className="pb-10">
-          <div className="px-2 flex items-center md:justify-start  justify-center md:space-x-3 space-x-1 lg:pl-[4.5rem]">
+        <div className="pb-16 ">
+          <div className="flex items-center md:justify-start justify-center space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
             {!categoriesOptions?.length > 0 && sortBy === null && (
-              <h2 className="mb-2 text-lg font-bold py-5   text-left text-black">
-                <p className="py-1 text-md text-black font-semibold">
+              <select
+                className="md:w-52 w-auto"
+                onChange={(e) => {
+                  setGender(e.target.value);
+                  setLoading(false);
+                  setCategoriesOptions(null);
+                  setSalonServices(null);
+                }}
+              >
+                <option value={null} selected disabled>
                   Select Gender
-                </p>
-
-                <select
-                  className="md:w-52 w-auto"
-                  onChange={(e) => {
-                    setGender(e.target.value);
-                    setLoading(false);
-                    setCategoriesOptions(null);
-                    setSalonServices(null);
-                  }}
-                >
-                  <option value={null} selected disabled>
-                    Select Gender
-                  </option>
-                  <option value={"men"}>men</option>
-                  <option value={"women"}>women</option>
-                </select>
-              </h2>
-            )}
-            <h2
-              className={`mb-2 text-lg font-bold py-5
-               text-left text-black`}
-            >
-              <p className="py-1 text-md text-black font-semibold">
-                {t("categories")}
-              </p>
-
-              <select className="md:w-52 w-auto" onChange={handleChange}>
-                <option selected>{t("selectCategory")}</option>
-                {salonServices?.map((service, i) => {
-                  return <option key={i}>{service}</option>;
-                })}
+                </option>
+                <option value={"men"}>men</option>
+                <option value={"women"}>women</option>
               </select>
-            </h2>
+            )}
+            <select className="md:w-52 w-auto" onChange={handleChange}>
+              <option selected>{t("selectCategory")}</option>
+              {salonServices?.map((service, i) => {
+                return <option key={i}>{service}</option>;
+              })}
+            </select>
             {(sortBy !== null || categoriesOptions?.length > 0) && (
-              <h2 className={`mb-2 text-lg font-bold py-5text-left text-black`}>
-                <p className="py-1 text-md text-black font-semibold">Sort</p>
-
-                <select className="md:w-52 w-auto" onChange={handleSortChange}>
-                  <option selected>Sort By</option>
-                  <option value="salon">salon services</option>
-                  <option value="spa">spa services</option>
-                </select>
-              </h2>
+              <select className="md:w-52 w-auto" onChange={handleSortChange}>
+                <option selected>Sort By</option>
+                <option value="salon">salon services</option>
+                <option value="spa">spa services</option>
+              </select>
             )}
             {(sortBy !== null || categoriesOptions?.length > 0) && (
-              <h2 className={`mt-7 text-lg font-bold text-left text-white`}>
-                <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
-                  {gender ? gender : ""}
-                </p>
-              </h2>
+              <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
+                {gender ? gender : ""}
+              </p>
             )}
           </div>
 
