@@ -1,11 +1,5 @@
-import SIdebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
+import React, { useEffect, useState } from "react";
 
-import Layout from "../../components/navbar/Layout";
-
-import Footer from "../../components/footer/Footer";
-import React, { useContext, useEffect, useState } from "react";
-import { SearchContext } from "../../context/SearchContext";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -35,6 +29,7 @@ const ShopDetails = () => {
   const [type, setType] = useState(null);
   const [salonOrParlourType, setParlourOrSalonType] = useState(null);
   const [map, setMap] = useState(false);
+  const [spaIncluded, setSpaIncluded] = useState(null);
 
   function getCookieObject(name) {
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -74,12 +69,16 @@ const ShopDetails = () => {
 
     description,
   }) => {
-    console.log(type);
-    console.log(salonOrParlourType);
+    // console.log(type);
+    // console.log(salonOrParlourType);
+    // console.log(spaIncluded, "spaIncluded");
+
     if (!type || type === "undefined") {
       return alert("Please select type of the shop!");
     } else if (!salonOrParlourType || salonOrParlourType === "undefined") {
       return alert("Please select category of the parlour!");
+    } else if (spaIncluded === null) {
+      return alert("Please select wether your shop has spa services!");
     } else if (!latLong) {
       return alert(t("selectAddressInMap"));
     } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
@@ -156,7 +155,7 @@ const ShopDetails = () => {
         type: type.toLowerCase(),
 
         subType: salonOrParlourType.toLowerCase(),
-
+        spaIncluded,
         lunchTimeArray,
         shopTimeArray,
         latLong,
@@ -453,10 +452,7 @@ const ShopDetails = () => {
             <select className="w-full p-1.5" onChange={handleType} value={type}>
               <option value="null">Select Type </option>
               <option value="salon">salon</option>
-              <option value="salon&spa">salon and spa</option>
-
               <option value="parlour">parlour</option>
-              <option value="parlour&spa">parlour and spa</option>
               <option value="spa">spa</option>
             </select>
           </div>
@@ -476,6 +472,35 @@ const ShopDetails = () => {
               </select>
             </div>
           }
+        </div>
+
+        <div className="mb-4 w-full flex items-start justify-around">
+          <div className="flex items-center justify-center space-x-2">
+            <input
+              type="checkbox"
+              name="Yes"
+              checked={spaIncluded === true}
+              className="h-6 w-6"
+              id="Yes"
+              onChange={(event) => setSpaIncluded(true)}
+              // disabled={isAvailable(i)}
+            />
+            <label className="text-gray-900">Yes, Included</label>
+          </div>
+          <div className="flex items-center justify-center space-x-2">
+            <input
+              type="checkbox"
+              name="No"
+              checked={spaIncluded === false}
+              className="h-6 w-6"
+              id="No"
+              value={false}
+              onChange={(event) => setSpaIncluded(false)}
+
+              // disabled={isAvailable(i)}
+            />
+            <label className="text-gray-900">Not Included</label>
+          </div>
         </div>
 
         <div className="mb-4">
