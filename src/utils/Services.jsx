@@ -24,7 +24,7 @@ const Services = ({ refer }) => {
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
         Select A Service
       </h1>
-      <Carousel cols={4} autoplay={6000} loop={true} rows={1} gap={7}>
+      <Carousel cols={4} autoplay={10000} loop={true} rows={1} gap={7}>
         <Carousel.Item>
           <div
             className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"

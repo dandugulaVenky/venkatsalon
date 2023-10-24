@@ -1,10 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
-import SIdebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
-import Footer from "../../components/footer/Footer";
-import Layout from "../../components/navbar/Layout";
 
 const AllCities = () => {
   const { type: type1, dispatch } = useContext(SearchContext);
@@ -39,20 +35,21 @@ const AllCities = () => {
     navigate("/shops", { state: { destination } });
   };
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   return (
     <>
       <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <div className="flex items-center py-10 space-x-2 md:mx-0 mx-3">
-          <label> City :</label>
           <input
             type="text"
-            className="w-64 rounded-md"
+            className="w-full md:w-[80%] mx-auto col-span-12 rounded-full p-2 text-center"
+            style={{
+              filter: " drop-shadow(0px 0px 0.35px gray)",
+              border: "2.4px solid gray",
+              caretColor: "#00ccbb",
+            }}
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            placeholder="Search city name"
+            placeholder="Search City Name"
           />
         </div>
 

@@ -127,18 +127,18 @@ const List = () => {
             <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 py-8 ">
               <input
                 type="text"
-                className=" col-span-6 rounded-full p-2 text-center"
-                onChange={(e) => setUserInput(e.target.value)}
-                value={userInput}
-                placeholder="Search shop name..."
+                className=" md:col-span-6 col-span-12 rounded-full p-2 text-center"
                 style={{
                   filter: " drop-shadow(0px 0px 0.35px gray)",
                   border: "2.4px solid gray",
                   caretColor: "#00ccbb",
                 }}
+                onChange={(e) => setUserInput(e.target.value)}
+                value={userInput}
+                placeholder="Search shop name..."
               />
 
-              <div className="col-span-2">
+              <div className="md:col-span-2 col-span-6">
                 <select
                   className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
                   onChange={filteredTypeofShopType}
@@ -155,7 +155,7 @@ const List = () => {
                 </select>
               </div>
 
-              <div className="col-span-2">
+              <div className="md:col-span-2 col-span-6">
                 <select
                   className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
                   onChange={filteredType}

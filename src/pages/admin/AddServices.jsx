@@ -1,9 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import {
-  parlourCategories,
-  parlourServices,
-} from "../../utils/parlourServices";
-import { salonCategories, salonServices } from "../../utils/salonServices";
+import { parlourCategories } from "../../utils/parlourServices";
+import { salonCategories } from "../../utils/salonServices";
 import { useTranslation } from "react-i18next";
 
 import axios from "axios";
@@ -13,6 +10,12 @@ import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
+import {
+  faDeleteLeft,
+  faDumpster,
+  faRemove,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -33,9 +36,9 @@ const AddServices = () => {
 
   useEffect(() => {
     const categories =
-      shopType === "parlour"
-        ? parlourCategories.filter((item) => item.subCategory === typeOfPerson)
-        : salonCategories.filter((item) => item.subCategory === typeOfPerson);
+      shopType?.type === "parlour"
+        ? parlourCategories[typeOfPerson]
+        : salonCategories[typeOfPerson];
 
     setCategories(categories);
   }, [shopType, typeOfPerson]);
@@ -48,7 +51,12 @@ const AddServices = () => {
         const { data } = await axios.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
-        setShopType(data?.type);
+        setShopType({
+          type: data?.type,
+          subType: data?.subType,
+        });
+
+        setTypeOfPerson(data?.subType);
       } catch (err) {
         toast("Something wrong!");
         console.log(err);
@@ -107,7 +115,7 @@ const AddServices = () => {
       services: allServices,
     };
 
-    if (shopServices.length > 0) {
+    if (shopServices?.length > 0) {
       const res = shopServices.map((shopService) => {
         if (
           shopService.category === category &&
@@ -138,6 +146,19 @@ const AddServices = () => {
       price: 0,
       duration: 0,
     });
+  };
+
+  const handleRemove = (removeService) => {
+    console.log("ji");
+    let result = shopServices.filter(
+      (item) =>
+        !(
+          item.category === removeService.category &&
+          item.subCategory === removeService.subCategory
+        )
+    );
+    console.log(result);
+    setShopServices(result);
   };
 
   const handleClick = async (e) => {
@@ -251,8 +272,14 @@ const AddServices = () => {
               value={typeOfPerson}
             >
               <option selected>Select Type</option>
-              <option value="men">men</option>
-              <option value="women">women</option>
+              {(shopType?.subType === "unisex" ||
+                shopType?.subType === "men") && (
+                <option value="men">men</option>
+              )}
+              {(shopType?.subType === "unisex" ||
+                shopType?.subType === "women") && (
+                <option value="women">women</option>
+              )}
             </select>
           </div>
           <div className="md:w-auto w-full">
@@ -303,19 +330,11 @@ const AddServices = () => {
                 3
               </span>
             </div>
-            <select
+            <input
               onChange={(e) => allHandleChange(e, "price")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
               value={allServices?.price}
-            >
-              <option selected>{t("selectPrice")}</option>
-              {[
-                100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200,
-                1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
-              ].map((price, i) => {
-                return <option key={i}>{price}</option>;
-              })}
-            </select>
+            />
           </div>
 
           <div className="text-lg  text-left text-black md:w-auto w-full">
@@ -373,11 +392,14 @@ const AddServices = () => {
                 <th scope="col" class="px-6 py-3">
                   {t("duration")}
                 </th>
+                <th scope="col" class="px-6 py-3">
+                  Delete
+                </th>
               </tr>
             </thead>
             <tbody>
               {shopServices?.length > 0 ? (
-                shopServices.map((service, i) => {
+                shopServices?.map((service, i) => {
                   return (
                     <tr class="border-b bg-gray-800 text-white" key={i}>
                       <th
@@ -390,6 +412,16 @@ const AddServices = () => {
                       <td class="px-6 py-4 ">{service.services.service}</td>
                       <td class="px-6 py-4">{service.services.price}</td>
                       <td class="px-6 py-4">{service.services.duration}</td>
+                      <td class="px-6 py-4">
+                        {" "}
+                        <FontAwesomeIcon
+                          icon={faDeleteLeft}
+                          onClick={() => handleRemove(service)}
+                          size="lg"
+                          color="#00ccbb"
+                          className="cursor-pointer"
+                        />{" "}
+                      </td>
                     </tr>
                   );
                 })

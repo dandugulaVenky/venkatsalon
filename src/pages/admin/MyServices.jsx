@@ -388,7 +388,7 @@ const MyServices = () => {
       (item) => item.subCategory === typeOfPerson
     );
 
-    console.log(categories1);
+    // console.log(categories1);
 
     let matter = categories1?.reduce((acc, item) => {
       if (!acc[item.category]) {
@@ -704,12 +704,23 @@ const MyServices = () => {
                                       </td> */}
                               <td className="p-5 text-right md:text-md text-sm">
                                 {edit === j ? (
-                                  <input
-                                    type="text"
+                                  <select
                                     readOnly={option.category === "packages"}
                                     value={editedService.duration}
                                     onChange={(e) => handleInput(e, "duration")}
-                                  />
+                                  >
+                                    <option selected>
+                                      {t("selectDurationMinutes")}
+                                    </option>
+                                    {[
+                                      10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
+                                      110, 120, 130, 140, 150,
+                                    ].map((duration, i) => {
+                                      return (
+                                        <option key={i}>{duration}</option>
+                                      );
+                                    })}
+                                  </select>
                                 ) : (
                                   <label className="text-gray-900">
                                     {option.duration} {t("min")}
