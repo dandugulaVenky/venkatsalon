@@ -287,9 +287,11 @@ const Hotel = () => {
     let newSlideNumber;
 
     if (direction === "l") {
-      newSlideNumber = slideNumber === 0 ? 5 : slideNumber - 1;
+      newSlideNumber =
+        slideNumber === 0 ? data?.images?.length - 1 : slideNumber - 1;
     } else {
-      newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
+      newSlideNumber =
+        slideNumber === data?.images?.length - 1 ? 0 : slideNumber + 1;
     }
 
     setSlideNumber(newSlideNumber);
@@ -552,7 +554,7 @@ const Hotel = () => {
                       `grid grid-cols-10 px-4  text-md font-bold cursor-pointer  space-x-5 hover:bg-gray-200 w-[100%] rounded-full relative ${
                         isbooked?.includes(true) &&
                         falseIndexes.length > 0 &&
-                        "bg-gray-400  my-2"
+                        "bg-gray-100  my-2"
                       }`
                     )}
                   >
@@ -573,7 +575,7 @@ const Hotel = () => {
                           <span>&nbsp;&nbsp; .</span>
                         ))}
                     </span>
-                    <section className="text-white py-1 col-span-7 overflow-auto">
+                    <section className="text-gray-800 py-1 col-span-7 overflow-auto">
                       <span>
                         {isbooked?.includes(true) &&
                           falseIndexes?.map((item) => {
@@ -798,9 +800,14 @@ const Hotel = () => {
                 />
                 <div className="sliderWrapper">
                   <img
-                    src={data.photos[slideNumber]}
+                    src={data?.images[slideNumber]?.url}
                     alt=""
                     className="sliderImg"
+                    style={{
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      maxHeight: 500,
+                    }}
                   />
                 </div>
                 <FontAwesomeIcon
@@ -817,9 +824,17 @@ const Hotel = () => {
                 <h1 className="hotelTitle">
                   {t("salonName", { name: data.name })}
                 </h1>
-                <div className="hotelAddress">
-                  <FontAwesomeIcon icon={faLocationDot} />
-                  <span>{data.address}</span>
+                <div className="space-x-3">
+                  <FontAwesomeIcon icon={faLocationDot} color="#00ccbb" />
+
+                  <a
+                    className="text-[#00ccbb]"
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.lat},${data?.latLong?.lng}`}
+                  >
+                    Get directions to shop
+                  </a>
                 </div>
                 <span className="hotelDistance">
                   {/* Excellent location – {data.distance}m from center */}
@@ -837,12 +852,12 @@ const Hotel = () => {
               ></img>
             </div>
             <div className="hotelImages">
-              {data.photos?.map((photo, i) => (
+              {data.images?.map((photo, i) => (
                 <div className="hotelImgWrapper" key={i}>
                   <img
                     onClick={() => handleOpen(i)}
-                    src={photo}
-                    alt=""
+                    src={photo?.url}
+                    alt="shop-img"
                     className="hotelImg"
                   />
                 </div>

@@ -1,11 +1,5 @@
 import React, { useContext, useState, Fragment, useEffect } from "react";
 import { Menu, Transition } from "@headlessui/react";
-
-import { SearchContext } from "../../context/SearchContext";
-import SIdebar from "../../components/navbar/SIdebar";
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
-import Footer from "../../components/footer/Footer";
 import moment from "moment";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // Import the default styles
@@ -56,8 +50,6 @@ function convertToMilliseconds(timeReserve) {
 }
 
 function Break() {
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
   const { user } = useContext(AuthContext);
 
   const [value, setValue] = useState(new Date());
@@ -646,7 +638,7 @@ function Break() {
           </div>
         </div>
       </div>
-      <div className="w-full mx-auto my-10">
+      {/* <div className="w-full mx-auto my-10">
         <iframe
           src="https://calendar.google.com/calendar/embed?src=venkatdandugulayou%40gmail.com&ctz=Asia%2FKolkata"
           width="100%"
@@ -655,7 +647,7 @@ function Break() {
           scrolling="no"
           title="myCalender"
         ></iframe>
-      </div>
+      </div> */}
     </div>
   );
 }

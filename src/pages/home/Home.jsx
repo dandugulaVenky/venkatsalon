@@ -159,7 +159,7 @@ const Home = ({ endRef, smallBanners }) => {
     };
 
     const handleToast = () => {
-      toast("Reserved successfully 🎉");
+      toast.success("Reserved successfully 🎉");
 
       navigate("/", { state: null });
       return null;

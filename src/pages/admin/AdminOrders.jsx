@@ -14,11 +14,7 @@ import {
   faCircleArrowDown,
   faCircleArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import SIdebar from "../../components/navbar/SIdebar";
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
-import { SearchContext } from "../../context/SearchContext";
-import Footer from "../../components/footer/Footer";
+
 import CustomerDetails from "../../components/admin/CustomerDetails";
 
 import Charts from "../../utils/Charts";
@@ -32,7 +28,7 @@ const AdminOrders = () => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [shopType, setShopType] = useState();
-
+  const [gender, setGender] = useState("men");
   const [value, setValue] = useState(new Date());
   const [allOrders, setAllOrders] = useState("");
   const [customerDetailsId, setCustomerDetailsId] = useState("");
@@ -43,7 +39,7 @@ const AdminOrders = () => {
 
   const [resultInServicesCount, setResultInServicesCount] = useState({});
   const [resultInCategoriesCount, setResultInCategoriesCount] = useState({});
-
+  const [genderAnalysis, setGenderAnaylis] = useState(null);
   const navigate = useNavigate();
 
   const endRef = useRef(null);
@@ -102,9 +98,14 @@ const AdminOrders = () => {
             }, []);
 
           let statusDoneServices = res.data.filter(
+            (booking) =>
+              booking.isDone === "true" && booking.subCategory === gender
+          );
+
+          let statusDoneServices1 = res.data.filter(
             (booking) => booking.isDone === "true"
           );
-          // console.log(statusDoneServices);
+
           //now again merge all the user services based on selection date
 
           let services = statusDoneServices
@@ -124,7 +125,7 @@ const AdminOrders = () => {
           let resultInServices = {};
           let resultInCategories = {};
 
-          for (let i = 0; i < services.length; i++) {
+          for (let i = 0; i < services?.length; i++) {
             const name = services[i].service;
 
             resultInServices[name] = (resultInServices[name] || 0) + 1;
@@ -165,6 +166,26 @@ const AdminOrders = () => {
 
           setResultInServicesCount(arr);
           setResultInCategoriesCount(arr1);
+          console.log(arr);
+          //generating revenue based on gender
+          const generateRevenue = statusDoneServices1.reduce((acc, item) => {
+            if (item.subCategory) {
+              if (isNaN(acc[item.subCategory])) {
+                acc[item.subCategory] = 0; // Initialize to 0 if it's NaN
+              }
+              acc[item.subCategory] += item.totalAmount;
+            }
+            return acc;
+          }, {});
+
+          const arr3 = Object.keys(generateRevenue).map((key) => {
+            return {
+              name: key,
+              amount: generateRevenue[key],
+            };
+          });
+
+          setGenderAnaylis(arr3);
 
           setLoading(false);
         } catch (err) {
@@ -175,7 +196,7 @@ const AdminOrders = () => {
         console.error(error.response.data.message);
         navigate("/login", { state: { destination: `/admin` } });
       });
-  }, [allOrders, navigate, shopId, value]);
+  }, [allOrders, gender, navigate, shopId, value]);
 
   useEffect(() => {
     requests();
@@ -219,10 +240,6 @@ const AdminOrders = () => {
     setAllOrders(false);
   };
 
-  let w = window.innerWidth;
-
-  const { open } = useContext(SearchContext);
-
   const containerStyle = {
     display: "flex",
     flexWrap: "wrap", // Allow items to wrap into multiple lines if needed
@@ -232,6 +249,10 @@ const AdminOrders = () => {
     flex: "1 1 150px", // flex-grow flex-shrink flex-basis
     margin: "10px", // Add some space between items
     padding: "5px",
+  };
+
+  const handleGender = (e) => {
+    setGender(e.target.value);
   };
 
   return (
@@ -295,13 +316,11 @@ const AdminOrders = () => {
           />
 
           <p className="md:text-md text-md" style={itemStyle}>
-            {t("count")} : {filteredArray.length}
+            {t("count")} : {filteredArray?.length}
           </p>
         </div>
 
         {filteredArray?.slice(0, visible).map((item, i) => {
-          let k = i;
-
           return (
             <div className="list p-5 overflow-x-auto relative mx-4" key={i}>
               <div className="space-y-2">
@@ -407,6 +426,11 @@ const AdminOrders = () => {
           </div>
         )}
 
+        <select onChange={handleGender} value={gender}>
+          <option value="men">men</option>
+          <option value="women">women</option>
+        </select>
+
         <div className="min-w-full overflow-auto py-10" ref={endRef}>
           <p className="py-10 text-center font-bold">{t("categoryChart")}</p>
           <Charts
@@ -425,6 +449,16 @@ const AdminOrders = () => {
             BarDataAmount="amount"
           />
         </div>
+        {genderAnalysis !== null && (
+          <div className="py-10 min-w-full overflow-auto ">
+            <p className="py-10 text-center font-bold">Gender Wise Revenue</p>
+            <Charts
+              data={genderAnalysis}
+              XAxisDatakey="name"
+              BarDataAmount="amount"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -809,7 +809,7 @@ const ParlorReserve = () => {
             )}
 
             {(sortBy !== null || categoriesOptions?.length > 0) && (
-              <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
+              <p className="bg-[#00ccbb] text-white shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
                 {gender ? gender : ""}
               </p>
             )}
@@ -976,15 +976,19 @@ const ParlorReserve = () => {
             </div>
           ) : (
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
-              {!(salonServices?.length <= 0 && gender) ? (
+              {gender !== undefined && salonServices?.length <= 0 ? (
+                !loading ? (
+                  "loading"
+                ) : (
+                  "Oops no services found !"
+                )
+              ) : (
                 <>
                   <img src={Select} alt="select category" className="h-72" />
                   <p className="font-semibold">
                     {t("selectCategoryToViewServices")}
                   </p>
                 </>
-              ) : (
-                "Oops no services found !"
               )}
             </div>
           )}

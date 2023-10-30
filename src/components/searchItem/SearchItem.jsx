@@ -20,7 +20,11 @@ const SearchItem = ({ item }) => {
         >
           <div className=" list rounded-md">
             <div className="w-full">
-              <img src={item.photos[0]} alt="" className="siImg w-full h-52" />
+              <img
+                src={item?.images[0]?.url}
+                alt=""
+                className="siImg w-full h-52"
+              />
             </div>
             <div className=" grid grid-cols-12 p-5  ">
               <div className="space-y-2.5 col-span-8">

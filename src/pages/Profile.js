@@ -4,13 +4,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import axios from "axios";
-import Layout from "../components/navbar/Layout";
 
-import Footer from "../components/footer/Footer";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../components/navbar/SIdebar";
-import Greeting from "../components/navbar/Greeting";
+
 import { SearchContext } from "../context/SearchContext";
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
@@ -76,9 +73,6 @@ export default function Profile() {
           navigate("/login", { state: { destination: `/profile` } }));
     }
   };
-
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
 
   return (
     <div>

@@ -51,6 +51,7 @@ import MobileFooter from "./components/footer/MobileFooter";
 import Footer from "./components/footer/Footer";
 import { SearchContext } from "./context/SearchContext";
 import SIdebar from "./components/navbar/SIdebar";
+import UpdateShopDetails from "./pages/admin/UpdateShopDetails";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -196,6 +197,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Break />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/update-shop-details"
+              element={
+                <ProtectedRoute>
+                  <UpdateShopDetails />
                 </ProtectedRoute>
               }
             />

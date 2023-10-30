@@ -23,7 +23,7 @@ const MapComponent = ({ onMapClick, latLong }) => {
     lat: latLong?.lat || 0,
     lng: latLong?.lng || 0,
   });
-  const [mapZoom, setMapZoom] = useState(6); // Initial zoom level
+  const [mapZoom, setMapZoom] = useState(17); // Initial zoom level
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -36,17 +36,17 @@ const MapComponent = ({ onMapClick, latLong }) => {
           setMapCenter(newMarkerPosition);
 
           // Calculate distance between marker and map center
-          const distance = latLong
-            ? calculateDistance(
-                mapCenter.lat,
-                mapCenter.lng,
-                newMarkerPosition.lat,
-                newMarkerPosition.lng
-              )
-            : 4;
+          // const distance = latLong
+          //   ? calculateDistance(
+          //       mapCenter.lat,
+          //       mapCenter.lng,
+          //       newMarkerPosition.lat,
+          //       newMarkerPosition.lng
+          //     )
+          //   : 4;
           // Calculate an appropriate zoom level based on distance
-          const newZoom = 17 - Math.log2(distance + 1); // You can adjust the formula as needed
-          setMapZoom(newZoom);
+          // const newZoom = 17 - Math.log2(distance + 1); // You can adjust the formula as needed
+          setMapZoom(17);
         },
         (error) => {
           console.error("Error fetching current location:", error);

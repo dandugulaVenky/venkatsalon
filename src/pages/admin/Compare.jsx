@@ -1,9 +1,5 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import SIdebar from "../../components/navbar/SIdebar";
-import Layout from "../../components/navbar/Layout";
-import Greeting from "../../components/navbar/Greeting";
-import { SearchContext } from "../../context/SearchContext";
-import Footer from "../../components/footer/Footer";
+import React, { useCallback, useEffect, useState } from "react";
+
 import axios from "axios";
 import baseUrl from "../../utils/client";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,12 +10,14 @@ import Charts from "../../utils/Charts";
 import { useTranslation } from "react-i18next";
 
 const Compare = () => {
-  let w = window.innerWidth;
   const { t } = useTranslation();
 
   const {
     state: { shopId },
   } = useLocation();
+  const [gender, setGender] = useState("men");
+  const [genderAnalysis, setGenderAnaylis] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const [resultInServicesCount, setResultInServicesCount] = useState({});
   const [resultInCategoriesCount, setResultInCategoriesCount] = useState({});
@@ -63,8 +61,14 @@ const Compare = () => {
         let output = [];
         let output1 = [];
         let statusDoneServices = res.data.filter(
+          (booking) =>
+            booking.isDone === "true" && booking.subCategory === gender
+        );
+
+        let statusDoneServices1 = res.data.filter(
           (booking) => booking.isDone === "true"
         );
+
         //problem here is total amount remains same but thee owner may change the price
         //  which will prices of categories amount may show false values
         new Promise((resolve, reject) => {
@@ -171,6 +175,25 @@ const Compare = () => {
             };
           });
 
+          const generateRevenue = statusDoneServices1.reduce((acc, item) => {
+            if (item.subCategory) {
+              if (isNaN(acc[item.subCategory])) {
+                acc[item.subCategory] = 0; // Initialize to 0 if it's NaN
+              }
+              acc[item.subCategory] += item.totalAmount;
+            }
+            return acc;
+          }, {});
+
+          const arr3 = Object.keys(generateRevenue).map((key) => {
+            return {
+              name: key,
+              amount: generateRevenue[key],
+            };
+          });
+
+          setGenderAnaylis(arr3);
+
           setResultInServicesCount(arr);
           setResultInCategoriesCount(arr1);
 
@@ -183,9 +206,7 @@ const Compare = () => {
         console.error(error.response.data.message);
         navigate("/login", { state: { destination: `/admin` } });
       });
-  }, [months, navigate, shopId, value, value1]);
-
-  const { open } = useContext(SearchContext);
+  }, [gender, months, navigate, shopId, value, value1]);
 
   const modifiedOnChange = (selectedDate) => {
     // Perform your desired modifications or actions here
@@ -211,7 +232,9 @@ const Compare = () => {
   useEffect(() => {
     requests();
   }, [months, requests, value, value1]);
-
+  const handleGender = (e) => {
+    setGender(e.target.value);
+  };
   return (
     <div>
       <div
@@ -264,6 +287,10 @@ const Compare = () => {
               <option value={6}>{t("lastSixMonths")}</option>
             </select>
           </div>
+          <select onChange={handleGender} value={gender}>
+            <option value="men">men</option>
+            <option value="women">women</option>
+          </select>
         </div>
 
         <div className="min-w-full overflow-auto py-10">
@@ -288,6 +315,16 @@ const Compare = () => {
           <p className="py-10 text-center font-bold">{t("revenue")}</p>
           <Charts data={amount} XAxisDatakey="Date" BarDataKey="Amount" />
         </div>
+        {genderAnalysis !== null && (
+          <div className="py-10 min-w-full overflow-auto ">
+            <p className="py-10 text-center font-bold">Gender Wise Revenue</p>
+            <Charts
+              data={genderAnalysis}
+              XAxisDatakey="name"
+              BarDataAmount="amount"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

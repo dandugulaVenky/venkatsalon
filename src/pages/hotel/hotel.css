@@ -52,7 +52,8 @@
 .hotelImages {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
+  gap: 5px;
 }
 
 .hotelImgWrapper {
@@ -117,7 +118,7 @@
   cursor: pointer;
 }
 .slider {
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;

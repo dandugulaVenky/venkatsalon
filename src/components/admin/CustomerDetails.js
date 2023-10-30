@@ -8,9 +8,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import baseUrl from "../../utils/client";
-import { useTranslation } from 'react-i18next';
-
-
+import { useTranslation } from "react-i18next";
 
 const CustomerDetails = ({ item, setOpenModal }) => {
   const [loading, setLoading] = useState(false);
@@ -151,7 +149,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
 
     try {
       const { email, phone } = user;
-      const mail = await axios.post(
+      await axios.post(
         `${baseUrl}/api/sendmail`,
         {
           email: item.email,
@@ -183,10 +181,10 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     // if (result2 === -1) {
     //   return toast("Cannot approve past times!");
     // }
-    if (result2 === 1 || result2 === 10) {
-      setLoading(false);
-      return toast("Cannot approve Future times!");
-    }
+    // if (result2 === 1 || result2 === 10) {
+    //   setLoading(false);
+    //   return toast("Cannot approve Future times!");
+    // }
 
     if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
       const { email, phone } = user;
@@ -223,7 +221,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           )
         );
 
-        const mail = await axios.post(
+        await axios.post(
           `${baseUrl}/api/sendmail`,
           {
             email: item.email,
@@ -297,17 +295,17 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                   <span>
                     {item.referenceNumber && (
                       <span className=" text-[20px] text-white">
-                        {t('referenceNo')}:{item.referenceNumber}
+                        {t("referenceNo")}:{item.referenceNumber}
                       </span>
                     )}
                   </span>
                 </h1>
                 <h1 className=" text-[13px] md:text-[15px] text-white">
                   {" "}
-                  {t('bookedDate')} : {item.date}
+                  {t("bookedDate")} : {item.date}
                 </h1>
                 <span className="text-[13px] md:text-[15px] text-white">
-                {t('bookedTime')} : {item.time}
+                  {t("bookedTime")} : {item.time}
                 </span>
                 {/* <span className="text-[13px] md:text-sm">
                   Seat Numbers :{" "}
@@ -346,18 +344,19 @@ const CustomerDetails = ({ item, setOpenModal }) => {
             <div className="flex flex-col space-y-1 ">
               <div>
                 <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
-                  {t('paidStatus')} : {item.isPaid === true ? "paid" : "Not paid"}
+                  {t("paidStatus")} :{" "}
+                  {item.isPaid === true ? "paid" : "Not paid"}
                 </span>
                 <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
-                  {t('amount')} : {item.totalAmount}
+                  {t("amount")} : {item.totalAmount}
                 </span>
               </div>
               <div>
                 <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
-                  {t('email',{email:item.email})}
+                  {t("email", { email: item.email })}
                 </span>
                 <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
-                  {t('phone',{phone:item.phone})}
+                  {t("phone", { phone: item.phone })}
                 </span>
               </div>
             </div>
@@ -383,7 +382,9 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                       : false
                   }
                 >
-                  {item.isDone === "true" ? `${t('accepted')}` : `${t('markDone')}`}
+                  {item.isDone === "true"
+                    ? `${t("accepted")}`
+                    : `${t("markDone")}`}
                 </button>
                 <button
                   className={
@@ -398,7 +399,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                       : false
                   }
                 >
-                  {t('cancel')}
+                  {t("cancel")}
                 </button>
               </div>
             )}

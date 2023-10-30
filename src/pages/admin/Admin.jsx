@@ -4,13 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import Footer from "../../components/footer/Footer";
-import Greeting from "../../components/navbar/Greeting";
-import Layout from "../../components/navbar/Layout";
-import Sidebar from "../../components/navbar/SIdebar";
-
 import { AuthContext } from "../../context/AuthContext";
-import { SearchContext } from "../../context/SearchContext";
+
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -41,9 +36,6 @@ const Admin = () => {
     getAdmin();
   }, [user?._id]);
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   const handleClick = (value) => {
     const input = value;
 
@@ -66,6 +58,9 @@ const Admin = () => {
         break;
       case "block":
         navigate("/admin/break");
+        break;
+      case "updateShopDetails":
+        navigate("/admin/update-shop-details");
         break;
       default:
         console.log("It is an unknown input.");
@@ -114,6 +109,12 @@ const Admin = () => {
           </div>
           <div className="card p-5 w-full" onClick={() => handleClick("block")}>
             <p>{t("takeBreak")} </p>
+          </div>
+          <div
+            className="card p-5 w-full"
+            onClick={() => handleClick("updateShopDetails")}
+          >
+            <p>Add/Del Shop Photos</p>
           </div>
         </div>
       ) : (

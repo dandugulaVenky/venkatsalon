@@ -977,8 +977,12 @@ const Reserve = () => {
             </div>
           ) : (
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
-              {salonServices?.length <= 0 && gender ? (
-                "Oops no services found !"
+              {gender !== undefined && salonServices?.length <= 0 ? (
+                !loading ? (
+                  "loading"
+                ) : (
+                  "Oops no services found !"
+                )
               ) : (
                 <>
                   <img src={Select} alt="select category" className="h-72" />
