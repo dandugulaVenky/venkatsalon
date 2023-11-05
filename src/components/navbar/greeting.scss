@@ -1,17 +1,3 @@
-.greetingimgs1 {
-  max-height: 50px;
-  width: auto;
-  background-size: cover;
-  transition: max-height 0.3s ease;
-}
-
-.greetingimgs2 {
-  max-height: 65px;
-  width: auto;
-  background-size: cover;
-  transition: max-height 0.3s ease;
-}
-
 .head1-greeting {
   background-color: white !important;
   padding-top: 4px;
@@ -21,13 +7,15 @@
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: 0 9px 23px rgba(0, 0, 0, 0.15), 0 5px 5px rgba(0, 0, 0, 0.22);
+  transition: all 0.01s;
 }
 
 .head2-greeting {
   background-color: transparent !important;
-  padding-top: 3px;
+  padding-top: 4px;
   padding-bottom: 7px;
   max-height: 200px;
   transition: max-height 2.5s ease;
   transition: background-color 2.5s ease-out;
+  transition: all 0.01s;
 }

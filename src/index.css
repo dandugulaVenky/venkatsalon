@@ -24,6 +24,13 @@ body {
   box-sizing: border-box;
 }
 
+/*This is for grid carousel in home-page */
+@media screen and (max-width: 767px) {
+  .eedFxX {
+    grid-template-columns: repeat(1, 70%) !important;
+  }
+}
+
 .card {
   @apply mb-5  block   rounded-lg  bg-slate-100 shadow-custom border-2 border-gray-100;
 }
