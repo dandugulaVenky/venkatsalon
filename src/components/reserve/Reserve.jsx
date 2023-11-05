@@ -20,6 +20,8 @@ import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 
 const Reserve = () => {
+  const [data, setData] = useState();
+
   const [salonPreview, setSalonPreview] = useState(false);
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
@@ -59,16 +61,17 @@ const Reserve = () => {
   const [salonServices, setSalonServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
-
   const { date: dater, time } = useContext(SearchContext);
 
   const { user } = useContext(AuthContext);
 
-  const { data: shopOwnerData, error } = useFetch(
-    `${baseUrl}/api/users/getOwnerDetails/${shopOwner}`,
-    { credentials: true }
-  );
+  const {
+    data: shopOwnerData,
+    loading: ownerDetailsLoading,
+    error,
+  } = useFetch(`${baseUrl}/api/users/getOwnerDetails/${shopOwner}`, {
+    credentials: true,
+  });
 
   const navigate = useNavigate();
 
@@ -102,7 +105,7 @@ const Reserve = () => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
       // console.log(data[0].roomNumbers);
-
+      setData(data);
       const res =
         data &&
         data[0]?.roomNumbers?.map((id, i) => {
@@ -978,7 +981,7 @@ const Reserve = () => {
           ) : (
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
               {gender !== undefined && salonServices?.length <= 0 ? (
-                !loading ? (
+                !loading || !ownerDetailsLoading ? (
                   "loading"
                 ) : (
                   "Oops no services found !"

@@ -3,7 +3,6 @@ import Carousel from "react-grid-carousel";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 
-import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +19,7 @@ const Categories = ({ type }) => {
   const { t } = useTranslation();
 
   const size = GetSize();
+  let w = window.innerWidth;
 
   // Queries
 
@@ -80,20 +80,21 @@ const Categories = ({ type }) => {
                 style={{ cursor: "pointer" }}
               >
                 <img
-                  src="https://picsum.photos/800/600?random=5"
+                  src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
                   alt="images"
                   style={{
                     width: "98%",
-                    height: 170,
-                    // filter: "brightness(70%) drop-shadow(0px 0px 2px black)",
+                    height: w > 768 ? 170 : 150,
+
+                    filter: "brightness(70%) drop-shadow(0px 0px 2px black)",
                     boxShadow: "1px 1.5px 2px black",
 
                     objectFit: "cover",
-                    objectPosition: "right bottom",
+                    objectPosition: "right top",
                     borderRadius: 7,
                   }}
                 />
-                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                <p className="absolute md:bottom-[2.65rem] bottom-11 left-4 text-white font-bold  text-xl ">
                   {t("shadnagar")}
                 </p>
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
@@ -124,7 +125,8 @@ const Categories = ({ type }) => {
                   alt="images"
                   style={{
                     width: "98%",
-                    height: 170,
+                    height: w > 768 ? 170 : 150,
+
                     boxShadow: "1px 1.5px 2px black",
 
                     objectFit: "cover",
@@ -132,10 +134,10 @@ const Categories = ({ type }) => {
                     borderRadius: 8,
                   }}
                 />
-                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                <p className="absolute md:bottom-[2.65rem] bottom-16 left-4 text-white font-bold  text-xl ">
                   {t("kothur")}
                 </p>
-                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <p className="absolute  md:bottom-4  bottom-9 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
                     {query?.data?.data?.length > 0
@@ -160,7 +162,8 @@ const Categories = ({ type }) => {
                   alt="images"
                   style={{
                     width: "98%",
-                    height: 170,
+                    height: w > 768 ? 170 : 150,
+
                     boxShadow: "1px 1.5px 2px black",
 
                     objectFit: "cover",
@@ -168,10 +171,10 @@ const Categories = ({ type }) => {
                     borderRadius: 8,
                   }}
                 />
-                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                <p className="absolute md:bottom-[2.65rem] bottom-16 left-4 text-white font-bold  text-xl ">
                   {t("thimmapur")}
                 </p>
-                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <p className="absolute  md:bottom-4  bottom-9 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
                     {query?.data?.data?.length > 0
@@ -196,7 +199,8 @@ const Categories = ({ type }) => {
                   alt="images"
                   style={{
                     width: "98%",
-                    height: 170,
+                    height: w > 768 ? 170 : 150,
+
                     boxShadow: "1px 1.5px 2px black",
 
                     objectFit: "cover",
@@ -204,10 +208,10 @@ const Categories = ({ type }) => {
                     borderRadius: 8,
                   }}
                 />
-                <p className="absolute md:bottom-[2.65rem] bottom-10 left-4 text-white font-bold  text-xl ">
+                <p className="absolute md:bottom-[2.65rem] bottom-16 left-4 text-white font-bold  text-xl ">
                   {t("shamshabad")}
                 </p>
-                <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                <p className="absolute  md:bottom-4  bottom-9 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
                     {query?.data?.data?.length > 0

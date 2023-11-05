@@ -20,6 +20,8 @@ import { toast } from "react-toastify";
 import ParlorPreview from "../../pages/preview";
 
 const ParlorReserve = () => {
+  const [data, setData] = useState();
+
   const [parlorPreview, setParlorPreview] = useState(false);
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [categories, setCategories] = useState();
@@ -59,16 +61,17 @@ const ParlorReserve = () => {
   const [salonServices, setSalonServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const { data } = useFetch(`${baseUrl}/api/hotels/room/${shopId}`);
-
   const { date: dater, time } = useContext(SearchContext);
 
   const { user } = useContext(AuthContext);
 
-  const { data: shopOwnerData, error } = useFetch(
-    `${baseUrl}/api/users/getOwnerDetails/${shopOwner}`,
-    { credentials: true }
-  );
+  const {
+    data: shopOwnerData,
+    loading: ownerDetailsLoading,
+    error,
+  } = useFetch(`${baseUrl}/api/users/getOwnerDetails/${shopOwner}`, {
+    credentials: true,
+  });
 
   const navigate = useNavigate();
 
@@ -102,7 +105,7 @@ const ParlorReserve = () => {
     const fetchData = async () => {
       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
       // console.log(data[0].roomNumbers);
-
+      setData(data);
       const res =
         data &&
         data[0]?.roomNumbers?.map((id, i) => {
@@ -110,6 +113,7 @@ const ParlorReserve = () => {
         });
 
       setSeats(res);
+
       setPreviewServices(data[0]?.services);
 
       // const services = (data[0]?.services || []).reduce((arr, item) => {
@@ -148,6 +152,7 @@ const ParlorReserve = () => {
 
   //Second Step----------------------------------------------------------------------------->
   //finding wether there is booking in front of this selected time here
+
   useEffect(() => {
     const findDurationsToBlock = () => {
       const filteredUnavailableDates = () => {
@@ -459,8 +464,6 @@ const ParlorReserve = () => {
           ? { seatNo: duration.seatNo, isReachedEnd: true }
           : { seatNo: duration.seatNo, isReachedEnd: false }
       );
-
-      console.log("hii");
 
       const lunch = check0.map((item) => {
         if (item.isReachedEnd) {
@@ -823,6 +826,7 @@ const ParlorReserve = () => {
                     const seatValues = getTotalTime(seat);
 
                     const isDisabled = isAvailable(i);
+
                     return (
                       !isDisabled && (
                         <div className="card  md:p-5 p-1.5" key={i}>
@@ -966,7 +970,7 @@ const ParlorReserve = () => {
                         onClick={(e) => previewHandler(totalAmount, e)}
                         className="primary-button flex items-center justify-center  w-full"
                       >
-                        {t("preview")}{" "}
+                        {t("preview")}
                         {/* {buttonLoad && <span className="buttonloader"></span>} */}
                       </button>
                     </li>
@@ -977,7 +981,7 @@ const ParlorReserve = () => {
           ) : (
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
               {gender !== undefined && salonServices?.length <= 0 ? (
-                !loading ? (
+                !loading || !ownerDetailsLoading ? (
                   "loading"
                 ) : (
                   "Oops no services found !"

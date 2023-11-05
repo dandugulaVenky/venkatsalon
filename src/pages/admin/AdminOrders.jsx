@@ -29,6 +29,7 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(false);
   const [shopType, setShopType] = useState();
   const [gender, setGender] = useState("men");
+  const [typeOfOrders, setTypeOfOrders] = useState("true");
   const [value, setValue] = useState(new Date());
   const [allOrders, setAllOrders] = useState("");
   const [customerDetailsId, setCustomerDetailsId] = useState("");
@@ -99,11 +100,11 @@ const AdminOrders = () => {
 
           let statusDoneServices = res.data.filter(
             (booking) =>
-              booking.isDone === "true" && booking.subCategory === gender
+              booking.isDone === typeOfOrders && booking.subCategory === gender
           );
 
           let statusDoneServices1 = res.data.filter(
-            (booking) => booking.isDone === "true"
+            (booking) => booking.isDone === typeOfOrders
           );
 
           //now again merge all the user services based on selection date
@@ -185,6 +186,8 @@ const AdminOrders = () => {
             };
           });
 
+          console.log(arr3, "arr3");
+
           setGenderAnaylis(arr3);
 
           setLoading(false);
@@ -196,7 +199,7 @@ const AdminOrders = () => {
         console.error(error.response.data.message);
         navigate("/login", { state: { destination: `/admin` } });
       });
-  }, [allOrders, gender, navigate, shopId, value]);
+  }, [allOrders, gender, typeOfOrders, navigate, shopId, value]);
 
   useEffect(() => {
     requests();
@@ -253,6 +256,10 @@ const AdminOrders = () => {
 
   const handleGender = (e) => {
     setGender(e.target.value);
+  };
+
+  const handleTypeOfOrders = (e) => {
+    setTypeOfOrders(e.target.value);
   };
 
   return (
@@ -426,11 +433,18 @@ const AdminOrders = () => {
           </div>
         )}
 
-        <select onChange={handleGender} value={gender}>
-          <option value="men">men</option>
-          <option value="women">women</option>
-        </select>
+        <div className="flex space-x-2 flex-wrap gap-2 mt-5 bg-yellow-300 rounded items-center justify-around py-3">
+          <select onChange={handleTypeOfOrders} value={typeOfOrders}>
+            <option value="true">completed</option>
+            <option value="false">not completed</option>
 
+            <option value="cancelled">cancelled</option>
+          </select>
+          <select onChange={handleGender} value={gender}>
+            <option value="men">men</option>
+            <option value="women">women</option>
+          </select>
+        </div>
         <div className="min-w-full overflow-auto py-10" ref={endRef}>
           <p className="py-10 text-center font-bold">{t("categoryChart")}</p>
           <Charts
