@@ -3,6 +3,7 @@ import Carousel from "react-grid-carousel";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 
+import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";

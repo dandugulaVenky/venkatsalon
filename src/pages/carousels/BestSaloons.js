@@ -1,9 +1,9 @@
 import React, { memo, useContext } from "react";
-
+import { useState } from "react";
 import Carousel from "react-grid-carousel";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
-
+import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faStar } from "@fortawesome/free-solid-svg-icons";
@@ -44,8 +44,6 @@ const BestSaloons = () => {
     navigate(`/shops`);
   };
 
-  let w = window.innerWidth;
-
   return (
     <div className="mt-8  text-black w-full  ">
       <div className="flex flex-row justify-between">
@@ -82,7 +80,7 @@ const BestSaloons = () => {
                         alt="images"
                         style={{
                           width: "98%",
-                          height: w > 768 ? 170 : 150,
+                          height: 170,
                           boxShadow: "1px 1.5px 2px black",
                           filter: "brightness(70%)",
 
@@ -91,11 +89,11 @@ const BestSaloons = () => {
                           borderRadius: 8,
                         }}
                       />
-                      <p className="absolute md:bottom-[2.55rem] bottom-16 left-4 text-white font-bold  text-xl content break-words">
+                      <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
                         {/* {item.name} */}
                         {t("salonName", { name: item.name })}
                       </p>
-                      <p className="absolute md:bottom-4  bottom-9 left-4 text-white flex items-center justify-center space-x-2  ">
+                      <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                         <span className="font-semibold">
                           {Math.ceil(item.rating)}{" "}
                         </span>
