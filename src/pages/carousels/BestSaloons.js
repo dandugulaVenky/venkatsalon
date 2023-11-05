@@ -1,9 +1,9 @@
 import React, { memo, useContext } from "react";
-import { useState } from "react";
+
 import Carousel from "react-grid-carousel";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faStar } from "@fortawesome/free-solid-svg-icons";
