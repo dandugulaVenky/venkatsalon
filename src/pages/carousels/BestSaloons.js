@@ -15,7 +15,9 @@ import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 
-const BestSaloons = () => {
+const BestSaloons = ({ smallBanners }) => {
+  const columns = smallBanners ? 10 : 4;
+  console.log(columns, "small");
   const { type: type1, city } = useContext(SearchContext);
 
   const { t } = useTranslation();
@@ -65,9 +67,9 @@ const BestSaloons = () => {
         <Skeleton cards={size} />
       ) : query?.data?.data?.length > 0 ? (
         <div>
-          <Carousel cols={4} rows={1} gap={7}>
+          <Carousel cols={columns} rows={1} gap={7}>
             {query?.data?.data &&
-              query?.data?.data?.slice(0, 4)?.map((item, i) => {
+              query?.data?.data?.slice(0, 6)?.map((item, i) => {
                 return (
                   <Carousel.Item key={i}>
                     <div

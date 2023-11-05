@@ -26,7 +26,8 @@ body {
 
 /*This is for grid carousel in home-page */
 @media screen and (max-width: 767px) {
-  .eedFxX {
+  .eedFxX,
+  .gWmwOg {
     grid-template-columns: repeat(1, 70%) !important;
   }
 }

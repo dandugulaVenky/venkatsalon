@@ -3,7 +3,7 @@ import "./home.css";
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
@@ -13,8 +13,6 @@ import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
-import BannerImg1 from "../images/mobileBanner1.webp";
-import BannerImg2 from "../images/mobileBanner2.webp";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
@@ -185,7 +183,12 @@ const Home = ({ endRef, smallBanners }) => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
-    : (images = [BannerImg1, BannerImg2]);
+    : (images = [
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+      ]);
 
   return (
     <div className="h-auto">
@@ -264,7 +267,7 @@ const Home = ({ endRef, smallBanners }) => {
           <div className=" w-full  flex justify-center items-center">
             <div className="md:max-w-[1244px] w-full ">
               <div>
-                <BestSaloons />
+                <BestSaloons smallBanners={smallBanners} />
               </div>
               <div>
                 <Categories />
