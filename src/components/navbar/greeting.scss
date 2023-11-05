@@ -7,7 +7,7 @@
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
   box-shadow: 0 9px 23px rgba(0, 0, 0, 0.15), 0 5px 5px rgba(0, 0, 0, 0.22);
-  transition: all 0.01s;
+  // transition: all 0.01s;
 }
 
 .head2-greeting {
@@ -16,6 +16,6 @@
   padding-bottom: 7px;
   max-height: 200px;
   transition: max-height 2.5s ease;
-  transition: background-color 2.5s ease-out;
-  transition: all 0.01s;
+  // transition: background-color 2.5s ease-out;
+  // transition: all 0.01s;
 }
