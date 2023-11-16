@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import "../registration/otp.css";
 import axios from "axios";
 import baseUrl from "../../utils/client";
+import { useTranslation } from "react-i18next";
+
 
 import { useLocation, useNavigate } from "react-router-dom";
 function setCookieObject(name1, value, daysToExpire) {
@@ -36,6 +38,7 @@ const OtpVerification = (props) => {
 
   let [disablenow, setDisableNow] = useState();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   //this should be used in finalRegustration Page
   const saveToken = async (id, token) => {
@@ -116,7 +119,7 @@ const OtpVerification = (props) => {
   return (
     <>
       <div className="mb-4 w-full transition-all delay-1000 ease-linear">
-        <label htmlFor="phone">Phone</label>
+        <label htmlFor="phone">{t('phoneTitle')}</label>
 
         {!verified && (
           <div
@@ -141,7 +144,7 @@ const OtpVerification = (props) => {
               onClick={getOtp}
               disabled={disable || number?.toString()?.length !== 13}
             >
-              Get Otp
+             {t('getOtp')}
             </button>
           </div>
         )}
@@ -163,7 +166,7 @@ const OtpVerification = (props) => {
             onClick={verifyOtp}
             disabled={disable}
           >
-            Verify Otp
+           {t('verifyOtp')}
           </button>
         </div>
 

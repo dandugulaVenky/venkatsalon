@@ -686,7 +686,7 @@ const Hotel = () => {
             <div className="md:col-span-4 col-span-12">
               {loading || loadingg ? (
                 <p className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none ">
-                  Loading....
+                  {t("loading")}
                 </p>
               ) : (
                 <button
@@ -833,7 +833,7 @@ const Hotel = () => {
                     rel="noreferrer"
                     href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.lat},${data?.latLong?.lng}`}
                   >
-                    Get directions to shop
+                    {t('getDirectionsToShop')}
                   </a>
                 </div>
                 <span className="hotelDistance">
@@ -950,8 +950,8 @@ const Hotel = () => {
                 )}
               </div>
               <div className="w-full bg-gray-200 md:mb-4 mb-14 rounded-md flex flex-col space-y-3 p-5 ">
-                <h1>Perfect for you!</h1>
-                <span>This shop has an excellent location score of 9.8!</span>
+                <h1>{t('perfectForYou')}</h1>
+                <span>{t('shopHasAnExcellentLocationScoreOf9.8')}</span>
 
                 <button
                   className="primary-button"
@@ -964,7 +964,7 @@ const Hotel = () => {
                   }}
                 >
                   <div className="flex items-center justify-center">
-                    <p> Go Top and Reserve</p> &nbsp;
+                    <p>{t('goTopAndReserve')}</p> &nbsp;
                     <FontAwesomeIcon icon={faCircleArrowUp} size="2x" />
                   </div>
                 </button>

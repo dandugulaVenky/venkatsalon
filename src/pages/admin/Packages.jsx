@@ -167,7 +167,7 @@ const Packages = () => {
           <div className="mb-2 py-5  flex items-center justify-around flex-wrap flex-grow basis-full">
             <div className="md:w-auto w-full">
               <div className="flex items-center justify-between">
-                <p className="py-2 font-semibold text-lg  ">Gender</p>
+                <p className="py-2 font-semibold text-lg  ">{t('gender')}</p>
                 <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   0
                 </span>
@@ -177,9 +177,9 @@ const Packages = () => {
                 className="border-2 border-[#00ccbb]  md:w-auto w-full"
                 value={typeOfPerson}
               >
-                <option selected>Select Type</option>
-                <option value="men">men</option>
-                <option value="women">women</option>
+                <option selected>{t('selectType')}</option>
+                <option value="men">{t('men')}</option>
+                <option value="women">{t('women')}</option>
               </select>
             </div>
             <div className="md:w-auto w-full">
@@ -194,7 +194,7 @@ const Packages = () => {
               <input
                 type="text"
                 className="h-8 w-full"
-                placeholder="package"
+                placeholder={t("package")}
                 value={packageName}
                 onChange={(e) => setPackageName(e.target.value)}
               ></input>
@@ -339,7 +339,7 @@ const Packages = () => {
                     <div className="mb-2 flex justify-between bg-green-500 rounded text-white font-bold p-2">
                       <div>{t("packagePrice")}</div>
                       <div>
-                        {price}
+                        {price}{" "}
                         {t("rs")}/-
                       </div>
                     </div>

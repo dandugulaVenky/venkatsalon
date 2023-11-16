@@ -12,6 +12,8 @@ import baseUrl from "../../utils/client";
 
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
+
 function removeCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
@@ -36,6 +38,8 @@ const OtpVerification = (props) => {
 
   let [disablenow, setDisableNow] = useState();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const saveToken = async (id, token) => {
     try {
       const response = await axios.post(`${baseUrl}/tokens`, {
@@ -152,7 +156,7 @@ const OtpVerification = (props) => {
   return (
     <>
       <div className="mb-4 w-full transition-all delay-1000 ease-linear">
-        <label htmlFor="phone">Phone</label>
+        <label htmlFor="phone">{t('phoneTitle')}</label>
 
         {!verified && (
           <div
@@ -177,7 +181,7 @@ const OtpVerification = (props) => {
               onClick={getOtp}
               disabled={disable || number?.toString()?.length !== 13}
             >
-              Get Otp
+              {t('getOtp')}
             </button>
           </div>
         )}
@@ -199,7 +203,7 @@ const OtpVerification = (props) => {
             onClick={verifyOtp}
             disabled={disable}
           >
-            Verify Otp
+            {t('verifyOtp')}
           </button>
         </div>
 

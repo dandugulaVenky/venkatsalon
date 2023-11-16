@@ -207,7 +207,7 @@ export const PaymentSuccess = () => {
   return (
     <div className="">
       <div className="md:h-[75vh] h-[65vh] flex flex-col items-center justify-center">
-        Reference No.{referenceNum}
+        {t('referenceNo')}.{referenceNum}
         <img
           src="https://media.giphy.com/media/mks5DcSGjhQ1a/giphy.gif"
           alt="gif"

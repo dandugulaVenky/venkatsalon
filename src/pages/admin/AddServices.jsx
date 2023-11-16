@@ -261,7 +261,7 @@ const AddServices = () => {
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around pb-4 md:space-y-0 space-y-3">
           <div className="md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">Gender</p>
+              <p className="py-2 font-semibold text-lg  ">{t('gender')}</p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 0
               </span>
@@ -271,14 +271,14 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb]  md:w-auto w-full"
               value={typeOfPerson}
             >
-              <option selected>Select Type</option>
+              <option selected>{t('selectType')}</option>
               {(shopType?.subType === "unisex" ||
                 shopType?.subType === "men") && (
-                <option value="men">men</option>
+                <option value="men">{t('men')}</option>
               )}
               {(shopType?.subType === "unisex" ||
                 shopType?.subType === "women") && (
-                <option value="women">women</option>
+                <option value="women">{t('women')}</option>
               )}
             </select>
           </div>
@@ -378,7 +378,7 @@ const AddServices = () => {
             <thead class="text-xs text-white uppercase bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
-                  Gender
+                {t('gender')}
                 </th>
                 <th scope="col" class="px-6 py-3">
                   {t("categoryName")}{" "}
@@ -393,7 +393,7 @@ const AddServices = () => {
                   {t("duration")}
                 </th>
                 <th scope="col" class="px-6 py-3">
-                  Delete
+                {t('delete')}
                 </th>
               </tr>
             </thead>

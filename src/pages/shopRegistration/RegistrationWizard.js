@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const RegistrationWizard = ({ activeStep = 0 }) => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
+  const { t } = useTranslation();
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
@@ -14,7 +15,7 @@ const RegistrationWizard = ({ activeStep = 0 }) => {
   const steps =
     windowWidth <= 768
       ? ["1", "2", "3"]
-      : ["Registration Form", "Shop Details", "Final Registration"];
+      : [t("registrationForm"), t("shopDetails"), t("finalRegistration")];
 
   return (
     <div className="mb-5 flex flex-wrap">

@@ -227,10 +227,10 @@ const RegistrationForm = () => {
                 className="md:px-10 px-5 py-2.5 card text-sm "
                 onSubmit={handleSubmit(submitHandler)}
               >
-                <h1 className="mb-4 text-2xl font-semibold">Register</h1>
+                <h1 className="mb-4 text-2xl font-semibold">{t('register')}</h1>
 
                 <div className="mb-4 ">
-                  <label htmlFor="name">Username</label>
+                  <label htmlFor="name">{t('username')}</label>
                   <input
                     type="text"
                     className="w-full"
@@ -253,7 +253,7 @@ const RegistrationForm = () => {
                   )}
                 </div>
                 <div className="mb-4">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t('emailTitle')}</label>
                   <input
                     type="email"
                     className="w-full"
@@ -273,7 +273,7 @@ const RegistrationForm = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="password">Password</label>
+                  <label htmlFor="password">{t('password')}</label>
                   <input
                     className="w-full"
                     type="password"
@@ -298,13 +298,13 @@ const RegistrationForm = () => {
                 </div>
 
                 <div className="mb-4" onClick={handleLocation}>
-                  <label htmlFor="city">Address</label>
+                  <label htmlFor="city">{t('address')}</label>
 
                   <input
                     type="text"
                     className="w-full"
                     id="city"
-                    placeholder={"enter city name."}
+                    placeholder={t('enterCityName')}
                     readOnly
                     value={storedUser?.city || address}
                   />
@@ -321,28 +321,28 @@ const RegistrationForm = () => {
                   </div>
                   <div>
                     <label htmlFor="terms" className="text-[10px] ">
-                      I agree, all the terms and conditions and
+                      {t('agreeAllThetermsAndConditions')}
                     </label>
                     <p className="text-[10px]">
-                      I have read privacy policy and cancellation policy
+                      {t('haveReadPrivacyAndCancellationPolicy')}
                     </p>
                   </div>
                 </div>
                 <div className="mb-4">
                   <button className="primary-button" disabled={loading}>
-                    Next
+                    {t('next')}
                   </button>
                 </div>
 
                 {pathname.includes("/register") && (
                   <p className="text-xs underline text-blue-600 pb-2">
                     <Link to="/shop-registration">
-                      Are you a barber/beautician? Click Here
+                      {t('barber/beauticianClickHere')}
                     </Link>
                   </p>
                 )}
                 <p className="text-xs underline text-blue-600">
-                  <Link to="/login">Already have an account? Click Here</Link>
+                  <Link to="/login">{t('alreadyHaveAccountClickHere')}</Link>
                 </p>
                 {errorContext && <span>{errorContext.message}</span>}
               </form>
@@ -354,13 +354,13 @@ const RegistrationForm = () => {
               className="primary-button "
               onClick={() => handleContinueProcess("continue")}
             >
-              Continue
+              {t('cpntinue')}
             </button>
             <button
               className="primary-button"
               onClick={() => handleContinueProcess("startAgain")}
             >
-              Start Again
+              {t('startAgain')}
             </button>
           </div>
         )}

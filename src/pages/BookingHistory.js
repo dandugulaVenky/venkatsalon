@@ -126,10 +126,10 @@ const BookingHistory = () => {
                 return (
                   <div className="py-2">
                     <p className="font-semibold">
-                      Seat - {seats[i] || "Any Seat"}
+                      {t('seat')} - {seats[i] || "Any Seat"}
                     </p>
                     <span key={i}>
-                      Services :{" "}
+                    {t('services')}  :{" "}
                       {seat.options.map((option, i) => {
                         return (
                           <span className="ml-1 font-bold" key={i}>
@@ -185,33 +185,33 @@ const BookingHistory = () => {
                 <thead className="border-b bg-gray-400 ">
                   <tr className="border-b-2 border-gray-200 ">
                     <th className="text-center md:text-md text-sm md:p-5 py-3">
-                      Reference
+                    {t('reference')}
                     </th>
                     <th className=" md:p-5 px-10 md:text-md text-sm text-right">
-                      Date
+                    {t('date')}
                     </th>
                     <th className="md:p-5 px-10  md:text-md text-sm text-right">
-                      Time
+                    {t('time')}
                     </th>
                     <th className="md:p-5 px-5  md:text-md text-sm text-right">
-                      Amount
+                      {t('amount')}
                     </th>
                     <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                      Shop
+                    {t('shop')}
                     </th>
                     {
                       <th className="md:p-5  px-10 md:text-md text-sm text-right">
-                        Inclusions
+                        {t('inclusions')}
                       </th>
                     }
                     <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                      Payment
+                    {t('payment')}
                     </th>{" "}
                     <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                      Done
+                    {t('done')}
                     </th>
                     <th className="md:p-5 px-5 md:text-md text-sm text-right">
-                      CreatedAt
+                    {t('createdAt')}
                     </th>
                   </tr>
                 </thead>
@@ -252,7 +252,7 @@ const BookingHistory = () => {
                             }}
                             className="cursor-pointer"
                           >
-                            Show Services
+                              {t('showServices')}
                           </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm">
@@ -265,11 +265,11 @@ const BookingHistory = () => {
                           <label>
                             {" "}
                             {item.isDone === "false" ? (
-                              <span className="text-red-500">Not Yet Done</span>
+                              <span className="text-red-500">{t('notYetDone')}</span>
                             ) : item.isDone === "cancelled" ? (
-                              <span className="text-red-500">Cancelled</span>
+                              <span className="text-red-500">{t('cancelled')}</span>
                             ) : (
-                              <span className="text-green-500"> Done</span>
+                              <span className="text-green-500"> {t('done')}</span>
                             )}
                           </label>
                         </td>
@@ -307,7 +307,7 @@ const BookingHistory = () => {
           </div>
         ) : (
           <div className="min-h-[75vh] flex items-center justify-center">
-            {/* <span className="loader"></span> */}No Bookings Found
+            {/* <span className="loader"></span> */}{t('noBookingsFound')}
           </div>
         )}
       </div>

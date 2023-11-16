@@ -250,7 +250,7 @@ const Preview = (props) => {
                             {t("duration")}
                           </th>
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                            Gender
+                          {t("gender")}
                           </th>
                         </tr>
                       </thead>

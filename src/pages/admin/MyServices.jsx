@@ -608,10 +608,10 @@ const MyServices = () => {
               value={typeOfPerson}
             >
               <option selected defaultValue={null}>
-                Select Type
+                {t('selectType')}
               </option>
-              <option value="men">men</option>
-              <option value="women">women</option>
+              <option value="men">{t('men')}</option>
+              <option value="women">{t('women')}</option>
             </select>
 
             <select className="w-auto my-2 mx-2" onChange={handleChange}>
@@ -629,7 +629,7 @@ const MyServices = () => {
               className="primary-button my-2"
               onClick={() => setSeatsShow(true)}
             >
-              Add / Remove Seats
+              {t('addRemoveSeats')}
             </button>
           </div>
 

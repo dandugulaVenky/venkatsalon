@@ -13,6 +13,7 @@ import baseUrl from "../../utils/client";
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
+import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 
 const BestSaloons = ({ smallBanners }) => {
@@ -21,6 +22,7 @@ const BestSaloons = ({ smallBanners }) => {
   const { type: type1, city } = useContext(SearchContext);
 
   const { t } = useTranslation();
+  const { locale, setLocale } = useContext(LanguageContext);
 
   const getBestSalons = async () => {
     return await axios.get(
@@ -123,7 +125,14 @@ const BestSaloons = ({ smallBanners }) => {
             }}
           ></img>
           <p className="text-black md:text-xl text-xs font-semibold">
-            No {type1}s found!
+            {/* No {type1}s found! */}
+            {/* {t('noTypeFound')} */}
+            { 
+            locale === "en" ?
+            t('noTypeFound',{type1:type1?.charAt(0)?.toUpperCase() + type1?.slice(1)}) 
+            : locale === "te" ?  t('noTypeFound',{type1:type1 === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
+            :  t('noTypeFound',{type1:type1 === "saloon" ? "सैलून" : "पार्लर"})
+           }
           </p>
         </div>
       )}

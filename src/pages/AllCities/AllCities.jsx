@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const AllCities = () => {
   const { type: type1, dispatch } = useContext(SearchContext);
@@ -18,6 +19,8 @@ const AllCities = () => {
   ];
 
   const [userInput, setUserInput] = useState("");
+  const { t } = useTranslation();
+
   function filterArray(array, userInput) {
     if (!userInput) {
       return array;
@@ -39,6 +42,7 @@ const AllCities = () => {
     <>
       <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
         <div className="flex items-center py-10 space-x-2 md:mx-0 mx-3">
+          <label>{t('city')}:</label>
           <input
             type="text"
             className="w-full md:w-[80%] mx-auto col-span-12 rounded-full p-2 text-center"
@@ -49,7 +53,7 @@ const AllCities = () => {
             }}
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            placeholder="Search City Name"
+            placeholder={t('searchCityName')}
           />
         </div>
 

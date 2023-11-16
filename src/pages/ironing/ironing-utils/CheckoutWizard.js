@@ -1,9 +1,14 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 
 export default function CheckoutWizard({ activeStep = 0 }) {
+  const { t } = useTranslation();
+
+
   return (
     <div className="mb-5 flex flex-wrap">
-      {["Added Items", "Shipping Address", "Place Order"].map((step, index) => (
+      {[t('addedItems'), t('shippingAddress'), t('placeOrder')].map((step, index) => (
         <div
           key={step}
           className={`flex-1 border-b-2  

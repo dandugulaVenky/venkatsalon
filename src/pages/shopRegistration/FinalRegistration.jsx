@@ -139,11 +139,11 @@ const FinalRegistration = () => {
         <div className="flex flex-col justify-center w-full min-h-[70vh] items-center">
           <div className="space-y-2">
             <p>
-              Shop Name :{" "}
+              {t('shopName')} :{" "}
               <span className="ml-4 w-52">{storedUser?.hotelInfo?.name}</span>
             </p>
             <div className="mb-4">
-              <label htmlFor="phone">No.of Seats : </label>
+              <label htmlFor="phone">{t('noOfSeats')}: </label>
               <input
                 className="ml-4 w-44"
                 type="number"
@@ -167,7 +167,7 @@ const FinalRegistration = () => {
                 {loading ? (
                   <span className="buttonloader ml-2"></span>
                 ) : (
-                  "Register"
+                  t('register')
                 )}
               </button>
             </div>

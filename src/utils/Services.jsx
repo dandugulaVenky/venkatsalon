@@ -127,7 +127,7 @@ const Services = ({ refer }) => {
                   : "bottom-4 left-4"
               }  text-white font-bold  text-2xl `}
             >
-              Spa
+              {t('spa')}
             </p>
             <span
               className={`${

@@ -6,6 +6,7 @@ import useFetch from "../../hooks/useFetch";
 import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
+import { t } from "i18next";
 
 const List = () => {
   let { city, type } = useContext(SearchContext);
@@ -149,9 +150,9 @@ const List = () => {
                   }}
                   value={subType}
                 >
-                  <option value="null">Sort By Type</option>
-                  <option value={type}>only {type}</option>
-                  <option value="spaIncluded">{type} & spa</option>
+                  <option value="null">{t('sortByType')}</option>
+                  <option value={type}>{t('onlyType',{type:type})}</option>
+                  <option value="spaIncluded">{t('typeSpa',{type:type})}</option>
                 </select>
               </div>
 
@@ -166,10 +167,10 @@ const List = () => {
                   }}
                   value={gender}
                 >
-                  <option value="null">Sort By Gender</option>
-                  <option value="women">women</option>
-                  <option value="men">men</option>
-                  <option value="unisex">unisex</option>
+                  <option value="null">{t('sortByGender')}</option>
+                  <option value="women">{t('women')}</option>
+                  <option value="men">{t('men')}</option>
+                  <option value="unisex">{t('unisex')}</option>
                 </select>
               </div>
             </div>
@@ -188,7 +189,7 @@ const List = () => {
                 )}
                 {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
-                    <p className="text-2xl font-semibold"> No {type}s found</p>
+                    <p className="text-2xl font-semibold">{t('noTypeFound1',{type:type})}</p>
                   </div>
                 )}
               </div>

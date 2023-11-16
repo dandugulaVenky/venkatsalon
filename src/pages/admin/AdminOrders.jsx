@@ -435,14 +435,14 @@ const AdminOrders = () => {
 
         <div className="flex space-x-2 flex-wrap gap-2 mt-5 bg-yellow-300 rounded items-center justify-around py-3">
           <select onChange={handleTypeOfOrders} value={typeOfOrders}>
-            <option value="true">completed</option>
-            <option value="false">not completed</option>
+            <option value="true">{t("completed")}</option>
+            <option value="false">{t("notCompleted")}</option>
 
-            <option value="cancelled">cancelled</option>
+            <option value="cancelled">{t("cancelled")}</option>
           </select>
           <select onChange={handleGender} value={gender}>
-            <option value="men">men</option>
-            <option value="women">women</option>
+            <option value="men">{t("men")}</option>
+            <option value="women">{t("women")}</option>
           </select>
         </div>
         <div className="min-w-full overflow-auto py-10" ref={endRef}>
@@ -465,7 +465,7 @@ const AdminOrders = () => {
         </div>
         {genderAnalysis !== null && (
           <div className="py-10 min-w-full overflow-auto ">
-            <p className="py-10 text-center font-bold">Gender Wise Revenue</p>
+            <p className="py-10 text-center font-bold">{t('genderWiseRevenue')}</p>
             <Charts
               data={genderAnalysis}
               XAxisDatakey="name"

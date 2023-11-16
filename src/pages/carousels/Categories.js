@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import Skeleton from "../../utils/Skeleton";
 import GetSize from "../../utils/GetSize";
 import { useQuery } from "@tanstack/react-query";
+import LanguageContext from "../../context/LanguageContext";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
@@ -20,6 +21,7 @@ const Categories = ({ type }) => {
   const { t } = useTranslation();
 
   const size = GetSize();
+  const { locale, setLocale } = useContext(LanguageContext);
 
   // Queries
 
@@ -54,10 +56,13 @@ const Categories = ({ type }) => {
           {t("browseAreaWise")}{" "}
           {type1
             ? // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
-              t("browseAreaWiseType", {
-                type1: type1?.charAt(0)?.toUpperCase(),
-                type2: type1?.slice(1),
-              }) + "s"
+              // t("browseAreaWiseType", {
+              //   type1: type1?.charAt(0)?.toUpperCase(), type2: type1?.slice(1),
+              // }) 
+              locale === "en" ?
+              t('browseAreaWiseType',{ type1: type1?.charAt(0)?.toUpperCase(), type2: type1?.slice(1)}) 
+              : locale === "te" ?  t('browseAreaWiseType',{type1:type1 === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
+              :  t('browseAreaWiseType',{type1:type1 === "saloon" ? "सैलून" : "पार्लर"})
             : "loading"}
         </h1>
         <button
