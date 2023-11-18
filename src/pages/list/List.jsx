@@ -7,6 +7,8 @@ import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { t } from "i18next";
+import LanguageContext from "../../context/LanguageContext";
+
 
 const List = () => {
   let { city, type } = useContext(SearchContext);
@@ -16,6 +18,8 @@ const List = () => {
   const [subType, setSubType] = useState();
   const [gender, setGender] = useState();
   city = city.toLowerCase().trim();
+  const { locale, setLocale } = useContext(LanguageContext);
+
 
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${
@@ -151,8 +155,22 @@ const List = () => {
                   value={subType}
                 >
                   <option value="null">{t('sortByType')}</option>
-                  <option value={type}>{t('onlyType',{type:type})}</option>
-                  <option value="spaIncluded">{t('typeSpa',{type:type})}</option>
+                  <option value={type}>
+                    { 
+                        locale === "en" ?
+                        t('onlyType',{type:type}) 
+                        : locale === "te" ?  t('onlyType',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
+                        :  t('onlyType',{type:type === "saloon" ? "सैलून" : "पार्लर"})
+                        }
+                    </option>
+                  <option value="spaIncluded">
+                    { 
+                        locale === "en" ?
+                        t('typeSpa',{type:type}) 
+                        : locale === "te" ?  t('typeSpa',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
+                        :  t('typeSpa',{type:type === "saloon" ? "सैलून" : "पार्लर"})
+                        }
+                    </option>
                 </select>
               </div>
 
@@ -189,7 +207,14 @@ const List = () => {
                 )}
                 {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
-                    <p className="text-2xl font-semibold">{t('noTypeFound1',{type:type})}</p>
+                    <p className="text-2xl font-semibold">
+                      { 
+                        locale === "en" ?
+                        t('noTypeFound1',{type:type}) 
+                        : locale === "te" ?  t('noTypeFound1',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
+                        :  t('noTypeFound1',{type:type === "saloon" ? "सैलून" : "पार्लर"})
+                        }
+                      </p>
                   </div>
                 )}
               </div>
