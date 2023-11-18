@@ -31,7 +31,7 @@
   "typeForYou": "{{type1}}s For You",
   "salonName": "{{name}}",
   "browseAreaWise": "Browse Area Wise",
-  "browseAreaWiseType": "{{type1}}{{type2}}s",
+  "browseAreaWiseType": "{{type1}}",
   "noTypeFound":"No {{type1}}s Found",
   "shops": "Shops",
   "shadnagar": "Shadnagar",

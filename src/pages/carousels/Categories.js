@@ -55,12 +55,8 @@ const Categories = ({ type }) => {
         <h1 className="px-2.5 md:px-5  md:text-xl font-semibold ">
           {t("browseAreaWise")}{" "}
           {type1
-            ? // ? type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s"
-              // t("browseAreaWiseType", {
-              //   type1: type1?.charAt(0)?.toUpperCase(), type2: type1?.slice(1),
-              // }) 
-              locale === "en" ?
-              t('browseAreaWiseType',{ type1: type1?.charAt(0)?.toUpperCase(), type2: type1?.slice(1)}) 
+            ? locale === "en" ?
+              t('browseAreaWiseType',{ type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1)})+"s"
               : locale === "te" ?  t('browseAreaWiseType',{type1:type1 === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
               :  t('browseAreaWiseType',{type1:type1 === "saloon" ? "सैलून" : "पार्लर"})
             : "loading"}
