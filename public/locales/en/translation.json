@@ -277,7 +277,7 @@
   "typeSpa":"{{type}} & spa",
   "sortByGender":"Sort By Gender",
   "unisex":"Unisex",
-  "noTypeFound1":"No {{type:type}}s found",
+  "noTypeFound1":"No {{type}}s found",
   "getOtp":"Get Otp",
   "verifyOtp":"Verify Otp",
   "noOfSeats":"No.of Seats",
