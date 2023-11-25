@@ -29,11 +29,11 @@ export default class AutoComplete extends React.Component {
         .then((results) => {
           setAddress(results[0]?.formatted_address.trim().toLowerCase());
           const city = results[0]?.formatted_address.trim().toLowerCase();
-
+          console.log(type, "type");
           dispatch({
             type: "NEW_SEARCH",
             payload: {
-              type: !type ? "saloon" : type,
+              type: !type ? "salon" : type,
               destination: city,
             },
           });

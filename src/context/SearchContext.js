@@ -13,7 +13,7 @@ const INITIAL_STATE = {
   open: false,
   type: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).type
-    : "saloon",
+    : "salon",
   timeDifferenceInDays: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).timeDifferenceInDays
     : 0,

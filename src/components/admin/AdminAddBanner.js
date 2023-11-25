@@ -5,7 +5,7 @@ import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRemove, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const AdminAddBanner = () => {
   const [images, setImages] = useState([]);
@@ -146,7 +146,7 @@ const AdminAddBanner = () => {
 
   return (
     <>
-      <div className="min-h-[86.2vh] flex flex-col items-center justify-center pt-8 pb-20 ">
+      <div className="min-h-[86.2vh] flex flex-col items-center justify-center pt-8 pb-20 mx-2 ">
         <>
           <p className="text-red-400 font-semibold px-4">
             Note1 : Total 6 images are being supported
@@ -177,37 +177,39 @@ const AdminAddBanner = () => {
             </button>
           </form>
         </>
-        <div className="flex card flex-col w-auto mx-auto  gap-2 my-10 border-2 rounded border-gray-400 p-4">
+        <div className="flex card flex-col w-auto   gap-2 my-10 border-2 rounded border-gray-400 p-2  m-8">
           <p className="text-[#00ccbb] font-semibold">
             My Total Pics : {data?.images?.length || 0}
           </p>
-          {data?.images?.length > 0
-            ? data?.images.map((image, i) => {
-                return (
-                  <div className="flex items-center justify-between space-x-5 my-4">
-                    <img
-                      src={image.url}
-                      style={{
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        maxWidth: 300,
-                      }}
-                      alt="shop img"
-                      key={i}
-                    />
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      size="lg"
-                      className="cursor-pointer "
-                      onClick={() => removeImage(image)}
-                      disabled={loading}
-                    />
-                  </div>
-                );
-              })
-            : data?.images?.length === 0
-            ? "No images found!"
-            : "Loading...."}
+          <div className="flex flex-wrap items-center justify-center space-x-5 max-w-7xl ">
+            {data?.images?.length > 0
+              ? data?.images.map((image, i) => {
+                  return (
+                    <div className="flex  items-center justify-between space-x-5 my-4">
+                      <img
+                        src={image.url}
+                        style={{
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          maxWidth: 300,
+                        }}
+                        alt="shop img"
+                        key={i}
+                      />
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        size="lg"
+                        className="cursor-pointer "
+                        onClick={() => removeImage(image)}
+                        disabled={loading}
+                      />
+                    </div>
+                  );
+                })
+              : data?.images?.length === 0
+              ? "No images found!"
+              : "Loading...."}
+          </div>
         </div>
       </div>
     </>

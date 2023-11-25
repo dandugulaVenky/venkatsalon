@@ -367,8 +367,8 @@ function Break() {
   return (
     <div className="">
       <div className="p-10 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
-        <div className="grid grid-cols-6  gap-2">
-          <div className=" md:col-span-3 col-span-6">
+        <div className="grid grid-cols-12  gap-2">
+          <div className=" md:col-span-6 col-span-12">
             <div className="grid place-items-center gap-5">
               <p className="text-2xl font-bold">{t("onlyForToday")}</p>
               <div>
@@ -490,7 +490,7 @@ function Break() {
                 </div>
                 <div className="pb-6">
                   <p>{t("endTimingToBlock")}</p>
-                  <div className="flex md:flex-row flex-col    items-start">
+                  <div className="flex md:flex-row flex-col items-start">
                     <Menu as="div" className="relative inline-block text-left">
                       <div>
                         <Menu.Button className="inline-flex justify-start  p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none w-[12rem]">
@@ -616,8 +616,8 @@ function Break() {
               </div>
             </div>
           </div>
-          <div className="  md:col-span-3 col-span-6 md:border-l-2 md:border-t-0 border-t-2  border-black">
-            <div className="grid place-items-center gap-3 mt-5 md:mt-0">
+          <div className="  md:col-span-6 col-span-12 md:border-l-2 md:border-t-0 border-t-2  border-black">
+            <div className="grid md:place-items-center place-items-start md:gap-3 mt-5 mr-2 md:mt-0">
               <p className="text-2xl font-bold">{t("onlyFromTomorrow")}</p>
               <div>
                 <p>{t("datesYouWantToBlock?")}</p>

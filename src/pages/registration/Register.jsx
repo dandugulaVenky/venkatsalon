@@ -1,10 +1,8 @@
-import axios from "axios";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../../components/footer/Footer";
-import Layout from "../../components/navbar/Layout";
+
 import "./otp.css";
 import "react-phone-number-input/style.css";
 import { AuthContext } from "../../context/AuthContext";
@@ -14,13 +12,12 @@ import { getToken } from "firebase/messaging";
 import { useState } from "react";
 import { useEffect } from "react";
 import { SearchContext } from "../../context/SearchContext";
-import Sidebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
+
 import Header from "../../components/header/Header";
 import Select from "../images/select.png";
 
 import OtpVerification from "./OtpVerification";
-import baseUrl from "../../utils/client";
+
 import { useTranslation } from "react-i18next";
 
 function getCookieObject(name) {
@@ -39,7 +36,7 @@ function getCookieObject(name) {
 const Register = () => {
   const [token, setToken] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  let { dispatch: dispatch1, city, type } = useContext(SearchContext);
+  let { dispatch: dispatch1, type } = useContext(SearchContext);
   const [number, setNumber] = useState("");
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
@@ -78,11 +75,12 @@ const Register = () => {
       setValue("name", storedUser.name);
       setAddress(storedUser.city);
       setVerified(storedUser.verified);
+      setTermsAccepted(false);
       setNumber(storedUser.number);
       setValue("email", storedUser.email);
       setValue("password", storedUser.password);
     }
-  }, []);
+  }, [canShowNumber]);
 
   const { loading, error: errorContext } = useContext(AuthContext);
 
@@ -131,13 +129,11 @@ const Register = () => {
     setHeader(true);
   };
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   return (
     <div>
       {header ? (
         <Header
+          city={address}
           setHeader={setHeader}
           setAddress={setAddress}
           dispatch={dispatch1}
@@ -150,11 +146,11 @@ const Register = () => {
       )}
 
       {location?.pathname?.includes("/register") && (
-        <p className="text-lg underline text-blue-600 pb-2 text-center">
+        <p className="text-lg underline text-blue-600  text-center pt-12  ">
           <Link to="/shop-registration">{t("barber/beauticianClickHere")}</Link>
         </p>
       )}
-      <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 pt-5">
+      <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20  pt-5 pb-20">
         <img
           src={LoginImage}
           alt="login"
@@ -185,7 +181,7 @@ const Register = () => {
             <h1 className="mb-4 text-2xl font-semibold">{t("register")}</h1>
 
             <div className="mb-4 ">
-              <label htmlFor="name">{t("username")}</label>
+              <label htmlFor="name">{t("Full Name")}</label>
               <input
                 type="text"
                 className="w-full"
@@ -195,11 +191,12 @@ const Register = () => {
                   required: "Please enter username",
                   minLength: {
                     value: 6,
-                    message: "Username must be more than 5 chars",
+                    message: "Name must be more than 5 chars",
                   },
                   pattern: {
-                    value: /^[a-zA-Z0-9_.+-@#]+$/i,
-                    message: "Please enter valid username",
+                    value: /^[a-zA-Z0-9_.+-@#]+(\s[a-zA-Z0-9_.+-@#]+)?$/i,
+
+                    message: "Please enter valid name",
                   },
                 })}
               />

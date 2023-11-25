@@ -89,7 +89,7 @@ const Home = ({ endRef, smallBanners }) => {
                 dispatch({
                   type: "NEW_SEARCH",
                   payload: {
-                    type: "saloon",
+                    type: "salon",
                     destination: city1,
                     colony,
                   },
@@ -127,7 +127,7 @@ const Home = ({ endRef, smallBanners }) => {
                     dispatch({
                       type: "NEW_SEARCH",
                       payload: {
-                        type: "saloon",
+                        type: "salon",
                         destination: "No Location!",
                       },
                     });
@@ -169,6 +169,7 @@ const Home = ({ endRef, smallBanners }) => {
     promptEnableLocation();
 
     reference !== undefined && reference !== null && handleToast();
+    localStorage.removeItem("bookingDetails");
     return () => {
       // clearTimeout(timeout);
       console.log("effect");

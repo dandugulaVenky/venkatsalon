@@ -6,7 +6,7 @@
 }
 
 .imgs2 {
-  max-height: 100px;
+  max-height: 90px;
   width: auto;
   background-size: cover;
   transition: max-height 0.3s ease;
@@ -38,7 +38,6 @@
 }
 
 .mainHead {
-  // height: 6.35rem;
   position: fixed;
   max-width: 1920px;
   top: 0;
@@ -47,8 +46,8 @@
   z-index: 19;
   margin: auto;
 }
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1064px) {
   .head2 {
-    background-color: #fff;
+    background-color: #fff !important;
   }
 }

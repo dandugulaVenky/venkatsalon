@@ -1,7 +1,6 @@
-.head1-greeting {
-  background-color: white !important;
-  padding-top: 4px;
-  padding-bottom: 7px;
+.greeting-head1 {
+  background-color: #ffffff !important;
+
   max-height: 200px;
   color: #000000 !important;
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
@@ -10,12 +9,46 @@
   // transition: all 0.01s;
 }
 
-.head2-greeting {
-  background-color: transparent !important;
-  padding-top: 4px;
-  padding-bottom: 7px;
+.greeting-head2 {
+  background-color: white !important;
+  padding-top: 1px;
+  padding-bottom: 1px;
   max-height: 200px;
+  margin-bottom: 20px;
   transition: max-height 2.5s ease;
   // transition: background-color 2.5s ease-out;
   // transition: all 0.01s;
+}
+
+.mainHead1 {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 19;
+  margin: auto;
+}
+
+.greeting-imgs1 {
+  max-height: 70px;
+  width: auto;
+  background-size: cover;
+  transition: max-height 0.3s ease;
+}
+
+.greeting-imgs2 {
+  max-height: 80px;
+  width: auto;
+  background-size: cover;
+  transition: max-height 0.3s ease;
+}
+.resp-margin {
+  margin-top: 5px;
+}
+
+@media screen and (min-width: 540px) {
+  .resp-margin {
+    margin-top: 23px;
+  }
 }

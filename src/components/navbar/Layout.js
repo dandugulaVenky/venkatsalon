@@ -60,12 +60,13 @@ const Layout = ({ bestRef }) => {
   useEffect(() => {
     setIsScrolled(false);
 
-    let timeout =
-      pathname.includes("/shops") || pathname.includes("/iron/product")
-        ? 750
-        : pathname.includes("/iron")
-        ? 135
-        : 100;
+    let timeout = pathname.includes("/shops")
+      ? 200
+      : pathname.includes("/iron")
+      ? 0
+      : pathname.includes("/iron/product")
+      ? 600
+      : 50;
     const handleScroll = () => {
       const scrollY = window.scrollY;
       if (scrollY >= 40) {
@@ -141,7 +142,7 @@ const Layout = ({ bestRef }) => {
         <Header header={null} />
       )}
 
-      <div className="mb-[5.85rem]">
+      <div className="mb-[5.5rem]">
         <div className="mainHead">
           <div
             className={`flex items-center justify-between px-10 ${

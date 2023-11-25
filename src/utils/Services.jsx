@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
-  const [active, setActive] = useState(type ? type : "saloon");
+  const [active, setActive] = useState(type ? type : "salon");
   const navigate = useNavigate();
   const { t } = useTranslation();
   const handler = (service) => {
@@ -29,7 +29,7 @@ const Services = ({ refer }) => {
           <div
             className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"
             id="section-id"
-            onClick={() => handler("saloon")}
+            onClick={() => handler("salon")}
           >
             <img
               src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
@@ -39,7 +39,7 @@ const Services = ({ refer }) => {
                 height: 132,
                 boxShadow: "1px 1.5px 2px black",
                 filter: `${
-                  active === "saloon" ? "brightness(40%)" : "brightness(70%)"
+                  active === "salon" ? "brightness(40%)" : "brightness(70%)"
                 }`,
                 borderRadius: 8,
                 objectFit: "cover",
@@ -48,7 +48,7 @@ const Services = ({ refer }) => {
             />
             <p
               className={`absolute  ${
-                active === "saloon"
+                active === "salon"
                   ? "inset-0 flex items-center justify-center"
                   : "bottom-4 left-4"
               }  text-white font-bold  text-2xl `}
@@ -57,7 +57,7 @@ const Services = ({ refer }) => {
             </p>
             <span
               className={`${
-                active === "saloon" ? "service-loader" : ""
+                active === "salon" ? "service-loader" : ""
               } absolute top-1 right-4`}
             ></span>
           </div>
@@ -127,7 +127,7 @@ const Services = ({ refer }) => {
                   : "bottom-4 left-4"
               }  text-white font-bold  text-2xl `}
             >
-              {t('spa')}
+              {t("spa")}
             </p>
             <span
               className={`${

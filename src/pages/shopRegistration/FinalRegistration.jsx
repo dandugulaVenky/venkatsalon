@@ -51,45 +51,82 @@ const FinalRegistration = () => {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     }
 
+    const ownerDetails = {
+      username: storedUser?.name.trim().toLowerCase(),
+      email: storedUser?.email.trim().toLowerCase(),
+      password: storedUser?.password.trim(),
+
+      city: storedUser?.city.toLowerCase(),
+      phone: storedUser?.number,
+      isAdmin: true,
+    };
+
     try {
       const newhotel = {
         ...storedUser.hotelInfo,
         city: storedUser.hotelInfo.city.toLowerCase(),
+        roomNumbers: arrayOfObjects.length,
+        ownerDetails,
       };
+      console.log(newhotel);
 
-      const response = await axios.post(`${baseUrl}/api/hotels`, newhotel);
-      const hotelId = response.data._id;
+      // await axios.post(`${baseUrl}/api/rooms/${hotelId}`, {
+      //   roomNumbers: arrayOfObjects,
+      //   name: storedUser?.hotelInfo?.name,
+      //   shopId: hotelId,
+      // });
 
-      await axios.post(`${baseUrl}/api/rooms/${hotelId}`, {
-        roomNumbers: arrayOfObjects,
-        name: storedUser?.hotelInfo?.name,
-        shopId: hotelId,
-      });
+      // let res = await axios.post(`${baseUrl}/api/auth/register`, {
+      //   username: storedUser?.name.trim().toLowerCase(),
+      //   email: storedUser?.email.trim().toLowerCase(),
+      //   password: storedUser?.password.trim(),
+      //   shopId: hotelId,
+      //   city: storedUser?.city.toLowerCase(),
+      //   phone: storedUser?.number,
+      //   isAdmin: true,
+      // });
 
-      let res = await axios.post(`${baseUrl}/api/auth/register`, {
+      let res = await axios.post(`${baseUrl}/api/auth/check_existing`, {
         username: storedUser?.name.trim().toLowerCase(),
         email: storedUser?.email.trim().toLowerCase(),
-        password: storedUser?.password.trim(),
-        shopId: hotelId,
-        city: storedUser?.city.toLowerCase(),
+
         phone: storedUser?.number,
-        isAdmin: true,
       });
 
-      await axios.put(
-        `${baseUrl}/api/hotels/${hotelId}`,
-        {
-          shopOwnerId: res.data,
-        },
-        {
-          withCredentials: true,
+      console.log(res);
+
+      if (res.status === 200) {
+        const response = await axios.post(
+          `${baseUrl}/api/shop_registration/new_registration`,
+          newhotel
+        );
+        if (response.status === 200) {
+          setLoading(false);
+          alert(t("willContactYouShortly"));
+          // Usage example
+          removeCookie("user_info");
+          navigate("/login");
+        } else {
+          alert(
+            "Something went wrong, please contact us at services@easytym.com"
+          );
         }
-      );
-      setLoading(false);
-      alert(t("willContactYouShortly"));
-      // Usage example
-      removeCookie("user_info");
-      navigate("/login");
+
+        // const hotelId = response.data._id;
+      } else {
+        alert(
+          "Something went wrong, please contact us at services@easytym.com"
+        );
+        // await axios.put(
+        //   `${baseUrl}/api/hotels/${hotelId}`,
+        //   {
+        //     shopOwnerId: res.data,
+        //   },
+        //   {
+        //     withCredentials: true,
+        //   }
+        // );
+      }
     } catch (err) {
       alert(err.response.data.message);
       setLoading(false);

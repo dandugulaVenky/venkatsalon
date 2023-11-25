@@ -53,7 +53,7 @@ const Greeting = ({ bestRef }) => {
     };
   }, []);
 
-  const [greet, setGreet] = useState("");
+  // const [greet, setGreet] = useState("");
   const { user } = useContext(AuthContext);
 
   const [cartItemsCount, setCartItemsCount] = useState(0);
@@ -64,13 +64,13 @@ const Greeting = ({ bestRef }) => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
 
-  useEffect(() => {
-    const myDate = new Date();
-    const hrs = myDate.getHours();
-    if (hrs < 12) setGreet("Good morning");
-    else if (hrs >= 12 && hrs <= 17) setGreet("Good afternoon");
-    else if (hrs >= 17 && hrs <= 24) setGreet("Good evening");
-  }, []);
+  // useEffect(() => {
+  //   const myDate = new Date();
+  //   const hrs = myDate.getHours();
+  //   if (hrs < 12) setGreet("Good morning");
+  //   else if (hrs >= 12 && hrs <= 17) setGreet("Good afternoon");
+  //   else if (hrs >= 17 && hrs <= 24) setGreet("Good evening");
+  // }, []);
 
   const handleLocation = () => {
     setHeader(!header);
@@ -93,17 +93,17 @@ const Greeting = ({ bestRef }) => {
           header={header}
           bestRef={bestRef}
         />
-      ) : address.length > 0 ? (
+      ) : address?.length > 0 ? (
         <Header header={header} />
       ) : (
         <Header header={null} />
       )}
 
-      <div className={"h-[4.2rem]"}>
-        <div className="mainHead">
+      <div className="h-[4rem] resp-margin">
+        <div className="mainHead1">
           <div
             className={`px-2  grid grid-cols-12  ${
-              isScrolled ? "head1-greeting" : "head2-greeting"
+              isScrolled ? "greeting-head1" : "greeting-head2"
             }`}
           >
             <div className="flex items-center justify-center col-span-2">
@@ -112,7 +112,7 @@ const Greeting = ({ bestRef }) => {
                   src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
                   alt="logo"
                   className={`${
-                    isScrolled ? "greetingimgs1" : "greetingimgs2"
+                    isScrolled ? "greeting-imgs1" : "greeting-imgs2"
                   }`}
                   onClick={scrollNow}
                 />

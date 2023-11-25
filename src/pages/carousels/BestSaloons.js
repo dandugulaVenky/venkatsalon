@@ -18,7 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
-  console.log(columns, "small");
+
   const { type: type1, city } = useContext(SearchContext);
 
   const { t } = useTranslation();
@@ -26,8 +26,8 @@ const BestSaloons = ({ smallBanners }) => {
 
   const getBestSalons = async () => {
     return await axios.get(
-      `${baseUrl}/api/hotels?type=${type1 ? type1 : "saloon"}&city=${
-        city ? city : "shadnagar"
+      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city=${
+        city ? city : "shadnagar, telangana 509216, india"
       }`
     );
   };
@@ -52,12 +52,30 @@ const BestSaloons = ({ smallBanners }) => {
     <div className="mt-8  text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
-          {type1 ? 
-          (
-              locale === "en" ?
-              t('typeForYou',{type1:type1?.charAt(0)?.toUpperCase() + type1?.slice(1)})
-              : locale === "te" ?  t('typeForYou',{type1:type1 === "saloon" ? "సెలూన్లు"  : type1 === "parlour" ? "పార్లర్లు" : "స్పా" })
-              :  t('typeForYou',{type1:type1 === "saloon" ? "सैलून" : type1 === "parlour" ? "पार्लर" : "स्पा"})
+          {type1 ? (
+            locale === "en-US" || locale === "en" ? (
+              t("typeForYou", {
+                type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
+              })
+            ) : locale === "te" ? (
+              t("typeForYou", {
+                type1:
+                  type1 === "salon"
+                    ? "సెలూన్లు"
+                    : type1 === "parlour"
+                    ? "పార్లర్లు"
+                    : "స్పా",
+              })
+            ) : (
+              t("typeForYou", {
+                type1:
+                  type1 === "salon"
+                    ? "सैलून"
+                    : type1 === "parlour"
+                    ? "पार्लर"
+                    : "स्पा",
+              })
+            )
           ) : (
             <Skeleton cards={1} />
           )}
@@ -129,12 +147,17 @@ const BestSaloons = ({ smallBanners }) => {
             }}
           ></img>
           <p className="text-black md:text-xl text-xs font-semibold">
-            { 
-            locale === "en" ?
-            t('noTypeFound',{type1:type1?.charAt(0)?.toUpperCase() + type1?.slice(1)}) 
-            : locale === "te" ?  t('noTypeFound',{type1:type1 === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
-            :  t('noTypeFound',{type1:type1 === "saloon" ? "सैलून" : "पार्लर"})
-           }
+            {locale === "en-US" || locale === "en"
+              ? t("noTypeFound", {
+                  type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
+                })
+              : locale === "te"
+              ? t("noTypeFound", {
+                  type1: type1 === "salon" ? "సెలూన్లు" : "పార్లర్లు",
+                })
+              : t("noTypeFound", {
+                  type1: type1 === "salon" ? "सैलून" : "पार्लर",
+                })}
           </p>
         </div>
       )}

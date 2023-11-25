@@ -35,7 +35,7 @@ const Test = ({ services }) => {
               <div className="relative md:h-28 md:w-52 h-32 w-full">
                 <img
                   src={
-                    type === "saloon"
+                    type === "salon"
                       ? image
                       : "https://img.freepik.com/premium-psd/top-view-beauty-salon-concept_23-2148600664.jpg?w=2000"
                   }

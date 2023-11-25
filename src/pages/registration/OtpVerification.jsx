@@ -155,8 +155,8 @@ const OtpVerification = (props) => {
 
   return (
     <>
-      <div className="mb-4 w-full transition-all delay-1000 ease-linear">
-        <label htmlFor="phone">{t('phoneTitle')}</label>
+      <div className="mb-4 w-full transition-all delay-1000 ease-linear pt-12  pb-20">
+        <label htmlFor="phone">{t("phoneTitle")}</label>
 
         {!verified && (
           <div
@@ -181,7 +181,7 @@ const OtpVerification = (props) => {
               onClick={getOtp}
               disabled={disable || number?.toString()?.length !== 13}
             >
-              {t('getOtp')}
+              {t("getOtp")}
             </button>
           </div>
         )}
@@ -203,7 +203,7 @@ const OtpVerification = (props) => {
             onClick={verifyOtp}
             disabled={disable}
           >
-            {t('verifyOtp')}
+            {t("verifyOtp")}
           </button>
         </div>
 

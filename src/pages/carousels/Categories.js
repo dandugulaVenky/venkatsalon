@@ -3,7 +3,6 @@ import Carousel from "react-grid-carousel";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 
-import { useEffect } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";
@@ -17,14 +16,13 @@ import LanguageContext from "../../context/LanguageContext";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
-  const [data, setData] = useState([]);
   const { t } = useTranslation();
 
   const size = GetSize();
   const { locale, setLocale } = useContext(LanguageContext);
 
   // Queries
-
+  console.log(locale, "locale");
   const shopsCount = async () => {
     return await axios.get(
       `${baseUrl}/api/hotels/countByCity?cities=shadnagar, telangana 509216, india-kothur, telangana 509228, india-thimmapur, telangana 509325, india-shamshabad, telangana 501218, india&&type=${type1}`
@@ -55,10 +53,17 @@ const Categories = ({ type }) => {
         <h1 className="px-2.5 md:px-5  md:text-xl font-semibold ">
           {t("browseAreaWise")}{" "}
           {type1
-            ? locale === "en" ?
-              t('browseAreaWiseType',{ type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1)})+"s"
-              : locale === "te" ?  t('browseAreaWiseType',{type1:type1 === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
-              :  t('browseAreaWiseType',{type1:type1 === "saloon" ? "सैलून" : "पार्लर"})
+            ? locale === "en-US" || locale === "en"
+              ? t("browseAreaWiseType", {
+                  type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
+                }) + "s"
+              : locale === "te"
+              ? t("browseAreaWiseType", {
+                  type1: type1 === "salon" ? "సెలూన్లు" : "పార్లర్లు",
+                })
+              : t("browseAreaWiseType", {
+                  type1: type1 === "salon" ? "सैलून" : "पार्लर",
+                })
             : "loading"}
         </h1>
         <button

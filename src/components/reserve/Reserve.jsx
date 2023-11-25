@@ -979,7 +979,7 @@ const Reserve = () => {
               </div>
             </div>
           ) : (
-            <div className="min-h-[60vh] flex items-center flex-col justify-center">
+            <div className="md:min-h-[75vh] min-h-[65vh] flex items-center flex-col justify-center">
               {gender !== undefined && salonServices?.length <= 0 ? (
                 !loading || !ownerDetailsLoading ? (
                   "loading"

@@ -102,7 +102,7 @@ export default function Login() {
   };
   return (
     <div>
-      <div className="px-8 py-8 md:min-h-[60vh] md:flex justify-center md:mb-20 pb-20 md:pt-8 pt-5">
+      <div className="px-8 md:min-h-[60vh] md:flex justify-center pt-12 pb-20 ">
         <img
           src={LoginImage}
           alt="login"

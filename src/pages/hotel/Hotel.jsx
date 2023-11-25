@@ -45,7 +45,12 @@ function classNames(...classes) {
 
 const Hotel = () => {
   const location = useLocation();
+
   const shopIdLocation = location.pathname.split("/")[2];
+
+  const { data, loading } = useFetch(
+    `${baseUrl}/api/hotels/find/${shopIdLocation}`
+  );
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -82,7 +87,8 @@ const Hotel = () => {
         "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
         "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
       ]);
-  const lunch = [24, 25, 26, 27, 28, 29];
+
+  const lunch = data?.lunchTimeArray || [];
   const [breakTime, setBreakTime] = useState();
 
   const [block, setBlock] = useState();
@@ -90,10 +96,6 @@ const Hotel = () => {
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
   const { t } = useTranslation();
-
-  const { data, loading } = useFetch(
-    `${baseUrl}/api/hotels/find/${shopIdLocation}`
-  );
 
   function isSpecificDate(value, targetDate) {
     return value.toString() === targetDate.toString();
@@ -378,7 +380,7 @@ const Hotel = () => {
       },
     });
 
-    if (user && type === "saloon") {
+    if (user && type === "salon") {
       navigate(`/shops/${shopIdLocation}/salon-reserve`, {
         state: {
           shopId: shopIdLocation,
@@ -616,7 +618,7 @@ const Hotel = () => {
 
   return (
     <div>
-      <div className={` w-full mx-auto  md:rounded md:px-4 `}>
+      <div className={` w-full mx-auto  md:rounded md:px-4  `}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
             return (
@@ -646,7 +648,7 @@ const Hotel = () => {
           <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
             <div
               className={
-                type === "saloon"
+                type === "salon"
                   ? `active scale-in-center space-x-2`
                   : `space-x-2`
               }
@@ -833,17 +835,17 @@ const Hotel = () => {
                     rel="noreferrer"
                     href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.lat},${data?.latLong?.lng}`}
                   >
-                    {t('getDirectionsToShop')}
+                    {t("getDirectionsToShop")}
                   </a>
                 </div>
                 <span className="hotelDistance">
                   {/* Excellent location – {data.distance}m from center */}
                   {t("shopDistance", { distance: data.distance })}
                 </span>
-                <span className="hotelPriceHighlight">
-                  {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
-                  {t("shopAbovePrice", { price: data.cheapestPrice })}
-                </span>
+                {/* <span className="hotelPriceHighlight"> */}
+                {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
+                {/* {t("shopAbovePrice", { price: data.cheapestPrice })} */}
+                {/* </span> */}
               </div>
               <img
                 src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1679746627/716z0eWdZjL._SL1500__t4foon.webp"
@@ -950,8 +952,8 @@ const Hotel = () => {
                 )}
               </div>
               <div className="w-full bg-gray-200 md:mb-4 mb-14 rounded-md flex flex-col space-y-3 p-5 ">
-                <h1>{t('perfectForYou')}</h1>
-                <span>{t('shopHasAnExcellentLocationScoreOf9.8')}</span>
+                <h1>{t("perfectForYou")}</h1>
+                <span>{t("shopHasAnExcellentLocationScoreOf9.8")}</span>
 
                 <button
                   className="primary-button"
@@ -964,7 +966,7 @@ const Hotel = () => {
                   }}
                 >
                   <div className="flex items-center justify-center">
-                    <p>{t('goTopAndReserve')}</p> &nbsp;
+                    <p>{t("goTopAndReserve")}</p> &nbsp;
                     <FontAwesomeIcon icon={faCircleArrowUp} size="2x" />
                   </div>
                 </button>
