@@ -122,9 +122,7 @@ const ShopDetails = () => {
         return alert(t("lunchTimeMax1HrOnly"));
       }
       if (diff < 10) {
-        return alert(
-          t("selectLunchTimeCorrectly10min")
-        );
+        return alert(t("selectLunchTimeCorrectly10min"));
       }
 
       const shopTime = options.filter((option) => {
@@ -257,7 +255,7 @@ const ShopDetails = () => {
       {map ? (
         <div className="reserve">
           <div className="md:w-[75%] w-[90%] mx-auto">
-            <h1>{t('reactGoogleMapsClickExample')}</h1>
+            <h1>{t("reactGoogleMapsClickExample")}</h1>
             <MapComponent onMapClick={handleMapClick} latLong={latLong} />
           </div>
         </div>
@@ -271,9 +269,9 @@ const ShopDetails = () => {
                  "
         onSubmit={handleSubmit(submitHandler)}
       >
-        <h1 className="my-4 text-xl">{t('shopDetails')}</h1>
+        <h1 className="my-4 text-xl">{t("shopDetails")}</h1>
         <div className="mb-4">
-          <label htmlFor="shopName">{t('shopName')}</label>
+          <label htmlFor="shopName">{t("shopName")}</label>
           <input
             className="w-full"
             placeholder="salon name"
@@ -298,14 +296,14 @@ const ShopDetails = () => {
 
         <div className="flex w-full ">
           <div className="mb-4 mr-4 flex flex-col w-full">
-            <label htmlFor="type">{t('shopStartTime')}</label>
+            <label htmlFor="type">{t("shopStartTime")}</label>
             <select
               className="w-full"
               value={selectedShopStartTime}
               onChange={(e) => handleShopStartTimeChange(e)}
             >
               <option selected value="null">
-                {t('selectTime')}
+                {t("selectTime")}
               </option>
               {options.map((option, index) => (
                 <option key={option.id} value={option.value}>
@@ -315,15 +313,13 @@ const ShopDetails = () => {
             </select>
           </div>
           <div className="mb-4 flex flex-col  w-full">
-            <label htmlFor="type">{t('shopEndTime')}</label>
+            <label htmlFor="type">{t("shopEndTime")}</label>
             <select
               className="w-full"
               value={selectedShopEndTime}
               onChange={(e) => handleShopEndTimeChange(e)}
             >
-              <option selected value="null">
-               
-              </option>
+              <option selected value="null"></option>
               {options.map((option, index) => (
                 <option key={option.id} value={option.value}>
                   {option.value}
@@ -335,14 +331,14 @@ const ShopDetails = () => {
 
         <div className="flex w-full ">
           <div className="mb-4 mr-4 flex flex-col w-full">
-            <label htmlFor="type">{t('lunchStartTime')}</label>
+            <label htmlFor="type">{t("lunchStartTime")}</label>
             <select
               className="w-full"
               value={selectedStartTime}
               onChange={(e) => handleStartTimeChange(e)}
             >
               <option selected value="null">
-              {t('selectTime')}
+                {t("selectTime")}
               </option>
               {options.map((option, index) => (
                 <option key={option.id} value={option.value}>
@@ -352,14 +348,14 @@ const ShopDetails = () => {
             </select>
           </div>
           <div className="mb-4 flex flex-col  w-full">
-            <label htmlFor="type">{t('lunchEndTime')}</label>
+            <label htmlFor="type">{t("lunchEndTime")}</label>
             <select
               className="w-full"
               value={selectedEndTime}
               onChange={(e) => handleEndTimeChange(e)}
             >
               <option selected value="null">
-              {t('selectTime')}
+                {t("selectTime")}
               </option>
               {options.map((option, index) => (
                 <option key={option.id} value={option.value}>
@@ -371,7 +367,7 @@ const ShopDetails = () => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="phone">{t('alternatePhoneNumber')}</label>
+          <label htmlFor="phone">{t("alternatePhoneNumber")}</label>
           <input
             className="w-full"
             type="number"
@@ -401,6 +397,8 @@ const ShopDetails = () => {
                 value: 3,
                 message: "City must be more than 3 chars",
               },
+
+
             })}
           />
           {errors.city && (
@@ -411,7 +409,7 @@ const ShopDetails = () => {
         <div className="w-full flex  flex-wrap">
           <div className=" mb-4 w-full">
             <label htmlFor="city" className="block">
-            {t('city')}
+              {t("city")}
             </label>
             <div className="relative inline-block bg-slate-100 rounded-md  text-black items-center w-full">
               <Combobox value={selectedCity} onChange={setSelectedCity}>
@@ -438,7 +436,7 @@ const ShopDetails = () => {
                     </Combobox.Option>
                   ))}
                   {filteredCities.length <= 0 && (
-                    <Combobox.Option>{t('OOPSWeDidNotFound')}</Combobox.Option>
+                    <Combobox.Option>{t("OOPSWeDidNotFound")}</Combobox.Option>
                   )}
                 </Combobox.Options>
               </Combobox>
@@ -448,33 +446,38 @@ const ShopDetails = () => {
             )}
           </div>
           <div className="mb-4 w-full">
-            <label htmlFor="type">{t('type')}</label>
+            <label htmlFor="type">{t("type")}</label>
             <select className="w-full p-1.5" onChange={handleType} value={type}>
-              <option value="null">{t('selectType')}</option>
-              <option value="salon">{t('salon')}</option>
-              <option value="parlour">{t('parlour')}</option>
-              <option value="spa">{t('spa')}</option>
+              <option value="null">{t("selectType")}</option>
+              <option value="salon">{t("salon")}</option>
+              <option value="parlour">{t("parlour")}</option>
+              <option value="spa">{t("spa")}</option>
             </select>
           </div>
 
           {
             <div className="mb-4 w-full">
-              <label htmlFor="salonOrParlourType">{type} {t('type')}</label>
+              <label htmlFor="salonOrParlourType">
+                {type} {t("type")}
+              </label>
               <select
                 className="w-full p-1.5"
                 onChange={handleParlourType}
                 value={salonOrParlourType}
               >
-                <option value="null">{t('select')} {type} {t('type')}</option>
-                <option value="women">{t('women')}</option>
-                <option value="men">{t('men')}</option>
-                <option value="unisex">{t('unisex')}</option>
+                <option value="null">
+                  {t("select")} {type} {t("type")}
+                </option>
+                <option value="women">{t("women")}</option>
+                <option value="men">{t("men")}</option>
+                <option value="unisex">{t("unisex")}</option>
               </select>
             </div>
           }
         </div>
 
         <div className="mb-4 w-full flex items-start justify-around">
+          <label htmlFor="Spa">Does Your shops has SPA Included?</label>
           <div className="flex items-center justify-center space-x-2">
             <input
               type="checkbox"
@@ -485,7 +488,7 @@ const ShopDetails = () => {
               onChange={(event) => setSpaIncluded(true)}
               // disabled={isAvailable(i)}
             />
-            <label className="text-gray-900">{t('yesIncluded')}</label>
+            <label className="text-gray-900">{t("yesIncluded")}</label>
           </div>
           <div className="flex items-center justify-center space-x-2">
             <input
@@ -499,12 +502,12 @@ const ShopDetails = () => {
 
               // disabled={isAvailable(i)}
             />
-            <label className="text-gray-900">{t('notIncluded')}</label>
+            <label className="text-gray-900">{t("notIncluded")}</label>
           </div>
         </div>
 
         <div className="mb-4">
-          <label htmlFor="description">{t('description')}</label>
+          <label htmlFor="description">{t("description")}</label>
           <input
             className="w-full"
             placeholder="unique point about your shop"
@@ -535,7 +538,7 @@ const ShopDetails = () => {
         </div>
 
         <div className="mb-4 flex justify-between">
-          <button className="primary-button">{t('next')}</button>
+          <button className="primary-button">{t("next")}</button>
         </div>
       </form>
     </>
