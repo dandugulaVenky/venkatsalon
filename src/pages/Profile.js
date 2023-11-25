@@ -8,7 +8,6 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-import { SearchContext } from "../context/SearchContext";
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
 
@@ -75,10 +74,10 @@ export default function Profile() {
   };
 
   return (
-    <div>
-      <div className="px-8 py-8 md:min-h-[60vh] md:flex justify-center md:mb-20 min-h-screen">
+    <div className="pt-6 pb-20">
+      <div className="px-8 md:min-h-[75.5vh] md:flex justify-center ">
         <form
-          className="px-10 py-5 card h-auto mt-10"
+          className="px-10 py-4 card h-auto "
           onSubmit={handleSubmit(submitHandler)}
         >
           <h1 className="mb-4 text-2xl font-semibold">{t("updateProfile")}</h1>

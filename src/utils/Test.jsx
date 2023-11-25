@@ -27,7 +27,7 @@ const Test = ({ services }) => {
   }, [services]);
 
   return (
-    <div className="   pt-5 md:mb-0  text-white ">
+    <div className="  my-4  text-white ">
       <Carousel cols={7} rows={1} gap={8}>
         {mergedServices?.map((item, i) => {
           return (

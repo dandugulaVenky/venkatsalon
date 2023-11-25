@@ -130,7 +130,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className="pt-10 pb-20">
       {header ? (
         <Header
           city={address}
@@ -146,11 +146,11 @@ const Register = () => {
       )}
 
       {location?.pathname?.includes("/register") && (
-        <p className="text-lg underline text-blue-600  text-center pt-12  ">
+        <p className="text-lg underline text-blue-600  text-center   ">
           <Link to="/shop-registration">{t("barber/beauticianClickHere")}</Link>
         </p>
       )}
-      <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20  pt-5 pb-20">
+      <div className="px-8  md:min-h-[60vh] md:flex justify-center ">
         <img
           src={LoginImage}
           alt="login"

@@ -1,11 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
-import Footer from "../../components/footer/Footer";
-import Greeting from "../../components/navbar/Greeting";
-import Layout from "../../components/navbar/Layout";
 
-import Sidebar from "../../components/navbar/SIdebar";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
 
@@ -20,15 +16,13 @@ const TermsAndConditions = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
 
   return (
-    <div>
+    <div className="pt-6 pb-20">
       <Seo props={siteMetadata} />
 
-      <div className="min-h-screen flex flex-col justify-start items-start px-10 overflow-auto md:pt-5 pt-5 md:mb-10 pb-20">
-        <h2 className="mb-2 mt-4">
+      <div className="min-h-screen flex flex-col justify-start items-start px-10 overflow-auto ">
+        <h2 className="text-2xl">
           <strong>Terms and Conditions</strong>
         </h2>
 

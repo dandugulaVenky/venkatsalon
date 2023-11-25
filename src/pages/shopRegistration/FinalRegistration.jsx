@@ -164,9 +164,7 @@ const FinalRegistration = () => {
   }, [navigate]);
 
   return (
-    <>
-      {""}
-
+    <div className="pt-10 pb-20">
       {/*<Seo props={siteMetadata} />*/}
 
       <div className="min-h-[85.5vh]">
@@ -176,11 +174,11 @@ const FinalRegistration = () => {
         <div className="flex flex-col justify-center w-full min-h-[70vh] items-center">
           <div className="space-y-2">
             <p>
-              {t('shopName')} :{" "}
+              {t("shopName")} :{" "}
               <span className="ml-4 w-52">{storedUser?.hotelInfo?.name}</span>
             </p>
             <div className="mb-4">
-              <label htmlFor="phone">{t('noOfSeats')}: </label>
+              <label htmlFor="phone">{t("noOfSeats")}: </label>
               <input
                 className="ml-4 w-44"
                 type="number"
@@ -204,7 +202,7 @@ const FinalRegistration = () => {
                 {loading ? (
                   <span className="buttonloader ml-2"></span>
                 ) : (
-                  t('register')
+                  t("register")
                 )}
               </button>
             </div>
@@ -212,7 +210,7 @@ const FinalRegistration = () => {
           <img src={Select} alt="select category" className="h-72" />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

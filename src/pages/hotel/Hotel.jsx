@@ -617,8 +617,8 @@ const Hotel = () => {
   };
 
   return (
-    <div>
-      <div className={` w-full mx-auto  md:rounded md:px-4  `}>
+    <div className="pt-6 pb-8">
+      <div className={` w-full mx-auto  md:rounded md:px-4 mb-4 `}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
             return (
@@ -638,9 +638,9 @@ const Hotel = () => {
         </CarouselBanner>
       </div>
 
-      <div className="md:px-4 px-2 ">
+      <div className="md:px-4 px-2 my-4 ">
         <div
-          className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col mt-4 "
+          className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
           style={{
             boxShadow: "1px 0.75px 1.5px black",
           }}

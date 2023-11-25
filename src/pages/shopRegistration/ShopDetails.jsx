@@ -248,8 +248,8 @@ const ShopDetails = () => {
   }, [navigate]);
 
   return (
-    <>
-      <div className="md:py-0.5 py-5">
+    <div className="pt-10 pb-20">
+      <div>
         <RegistrationWizard activeStep={1} />
       </div>
       {map ? (
@@ -319,7 +319,10 @@ const ShopDetails = () => {
               value={selectedShopEndTime}
               onChange={(e) => handleShopEndTimeChange(e)}
             >
-              <option selected value="null"></option>
+              <option selected value="null">
+                {" "}
+                {t("selectTime")}
+              </option>
               {options.map((option, index) => (
                 <option key={option.id} value={option.value}>
                   {option.value}
@@ -541,7 +544,7 @@ const ShopDetails = () => {
           <button className="primary-button">{t("next")}</button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

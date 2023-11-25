@@ -145,8 +145,8 @@ const AdminAddBanner = () => {
   };
 
   return (
-    <>
-      <div className="min-h-[86.2vh] flex flex-col items-center justify-center pt-8 pb-20 mx-2 ">
+    <div className="pt-6 pb-20">
+      <div className="min-h-[86.2vh] flex flex-col items-center justify-center mx-2 ">
         <>
           <p className="text-red-400 font-semibold px-4">
             Note1 : Total 6 images are being supported
@@ -212,7 +212,7 @@ const AdminAddBanner = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

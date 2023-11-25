@@ -101,8 +101,8 @@ export default function Login() {
     }
   };
   return (
-    <div>
-      <div className="px-8 md:min-h-[60vh] md:flex justify-center pt-12 pb-20 ">
+    <div className="pt-10 pb-20">
+      <div className="px-8 md:min-h-[60vh] md:flex justify-center  ">
         <img
           src={LoginImage}
           alt="login"

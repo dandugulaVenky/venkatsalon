@@ -1,9 +1,5 @@
 import React, { useContext } from "react";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
-import Layout from "../../../components/navbar/Layout";
-import { SearchContext } from "../../../context/SearchContext";
-import Footer from "../../../components/footer/Footer";
+
 import useFetch from "../../../hooks/useFetch";
 import baseUrl from "../../../utils/client";
 import { AuthContext } from "../../../context/AuthContext";
@@ -12,10 +8,9 @@ import moment from "moment/moment";
 import { useTranslation } from "react-i18next";
 
 const Orders = () => {
-  const { open } = useContext(SearchContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  let w = window.innerWidth;
+
   const { t } = useTranslation();
 
   const { data, loading, error } = useFetch(
@@ -27,17 +22,15 @@ const Orders = () => {
   }
 
   return (
-    <div>
-      {""}
-
+    <div className="pt-6 pb-20">
       {loading ? (
         <div className="min-h-[90vh] flex items-center justify-center">
           <p> loading...</p>
         </div>
       ) : (
         <div className="min-h-[90vh] md:mx-10 mx-5  ">
-          <p className="py-4 font-bold">{t("myIronOrders")}</p>
-          <div className="grid grid-cols-1 md:gap-4 md:grid-cols-2 lg:grid-cols-4 pb-20">
+          <p className="pb-4 font-bold">{t("myIronOrders")}</p>
+          <div className="grid grid-cols-1 md:gap-4 md:grid-cols-2 lg:grid-cols-4 ">
             {data?.map((order) => (
               <div className="card  overflow-auto ">
                 <div className="flex flex-col items-start justify-center p-5 ">

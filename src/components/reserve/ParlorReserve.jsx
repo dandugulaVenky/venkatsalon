@@ -767,7 +767,7 @@ const ParlorReserve = () => {
   };
 
   return (
-    <>
+    <div className="pt-6 pb-8">
       <ShowInclusions />
       {parlorPreview && reserveState !== null ? (
         <div className="min-h-screen">
@@ -778,7 +778,7 @@ const ParlorReserve = () => {
           />
         </div>
       ) : (
-        <div className="pb-16">
+        <div>
           <div className="flex items-center md:justify-start justify-center space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
             {!categoriesOptions?.length > 0 && sortBy === null && (
               <select
@@ -998,7 +998,7 @@ const ParlorReserve = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

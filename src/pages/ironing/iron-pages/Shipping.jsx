@@ -5,12 +5,11 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Store } from "../ironing-utils/Store";
 import CheckoutWizard from "../ironing-utils/CheckoutWizard";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
+
 import Seo from "../../../utils/Seo";
-import Layout from "../../../components/navbar/Layout";
+
 import { SearchContext } from "../../../context/SearchContext";
-import Footer from "../../../components/footer/Footer";
+
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { useTranslation } from "react-i18next";
 
@@ -32,9 +31,6 @@ export default function Shipping() {
     formState: { errors },
     setValue,
   } = useForm();
-
-  const { open } = useContext(SearchContext);
-  let w = window.innerWidth;
 
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
@@ -71,12 +67,10 @@ export default function Shipping() {
   };
 
   return (
-    <>
-      {""}
-
+    <div className="pt-6 pb-20">
       <Seo props={siteMetadata} />
 
-      <div className="md:py-0.5 py-5">
+      <div className=" pb-5">
         <CheckoutWizard activeStep={1} />
       </div>
       <form
@@ -159,6 +153,6 @@ export default function Shipping() {
           <button className="primary-button">{t("next")}</button>
         </div>
       </form>
-    </>
+    </div>
   );
 }

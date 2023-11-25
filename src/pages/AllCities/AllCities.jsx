@@ -39,10 +39,10 @@ const AllCities = () => {
   };
 
   return (
-    <>
+    <div className="pt-6 pb-20">
       <div className="w-full md:mx-auto md:max-w-xl lg:max-w-3xl xl:max-w-6xl">
-        <div className="flex items-center py-10 space-x-2 md:mx-0 mx-3">
-          <label>{t('city')}:</label>
+        <div className="flex pb-8 items-centerspace-x-2 md:mx-0 mx-3">
+          <label>{t("city")}:</label>
           <input
             type="text"
             className="w-full md:w-[80%] mx-auto col-span-12 rounded-full p-2 text-center"
@@ -53,7 +53,7 @@ const AllCities = () => {
             }}
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            placeholder={t('searchCityName')}
+            placeholder={t("searchCityName")}
           />
         </div>
 
@@ -83,7 +83,7 @@ const AllCities = () => {
           </>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default AllCities;

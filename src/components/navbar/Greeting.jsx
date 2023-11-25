@@ -99,8 +99,8 @@ const Greeting = ({ bestRef }) => {
         <Header header={null} />
       )}
 
-      <div className="h-[4rem] resp-margin">
-        <div className="mainHead1">
+      <div className=" resp-margin">
+        <div className="mainHead1 bg-[#34fbea32]">
           <div
             className={`px-2  grid grid-cols-12  ${
               isScrolled ? "greeting-head1" : "greeting-head2"

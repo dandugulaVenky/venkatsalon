@@ -9,7 +9,6 @@ import baseUrl from "../../utils/client";
 import { t } from "i18next";
 import LanguageContext from "../../context/LanguageContext";
 
-
 const List = () => {
   let { city, type } = useContext(SearchContext);
   const [data1, setData1] = useState();
@@ -19,7 +18,6 @@ const List = () => {
   const [gender, setGender] = useState();
   city = city.toLowerCase().trim();
   const { locale, setLocale } = useContext(LanguageContext);
-
 
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${
@@ -121,15 +119,15 @@ const List = () => {
   };
 
   return (
-    <>
-      <div className="min-h-[85.5vh]">
+    <div className="pt-6 pb-20">
+      <div className="min-h-[85.5vh] ">
         {loading ? (
           <div className=" flex items-center justify-center h-[70vh]">
             <span className="loader "></span>
           </div>
         ) : (
-          <div className="w-full  mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl pb-24">
-            <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 py-8 ">
+          <div className="w-full  mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl ">
+            <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 pb-6 ">
               <input
                 type="text"
                 className=" md:col-span-6 col-span-12 rounded-full p-2 text-center"
@@ -154,23 +152,29 @@ const List = () => {
                   }}
                   value={subType}
                 >
-                  <option value="null">{t('sortByType')}</option>
+                  <option value="null">{t("sortByType")}</option>
                   <option value={type}>
-                    { 
-                        locale === "en" ?
-                        t('onlyType',{type:type}) 
-                        : locale === "te" ?  t('onlyType',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
-                        :  t('onlyType',{type:type === "saloon" ? "सैलून" : "पार्लर"})
-                        }
-                    </option>
+                    {locale === "en"
+                      ? t("onlyType", { type: type })
+                      : locale === "te"
+                      ? t("onlyType", {
+                          type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                        })
+                      : t("onlyType", {
+                          type: type === "saloon" ? "सैलून" : "पार्लर",
+                        })}
+                  </option>
                   <option value="spaIncluded">
-                    { 
-                        locale === "en" ?
-                        t('typeSpa',{type:type}) 
-                        : locale === "te" ?  t('typeSpa',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
-                        :  t('typeSpa',{type:type === "saloon" ? "सैलून" : "पार्लर"})
-                        }
-                    </option>
+                    {locale === "en"
+                      ? t("typeSpa", { type: type })
+                      : locale === "te"
+                      ? t("typeSpa", {
+                          type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                        })
+                      : t("typeSpa", {
+                          type: type === "saloon" ? "सैलून" : "पार्लर",
+                        })}
+                  </option>
                 </select>
               </div>
 
@@ -185,10 +189,10 @@ const List = () => {
                   }}
                   value={gender}
                 >
-                  <option value="null">{t('sortByGender')}</option>
-                  <option value="women">{t('women')}</option>
-                  <option value="men">{t('men')}</option>
-                  <option value="unisex">{t('unisex')}</option>
+                  <option value="null">{t("sortByGender")}</option>
+                  <option value="women">{t("women")}</option>
+                  <option value="men">{t("men")}</option>
+                  <option value="unisex">{t("unisex")}</option>
                 </select>
               </div>
             </div>
@@ -208,13 +212,16 @@ const List = () => {
                 {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
                     <p className="text-2xl font-semibold">
-                      { 
-                        locale === "en" ?
-                        t('noTypeFound1',{type:type}) 
-                        : locale === "te" ?  t('noTypeFound1',{type:type === "saloon" ? "సెలూన్లు"  : "పార్లర్లు" })
-                        :  t('noTypeFound1',{type:type === "saloon" ? "सैलून" : "पार्लर"})
-                        }
-                      </p>
+                      {locale === "en"
+                        ? t("noTypeFound1", { type: type })
+                        : locale === "te"
+                        ? t("noTypeFound1", {
+                            type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                          })
+                        : t("noTypeFound1", {
+                            type: type === "saloon" ? "सैलून" : "पार्लर",
+                          })}
+                    </p>
                   </div>
                 )}
               </div>
@@ -222,7 +229,7 @@ const List = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

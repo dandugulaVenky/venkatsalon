@@ -7,12 +7,9 @@ import axios from "axios";
 
 import Layout from "../../components/navbar/Layout";
 
-import Footer from "../../components/footer/Footer";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import Sidebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
 import { useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
@@ -63,19 +60,15 @@ export default function Contact() {
       toast.error(err);
     }
   };
-  const { open } = useContext(SearchContext);
+
   const { t } = useTranslation();
 
-  let w = window.innerWidth;
   return (
     <>
-      <div>
-        {""}
-        {w >= 768 && <Layout />}
-
+      <div className="pt-6 pb-20">
         <Seo props={siteMetadata} />
 
-        <div className=" min-h-screen px-8   flex flex-col items-center justify-center  md:mt-12 -mt-5 ">
+        <div className=" px-8   flex flex-col items-center justify-center   ">
           <form
             className="px-10 py-2.5 card h-auto  "
             onSubmit={handleSubmit(submitHandler)}

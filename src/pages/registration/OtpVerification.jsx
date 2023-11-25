@@ -155,7 +155,7 @@ const OtpVerification = (props) => {
 
   return (
     <>
-      <div className="mb-4 w-full transition-all delay-1000 ease-linear pt-12  pb-20">
+      <div className="w-full transition-all delay-1000 ease-linear pt-10 pb-20">
         <label htmlFor="phone">{t("phoneTitle")}</label>
 
         {!verified && (

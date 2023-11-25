@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useRef } from "react";
+import React, { memo, useCallback, useRef } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -263,12 +263,9 @@ const AdminOrders = () => {
   };
 
   return (
-    <div>
-      <div
-        className="px-3  pb-20 md:pt-4 mx-auto"
-        style={{ maxWidth: "1140px" }}
-      >
-        <div className="pt-5 mb-5  " style={containerStyle}>
+    <div className="pt-6 pb-20">
+      <div className="px-3   mx-auto" style={{ maxWidth: "1140px" }}>
+        <div style={containerStyle}>
           <button
             className="bg-[#00ccbb]  rounded-md text-white"
             onClick={() => {
@@ -465,7 +462,9 @@ const AdminOrders = () => {
         </div>
         {genderAnalysis !== null && (
           <div className="py-10 min-w-full overflow-auto ">
-            <p className="py-10 text-center font-bold">{t('genderWiseRevenue')}</p>
+            <p className="py-10 text-center font-bold">
+              {t("genderWiseRevenue")}
+            </p>
             <Charts
               data={genderAnalysis}
               XAxisDatakey="name"

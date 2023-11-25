@@ -13,7 +13,6 @@ import { Link } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-import AdminAddBanner from "../../components/admin/AdminAddBanner";
 
 const MyServices = () => {
   const [shopAllServices, setShopAllServices] = useState();
@@ -409,7 +408,7 @@ const MyServices = () => {
   }, [allMergedServices, currentCategory, typeOfPerson]);
 
   return (
-    <>
+    <div className="pt-6 pb-20">
       {showInclusions?.inclusions?.length > 0 ? (
         <div className="reserve relative">
           <div className="overflow-auto  ">
@@ -590,14 +589,14 @@ const MyServices = () => {
           </div>
         </div>
       ) : (
-        <div className="pb-20 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
-          <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
+        <div className=" min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
+          <p className="float-right bg-gray-50 px-2 rounded-md font-bold">
             {t("totalServices")} :{" "}
             {shopAllServices?.length
               ? shopAllServices?.length
               : allServices?.length}
           </p>
-          <p className="float-right bg-gray-50 p-4 rounded-md font-bold">
+          <p className="float-right bg-gray-50 px-2 rounded-md font-bold">
             Total Seats : {roomData?.length || 0}
           </p>
 
@@ -608,10 +607,10 @@ const MyServices = () => {
               value={typeOfPerson}
             >
               <option selected defaultValue={null}>
-                {t('selectType')}
+                {t("selectType")}
               </option>
-              <option value="men">{t('men')}</option>
-              <option value="women">{t('women')}</option>
+              <option value="men">{t("men")}</option>
+              <option value="women">{t("women")}</option>
             </select>
 
             <select className="w-auto my-2 mx-2" onChange={handleChange}>
@@ -629,7 +628,7 @@ const MyServices = () => {
               className="primary-button my-2"
               onClick={() => setSeatsShow(true)}
             >
-              {t('addRemoveSeats')}
+              {t("addRemoveSeats")}
             </button>
           </div>
 
@@ -848,7 +847,7 @@ const MyServices = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

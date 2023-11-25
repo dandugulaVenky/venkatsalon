@@ -365,8 +365,8 @@ function Break() {
   };
 
   return (
-    <div className="">
-      <div className="p-10 min-h-[80vh]  mx-auto border-2 border-slate-50 mt-5 mb-10 rounded-md max-w-sm  md:max-w-[1200px]">
+    <div className="pt-6 pb-20">
+      <div className="px-10 min-h-[80vh]  mx-auto border-2 border-slate-50  rounded-md max-w-sm  md:max-w-[1200px]">
         <div className="grid grid-cols-12  gap-2">
           <div className=" md:col-span-6 col-span-12">
             <div className="grid place-items-center gap-5">

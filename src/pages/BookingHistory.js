@@ -92,9 +92,6 @@ const BookingHistory = () => {
   }
   const filteredArray = filterArray(data, userInput);
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   const GetPushed = () => {
     const item = showServices;
 
@@ -126,10 +123,10 @@ const BookingHistory = () => {
                 return (
                   <div className="py-2">
                     <p className="font-semibold">
-                      {t('seat')} - {seats[i] || "Any Seat"}
+                      {t("seat")} - {seats[i] || "Any Seat"}
                     </p>
                     <span key={i}>
-                    {t('services')}  :{" "}
+                      {t("services")} :{" "}
                       {seat.options.map((option, i) => {
                         return (
                           <span className="ml-1 font-bold" key={i}>
@@ -152,11 +149,11 @@ const BookingHistory = () => {
   };
 
   return (
-    <div className="">
+    <div className="pt-6 pb-20">
       {showServices !== null && <GetPushed />}
 
       <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
-        <div className="flex items-center justify-around  py-5">
+        <div className="flex items-center justify-around ">
           <p className=" md:text-xl text-xs font-semibold">
             {t("bookingHistory")}
           </p>
@@ -185,33 +182,33 @@ const BookingHistory = () => {
                 <thead className="border-b bg-gray-400 ">
                   <tr className="border-b-2 border-gray-200 ">
                     <th className="text-center md:text-md text-sm md:p-5 py-3">
-                    {t('reference')}
+                      {t("reference")}
                     </th>
                     <th className=" md:p-5 px-10 md:text-md text-sm text-right">
-                    {t('date')}
+                      {t("date")}
                     </th>
                     <th className="md:p-5 px-10  md:text-md text-sm text-right">
-                    {t('time')}
+                      {t("time")}
                     </th>
                     <th className="md:p-5 px-5  md:text-md text-sm text-right">
-                      {t('amount')}
+                      {t("amount")}
                     </th>
                     <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                    {t('shop')}
+                      {t("shop")}
                     </th>
                     {
                       <th className="md:p-5  px-10 md:text-md text-sm text-right">
-                        {t('inclusions')}
+                        {t("inclusions")}
                       </th>
                     }
                     <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                    {t('payment')}
+                      {t("payment")}
                     </th>{" "}
                     <th className="md:p-5  px-5 md:text-md text-sm text-right">
-                    {t('done')}
+                      {t("done")}
                     </th>
                     <th className="md:p-5 px-5 md:text-md text-sm text-right">
-                    {t('createdAt')}
+                      {t("createdAt")}
                     </th>
                   </tr>
                 </thead>
@@ -252,7 +249,7 @@ const BookingHistory = () => {
                             }}
                             className="cursor-pointer"
                           >
-                              {t('showServices')}
+                            {t("showServices")}
                           </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm">
@@ -265,11 +262,18 @@ const BookingHistory = () => {
                           <label>
                             {" "}
                             {item.isDone === "false" ? (
-                              <span className="text-red-500">{t('notYetDone')}</span>
+                              <span className="text-red-500">
+                                {t("notYetDone")}
+                              </span>
                             ) : item.isDone === "cancelled" ? (
-                              <span className="text-red-500">{t('cancelled')}</span>
+                              <span className="text-red-500">
+                                {t("cancelled")}
+                              </span>
                             ) : (
-                              <span className="text-green-500"> {t('done')}</span>
+                              <span className="text-green-500">
+                                {" "}
+                                {t("done")}
+                              </span>
                             )}
                           </label>
                         </td>
@@ -307,7 +311,8 @@ const BookingHistory = () => {
           </div>
         ) : (
           <div className="min-h-[75vh] flex items-center justify-center">
-            {/* <span className="loader"></span> */}{t('noBookingsFound')}
+            {/* <span className="loader"></span> */}
+            {t("noBookingsFound")}
           </div>
         )}
       </div>

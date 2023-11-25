@@ -2,11 +2,9 @@ import axios from "axios";
 import React from "react";
 
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "./footer/Footer";
-import Greeting from "./navbar/Greeting";
-import Layout from "./navbar/Layout";
+
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
@@ -88,12 +86,10 @@ const BookingFailure = () => {
 
     return () => console.log("my effect is destroying");
   });
-  let w = window.innerWidth;
 
   return (
-    <>
-      {w >= 768 && <Layout />}
-      <div className=" flex flex-col items-center justify-center pb-40">
+    <div className="pt-6 pb-20">
+      <div className=" flex flex-col items-center justify-center ">
         {reference !== undefined && (
           <div className="flex flex-col items-center justify-center md:min-h-[70vh] min-h-[80vh]">
             <p>Reference : {reference}</p>
@@ -108,7 +104,7 @@ const BookingFailure = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

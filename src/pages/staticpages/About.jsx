@@ -1,10 +1,7 @@
 import React from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
-import Footer from "../../components/footer/Footer";
-import Greeting from "../../components/navbar/Greeting";
-import Layout from "../../components/navbar/Layout";
-import Sidebar from "../../components/navbar/SIdebar";
+
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
@@ -20,15 +17,14 @@ const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
+
   const { t } = useTranslation();
 
   return (
-    <>
+    <div className="pt-6 pb-20">
       <Seo props={siteMetadata} />
 
-      <div className="py-10 px-20 flex flex-col space-y-3 justify-center">
+      <div className=" px-10 flex flex-col space-y-3 justify-center">
         <div>
           <h1 className="text-2xl font-bold">{t("introduction")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
@@ -80,7 +76,7 @@ const About = () => {
         <p>{t("callUs")}</p>
         <p>{t("aboutUsEmail")}</p>
       </div>
-    </>
+    </div>
   );
 };
 

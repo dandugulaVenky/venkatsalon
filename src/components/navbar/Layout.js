@@ -143,7 +143,7 @@ const Layout = ({ bestRef }) => {
       )}
 
       <div className="mb-[5.5rem]">
-        <div className="mainHead">
+        <div className="mainHead bg-[#34fbea32]">
           <div
             className={`flex items-center justify-between px-10 ${
               pathname.includes("/shops") ? "bg-white" : "bg-transparent"

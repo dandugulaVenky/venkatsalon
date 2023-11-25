@@ -1,7 +1,7 @@
 .greeting-head1 {
   background-color: #ffffff !important;
 
-  max-height: 200px;
+  max-height: 170px;
   color: #000000 !important;
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -10,11 +10,11 @@
 }
 
 .greeting-head2 {
-  background-color: white !important;
+  background-color: transparent;
   padding-top: 1px;
   padding-bottom: 1px;
-  max-height: 200px;
-  margin-bottom: 20px;
+  max-height: 180px;
+
   transition: max-height 2.5s ease;
   // transition: background-color 2.5s ease-out;
   // transition: all 0.01s;
@@ -38,17 +38,22 @@
 }
 
 .greeting-imgs2 {
-  max-height: 80px;
+  max-height: 82px;
   width: auto;
   background-size: cover;
   transition: max-height 0.3s ease;
 }
 .resp-margin {
-  margin-top: 5px;
+  height: 140px;
 }
 
-@media screen and (min-width: 540px) {
+@media screen and (max-width: 1064px) {
   .resp-margin {
-    margin-top: 23px;
+    height: 85px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .resp-margin {
+    height: 70px;
   }
 }

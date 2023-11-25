@@ -22,7 +22,7 @@ const siteMetadata = {
 
 export default function Ironing() {
   let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
+
   const location = useLocation();
   const navigate = useNavigate();
 

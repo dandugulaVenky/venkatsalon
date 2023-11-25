@@ -1,16 +1,14 @@
-import Cookies from "js-cookie";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { Store } from "../ironing-utils/Store";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CheckoutWizard from "../ironing-utils/CheckoutWizard";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
+
 import Seo from "../../../utils/Seo";
-import Layout from "../../../components/navbar/Layout";
+
 import { SearchContext } from "../../../context/SearchContext";
-import Footer from "../../../components/footer/Footer";
+
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../utils/client";
@@ -29,10 +27,9 @@ export default function PlaceOrder() {
   }, []);
 
   const { user } = useContext(AuthContext);
-  const { open } = useContext(SearchContext);
-  let w = window.innerWidth;
+
   const [buttonLoad, setButtonLoad] = useState(false);
-  const { state, dispatch } = useContext(Store);
+  const { state } = useContext(Store);
   const { cart } = state;
   const { cartItems, shippingAddress } = cart;
 
@@ -118,11 +115,7 @@ export default function PlaceOrder() {
   };
 
   return (
-    <>
-      {""}
-
-      <Seo props={siteMetadata} />
-
+    <div className="pt-6 pb-20">
       <CheckoutWizard activeStep={2} />
       <h1 className="mb-4 text-xl px-10 pt-5">{t("placeOrder")}</h1>
       {cartItems.length === 0 ? (
@@ -246,6 +239,6 @@ export default function PlaceOrder() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

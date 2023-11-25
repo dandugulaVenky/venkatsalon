@@ -6,11 +6,9 @@ import { Store } from "../ironing-utils/Store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import { SearchContext } from "../../../context/SearchContext";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
+
 import Seo from "../../../utils/Seo";
-import Layout from "../../../components/navbar/Layout";
-import Footer from "../../../components/footer/Footer";
+
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { useTranslation } from "react-i18next";
 
@@ -45,12 +43,8 @@ function Cart() {
     toast.success("Product updated in the cart");
   };
   return (
-    <>
-      {""}
-
-      <Seo props={siteMetadata} />
-
-      <div className="bg-gray-200 h-[100vh] md:px-14 px-5 py-10">
+    <div className="pt-6 pb-20">
+      <div className="py-5 h-[100vh] md:px-14 px-5 ">
         <h1 className="mb-4 text-xl">{t("shoppingCart")}</h1>
         {cartItems.length === 0 ? (
           <div className="font-bold py-2">
@@ -64,7 +58,7 @@ function Cart() {
             <div className="overflow-x-auto lg:col-span-3 h-auto ">
               <table className="min-w-full ">
                 <thead className="border-b">
-                  <tr className=" border-2 border-b-white">
+                  <tr className=" ">
                     <th className="p-5 text-left">{t("item")}</th>
                     <th className="p-5 text-right">{t("quantity")}</th>
                     <th className="p-5 text-right">{t("price")}</th>
@@ -73,7 +67,7 @@ function Cart() {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item.slug} className=" border-2 border-b-white">
+                    <tr key={item.slug}>
                       <td>
                         <Link to={`/iron/product/${item.slug}`}>
                           <a className="flex items-center">
@@ -143,7 +137,7 @@ function Cart() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

@@ -69,7 +69,7 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="pt-6 pb-20">
       {loading ? (
         <div className="min-h-[85vh]  flex items-center justify-center">
           <span className="loader "></span>

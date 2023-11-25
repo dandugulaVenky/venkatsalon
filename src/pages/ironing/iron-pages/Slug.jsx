@@ -1,19 +1,13 @@
-import { useCallback, useContext, useMemo, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
-import { toast } from "react-toastify";
+import { useContext, useMemo } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import { Store } from "../ironing-utils/Store";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
+
 import Seo from "../../../utils/Seo";
 import { SearchContext } from "../../../context/SearchContext";
-import Layout from "../../../components/navbar/Layout";
+
 import useEffectOnce from "../../../utils/UseEffectOnce";
-import Footer from "../../../components/footer/Footer";
+
 import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
@@ -73,7 +67,6 @@ export default function Slug() {
   const product = findProduct[0];
 
   const { state, dispatch } = useContext(Store);
-  const { open } = useContext(SearchContext);
 
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -89,15 +82,12 @@ export default function Slug() {
     dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
     navigate("/iron/cart");
   };
-  let w = window.innerWidth;
 
   return (
-    <>
-      {""}
-
+    <div className="pt-6 pb-20">
       <Seo props={siteMetadata} />
 
-      <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12 mt-2 mb-10">
+      <div className="grid md:grid-cols-4 md:gap-3 px-4 md:px-12">
         <div className="md:col-span-2">
           <img
             src={product.image}
@@ -144,6 +134,6 @@ export default function Slug() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

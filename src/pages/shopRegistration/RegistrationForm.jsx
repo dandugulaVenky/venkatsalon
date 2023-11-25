@@ -174,11 +174,8 @@ const RegistrationForm = () => {
     setHeader(true);
   };
 
-  let w = window.innerWidth;
-  const { open } = useContext(SearchContext);
-
   return (
-    <div>
+    <div className="pt-10 pb-20">
       {header ? (
         <Header
           setHeader={setHeader}
@@ -192,11 +189,11 @@ const RegistrationForm = () => {
         <Header header={header} />
       )}
 
-      <div className=" pt-8 md:pt-10">
+      <div>
         <RegistrationWizard activeStep={0} />
       </div>
 
-      <div className="px-8  md:min-h-[60vh] md:flex justify-center md:mb-20 pt-5  pb-20">
+      <div className="px-8  md:min-h-[60vh] md:flex justify-center">
         <img
           src={LoginImage}
           alt="login"

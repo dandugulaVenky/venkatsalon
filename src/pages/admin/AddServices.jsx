@@ -10,11 +10,7 @@ import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
-import {
-  faDeleteLeft,
-  faDumpster,
-  faRemove,
-} from "@fortawesome/free-solid-svg-icons";
+import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AddServices = () => {
@@ -255,13 +251,12 @@ const AddServices = () => {
   };
 
   return (
-    <div>
-      {""}
-      <div className="md:py-10 pb-20 md:px-5 px-2.5 min-h-screen">
+    <div className="pt-6 pb-20">
+      <div className=" md:px-5 px-2.5 min-h-screen">
         <div className="flex md:flex-row flex-col flex-wrap items-center justify-around pb-4 md:space-y-0 space-y-3">
           <div className="md:w-auto w-full">
             <div className="flex items-center justify-between">
-              <p className="py-2 font-semibold text-lg  ">{t('gender')}</p>
+              <p className="py-2 font-semibold text-lg  ">{t("gender")}</p>
               <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                 0
               </span>
@@ -271,14 +266,14 @@ const AddServices = () => {
               className="border-2 border-[#00ccbb]  md:w-auto w-full"
               value={typeOfPerson}
             >
-              <option selected>{t('selectType')}</option>
+              <option selected>{t("selectType")}</option>
               {(shopType?.subType === "unisex" ||
                 shopType?.subType === "men") && (
-                <option value="men">{t('men')}</option>
+                <option value="men">{t("men")}</option>
               )}
               {(shopType?.subType === "unisex" ||
                 shopType?.subType === "women") && (
-                <option value="women">{t('women')}</option>
+                <option value="women">{t("women")}</option>
               )}
             </select>
           </div>
@@ -378,7 +373,7 @@ const AddServices = () => {
             <thead class="text-xs text-white uppercase bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
-                {t('gender')}
+                  {t("gender")}
                 </th>
                 <th scope="col" class="px-6 py-3">
                   {t("categoryName")}{" "}
@@ -393,7 +388,7 @@ const AddServices = () => {
                   {t("duration")}
                 </th>
                 <th scope="col" class="px-6 py-3">
-                {t('delete')}
+                  {t("delete")}
                 </th>
               </tr>
             </thead>

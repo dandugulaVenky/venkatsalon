@@ -214,9 +214,9 @@ const Preview = (props) => {
   }, []);
 
   return (
-    <>
+    <div className="pb-20">
       <div
-        className="pb-20 min-h-screen bg-cover bg-center bg-no-repeat"
+        className=" min-h-screen bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
             "url('https://res.cloudinary.com/duk9xkcp5/image/upload/v1687704167/pexels-pixabay-219677_kgdqgm.jpg')",
@@ -250,7 +250,7 @@ const Preview = (props) => {
                             {t("duration")}
                           </th>
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                          {t("gender")}
+                            {t("gender")}
                           </th>
                         </tr>
                       </thead>
@@ -354,7 +354,7 @@ const Preview = (props) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

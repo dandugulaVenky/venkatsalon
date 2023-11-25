@@ -71,9 +71,9 @@ const PackagePreview = (props) => {
   };
 
   return (
-    <div>
-      <div className="pb-10 min-h-screen">
-        <p className="mb-2 py-5 md:pl-[4.5rem] pl-4 text-black font-bold text-xl">
+    <div className="pt-6 pb-20">
+      <div className=" min-h-screen">
+        <p className="pb-5 md:pl-[4.5rem] pl-4 text-black font-bold text-xl">
           Preview Of Package
         </p>
         <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">

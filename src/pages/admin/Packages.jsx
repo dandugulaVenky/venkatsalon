@@ -148,8 +148,7 @@ const Packages = () => {
   };
 
   return (
-    <>
-      {""}
+    <div className="pt-6 pb-20">
       {preview ? (
         <div>
           <PackagePreview
@@ -163,11 +162,11 @@ const Packages = () => {
           />
         </div>
       ) : (
-        <div className="pb-10 min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
-          <div className="mb-2 py-5  flex items-center justify-around flex-wrap flex-grow basis-full">
+        <div className="min-h-screen md:w-[90vw] w-[95.5vw] mx-auto">
+          <div className="  flex items-center justify-around flex-wrap flex-grow basis-full pb-5">
             <div className="md:w-auto w-full">
               <div className="flex items-center justify-between">
-                <p className="py-2 font-semibold text-lg  ">{t('gender')}</p>
+                <p className="py-2 font-semibold text-lg  ">{t("gender")}</p>
                 <span className=" bg-[#00ccbb] rounded-full md:px-3.5 px-2.5   md:py-1.5 py-0.5 text-white">
                   0
                 </span>
@@ -177,9 +176,9 @@ const Packages = () => {
                 className="border-2 border-[#00ccbb]  md:w-auto w-full"
                 value={typeOfPerson}
               >
-                <option selected>{t('selectType')}</option>
-                <option value="men">{t('men')}</option>
-                <option value="women">{t('women')}</option>
+                <option selected>{t("selectType")}</option>
+                <option value="men">{t("men")}</option>
+                <option value="women">{t("women")}</option>
               </select>
             </div>
             <div className="md:w-auto w-full">
@@ -339,8 +338,7 @@ const Packages = () => {
                     <div className="mb-2 flex justify-between bg-green-500 rounded text-white font-bold p-2">
                       <div>{t("packagePrice")}</div>
                       <div>
-                        {price}{" "}
-                        {t("rs")}/-
+                        {price} {t("rs")}/-
                       </div>
                     </div>
                   </li>
@@ -361,7 +359,7 @@ const Packages = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 export default Packages;

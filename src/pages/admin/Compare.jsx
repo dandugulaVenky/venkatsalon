@@ -236,12 +236,9 @@ const Compare = () => {
     setGender(e.target.value);
   };
   return (
-    <div>
-      <div
-        className=" md:px-5  pb-20 md:pt-4 mx-auto"
-        style={{ maxWidth: "1140px" }}
-      >
-        <p className="text-center font-semibold py-10 md:text-xl underline">
+    <div className="pt-6 pb-20">
+      <div className="mx-auto" style={{ maxWidth: "1140px" }}>
+        <p className="text-center  py-5 font-semibold md:text-xl underline">
           {t("myservicesAnalysis")}
         </p>
         <div className="flex md:flex-row flex-col px-5 gap-4 items-center justify-between">

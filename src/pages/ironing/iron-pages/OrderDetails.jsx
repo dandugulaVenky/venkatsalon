@@ -1,27 +1,23 @@
 import axios from "axios";
 
-import { useEffect, useReducer } from "react";
-import { toast } from "react-toastify";
+import { useEffect } from "react";
+
 import baseUrl from "../../../utils/client";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useFetch from "../../../hooks/useFetch";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/AuthContext";
-import SIdebar from "../../../components/navbar/SIdebar";
-import Greeting from "../../../components/navbar/Greeting";
-import Layout from "../../../components/navbar/Layout";
-import { SearchContext } from "../../../context/SearchContext";
-import Footer from "../../../components/footer/Footer";
+
 import { useState } from "react";
 
 export default function OrderDetails() {
   const { pathname } = useLocation();
 
   const { user } = useContext(AuthContext);
-  let w = window.innerWidth;
+
   const navigate = useNavigate();
   const orderId = pathname.split("/")[3];
-  const { open } = useContext(SearchContext);
+
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { data, loading, error } = useFetch(
@@ -62,15 +58,13 @@ export default function OrderDetails() {
   }, [user?._id]);
 
   return (
-    <>
-      {""}
-
-      <h1 className="mb-4 text-xl md:px-10 px-4 py-3 font-bold">{`Order ${orderId}`}</h1>
+    <div className="pt-6 pb-20">
+      <h1 className="mb-4 text-xl md:px-10 px-4  font-bold">{`Order ${orderId}`}</h1>
 
       {loading && data[0]?.length > 0 ? (
         "loading"
       ) : (
-        <div className="grid md:grid-cols-4 md:gap-5 md:px-10 px-4 pb-20">
+        <div className="grid md:grid-cols-4 md:gap-5 md:px-10 px-4 ">
           <div className="overflow-x-auto md:col-span-3">
             <div className="card  p-5">
               <h2 className="mb-2 text-lg">Shipping Address</h2>
@@ -182,6 +176,6 @@ export default function OrderDetails() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
