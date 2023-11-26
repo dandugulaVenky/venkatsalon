@@ -29,7 +29,7 @@ import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
 import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 
 import Reserve from "./components/reserve/Reserve";
-import ParlorReserve from "./components/reserve/ParlorReserve";
+// import ParlorReserve from "./components/reserve/ParlorReserve";
 import Transactions from "./pages/admin/Transactions";
 import AdminOrders from "./pages/admin/AdminOrders";
 import Packages from "./pages/admin/Packages";
