@@ -57,6 +57,12 @@ const Packages = () => {
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
+        const { data: data1 } = await axios.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
+
+        setTypeOfPerson(data1?.subType);
+
         // const services = (data[0]?.services || []).reduce((arr, item) => {
         //   arr.push(item.category);
         //   return arr;
@@ -66,6 +72,7 @@ const Packages = () => {
         // );
 
         setRoomId(data[0]?._id);
+
         // setServices(packageRemovedServices);
         setCategories(data[0]?.services);
         setLoading(true);
@@ -177,8 +184,12 @@ const Packages = () => {
                 value={typeOfPerson}
               >
                 <option selected>{t("selectType")}</option>
-                <option value="men">{t("men")}</option>
-                <option value="women">{t("women")}</option>
+                {(typeOfPerson === "unisex" || typeOfPerson === "men") && (
+                  <option value="men">{t("men")}</option>
+                )}
+                {(typeOfPerson === "unisex" || typeOfPerson === "women") && (
+                  <option value="women">{t("women")}</option>
+                )}
               </select>
             </div>
             <div className="md:w-auto w-full">

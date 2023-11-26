@@ -137,7 +137,7 @@ const Reserve = () => {
         0
       );
 
-      console.log(totalTimeOfServices);
+      // console.log(totalTimeOfServices);
 
       setTotalTime(totalTimeOfServices);
       setAllServices(mergedPreviewServices);
@@ -771,7 +771,6 @@ const Reserve = () => {
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
     >
-      {""}
       <ShowInclusions />
       {salonPreview && reserveState !== null ? (
         <div className="min-h-screen">
@@ -983,7 +982,7 @@ const Reserve = () => {
           ) : (
             <div className="md:min-h-[75vh] min-h-[65vh] flex items-center flex-col justify-center">
               {gender !== undefined && salonServices?.length <= 0 ? (
-                !loading || !ownerDetailsLoading ? (
+                !loading && !ownerDetailsLoading ? (
                   "loading"
                 ) : (
                   "Oops no services found !"
