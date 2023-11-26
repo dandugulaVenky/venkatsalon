@@ -112,12 +112,12 @@ function App() {
             <Route path="/cities" element={<AllCities />} />
 
             <Route path="/shops/:id" element={<Hotel />} />
-            <Route path="/shops/:id/salon-reserve" element={<Reserve />} />
+            <Route path="/shops/:id/:id1" element={<Reserve />} />
 
-            <Route
+            {/* <Route
               path="/shops/:id/parlour-reserve"
               element={<ParlorReserve />}
-            />
+            /> */}
 
             <Route
               path="/profile"

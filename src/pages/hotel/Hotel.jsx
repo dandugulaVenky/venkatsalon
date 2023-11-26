@@ -380,8 +380,8 @@ const Hotel = () => {
       },
     });
 
-    if (user && type === "salon") {
-      navigate(`/shops/${shopIdLocation}/salon-reserve`, {
+    if (user) {
+      navigate(`/shops/${shopIdLocation}/${type}-reserve`, {
         state: {
           shopId: shopIdLocation,
           shopName: data.name,
@@ -395,22 +395,22 @@ const Hotel = () => {
           type: data.type,
         },
       });
-    } else if (user && type === "parlour") {
-      navigate(`/shops/${shopIdLocation}/parlour-reserve`, {
-        state: {
-          shopId: shopIdLocation,
-          shopName: data.name,
-          shopOwner: data.shopOwnerId,
-          mergedServices,
+      // } else if (user && type === "parlour") {
+      //   navigate(`/shops/${shopIdLocation}/parlour-reserve`, {
+      //     state: {
+      //       shopId: shopIdLocation,
+      //       shopName: data.name,
+      //       shopOwner: data.shopOwnerId,
+      //       mergedServices,
 
-          selectedValue: selectValue,
-          minValuesObj: minutesValues.minValuesObj,
-          value: value,
-          options: options,
-          breakTime,
-          type: data.type,
-        },
-      });
+      //       selectedValue: selectValue,
+      //       minValuesObj: minutesValues.minValuesObj,
+      //       value: value,
+      //       options: options,
+      //       breakTime,
+      //       type: data.type,
+      //     },
+      //   });
     } else {
       navigate("/login", {
         state: { destination: `/shops/${shopIdLocation}` },

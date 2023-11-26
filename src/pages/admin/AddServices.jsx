@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { spaCategories } from "../../utils/spaServices";
 
 const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -34,7 +35,9 @@ const AddServices = () => {
     const categories =
       shopType?.type === "parlour"
         ? parlourCategories[typeOfPerson]
-        : salonCategories[typeOfPerson];
+        : shopType?.type === "salon"
+        ? salonCategories[typeOfPerson]
+        : spaCategories[typeOfPerson];
 
     setCategories(categories);
   }, [shopType, typeOfPerson]);

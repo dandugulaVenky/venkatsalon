@@ -37,6 +37,23 @@ export const salonCategories = {
         },
       ],
     },
+    {
+      category: "regular-spa",
+      subCategory: "men",
+      services: [
+        {
+          name: "massage",
+          category: "regular-spa",
+          subCategory: "men",
+        },
+
+        {
+          name: "full-massage",
+          category: "regular-spa",
+          subCategory: "men",
+        },
+      ],
+    },
   ],
   women: [
     {
@@ -72,6 +89,22 @@ export const salonCategories = {
         {
           name: "body-massage",
           category: "nailing",
+          subCategory: "women",
+        },
+      ],
+    },
+    {
+      category: "regular-spa",
+      subCategory: "women",
+      services: [
+        {
+          name: "massage",
+          category: "regular-spa",
+          subCategory: "women",
+        },
+        {
+          name: "full-massage",
+          category: "regular-spa",
           subCategory: "women",
         },
       ],
