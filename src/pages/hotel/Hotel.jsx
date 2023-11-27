@@ -43,6 +43,27 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+function getCurrentTimeRounded() {
+  const now = new Date();
+  let hours = now.getHours();
+  let minutes = now.getMinutes();
+
+  // Round the minutes down to the nearest 10
+  const roundedMinutes = Math.floor(minutes / 10) * 10;
+
+  // If the minutes are already a multiple of 10, keep the same, otherwise round down
+  minutes = roundedMinutes === minutes ? minutes : roundedMinutes;
+
+  // Convert hours to 12-hour format and determine AM/PM
+  const amOrPm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12; // Handle midnight (0) as 12 AM
+
+  // Construct the formatted time string
+  const roundedTime = `${hours === 0 ? "12" : hours}:${
+    minutes < 10 ? "0" : ""
+  }${minutes} ${amOrPm}`;
+  return roundedTime;
+}
 const Hotel = () => {
   const location = useLocation();
 
@@ -150,34 +171,6 @@ const Hotel = () => {
 
     return null;
   }
-  // const filterOptions = () => {
-  //   const date = new Date();
-  //   const formattedTime = date.toLocaleString("en-US", {
-  //     hour: "numeric",
-  //     minute: "numeric",
-  //     hour12: true,
-  //   });
-
-  //   const values = options.filter((option) => {
-  //     return formattedTime.split(":")[0] === option.value.split(":")[0] &&
-  //       formattedTime.split(":")[1].split(" ")[1] ===
-  //         option.value.split(":")[1].split(" ")[1]
-  //       ? option
-  //       : null;
-  //   });
-
-  //   if (values[0]?.id === 72) {
-  //     return setoptions(null);
-  //   }
-  //   const filteredOptions1 = options.filter((option) => {
-  //     return values[0].id <= option.id;
-  //   });
-  //   setoptions(
-  //     moment(value).format("Do MM") === moment(date).format("Do MM")
-  //       ? filteredOptions1
-  //       : options
-  //   );
-  // };
 
   const fetchReviews = useCallback(async () => {
     return await axios
@@ -501,6 +494,11 @@ const Hotel = () => {
 
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
+    const roundedTime = getCurrentTimeRounded();
+    let id = 0;
+    moment(value).format("Do MM") === moment(new Date()).format("Do MM")
+      ? (id = options.find((option) => option.value === roundedTime).id)
+      : (id = 0);
     return (
       <div className="reserve  overscroll-none">
         <FontAwesomeIcon
@@ -547,67 +545,70 @@ const Hotel = () => {
                   }
                 }
                 return (
-                  <div
-                    onClick={() => handleTime(option)}
-                    className={classNames(
-                      // timeReserve === option.value
-                      //   ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
-                      //   : "text-gray-700",
-                      `grid grid-cols-10 px-4  text-md font-bold cursor-pointer  space-x-5 hover:bg-gray-200 w-[100%] rounded-full relative ${
-                        isbooked?.includes(true) &&
-                        falseIndexes.length > 0 &&
-                        "bg-gray-100  my-2"
-                      }`
-                    )}
-                  >
-                    <span
-                      className={`${!finalBooked && " text-red-500"}  ${
-                        lunch.includes(option.id) && ` text-red-500 `
-                      } ${
-                        breakTime?.block.includes(option.id) && ` text-red-500 `
-                      } col-span-3 py-1`}
+                  i >= id && (
+                    <div
+                      onClick={() => handleTime(option)}
+                      className={classNames(
+                        // timeReserve === option.value
+                        //   ? "bg-gray-500 text-white py-0.5 text-md font-bold cursor-pointer w-[100%]"
+                        //   : "text-gray-700",
+                        `grid grid-cols-10 px-4  text-md font-bold cursor-pointer  space-x-5 hover:bg-gray-200 w-[100%] rounded-full relative ${
+                          isbooked?.includes(true) &&
+                          falseIndexes.length > 0 &&
+                          "bg-gray-100  my-2"
+                        }`
+                      )}
                     >
-                      {option.value}
-                      {breakTime?.block.includes(option.id) &&
-                        (breakTime.block[0] === option.id ||
-                        breakTime.block[breakTime.block.length - 1] ===
-                          option.id ? (
-                          <span>&nbsp;&nbsp; blocked</span>
-                        ) : (
-                          <span>&nbsp;&nbsp; .</span>
-                        ))}
-                    </span>
-                    <section className="text-gray-800 py-1 col-span-7 overflow-auto">
-                      <span>
-                        {isbooked?.includes(true) &&
-                          falseIndexes?.map((item) => {
-                            return (
-                              <span className={``}>
-                                S{item + 1}&nbsp;
-                                <FontAwesomeIcon
-                                  icon={faCircle}
-                                  color="orange "
-                                  size="xs"
-                                />
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                              </span>
-                            );
-                          })}
+                      <span
+                        className={`${!finalBooked && " text-red-500"}  ${
+                          lunch.includes(option.id) && ` text-red-500 `
+                        } ${
+                          breakTime?.block.includes(option.id) &&
+                          ` text-red-500 `
+                        } col-span-3 py-1`}
+                      >
+                        {option.value}
+                        {breakTime?.block.includes(option.id) &&
+                          (breakTime.block[0] === option.id ||
+                          breakTime.block[breakTime.block.length - 1] ===
+                            option.id ? (
+                            <span>&nbsp;&nbsp; blocked</span>
+                          ) : (
+                            <span>&nbsp;&nbsp; .</span>
+                          ))}
                       </span>
-                      <span className="">
-                        {finalBooked &&
-                          !isbooked?.includes(true) &&
-                          !lunch.includes(option.id) &&
-                          !breakTime?.block.includes(option.id) && (
-                            <FontAwesomeIcon
-                              icon={faCircle}
-                              color="green "
-                              size="xs"
-                            />
-                          )}
-                      </span>
-                    </section>
-                  </div>
+                      <section className="text-gray-800 py-1 col-span-7 overflow-auto">
+                        <span>
+                          {isbooked?.includes(true) &&
+                            falseIndexes?.map((item) => {
+                              return (
+                                <span className={``}>
+                                  S{item + 1}&nbsp;
+                                  <FontAwesomeIcon
+                                    icon={faCircle}
+                                    color="orange "
+                                    size="xs"
+                                  />
+                                  &nbsp;&nbsp;&nbsp;&nbsp;
+                                </span>
+                              );
+                            })}
+                        </span>
+                        <span className="">
+                          {finalBooked &&
+                            !isbooked?.includes(true) &&
+                            !lunch.includes(option.id) &&
+                            !breakTime?.block.includes(option.id) && (
+                              <FontAwesomeIcon
+                                icon={faCircle}
+                                color="green "
+                                size="xs"
+                              />
+                            )}
+                        </span>
+                      </section>
+                    </div>
+                  )
                 );
               })}
           </div>
@@ -617,8 +618,8 @@ const Hotel = () => {
   };
 
   return (
-    <div className="pt-6 pb-8">
-      <div className={` w-full mx-auto  md:rounded md:px-4 mb-4 `}>
+    <div className="pt-6 pb-8 resp">
+      <div className={` w-full mx-auto  md:rounded md:px-4 `}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
             return (
@@ -727,45 +728,6 @@ const Hotel = () => {
                   </div>
                 </button>
               )}
-              {/* <Menu as="div" className="relative inline-block text-left w-full">
-                <div>
-                  <Menu.Button
-                    onClick={() => setShowTimings(true)}
-                    className="inline-flex justify-start w-full p-[0.8rem] text-sm font-medium text-gray-700 bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
-                  >
-                    <div className="w-full flex items-center justify-between">
-                      <span className="md:text-md ">
-                        {timeReserve ? (
-                          <p
-                            className={
-                              lunch.includes(options[selectValue].id) &&
-                              ` text-red-500 `
-                            }
-                          >
-                            {timeReserve}
-                          </p>
-                        ) : (
-                          t("selectTime")
-                        )}
-                      </span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-5 h-5 ml-2 -mr-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </div>
-                  </Menu.Button>
-                </div>
-              </Menu> */}
             </div>
             {showTimings && <ShowTheTimings />}
             <div className="md:col-span-4 col-span-12">
