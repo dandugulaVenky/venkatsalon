@@ -495,10 +495,10 @@ const Hotel = () => {
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
     const roundedTime = getCurrentTimeRounded();
-    let id = 0;
-    moment(value).format("Do MM") === moment(new Date()).format("Do MM")
-      ? (id = options.find((option) => option.value === roundedTime).id)
-      : (id = 0);
+    let id =
+      moment(value).format("Do MM") === moment(new Date()).format("Do MM")
+        ? options.find((option) => option.value === roundedTime)?.id
+        : 0;
     return (
       <div className="reserve  overscroll-none">
         <FontAwesomeIcon

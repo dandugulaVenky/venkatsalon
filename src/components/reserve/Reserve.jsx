@@ -821,7 +821,7 @@ const Reserve = () => {
           </div>
 
           {categoriesOptions?.length > 0 ? (
-            <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
+            <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  pb-10 md:w-[90vw] w-[95.5vw] mx-auto">
               <div className=" lg:col-span-3 md:col-span-3 overflow-x-auto">
                 {show ? (
                   seats?.map((seat, i) => {
@@ -830,7 +830,7 @@ const Reserve = () => {
                     const isDisabled = isAvailable(i);
                     return (
                       !isDisabled && (
-                        <div className="card  md:p-5 p-1.5" key={i}>
+                        <div className="card  md:p-5 p-1.5 " key={i}>
                           <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right">
                             <span>
                               {t("seat")} {i + 1}
