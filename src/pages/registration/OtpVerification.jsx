@@ -13,6 +13,7 @@ import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
+import OtpInput from "./OtpInput";
 
 function removeCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
@@ -22,17 +23,19 @@ const OtpVerification = (props) => {
     token,
     verified,
     setVerified,
+
     number,
     setNumber,
     storedUser,
     setCanShowNumber,
+    email,
   } = useMemo(() => props, [props]);
 
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
-
+  const [emailVerified, setIsVerifiedEmail] = useState();
   // const [number, setNumber] = useState();
   let { dispatch } = useContext(AuthContext);
 
@@ -42,7 +45,7 @@ const OtpVerification = (props) => {
 
   const saveToken = async (id, token) => {
     try {
-      const response = await axios.post(`${baseUrl}/tokens`, {
+      await axios.post(`${baseUrl}/tokens`, {
         userId: id,
         token,
       });
@@ -153,16 +156,57 @@ const OtpVerification = (props) => {
     }
   };
 
+  console.log(emailVerified);
   return (
     <>
-      <div className="w-full transition-all delay-1000 ease-linear pt-10 pb-20">
-        <label htmlFor="phone">{t("phoneTitle")}</label>
+      <div className="w-full transition-all delay-1000 ease-linear py-5">
+        {emailVerified !== "True" && (
+          <OtpInput
+            length={4}
+            email={email}
+            setIsVerifiedEmail={setIsVerifiedEmail}
+          />
+        )}
 
-        {!verified && (
+        {emailVerified === "True" ? (
+          <div>
+            <p className="bg-green-300 p-2 mt-5 rounded-md">Successfull!</p>
+          </div>
+        ) : emailVerified === "Expired" ? (
+          <div>
+            {" "}
+            <p className="bg-red-300 p-2 mt-5 rounded-md">
+              Expired! Please Resubmit!
+            </p>
+            <button
+              className="primary-button mt-3"
+              onClick={() => window.location.reload()}
+            >
+              Go Back
+            </button>
+          </div>
+        ) : emailVerified === "Invalid" ? (
+          <div>
+            <p className="bg-red-300 p-2 mt-5 rounded-md">
+              Invalid! Please Re-enter Details!
+            </p>
+            <button
+              className="primary-button mt-3"
+              onClick={() => window.location.reload()}
+            >
+              Go Back
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
+
+        {!verified && emailVerified === "True" && (
           <div
             style={{ display: !flag ? "block" : "none" }}
-            className="space-y-2"
+            className="space-y-2 mt-7"
           >
+            <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
               defaultCountry="IN"
               value={number}
@@ -185,6 +229,7 @@ const OtpVerification = (props) => {
             </button>
           </div>
         )}
+
         <div
           style={{ display: flag && !verified ? "block" : "none" }}
           className="space-y-2"

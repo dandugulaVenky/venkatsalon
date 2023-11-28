@@ -19,6 +19,8 @@ import Select from "../images/select.png";
 import OtpVerification from "./OtpVerification";
 
 import { useTranslation } from "react-i18next";
+import baseUrl from "../../utils/client";
+import axios from "axios";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -43,7 +45,7 @@ const Register = () => {
   const [verified, setVerified] = useState(false);
   const location = useLocation();
   const { shopId } = location?.state !== null && location?.state;
-  console.log(shopId);
+
   const [canShowNumber, setCanShowNumber] = useState();
   const [storedUser, setStoredUser] = useState();
   const navigate = useNavigate();
@@ -102,19 +104,6 @@ const Register = () => {
       return toast("Please accept terms and conditions to continue!");
     }
 
-    // console.log(normalUserData);
-    // function setCookieObject(name1, value, daysToExpire) {
-    //   const expires = new Date();
-    //   expires.setDate(expires.getDate() + daysToExpire);
-
-    //   // Serialize the object to JSON and encode it
-    //   const cookieValue =
-    //     encodeURIComponent(JSON.stringify(value)) +
-    //     (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
-    //   document.cookie = `${name1}=${cookieValue}; path=/`;
-    // }
-    // setCookieObject("normalUser_info", normalUserData, 7);
     const normalUserData = {
       name,
       city: address,
@@ -123,7 +112,24 @@ const Register = () => {
       termsAccepted,
     };
     setStoredUser(normalUserData);
-    setCanShowNumber(true);
+
+    try {
+      const sendOtp = async () => {
+        const res = await axios.post(`${baseUrl}/send-email-verification-otp`, {
+          email,
+        });
+
+        if (res.status === 200) {
+          setCanShowNumber(true);
+        } else {
+          alert("Something went wrong!");
+        }
+      };
+
+      sendOtp();
+    } catch (err) {
+      console.log(err);
+    }
   };
   const handleLocation = () => {
     setHeader(true);
@@ -169,9 +175,10 @@ const Register = () => {
               setNumber={setNumber}
               storedUser={storedUser}
               setCanShowNumber={setCanShowNumber}
+              email={storedUser.email}
             />
 
-            <img src={Select} alt="select category" className="h-72" />
+            <img src={Select} alt="select category" className="h-52" />
           </div>
         ) : (
           <form
