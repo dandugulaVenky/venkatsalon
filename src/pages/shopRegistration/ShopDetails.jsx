@@ -410,7 +410,7 @@ const ShopDetails = () => {
                   className="pl-2 w-full "
                   id="city"
                   {...register("city", {
-                    required: "Please enter shop name",
+                    required: "Please enter city name",
                   })}
                 />
 
