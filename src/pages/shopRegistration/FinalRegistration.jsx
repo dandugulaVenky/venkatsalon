@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import RegistrationWizard from "./RegistrationWizard";
 import Select from "../images/select.png";
+
+import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
 import axios from "axios";
 
 const FinalRegistration = () => {
-  let w = window.innerWidth;
-
   const [seats, setSeats] = useState("");
   const [loading, setLoading] = useState(false);
-  const [storedUser, setStoredUser] = useState();
-
+  const [shopDetails, setShopDetails] = useState();
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -34,7 +34,7 @@ const FinalRegistration = () => {
     if (seats > 10) {
       return alert(t("max10SeatsAllowed"));
     }
-    if (!storedUser) {
+    if (!shopDetails) {
       return alert(t("detailsAreNotUpToTheMark"));
     }
     setLoading(true);
@@ -50,118 +50,99 @@ const FinalRegistration = () => {
     function removeCookie(name) {
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
     }
+    console.log(user);
+    try {
+      const res = await axios.get(
+        `${baseUrl}/api/users/checkAlreadyShopPresent/${user?._id}`,
+        { withCredentials: true }
+      );
+      if (res.data.status === 409) {
+        alert(res.data.message);
+        setLoading(false);
+
+        return;
+      }
+
+      const res1 = await axios.post(
+        `${baseUrl}/api/shop_registration/checkIfRegistrationExists`,
+
+        {
+          email: user?.email,
+          phone: user?.phone,
+        },
+        { withCredentials: true }
+      );
+
+      if (res1.data.status === 409) {
+        alert(res.data.message);
+        setLoading(false);
+
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+
+      alert(err.response.data.message);
+
+      return;
+    }
 
     const ownerDetails = {
-      username: storedUser?.name.trim().toLowerCase(),
-      email: storedUser?.email.trim().toLowerCase(),
-      password: storedUser?.password.trim(),
-
-      city: storedUser?.city.toLowerCase(),
-      phone: storedUser?.number,
+      username: user?.username.trim().toLowerCase(),
+      userId: user?._id,
+      city: user?.city,
+      phone: user?.phone,
+      email: user?.city,
       isAdmin: true,
     };
 
     try {
       const newhotel = {
-        ...storedUser.hotelInfo,
-        city: storedUser.hotelInfo.city.toLowerCase(),
+        ...shopDetails,
+        city: shopDetails.city.toLowerCase(),
         roomNumbers: arrayOfObjects.length,
         ownerDetails,
       };
-      console.log(newhotel);
 
-      // await axios.post(`${baseUrl}/api/rooms/${hotelId}`, {
-      //   roomNumbers: arrayOfObjects,
-      //   name: storedUser?.hotelInfo?.name,
-      //   shopId: hotelId,
-      // });
-
-      // let res = await axios.post(`${baseUrl}/api/auth/register`, {
-      //   username: storedUser?.name.trim().toLowerCase(),
-      //   email: storedUser?.email.trim().toLowerCase(),
-      //   password: storedUser?.password.trim(),
-      //   shopId: hotelId,
-      //   city: storedUser?.city.toLowerCase(),
-      //   phone: storedUser?.number,
-      //   isAdmin: true,
-      // });
-
-      let res = await axios.post(`${baseUrl}/api/auth/check_existing`, {
-        username: storedUser?.name.trim().toLowerCase(),
-        email: storedUser?.email.trim().toLowerCase(),
-
-        phone: storedUser?.number,
-      });
-
-      console.log(res);
-
-      if (res.status === 200) {
-        const response = await axios.post(
-          `${baseUrl}/api/shop_registration/new_registration`,
-          newhotel
-        );
-        if (response.status === 200) {
-          setLoading(false);
-          alert(t("willContactYouShortly"));
-          // Usage example
-          removeCookie("user_info");
-          navigate("/login");
-        } else {
-          alert(
-            "Something went wrong, please contact us at services@easytym.com"
-          );
-        }
-
-        // const hotelId = response.data._id;
+      const response = await axios.post(
+        `${baseUrl}/api/shop_registration/new_registration`,
+        newhotel,
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setLoading(false);
+        alert(t("willContactYouShortly"));
+        // Usage example
+        removeCookie("user_info");
+        navigate("/login");
       } else {
         alert(
           "Something went wrong, please contact us at services@easytym.com"
         );
-        // await axios.put(
-        //   `${baseUrl}/api/hotels/${hotelId}`,
-        //   {
-        //     shopOwnerId: res.data,
-        //   },
-        //   {
-        //     withCredentials: true,
-        //   }
-        // );
+        setLoading(false);
       }
     } catch (err) {
       alert(err.response.data.message);
       setLoading(false);
-      if (err.response.status === 409) {
-        navigate("/shop-registration", { state: { goToStep: true } });
-      } else if (err.response.status === 400) {
-        navigate("/shop-registration", {
-          state: { goToStep: true, phoneNumber: true },
-        });
-      }
+
       console.log(err);
     }
 
-    console.log(storedUser);
-    console.log(arrayOfObjects);
+    console.log(user);
   };
 
   useEffect(() => {
+    if (!user || user === "undefined") {
+      navigate("/login");
+    }
     window.scrollTo(0, 0);
 
     // Usage example
-    const storedUser = getCookieObject("user_info");
-
-    if (storedUser) {
-      setStoredUser(storedUser);
-      if (storedUser.step === 3) {
-        return;
-      } else if (storedUser.step === 2) {
-        return;
-      }
-    } else {
-      console.log("User info not found in the cookie.");
-      navigate("/shop-registration");
-    }
-  }, [navigate]);
+    const shopDetails = getCookieObject("shop_info");
+    setShopDetails(shopDetails);
+    console.log(typeof user, "shopDetails");
+  }, [navigate, user]);
 
   return (
     <div className="pt-10 pb-20">
@@ -175,7 +156,7 @@ const FinalRegistration = () => {
           <div className="space-y-2">
             <p>
               {t("shopName")} :{" "}
-              <span className="ml-4 w-52">{storedUser?.hotelInfo?.name}</span>
+              <span className="ml-4 w-52">{shopDetails?.name}</span>
             </p>
             <div className="mb-4">
               <label htmlFor="phone">{t("noOfSeats")}: </label>

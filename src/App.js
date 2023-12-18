@@ -37,7 +37,7 @@ import MyServices from "./pages/admin/MyServices";
 import AddServices from "./pages/admin/AddServices";
 import Compare from "./pages/admin/Compare";
 import AllCities from "./pages/AllCities/AllCities";
-import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
+// import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
 import FinalRegistration from "./pages/shopRegistration/FinalRegistration";
 import ShopDetails from "./pages/shopRegistration/ShopDetails";
 import Break from "./pages/admin/Break";
@@ -101,7 +101,7 @@ function App() {
             {/* <Route path="/get-started" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/shop-registration" element={<RegistrationForm />} />
+            {/* <Route path="/shop-registration" element={<RegistrationForm />} /> */}
             <Route path="/shop-details" element={<ShopDetails />} />
             <Route
               path="/shop-final-registration"

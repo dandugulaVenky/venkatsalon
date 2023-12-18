@@ -1,8 +1,7 @@
-import axios from "axios";
 import React, { useRef, useEffect, useState } from "react";
-import baseUrl from "../../utils/client";
-import { toast } from "react-toastify";
+import { useLocation, useNavigate } from "react-router-dom";
 
+import { toast } from "react-toastify";
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
   expires.setDate(expires.getDate() + daysToExpire);
@@ -14,18 +13,24 @@ function setCookieObject(name1, value, daysToExpire) {
 
   document.cookie = `${name1}=${cookieValue}; path=/`;
 }
-
 const OtpInput = ({
   length,
-
-  setIsVerifiedEmail,
-  emailVerified,
+  setDisableNow,
+  setVerified,
+  setDisable,
   storedUser,
+  result,
+  number,
+  shopRegistration = false,
+  disable,
+  setPhoneVerified,
 }) => {
   const inputs = Array.from({ length });
   const inputRefs = useRef([]);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
+  const location = useLocation();
+  const { state } = location;
+  const navigate = useNavigate();
   useEffect(() => {
     inputRefs.current = inputRefs.current.slice(0, length);
   }, [length]);
@@ -58,22 +63,61 @@ const OtpInput = ({
 
     const otp = values.reduce((acc, i) => acc + i, "");
     console.log(typeof Number(otp));
-    try {
-      await axios.post(`${baseUrl}/verify-email-verification-otp`, {
-        email: storedUser.email,
-        otp: Number(otp),
-      });
-      setIsVerifiedEmail(true);
-      storedUser.emailVerified = true;
+    const verifyOtp = async (e) => {
+      setDisableNow(false);
 
-      setCookieObject("normalUser_info", storedUser, 7);
-    } catch (err) {
-      console.log(err);
-      toast(err.response.data);
-      setIsVerifiedEmail(false);
-      storedUser.emailVerified = false;
-      setCookieObject("normalUser_info", storedUser, 7);
-    }
+      if (otp === "" || otp === null) return;
+      setDisable(true);
+
+      try {
+        await result.confirm(otp);
+        setVerified(true);
+        storedUser.phoneVerified = true;
+        storedUser.number = number;
+        setPhoneVerified(true);
+        setCookieObject("normalUser_info", storedUser, 7);
+        setDisable(false);
+      } catch (err) {
+        toast(err.message);
+        setVerified(false);
+        setPhoneVerified(false);
+        setDisable(false);
+      }
+    };
+
+    const shopVerifyOtp = async () => {
+      setDisableNow(false);
+
+      if (otp === "" || otp === null) return;
+      setDisable(true);
+
+      try {
+        await result.confirm(otp);
+
+        if (state?.phoneNumber) {
+          storedUser.verified = true;
+          storedUser.number = number;
+          setCookieObject("user_info", storedUser, 7);
+          return navigate("/shop-final-registration");
+        }
+        setPhoneVerified(true);
+        setVerified(true);
+        storedUser.verified = true;
+        storedUser.number = number;
+        storedUser.step = 1;
+
+        setCookieObject("user_info", storedUser, 7);
+        setDisable(false);
+
+        navigate("/shop-details");
+      } catch (err) {
+        toast(err.message);
+        setPhoneVerified(false);
+        setDisable(false);
+      }
+    };
+
+    shopRegistration ? shopVerifyOtp() : verifyOtp();
   };
 
   return (
@@ -89,14 +133,15 @@ const OtpInput = ({
           onKeyDown={(e) => handleKeyDown(e, index)}
         />
       ))}
+
       <button
         className={`${
           isButtonDisabled ? "default-button " : "primary-button "
         }`}
         onClick={handleSubmit}
-        disabled={emailVerified || isButtonDisabled}
+        disabled={isButtonDisabled || disable}
       >
-        Submit
+        {disable ? "loading" : "Submit"}
       </button>
     </div>
   );

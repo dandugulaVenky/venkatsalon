@@ -4,7 +4,7 @@ import Carousel from "react-grid-carousel";
 import { SearchContext } from "../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import Saloon from "../pages/images/you-have-the-power-to-protect-your-time.png";
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
   const [active, setActive] = useState(type ? type : "salon");
@@ -22,7 +22,7 @@ const Services = ({ refer }) => {
   return (
     <div className=" mt-10  text-black " ref={refer}>
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
-        {t('selectService')}
+        {t("selectService")}
       </h1>
       <Carousel cols={4} autoplay={10000} loop={true} rows={1} gap={7}>
         <Carousel.Item>
@@ -32,7 +32,7 @@ const Services = ({ refer }) => {
             onClick={() => handler("salon")}
           >
             <img
-              src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
+              src={Saloon}
               alt="images"
               style={{
                 width: "98%",

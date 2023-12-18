@@ -15,7 +15,7 @@ const RegistrationWizard = ({ activeStep = 0 }) => {
   const steps =
     windowWidth <= 768
       ? ["1", "2", "3"]
-      : [t("registrationForm"), t("shopDetails"), t("finalRegistration")];
+      : [t("RegistrationDone"), t("shopDetails"), t("finalRegistration")];
 
   return (
     <div className="mb-5 flex flex-wrap">

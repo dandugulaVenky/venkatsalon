@@ -1,10 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
 
+  const navigate = useNavigate();
   return (
     <div className=" w-full ">
       <div className="flex items-center justify-center space-x-24 md:space-x-96  bg-[#00ccbb] text-white text-sm pt-10 ">
@@ -38,10 +42,18 @@ const Footer = () => {
             </Link>
           </li>
           <li className="">{t("careers")}</li>
-          <li className="">{t("joinUs")}</li>
-          <Link to="/test">
-            <li>Test</li>
-          </Link>
+
+          <button
+            onClick={() => {
+              if (user) {
+                navigate("/shop-details");
+              } else {
+                alert("Please login to join with us!");
+              }
+            }}
+          >
+            {t("joinUs")}
+          </button>
         </ul>
       </div>
       <div className="text-center h-16 text-white bg-[#00ccbb] flex items-center justify-center space-x-2">

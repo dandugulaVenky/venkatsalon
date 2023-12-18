@@ -35,19 +35,32 @@ function getCookieObject(name) {
   return null;
 }
 
+function setCookieObject(name1, value, daysToExpire) {
+  const expires = new Date();
+  expires.setDate(expires.getDate() + daysToExpire);
+
+  // Serialize the object to JSON and encode it
+  const cookieValue =
+    encodeURIComponent(JSON.stringify(value)) +
+    (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+  document.cookie = `${name1}=${cookieValue}; path=/`;
+}
+
 const Register = () => {
   const [token, setToken] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   let { dispatch: dispatch1, type } = useContext(SearchContext);
-  const [number, setNumber] = useState("");
+
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
-  const [verified, setVerified] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
   const location = useLocation();
   const { shopId } = location?.state !== null && location?.state;
 
   const [canShowNumber, setCanShowNumber] = useState();
-  const [storedUser, setStoredUser] = useState();
+  const [storedUser, setStoredUser] = useState(null);
   const navigate = useNavigate();
   async function requestPermission() {
     const permission = await Notification.requestPermission();
@@ -59,7 +72,7 @@ const Register = () => {
       });
       // console.log("Token Gen", token);
       setToken(token);
-      // Send this token  to server ( db)
+      // Send this token  to server (db)
     } else if (permission === "denied") {
       alert(t("deniedForNotification"));
     }
@@ -70,48 +83,59 @@ const Register = () => {
     window.scrollTo(0, 0);
     requestPermission();
 
-    const storedUser = getCookieObject("normalUser_info");
+    const storedUser1 = getCookieObject("normalUser_info");
 
-    if (storedUser) {
-      setStoredUser(storedUser);
-      setValue("name", storedUser.name);
-      setAddress(storedUser.city);
-      setVerified(storedUser.verified);
-      setTermsAccepted(false);
-      setNumber(storedUser.number);
-      setValue("email", storedUser.email);
-      setValue("password", storedUser.password);
+    if (storedUser1) {
+      setStoredUser(storedUser1);
+      setValue("name", storedUser1.name);
+      setAddress(storedUser1.city);
+      setEmailVerified(storedUser1.emailVerified);
+      setPhoneVerified(storedUser1.phoneVerified);
+      setTermsAccepted(storedUser1.termsAccepted);
+
+      setValue("email", storedUser1.email);
+      setValue("password", storedUser1.password);
     }
   }, [canShowNumber]);
 
-  const { loading, error: errorContext } = useContext(AuthContext);
-
+  const { error: errorContext } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     register,
     setValue,
+
     formState: { errors },
   } = useForm();
 
   const { t } = useTranslation();
 
   const submitHandler = async ({ name, email, password }) => {
+    setLoading(true);
     if (!name || !email || !password || !address) {
+      setLoading(false);
       return alert(t("pleaseEnterAllDetails"));
     }
 
     if (!termsAccepted) {
+      setLoading(false);
+
       return toast("Please accept terms and conditions to continue!");
     }
+    const storedUser1 = getCookieObject("normalUser_info");
 
     const normalUserData = {
       name,
       city: address,
       email,
+      emailVerified,
+      phoneVerified,
       password,
       termsAccepted,
+      number: storedUser1?.number || "",
     };
     setStoredUser(normalUserData);
+    setCookieObject("normalUser_info", normalUserData, 7);
 
     try {
       const sendOtp = async () => {
@@ -121,14 +145,17 @@ const Register = () => {
 
         if (res.status === 200) {
           setCanShowNumber(true);
+          setLoading(false);
         } else {
           alert("Something went wrong!");
+          setLoading(false);
         }
       };
 
       sendOtp();
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   };
   const handleLocation = () => {
@@ -144,6 +171,7 @@ const Register = () => {
           setAddress={setAddress}
           dispatch={dispatch1}
           type={type}
+          z
           register={true}
           header={header}
         />
@@ -151,11 +179,6 @@ const Register = () => {
         <Header header={header} />
       )}
 
-      {location?.pathname?.includes("/register") && (
-        <p className="text-lg underline text-blue-600  text-center   ">
-          <Link to="/shop-registration">{t("barber/beauticianClickHere")}</Link>
-        </p>
-      )}
       <div className="px-8  md:min-h-[60vh] md:flex justify-center ">
         <img
           src={LoginImage}
@@ -169,13 +192,12 @@ const Register = () => {
           <div className="md:px-10 px-5 pt-10 card text-sm ">
             <OtpVerification
               token={token}
-              verified={verified}
-              setVerified={setVerified}
-              number={number}
-              setNumber={setNumber}
+              emailVerified={emailVerified}
+              setEmailVerified={setEmailVerified}
+              phoneVerified={phoneVerified}
+              setPhoneVerified={setPhoneVerified}
               storedUser={storedUser}
               setCanShowNumber={setCanShowNumber}
-              email={storedUser.email}
             />
 
             <img src={Select} alt="select category" className="h-52" />
@@ -271,7 +293,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   id="terms"
-                  value={termsAccepted}
+                  checked={termsAccepted}
                   onChange={() => setTermsAccepted(!termsAccepted)}
                 />
               </div>
@@ -286,7 +308,7 @@ const Register = () => {
             </div>
             <div className="mb-4">
               <button className="primary-button" disabled={loading}>
-                {t("next")}
+                {loading ? "loading" : t("next")}
               </button>
             </div>
 

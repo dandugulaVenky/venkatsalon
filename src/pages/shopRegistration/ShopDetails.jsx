@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import options from "../../utils/time";
 import RegistrationWizard from "./RegistrationWizard";
 import MapComponent from "../../components/MapComponent";
 import { Combobox } from "@headlessui/react";
+import { AuthContext } from "../../context/AuthContext";
 
 const ShopDetails = () => {
   const {
@@ -21,6 +22,7 @@ const ShopDetails = () => {
   const { t } = useTranslation();
   const [selectedStartTime, setSelectedStartTime] = useState("");
   const [selectedShopStartTime, setSelectedShopStartTime] = useState("");
+  const { user } = useContext(AuthContext);
 
   const [selectedEndTime, setSelectedEndTime] = useState("");
   const [selectedShopEndTime, setSelectedShopEndTime] = useState("");
@@ -89,12 +91,11 @@ const ShopDetails = () => {
       selectedStartTime !== selectedEndTime &&
       selectedShopStartTime !== selectedShopEndTime
     ) {
-      const existingUserData = getCookieObject("user_info");
-      const x = existingUserData.number.includes(phone);
-      if (x) {
-        alert(t("alternateNumberShouldBeDifferent"));
-        return;
-      }
+      // const x = existingUserData.number.includes(phone);
+      // if (x) {
+      //   alert(t("alternateNumberShouldBeDifferent"));
+      //   return;
+      // }
       const selectedShopStartIndex = options.find((option) => {
         return option.value === selectedShopStartTime;
       })?.id;
@@ -144,7 +145,7 @@ const ShopDetails = () => {
       // console.log(lunchTimeArray, "lunch array in shop-details");
       // console.log(shopTimeArray, "Shop array in shop-details");
 
-      existingUserData.hotelInfo = {
+      const hotelInfo = {
         name: shopName,
 
         alternatePhone: phone,
@@ -158,8 +159,7 @@ const ShopDetails = () => {
         shopTimeArray,
         latLong,
       };
-      existingUserData.step = 2;
-      console.log(existingUserData);
+
       function setCookieObject(name1, value, daysToExpire) {
         const expires = new Date();
         expires.setDate(expires.getDate() + daysToExpire);
@@ -171,7 +171,7 @@ const ShopDetails = () => {
 
         document.cookie = `${name1}=${cookieValue}; path=/`;
       }
-      setCookieObject("user_info", existingUserData, 7);
+      setCookieObject("shop_info", hotelInfo, 7);
 
       console.log("done");
       navigate("/shop-final-registration");
@@ -232,20 +232,9 @@ const ShopDetails = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // Usage example
-    const storedUser = getCookieObject("user_info");
-
-    if (storedUser) {
-      if (storedUser.step === 1) {
-        return;
-      } else if (storedUser.step === 2) {
-        // navigate("/shop-final-registration");
-      }
-    } else {
-      console.log("User info not found in the cookie.");
-      navigate("/shop-registration");
+    if (!user || user === "undefined") {
     }
-  }, [navigate]);
+  }, [navigate, user]);
 
   return (
     <div className="pt-10 pb-20">

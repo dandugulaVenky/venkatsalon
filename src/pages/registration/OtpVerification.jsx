@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
@@ -15,31 +15,42 @@ import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import OtpInput from "./OtpInput";
 
+function setCookieObject(name1, value, daysToExpire) {
+  const expires = new Date();
+  expires.setDate(expires.getDate() + daysToExpire);
+
+  // Serialize the object to JSON and encode it
+  const cookieValue =
+    encodeURIComponent(JSON.stringify(value)) +
+    (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+  document.cookie = `${name1}=${cookieValue}; path=/`;
+}
+
 function removeCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
 const OtpVerification = (props) => {
   const {
     token,
-    verified,
-    setVerified,
+    emailVerified,
+    setEmailVerified,
+    phoneVerified,
+    setPhoneVerified,
 
-    number,
-    setNumber,
     storedUser,
     setCanShowNumber,
-    email,
-  } = useMemo(() => props, [props]);
+  } = props;
 
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
-  const [emailVerified, setIsVerifiedEmail] = useState();
-  // const [number, setNumber] = useState();
   let { dispatch } = useContext(AuthContext);
-
+  const [number, setNumber] = useState("");
   let [disablenow, setDisableNow] = useState();
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -95,29 +106,22 @@ const OtpVerification = (props) => {
 
     try {
       await result.confirm(otp);
-      setVerified(true);
-      storedUser.verified = true;
+      setPhoneVerified(true);
+
+      storedUser.phoneVerified = true;
+
       storedUser.number = number;
-      function setCookieObject(name1, value, daysToExpire) {
-        const expires = new Date();
-        expires.setDate(expires.getDate() + daysToExpire);
 
-        // Serialize the object to JSON and encode it
-        const cookieValue =
-          encodeURIComponent(JSON.stringify(value)) +
-          (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
-        document.cookie = `${name1}=${cookieValue}; path=/`;
-      }
       setCookieObject("normalUser_info", storedUser, 7);
       setDisable(false);
     } catch (err) {
-      toast(err.message);
+      alert(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
     }
   };
 
   const RegisterNow = async () => {
+    setLoading(true);
     const { name, email, password, city } = storedUser;
 
     try {
@@ -127,7 +131,7 @@ const OtpVerification = (props) => {
         password: password.trim(),
 
         city: city.toLowerCase(),
-        phone: number,
+        phone: number || storedUser.number,
       });
 
       if (res.status === 200) {
@@ -143,65 +147,62 @@ const OtpVerification = (props) => {
           );
           dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
           token !== "" && saveToken(res.data.details._id, token);
+          setLoading(false);
 
           removeCookie("normalUser_info");
           navigate("/");
         } catch (err) {
           dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+          setLoading(false);
         }
       }
     } catch (err) {
-      toast.error(err.response.data.message);
-      setCanShowNumber(false);
+      if (err.response.status === 409) {
+        alert(`${err.response.data.message} please try with another email!`);
+
+        setEmailVerified(false);
+        storedUser.emailVerified = false;
+        setCanShowNumber(false);
+        setCookieObject("normalUser_info", storedUser, 7);
+      } else if (err.response.status === 400) {
+        setPhoneVerified(false);
+        storedUser.phoneVerified = false;
+
+        alert(`${err.response.data.message} please try with another number!`);
+        setFlag(false);
+        setCookieObject("normalUser_info", storedUser, 7);
+      } else {
+        console.log("Everything is fine!");
+      }
     }
+    setLoading(false);
   };
 
-  console.log(emailVerified);
   return (
     <>
       <div className="w-full transition-all delay-1000 ease-linear py-5">
-        {emailVerified !== "True" && (
-          <OtpInput
-            length={4}
-            email={email}
-            setIsVerifiedEmail={setIsVerifiedEmail}
-          />
+        {!storedUser.emailVerified && !emailVerified && (
+          <>
+            <p className="bg-green-300 p-2 my-5 rounded-md">
+              Check your email for otp!
+            </p>
+            <OtpInput
+              length={4}
+              email={storedUser?.email}
+              setIsVerifiedEmail={setEmailVerified}
+              emailVerified={emailVerified}
+              storedUser={storedUser}
+            />
+          </>
         )}
 
-        {emailVerified === "True" ? (
+        {storedUser.emailVerified && emailVerified && (
           <div>
             <p className="bg-green-300 p-2 mt-5 rounded-md">Successfull!</p>
           </div>
-        ) : emailVerified === "Expired" ? (
-          <div>
-            {" "}
-            <p className="bg-red-300 p-2 mt-5 rounded-md">
-              Expired! Please Resubmit!
-            </p>
-            <button
-              className="primary-button mt-3"
-              onClick={() => window.location.reload()}
-            >
-              Go Back
-            </button>
-          </div>
-        ) : emailVerified === "Invalid" ? (
-          <div>
-            <p className="bg-red-300 p-2 mt-5 rounded-md">
-              Invalid! Please Re-enter Details!
-            </p>
-            <button
-              className="primary-button mt-3"
-              onClick={() => window.location.reload()}
-            >
-              Go Back
-            </button>
-          </div>
-        ) : (
-          ""
         )}
 
-        {!verified && emailVerified === "True" && (
+        {!phoneVerified && emailVerified && (
           <div
             style={{ display: !flag ? "block" : "none" }}
             className="space-y-2 mt-7"
@@ -231,7 +232,9 @@ const OtpVerification = (props) => {
         )}
 
         <div
-          style={{ display: flag && !verified ? "block" : "none" }}
+          style={{
+            display: flag && !storedUser.phoneVerified ? "block" : "none",
+          }}
           className="space-y-2"
         >
           <input
@@ -252,7 +255,7 @@ const OtpVerification = (props) => {
           </button>
         </div>
 
-        <div style={{ display: verified ? "block" : "none" }}>
+        <div style={{ display: storedUser.phoneVerified ? "block" : "none" }}>
           <input
             type="text"
             value={"Verified"}
@@ -265,9 +268,9 @@ const OtpVerification = (props) => {
         </div>
       </div>
 
-      {verified ? (
+      {storedUser.phoneVerified && storedUser.emailVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
-          Proceed
+          {loading ? "loading" : "Proceed"}
         </button>
       ) : (
         ""
@@ -276,4 +279,4 @@ const OtpVerification = (props) => {
   );
 };
 
-export default memo(OtpVerification);
+export default OtpVerification;
