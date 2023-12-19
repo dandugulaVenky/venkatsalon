@@ -25,7 +25,7 @@ const AdminAddBanner = () => {
     getData();
   }, [user?.shopId]);
 
-  //handlde images
+  //handle images
   const handleImage = (e) => {
     setImages([]);
     const files = Array.from(e.target.files);

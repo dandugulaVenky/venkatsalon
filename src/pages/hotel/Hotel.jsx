@@ -509,7 +509,7 @@ const Hotel = () => {
             setShowTimings(false);
             document.body.style.overflow = "unset";
           }}
-          className="absolute md:top-10 top-5 lg:right-72 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
         <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">

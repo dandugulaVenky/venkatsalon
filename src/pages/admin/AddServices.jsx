@@ -30,7 +30,7 @@ const AddServices = () => {
   const [typeOfPerson, setTypeOfPerson] = useState(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
-
+  console.log(shopType?.type, "shopType?.type");
   useEffect(() => {
     const categories =
       shopType?.type === "parlour"
@@ -74,11 +74,12 @@ const AddServices = () => {
         setRoomId(data[0]?._id);
       } catch (err) {
         toast("Something wrong!");
+        navigate("/login");
         console.log(err);
       }
     };
     fetchData();
-  }, [user?.shopId]);
+  }, [navigate, user?.shopId]);
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
@@ -148,12 +149,15 @@ const AddServices = () => {
   };
 
   const handleRemove = (removeService) => {
-    console.log("ji");
+    console.log(shopServices);
+    console.log(removeService);
+
     let result = shopServices.filter(
       (item) =>
         !(
           item.category === removeService.category &&
-          item.subCategory === removeService.subCategory
+          item.subCategory === removeService.subCategory &&
+          item.services.service === removeService.services.service
         )
     );
     console.log(result);

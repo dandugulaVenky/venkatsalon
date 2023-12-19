@@ -115,7 +115,7 @@ const FinalRegistration = () => {
         alert(t("willContactYouShortly"));
         // Usage example
         removeCookie("user_info");
-        navigate("/login");
+        navigate("/");
       } else {
         alert(
           "Something went wrong, please contact us at services@easytym.com"
