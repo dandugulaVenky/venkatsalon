@@ -59,14 +59,15 @@ const Layout = ({ bestRef }) => {
 
   useEffect(() => {
     setIsScrolled(false);
+    scrollNow();
 
     let timeout = pathname.includes("/shops")
-      ? 200
+      ? 600
       : pathname.includes("/iron")
       ? 0
       : pathname.includes("/iron/product")
       ? 600
-      : 50;
+      : 0;
     const handleScroll = () => {
       const scrollY = window.scrollY;
       if (scrollY >= 40) {

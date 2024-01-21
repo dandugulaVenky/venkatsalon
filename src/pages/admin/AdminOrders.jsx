@@ -243,15 +243,15 @@ const AdminOrders = () => {
     setAllOrders(false);
   };
 
-  const containerStyle = {
-    display: "flex",
-    flexWrap: "wrap", // Allow items to wrap into multiple lines if needed
-  };
-
   const itemStyle = {
     flex: "1 1 150px", // flex-grow flex-shrink flex-basis
     margin: "10px", // Add some space between items
     padding: "5px",
+  };
+
+  const containerStyle = {
+    display: "flex",
+    flexWrap: "wrap", // Allow items to wrap into multiple lines if needed
   };
 
   const handleGender = (e) => {

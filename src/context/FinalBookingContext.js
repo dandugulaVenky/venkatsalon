@@ -1,51 +1,66 @@
-// import axios from "axios";
-// import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 
-// const INITIAL_STATE = {
-//   selectedSeats: [{}],
-//   totalAmount: 0,
+const INITIAL_STATE = {
+  totalAmount: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).totalAmount
+    : "",
 
-//   shopOwner: "",
-//   shopId: "",
-//   roomId: "",
-//   shopName: "",
-//   ownerEmail: "",
-//   ownerNumber: "",
-//   bookId: "",
-//   user: {},
+  shopName: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).shopName
+    : "",
+  city: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).city
+    : "",
+  date: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).date
+    : "",
 
-//   link: "",
-//   dates: [],
-// };
+  phone: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).phone
+    : "",
+  id: JSON.parse(localStorage.getItem("appointmentDetails"))
+    ? JSON.parse(localStorage.getItem("appointmentDetails")).id
+    : "",
+  status: "pending",
+};
 
-// export const FinalBookingContext = createContext(INITIAL_STATE);
+export const FinalBookingContext = createContext(INITIAL_STATE);
 
-// // const FinalBookingReducer = async (state, action) => {
-// //   switch (action.type) {
-// //     case "NEW_FINALBOOKING":
-// //       // console.log("payload", action.payload);
+const FinalBookingReducer = async (state, action) => {
+  switch (action.type) {
+    case "NEW_APPOINTMENT":
+      const city = action.payload.city;
+      const date = action.payload.date;
+      const shopName = action.payload.shopName;
+      const phone = action.payload.phone;
+      const totalAmount = action.payload.totalAmount;
+      const id = action.payload.id;
+      localStorage.setItem(
+        "appointmentDetails",
+        JSON.stringify({ city, date, shopName, phone, totalAmount, id })
+      );
 
-// //       return { ...state };
-// //     case "RESET_FINALBOOKING":
-// //       localStorage.removeItem("FinalBookingDetails");
-// //       localStorage.removeItem("bookingDetails");
-// //       return INITIAL_STATE;
+      return { ...state };
+    case "RESET_APPOINTMENT":
+      localStorage.removeItem("appointmentDetails");
+      return INITIAL_STATE;
 
-// //     default:
-// //       return state;
-// //   }
-// // };
+    default:
+      return state;
+  }
+};
 
-// export const FinalBookingContextProvider = ({ children }) => {
-//   // const [state, dispatch] = useReducer(FinalBookingReducer, INITIAL_STATE);
+export const FinalBookingContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(FinalBookingReducer, INITIAL_STATE);
 
-//   return (
-//     <FinalBookingContext.Provider
-//       value={{
-//         dispatch,
-//       }}
-//     >
-//       {children}
-//     </FinalBookingContext.Provider>
-//   );
-// };
+  return (
+    <FinalBookingContext.Provider
+      value={{
+        dispatch,
+        state,
+      }}
+    >
+      {children}
+    </FinalBookingContext.Provider>
+  );
+};

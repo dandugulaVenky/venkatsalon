@@ -31,6 +31,7 @@ const AddServices = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
   console.log(shopType?.type, "shopType?.type");
+
   useEffect(() => {
     const categories =
       shopType?.type === "parlour"
@@ -149,8 +150,8 @@ const AddServices = () => {
   };
 
   const handleRemove = (removeService) => {
-    console.log(shopServices);
-    console.log(removeService);
+    // console.log(shopServices);
+    // console.log(removeService);
 
     let result = shopServices.filter(
       (item) =>

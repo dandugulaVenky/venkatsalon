@@ -45,7 +45,9 @@ const Admin = () => {
         break;
       case "orders":
         navigate("/admin/orders");
-
+        break;
+      case "appointments":
+        navigate("/admin/appointments");
         break;
       case "packages":
         navigate("/admin/packages");
@@ -75,7 +77,7 @@ const Admin = () => {
           <span className="loader "></span>
         </div>
       ) : isAdmin ? (
-        <div className="min-h-[85vh] flex flex-col  justify-center md:w-[30vw] w-[80vw] mx-auto cursor-pointer">
+        <div className="min-h-[85vh] flex flex-col justify-center md:w-[30vw] w-[80vw] mx-auto cursor-pointer">
           <p>{isAdmin?.shopName}</p>
           <div
             className="card p-5 w-full"
@@ -88,6 +90,12 @@ const Admin = () => {
             onClick={() => handleClick("orders")}
           >
             <p>{t("viewOrders")}</p>
+          </div>
+          <div
+            className="card p-5 w-full"
+            onClick={() => handleClick("appointments")}
+          >
+            <p>View Appointments</p>
           </div>
           <div
             className="card p-5 w-full"

@@ -27,7 +27,7 @@ import { useTranslation } from "react-i18next";
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const [showTypeOfOrders, setShowTypeOfOrders] = useState("directOrders");
   const [shopId, setShopId] = useState(user?.shopId);
   const [userInput, setUserInput] = useState("");
 
@@ -38,6 +38,7 @@ const BookingHistory = () => {
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
+  console.log(data);
   const { t } = useTranslation();
   useEffectOnce(() => {
     window.scrollTo(0, 0);
@@ -80,17 +81,26 @@ const BookingHistory = () => {
     if (!userInput) {
       return array;
     }
-    return data?.filter((booking) => {
-      return (
-        booking.referenceNumber
-          .toLowerCase()
-          .includes(userInput.toLowerCase()) ||
-        booking.date.toLowerCase().includes(userInput.toLowerCase()) ||
-        booking.time.toLowerCase().includes(userInput.toLowerCase())
-      );
-    });
+    return showTypeOfOrders === "directOrders"
+      ? data[showTypeOfOrders]?.filter((booking) => {
+          return (
+            booking.referenceNumber
+              .toLowerCase()
+              .includes(userInput.toLowerCase()) ||
+            booking.date.toLowerCase().includes(userInput.toLowerCase()) ||
+            booking.time.toLowerCase().includes(userInput.toLowerCase())
+          );
+        })
+      : data[showTypeOfOrders]?.filter((booking) => {
+          return (
+            booking.referenceNum
+              .toLowerCase()
+              .includes(userInput.toLowerCase()) ||
+            booking.date.toLowerCase().includes(userInput.toLowerCase())
+          );
+        });
   }
-  const filteredArray = filterArray(data, userInput);
+  const filteredArray = filterArray(data[showTypeOfOrders], userInput);
 
   const GetPushed = () => {
     const item = showServices;
@@ -158,6 +168,16 @@ const BookingHistory = () => {
             {t("bookingHistory")}
           </p>
 
+          <select
+            onChange={(e) => {
+              setShowTypeOfOrders(e.target.value);
+              setUserInput("");
+            }}
+          >
+            <option value="directOrders">Direct Orders</option>
+            <option value="appointments">Appointment Orders</option>
+          </select>
+
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
@@ -166,7 +186,7 @@ const BookingHistory = () => {
           />
 
           <p className="md:text-lg text-xs">
-            {t("count")} : {filteredArray.length}
+            {t("count")} : {filteredArray?.length}
           </p>
         </div>
         {loading && filteredArray?.length === 0 && (
@@ -175,7 +195,7 @@ const BookingHistory = () => {
           </div>
         )}
 
-        {filteredArray?.length > 0 ? (
+        {showTypeOfOrders === "directOrders" && filteredArray?.length > 0 ? (
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[98vw] mx-auto pt-5 pb-10 ">
             <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
               <table className="min-w-full  ">
@@ -283,6 +303,119 @@ const BookingHistory = () => {
                               "MMM Do YY hh:mm:ss A"
                             )}
                           </label>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {filteredArray?.length >= 10 && (
+              <div className="min-w-[90vw] py-4  grid place-items-center pb-10">
+                {visible >= filteredArray.length ? (
+                  <button
+                    className="primary-button"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCircleArrowUp} />
+                  </button>
+                ) : (
+                  <button className=" primary-button " onClick={setLoadMore}>
+                    <FontAwesomeIcon icon={faCircleArrowDown} />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ) : showTypeOfOrders === "appointments" && filteredArray?.length > 0 ? (
+          <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[98vw] mx-auto pt-5 pb-10 ">
+            <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
+              <table className="min-w-full  ">
+                <thead className="border-b bg-gray-400 ">
+                  <tr className="border-b-2 border-gray-200 ">
+                    <th className="text-center md:text-md text-sm  py-3">
+                      {t("reference")}
+                    </th>
+                    <th className=" md:p-5 px-10 md:text-md text-sm text-right">
+                      {t("date")}
+                    </th>
+                    <th className="md:p-5 px-5  md:text-md text-sm text-right">
+                      {t("amount")}
+                    </th>
+                    <th className="md:p-5  px-10  md:text-md text-sm text-right">
+                      {t("shop")}
+                    </th>
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      {t("payment")}
+                    </th>{" "}
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Validity
+                    </th>
+                    <th className="md:p-5  px-5 md:text-md text-sm text-right">
+                      Status
+                    </th>
+                    {/* <th className="md:p-5 px-5 md:text-md text-sm text-right">
+                      {t("createdAt")}
+                    </th> */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredArray?.slice(0, visible)?.map((item, j) => {
+                    // {filteredArray?.map((item, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-gray-500">
+                        <td className="p-3  md:text-md text-center text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.referenceNum}{" "}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label className="text-gray-900 w-full">
+                            {item.date}
+                          </label>
+                        </td>
+
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            <label>&#8377; {item.totalAmount}</label>
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>{item.shopName}</label>
+                        </td>
+
+                        {/* <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {item.isPaid === true ? "paid" : "Not paid"}
+                          </label>
+                        </td> */}
+
+                        <td className="p-3 text-right md:text-md text-sm">
+                          <label>
+                            {" "}
+                            {item.isDone === "false" ? (
+                              <span className="text-red-500">
+                                {t("notYetDone")}
+                              </span>
+                            ) : item.isDone === "cancelled" ? (
+                              <span className="text-red-500">
+                                {t("cancelled")}
+                              </span>
+                            ) : (
+                              <span className="text-green-500">
+                                {" "}
+                                {t("done")}
+                              </span>
+                            )}
+                          </label>
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          {item.validity}
+                        </td>
+                        <td className="p-3 text-right md:text-md text-sm">
+                          {item.status || "pending"}
                         </td>
                       </tr>
                     );

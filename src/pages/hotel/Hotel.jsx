@@ -12,6 +12,7 @@ import {
   faLocationDot,
   faScissors,
   faSpa,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   useContext,
@@ -38,6 +39,7 @@ import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
+import { FinalBookingContext } from "../../context/FinalBookingContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -81,6 +83,10 @@ const Hotel = () => {
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
+  //Appointment or Booking
+
+  const [appointment, setAppointment] = useState("null");
+
   const { user } = useContext(AuthContext);
   const { city, timeDifferenceInDays, time } = useContext(SearchContext);
   const [value, setValue] = useState(
@@ -90,6 +96,7 @@ const Hotel = () => {
   const [timeReserve, setTimeReserve] = useState(time ? time : "");
 
   const { type, dispatch } = useContext(SearchContext);
+  const { dispatch: appointmentDispatch } = useContext(FinalBookingContext);
 
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
@@ -189,7 +196,9 @@ const Hotel = () => {
 
   useEffect(() => {
     setLoadingg(true);
-
+    appointmentDispatch({
+      type: "RESET_APPOINTMENT",
+    });
     try {
       const fetchData = async () => {
         const { data } = await axios.get(
@@ -271,7 +280,7 @@ const Hotel = () => {
       setLoadingg(false);
     }
     // filterOptions();
-  }, [navigate, shopIdLocation, today, type, value]);
+  }, [appointmentDispatch, navigate, shopIdLocation, today, type, value]);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -492,6 +501,119 @@ const Hotel = () => {
   };
   const [showTimings, setShowTimings] = useState(false);
 
+  const ShowAppointmentModals = useCallback(() => {
+    const appointmentPayment = async () => {
+      appointmentDispatch({
+        type: "NEW_APPOINTMENT",
+        payload: {
+          totalAmount: 20,
+          date: moment(value).format("MMM Do YY"),
+          shopName: data.name,
+          city: data.city,
+          phone: data.alternatePhone,
+          id: data._id,
+          status: "pending",
+        },
+      });
+
+      try {
+        await axios.post(
+          `${baseUrl}/api/hotels/checkAppointmentExists/${shopIdLocation}`,
+          { date: moment(value).format("MMM Do YY") },
+          { withCredentials: true }
+        );
+      } catch (error) {
+        console.log(error);
+        return alert("You already have an appointment this day!");
+      }
+
+      const {
+        data: { key },
+      } = await axios.get(`${baseUrl}/api/getkey`);
+      try {
+        const {
+          data: { order },
+        } = await axios.post(
+          `${baseUrl}/api/payments/appointment/checkout`,
+          {
+            amount: 20,
+          },
+          { withCredentials: true }
+        );
+        const options = {
+          key,
+          amount: order.amount,
+          currency: "INR",
+          name: "EASYTYM",
+          description: "SALONS & PARLOURS",
+          image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+          order_id: order.id,
+          callback_url: `${baseUrl}/api/payments/appointment/paymentverification`,
+          prefill: {
+            name: "Test Team",
+            email: "test.test@example.com",
+            contact: "9999999999",
+          },
+          notes: {
+            address: "EasyTym Corporate Office",
+          },
+          theme: {
+            color: "#121212",
+          },
+          modal: {
+            ondismiss: function () {},
+          },
+        };
+        const razor = new window.Razorpay(options);
+        razor.open();
+      } catch (err) {
+        alert(err.response.data.message);
+      }
+    };
+    return (
+      <div className="reserve  overscroll-none">
+        <FontAwesomeIcon
+          icon={faClose}
+          size="xl"
+          color="black"
+          onClick={() => {
+            setAppointment("null");
+            document.body.style.overflow = "unset";
+          }}
+          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+        />
+
+        <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[45%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+          <p className="font-bold font-verdana text-center">
+            Date Selected - {moment(value).format("MMM Do YY")}
+          </p>
+          <p>
+            Note: If confirmed, you will recieve a call from shop owner to know
+            about the services and your convenient time! We will collect a
+            amount of 20 rs/- for booking confirmation.
+          </p>
+          <p className="pb-4">
+            In case of any queries, please
+            <Link to="/contact-us" className="text-[#00ccbb]">
+              contact us
+            </Link>
+            .
+          </p>
+          <button className="primary-button mt-4" onClick={appointmentPayment}>
+            Confirm
+          </button>
+        </div>
+      </div>
+    );
+  }, [
+    appointmentDispatch,
+    data._id,
+    data.alternatePhone,
+    data.city,
+    data.name,
+    value,
+  ]);
+
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
     const roundedTime = getCurrentTimeRounded();
@@ -639,6 +761,8 @@ const Hotel = () => {
         </CarouselBanner>
       </div>
 
+      {appointment === "appointment" && <ShowAppointmentModals />}
+
       <div className="md:px-4 px-2 my-4 ">
         <div
           className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
@@ -647,30 +771,46 @@ const Hotel = () => {
           }}
         >
           <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
-            <div
-              className={
-                type === "salon"
-                  ? `active scale-in-center space-x-2`
-                  : `space-x-2`
-              }
-            >
-              <FontAwesomeIcon icon={faScissors} />
-              <span className="text-xs md:text-lg font-bold ">
-                {t("saloonShops")}
-              </span>
-            </div>
-            <div
-              className={
-                type === "parlour"
-                  ? `active scale-in-center space-x-2`
-                  : `space-x-2`
-              }
-            >
-              <FontAwesomeIcon icon={faSpa} />
-              <span className="text-xs md:text-lg font-bold">
-                {t("beautyParlours")}
-              </span>
-            </div>
+            {appointment !== "null" ? (
+              <div className={`active scale-in-center space-x-2`}>
+                <span className="text-xs md:text-lg font-bold space-x-2 ">
+                  {appointment}
+                  <FontAwesomeIcon
+                    icon={faCircleXmark}
+                    className=" ml-4 cursor-pointer"
+                    size="lg"
+                    onClick={() => setAppointment("null")}
+                  />
+                </span>
+              </div>
+            ) : (
+              <>
+                <div
+                  className={
+                    type === "salon"
+                      ? `active scale-in-center space-x-2`
+                      : `space-x-2`
+                  }
+                >
+                  <FontAwesomeIcon icon={faScissors} />
+                  <span className="text-xs md:text-lg font-bold ">
+                    {t("saloonShops")}
+                  </span>
+                </div>
+                <div
+                  className={
+                    type === "parlour"
+                      ? `active scale-in-center space-x-2`
+                      : `space-x-2`
+                  }
+                >
+                  <FontAwesomeIcon icon={faSpa} />
+                  <span className="text-xs md:text-lg font-bold">
+                    {t("beautyParlours")}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="grid grid-cols-12 gap-5 pb-5">
@@ -691,7 +831,7 @@ const Hotel = () => {
                 <p className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none ">
                   {t("loading")}
                 </p>
-              ) : (
+              ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
                   className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
@@ -727,6 +867,19 @@ const Hotel = () => {
                     </svg>
                   </div>
                 </button>
+              ) : appointment === "appointment" ? (
+                "Book an appointment!"
+              ) : (
+                <select
+                  className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                  onChange={(e) => setAppointment(e.target.value)}
+                >
+                  <option value={"null"} disabled selected>
+                    Select type of booking
+                  </option>
+                  <option value={"appointment"}>Book an appointment</option>
+                  <option value={"booking"}>Book Time And Services</option>
+                </select>
               )}
             </div>
             {showTimings && <ShowTheTimings />}

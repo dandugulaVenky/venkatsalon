@@ -52,6 +52,8 @@ import Footer from "./components/footer/Footer";
 import { SearchContext } from "./context/SearchContext";
 import SIdebar from "./components/navbar/SIdebar";
 import UpdateShopDetails from "./pages/admin/UpdateShopDetails";
+import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
+import AdminAppointments from "./pages/admin/AdminAppointments";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -66,8 +68,8 @@ function App() {
   };
   const [locale, setLocale] = useState(i18next.language);
   const { open } = useContext(SearchContext);
-  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const [smallBanners, setSmallBanners] = useState(window.innerWidth < 540);
+  const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const handleResize = (e) => {
     setSmallScreen(window.innerWidth < 1064);
     setSmallBanners(window.innerWidth < 540);
@@ -160,6 +162,14 @@ function App() {
               }
             />
             <Route
+              path="/admin/appointments"
+              element={
+                <ProtectedRoute>
+                  <AdminAppointments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/packages"
               element={
                 <ProtectedRoute>
@@ -216,6 +226,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* appointment payment success */}
+            <Route
+              path="/appointment/appointment-payment-success"
+              element={
+                <ProtectedRoute>
+                  <AppointmentPaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route
               path="/terms-and-conditions"

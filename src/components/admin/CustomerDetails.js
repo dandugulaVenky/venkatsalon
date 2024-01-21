@@ -178,13 +178,13 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    // if (result2 === -1) {
-    //   return toast("Cannot approve past times!");
-    // }
-    // if (result2 === 1 || result2 === 10) {
-    //   setLoading(false);
-    //   return toast("Cannot approve Future times!");
-    // }
+    if (result2 === -1) {
+      return toast("Cannot approve past times!");
+    }
+    if (result2 === 1 || result2 === 10) {
+      setLoading(false);
+      return toast("Cannot approve Future times!");
+    }
 
     if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
       const { email, phone } = user;

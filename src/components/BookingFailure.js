@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -8,9 +8,40 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-import useEffectOnce from "../utils/UseEffectOnce";
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
+const useEffectOnce = (effect) => {
+  const destroyFunc = useRef();
+  const effectCalled = useRef(false);
+  const renderAfterCalled = useRef(false);
+  const [val, setVal] = useState(0);
+
+  if (effectCalled.current) {
+    renderAfterCalled.current = true;
+  }
+
+  useEffect(() => {
+    // only execute the effect first time around
+    if (!effectCalled.current) {
+      destroyFunc.current = effect();
+      effectCalled.current = true;
+    }
+
+    // this forces one render after the effect is run
+    setVal((val) => val + 1);
+
+    return () => {
+      // if the comp didn't render since the useEffect was called,
+      // we know it's the dummy React cycle
+      if (!renderAfterCalled.current) {
+        return;
+      }
+      if (typeof destroyFunc.current === "function") {
+        destroyFunc.current();
+      }
+    };
+  }, []);
+};
 
 const BookingFailure = () => {
   const location = useLocation();

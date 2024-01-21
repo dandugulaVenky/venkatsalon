@@ -11,9 +11,9 @@ import {
 
 export default function Chart({
   data,
-  XAxisDatakey,
-  BarDataKey,
-  BarDataAmount,
+  XAxisDatakey = null,
+  BarDataKey = null,
+  BarDataAmount = null,
 }) {
   const [chartWidth, setChartWidth] = useState(0);
 
@@ -80,8 +80,8 @@ export default function Chart({
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey={BarDataKey} fill="#00ccbb" />
-        <Bar dataKey={BarDataAmount} fill="#868f00" />
+        {BarDataKey && <Bar dataKey={BarDataKey} fill="#00ccbb" />}
+        {BarDataAmount && <Bar dataKey={BarDataAmount} fill="#868f00" />}
       </BarChart>
     </div>
   );
