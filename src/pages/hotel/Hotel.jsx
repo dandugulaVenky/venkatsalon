@@ -215,7 +215,7 @@ const Hotel = () => {
             return arr.concat(item);
           }, []);
 
-        const totalTimeOfServices = mergedPreviewServices.reduce(
+        const totalTimeOfServices = mergedPreviewServices?.reduce(
           (acc, service) => {
             return (acc += service.duration);
           },
@@ -503,6 +503,13 @@ const Hotel = () => {
 
   const ShowAppointmentModals = useCallback(() => {
     const appointmentPayment = async () => {
+      if (!user) {
+        navigate("/login", {
+          state: { destination: `/shops/${shopIdLocation}` },
+        });
+        return;
+      }
+
       appointmentDispatch({
         type: "NEW_APPOINTMENT",
         payload: {
@@ -518,13 +525,13 @@ const Hotel = () => {
 
       try {
         await axios.post(
-          `${baseUrl}/api/hotels/checkAppointmentExists/${shopIdLocation}`,
+          `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
           { date: moment(value).format("MMM Do YY") },
           { withCredentials: true }
         );
       } catch (error) {
         console.log(error);
-        return alert("You already have an appointment this day!");
+        return alert(error.response.data.message);
       }
 
       const {
