@@ -95,7 +95,7 @@ const Hotel = () => {
 
   const [timeReserve, setTimeReserve] = useState(time ? time : "");
 
-  const { type, dispatch } = useContext(SearchContext);
+  const { dispatch } = useContext(SearchContext);
   const { dispatch: appointmentDispatch } = useContext(FinalBookingContext);
 
   const [services, setServices] = useState([]);
@@ -280,7 +280,7 @@ const Hotel = () => {
       setLoadingg(false);
     }
     // filterOptions();
-  }, [appointmentDispatch, navigate, shopIdLocation, today, type, value]);
+  }, [appointmentDispatch, navigate, shopIdLocation, today, value]);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -373,7 +373,7 @@ const Hotel = () => {
     dispatch({
       type: "NEW_SEARCH",
       payload: {
-        type,
+        type: data.type,
         destination: city,
         value,
         time: timeReserve,
@@ -383,7 +383,7 @@ const Hotel = () => {
     });
 
     if (user) {
-      navigate(`/shops/${shopIdLocation}/${type}-reserve`, {
+      navigate(`/shops/${shopIdLocation}/${data.type}-reserve`, {
         state: {
           shopId: shopIdLocation,
           shopName: data.name,
@@ -602,7 +602,7 @@ const Hotel = () => {
           <p className="pb-4">
             In case of any queries, please
             <Link to="/contact-us" className="text-[#00ccbb]">
-              contact us
+              &nbsp; contact us
             </Link>
             .
           </p>
@@ -618,6 +618,9 @@ const Hotel = () => {
     data.alternatePhone,
     data.city,
     data.name,
+    navigate,
+    shopIdLocation,
+    user,
     value,
   ]);
 
@@ -794,7 +797,7 @@ const Hotel = () => {
               <>
                 <div
                   className={
-                    type === "salon"
+                    data.type === "salon"
                       ? `active scale-in-center space-x-2`
                       : `space-x-2`
                   }
@@ -806,7 +809,7 @@ const Hotel = () => {
                 </div>
                 <div
                   className={
-                    type === "parlour"
+                    data.type === "parlour"
                       ? `active scale-in-center space-x-2`
                       : `space-x-2`
                   }

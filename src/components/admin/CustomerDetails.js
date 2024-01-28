@@ -259,7 +259,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
   const [userBookingIds, setUserBookingsIds] = useState([]);
 
   const mapUserBookingIds = (data1) => {
-    data1.map((booking) => {
+    data1?.directOrders?.map((booking) => {
       if (booking.bookId === item.bookId) {
         userBookingIds.push(booking._id);
         // console.log(`Foundroooooo ${k}`, booking.bookId);

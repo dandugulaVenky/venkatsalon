@@ -109,7 +109,7 @@ const AdminAppointments = () => {
         });
     };
     requests();
-  }, [months, value, update]);
+  }, [months, value, update]); //this is done wantedly
 
   const handleAcception = async (date, userId) => {
     const initialSelectedDates = Array.from({ length: 7 }, (_, index) => {
@@ -280,12 +280,25 @@ const AdminAppointments = () => {
                     <div className="flex space-x-2 space-y-2">
                       <button
                         className="primary-button"
+                        disabled={
+                          item.status === "Accepted" ||
+                          item.status === "Cancelled"
+                        }
                         onClick={() => handleAcception(item.date, item.userId)}
                       >
                         Accept
                       </button>
                       <button
-                        className="default-button"
+                        disabled={
+                          item.status === "Accepted" ||
+                          item.status === "Cancelled"
+                        }
+                        className={` ${
+                          item.status === "Accepted" ||
+                          item.status === "Cancelled"
+                            ? "default-button"
+                            : "bg-gray-400"
+                        }`}
                         onClick={() => handleRejection(item.date, item.userId)}
                       >
                         Reject

@@ -5,13 +5,15 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
+import { SearchContext } from "../../context/SearchContext";
 
 const AppointmentPaymentSuccess = () => {
   let navigate = useNavigate();
   const seachQuery = useSearchParams()[0];
   const { user: mainUser } = useContext(AuthContext);
+  const { type } = useContext(SearchContext);
   const { state } = useContext(FinalBookingContext);
-  console.log(state, "maks");
+  console.log(type, "maks");
   const referenceNum = seachQuery.get("reference");
 
   let isExecuted = false;
@@ -63,6 +65,8 @@ const AppointmentPaymentSuccess = () => {
             totalAmount: 20,
             referenceNum,
             status: "pending",
+            type,
+            shopId: state.id,
           },
           { withCredentials: true }
         );
@@ -74,11 +78,15 @@ const AppointmentPaymentSuccess = () => {
             totalAmount: 20,
             userId: mainUser._id,
             username: mainUser.username,
+            shopName: state.shopName,
+
             email: mainUser.email,
             phone: mainUser.phone,
             validity: "1 Day",
             referenceNum,
             status: "pending",
+            type,
+            shopId: state.id,
           },
           { withCredentials: true }
         );

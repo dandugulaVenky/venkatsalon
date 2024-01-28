@@ -258,7 +258,7 @@ const Home = ({ endRef, smallBanners }) => {
         </CarouselBanner>
       </div>
       <div className=" md:my-10 xl:my-4">
-        <div className="md:max-w-[1244px] w-full mx-auto">
+        <div className="md:max-w-[1240px] w-full mx-auto">
           <Services />
         </div>
 
