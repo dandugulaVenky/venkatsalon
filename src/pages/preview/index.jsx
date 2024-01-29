@@ -162,9 +162,11 @@ const Preview = (props) => {
             notes: {
               address: "EasyTym Corporate Office",
             },
+
             theme: {
               color: "#121212",
             },
+
             modal: {
               ondismiss: function () {},
             },

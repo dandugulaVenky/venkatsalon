@@ -5,6 +5,11 @@ import { SearchContext } from "../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Saloon from "../pages/images/you-have-the-power-to-protect-your-time.png";
+import Salon from "../pages/images/salons.jpeg";
+import Parlour from "../pages/images/parlour.jpg";
+import Spa from "../pages/images/spa.jpeg";
+import DryCleaning from "../pages/images/dry.jpeg";
+
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
   const [active, setActive] = useState(type ? type : "salon");
@@ -24,7 +29,7 @@ const Services = ({ refer }) => {
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
         {t("selectService")}
       </h1>
-      <Carousel cols={4} autoplay={10000} loop={true} rows={1} gap={7}>
+      <Carousel cols={4} rows={1} gap={7}>
         <Carousel.Item>
           <div
             className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"
@@ -32,7 +37,7 @@ const Services = ({ refer }) => {
             onClick={() => handler("salon")}
           >
             <img
-              src={Saloon}
+              src={Salon}
               alt="images"
               style={{
                 width: "98%",
@@ -69,7 +74,7 @@ const Services = ({ refer }) => {
             onClick={() => handler("parlour")}
           >
             <img
-              src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678881963/beauty2_nttutx.webp"
+              src={Parlour}
               alt="images"
               style={{
                 width: "98%",
@@ -106,7 +111,7 @@ const Services = ({ refer }) => {
             onClick={() => handler("spa")}
           >
             <img
-              src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1678881963/beauty2_nttutx.webp"
+              src={Spa}
               alt="images"
               style={{
                 width: "98%",
@@ -136,7 +141,7 @@ const Services = ({ refer }) => {
             ></span>
           </div>
         </Carousel.Item>
-        <Carousel.Item>
+        {/* <Carousel.Item>
           <div
             className="relative h-auto w-full cursor-pointer"
             onClick={() => navigate("/iron")}
@@ -165,7 +170,7 @@ const Services = ({ refer }) => {
               } absolute top-1 right-4`}
             ></span>
           </div>
-        </Carousel.Item>
+        </Carousel.Item> */}
         <Carousel.Item>
           <div
             className="relative h-auto w-full cursor-pointer"
@@ -176,7 +181,7 @@ const Services = ({ refer }) => {
             }
           >
             <img
-              src="https://picsum.photos/800/600?random=1"
+              src={DryCleaning}
               alt="images"
               style={{
                 width: "98%",
