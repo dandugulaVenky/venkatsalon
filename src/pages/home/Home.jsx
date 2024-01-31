@@ -72,8 +72,8 @@ const Home = ({ endRef, smallBanners }) => {
             // Find the colony or locality name
             const colony = addressComponents.find(
               (component) =>
-                component.types.includes("sublocality") ||
-                component.types.includes("locality")
+                component.types.includes("locality") ||
+                component.types.includes("political")
             );
             if (colony) {
               console.log(colony.long_name);
@@ -81,9 +81,13 @@ const Home = ({ endRef, smallBanners }) => {
             console.log(results);
             if (status === "OK") {
               if (results[0]) {
-                const city1 = results[2]?.formatted_address
-                  .trim()
-                  .toLowerCase();
+                let string =
+                  results[1]?.address_components[1]?.long_name +
+                  ", " +
+                  results[1]?.address_components[3]?.long_name +
+                  ", " +
+                  results[1]?.address_components[4]?.long_name;
+                const city1 = string.trim().toLowerCase();
 
                 // Dispatch the necessary information
                 dispatch({
@@ -222,7 +226,7 @@ const Home = ({ endRef, smallBanners }) => {
             <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem]">
               {t("welcome")}
             </h1>
-            <h1 className="md:text-gray-700 font-bold  py-3">
+            <h1 className="md:text-gray-700 font-bold py-3">
               {t("welcomeMessage")}
             </h1>
           </div>
