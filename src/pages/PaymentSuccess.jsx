@@ -148,7 +148,7 @@ export const PaymentSuccess = () => {
           totalAmount: finalBookingDetails?.totalAmount,
           selectedSeats: selectedSeats1,
           referenceNumber: referenceNum,
-          link: "https://main--profound-babka-e67f58.netlify.app/history",
+          link: "https://easytym.com/history",
         },
         { withCredentials: true }
       );
