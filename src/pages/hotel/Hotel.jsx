@@ -395,6 +395,7 @@ const Hotel = () => {
           options: options,
           breakTime,
           type: data.type,
+          subType: data.subType,
         },
       });
       // } else if (user && type === "parlour") {

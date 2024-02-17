@@ -9,6 +9,7 @@ import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import time from "../../utils/time";
 
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
@@ -26,6 +27,7 @@ const Preview = (props) => {
   const [height, setHeight] = useState(false);
 
   const [showPreviewServices, setShowPreviewServices] = useState();
+  const [timeRange, setTimeRange] = useState(0);
 
   useEffect(() => {
     const mergedPreviewServices = state?.previewServices
@@ -51,6 +53,24 @@ const Preview = (props) => {
         };
       }
     });
+
+    let totalTime = 0;
+    showPreviewServices?.forEach((seat, i) => {
+      seat.show.length > 0 &&
+        (totalTime += seat.show.reduce((acc, show) => acc + show.duration, 0));
+    });
+
+    console.log(totalTime);
+
+    const findIdOfTime = time.find(
+      (item, i) => item.value === state?.dates[0]?.time
+    );
+
+    const timeRanges = time.find(
+      (item, i) => item.id === findIdOfTime.id + totalTime / 10
+    );
+
+    setTimeRange(timeRanges);
 
     setShowPreviewServices(showPreviewServicess);
   }, [state]);
@@ -216,7 +236,7 @@ const Preview = (props) => {
   }, []);
 
   return (
-    <div className="pb-20">
+    <div className="md:pb-0 pb-20">
       <div
         className=" min-h-screen bg-cover bg-center bg-no-repeat"
         style={{
@@ -303,7 +323,9 @@ const Preview = (props) => {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("time")}</div>
-                    <div>{state?.dates[0]?.time}</div>
+                    <div>
+                      {state?.dates[0]?.time} - {timeRange?.value}
+                    </div>
                   </div>
                 </li>
                 <li>
@@ -322,7 +344,7 @@ const Preview = (props) => {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("total")}</div>
-                    <div>&#8377; 700</div>
+                    <div>&#8377; {state?.totalAmount + 30}</div>
                   </div>
                 </li>
 

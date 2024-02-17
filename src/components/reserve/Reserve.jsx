@@ -20,16 +20,6 @@ import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 
 const Reserve = () => {
-  const [data, setData] = useState();
-
-  const [salonPreview, setSalonPreview] = useState(false);
-  const [categoriesOptions, setCategoriesOptions] = useState();
-  const [categories, setCategories] = useState();
-  const [reserveState, setReserveState] = useState(null);
-  const [allServices, setAllServices] = useState();
-  const [showInclusions, setShowInclusions] = useState();
-  const [category, setCategory] = useState();
-  const [gender, setGender] = useState();
   const location = useLocation();
   const state = location?.state;
   const {
@@ -43,7 +33,18 @@ const Reserve = () => {
     mergedServices,
     breakTime,
     type,
+    subType,
   } = state !== null && state;
+  const [data, setData] = useState();
+
+  const [salonPreview, setSalonPreview] = useState(false);
+  const [categoriesOptions, setCategoriesOptions] = useState();
+  const [categories, setCategories] = useState();
+  const [reserveState, setReserveState] = useState(null);
+  const [allServices, setAllServices] = useState();
+  const [showInclusions, setShowInclusions] = useState();
+  const [category, setCategory] = useState();
+  const [gender, setGender] = useState(subType);
 
   const [loading, setLoading] = useState(false);
 
@@ -310,7 +311,10 @@ const Reserve = () => {
     if (sortBy === "spa") {
       result = services?.filter((category, i) => category.includes("spa"));
     } else if (sortBy === "salon") {
-      result = services?.filter((category, i) => !category.includes("salon"));
+      result = services?.filter(
+        (category, i) =>
+          !category.includes("salon") && !category.includes("spa")
+      );
     } else {
       result = services?.filter((category, i) => !category.includes(sortBy));
     }
@@ -462,8 +466,6 @@ const Reserve = () => {
           ? { seatNo: duration.seatNo, isReachedEnd: true }
           : { seatNo: duration.seatNo, isReachedEnd: false }
       );
-
-      console.log("hii");
 
       const lunch = check0.map((item) => {
         if (item.isReachedEnd) {
@@ -783,7 +785,7 @@ const Reserve = () => {
       ) : (
         <div className="">
           <div className="flex items-center md:justify-start justify-center space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
-            {!categoriesOptions?.length > 0 && sortBy === null && (
+            {/* {!categoriesOptions?.length > 0 && sortBy === null && (
               <select
                 className="md:w-52 w-auto"
                 onChange={(e) => {
@@ -799,7 +801,7 @@ const Reserve = () => {
                 <option value={"men"}>men</option>
                 <option value={"women"}>women</option>
               </select>
-            )}
+            )} */}
             <select className="md:w-52 w-auto" onChange={handleChange}>
               <option selected>{t("selectCategory")}</option>
               {salonServices?.map((service, i) => {
@@ -955,7 +957,7 @@ const Reserve = () => {
                     <li>
                       <div className="mb-2 flex justify-between">
                         <div> {t("time")}</div>
-                        <div> {options[selectedValue]?.value}-7:00 PM</div>
+                        <div> {options[selectedValue]?.value}</div>
                       </div>
                     </li>
                     <li>
