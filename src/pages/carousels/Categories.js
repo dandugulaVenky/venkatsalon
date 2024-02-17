@@ -105,10 +105,8 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {query?.data?.data?.length > 0
-                      ? query?.data?.data[0]
-                      : "Loading"}{" "}
-                    {t("shops")}
+                    {query?.data?.data?.length > 0 ? "Coming" : "Loading"}{" "}
+                    {t("shops")} Soon
                   </span>
                 </p>
               </div>
@@ -178,8 +176,10 @@ const Categories = ({ type }) => {
                 <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                   <FontAwesomeIcon icon={faBuilding} size="lg" />
                   <span className="font-semibold">
-                    {query?.data?.data?.length > 0 ? "Coming" : "Loading"}{" "}
-                    {t("shops")} Soon
+                    {query?.data?.data?.length > 0
+                      ? query?.data?.data[2]
+                      : "Loading"}{" "}
+                    {t("shops")}
                   </span>
                 </p>
               </div>

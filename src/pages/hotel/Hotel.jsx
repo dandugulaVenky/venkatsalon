@@ -932,8 +932,9 @@ const Hotel = () => {
                     className="sliderImg"
                     style={{
                       backgroundSize: "cover",
+                      objectFit: "contain",
                       backgroundPosition: "center",
-                      maxHeight: 500,
+                      maxHeight: 400,
                     }}
                   />
                 </div>

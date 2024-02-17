@@ -111,7 +111,7 @@ const AdminAddBanner = () => {
 
       console.log(error);
       if (error.response.data.status === 413) {
-        toast.warn("Images collectively should contain 10mb or less!");
+        toast.warn("Images collectively should contain 10mb or less! ");
       }
     }
 
