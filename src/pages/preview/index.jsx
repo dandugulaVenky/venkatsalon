@@ -44,6 +44,7 @@ const Preview = (props) => {
       const push = mergedPreviewServices.filter((item) =>
         seat.options.includes(item.service)
       );
+
       if (push) {
         return {
           id: seat.id,
@@ -55,12 +56,10 @@ const Preview = (props) => {
     });
 
     let totalTime = 0;
-    showPreviewServices?.forEach((seat, i) => {
+    showPreviewServicess?.forEach((seat, i) => {
       seat.show.length > 0 &&
         (totalTime += seat.show.reduce((acc, show) => acc + show.duration, 0));
     });
-
-    console.log(totalTime);
 
     const findIdOfTime = time.find(
       (item, i) => item.value === state?.dates[0]?.time
