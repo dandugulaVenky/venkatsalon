@@ -174,7 +174,7 @@ const Layout = ({ bestRef }) => {
             </div>
             <div className="flex items-center justify-between ">
               <div className="flex items-center justify-center md:space-x-8 space-x-3 ">
-                {
+                {/* {
                   <Link to="/iron" className="transition-all delay-300">
                     <h1
                       className={`font-semibold md:text-lg text-xs ${
@@ -189,7 +189,7 @@ const Layout = ({ bestRef }) => {
                       {t("ironHome")}
                     </h1>
                   </Link>
-                }
+                } */}
                 <Link to="/about-us">
                   <h1
                     className={` font-semibold md:text-lg text-xs ${

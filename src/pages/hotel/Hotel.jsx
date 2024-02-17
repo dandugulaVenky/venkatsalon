@@ -66,7 +66,7 @@ function getCurrentTimeRounded() {
   }${minutes} ${amOrPm}`;
   return roundedTime;
 }
-const Hotel = () => {
+const Hotel = ({ smallBanners }) => {
   const location = useLocation();
 
   const shopIdLocation = location.pathname.split("/")[2];
@@ -906,7 +906,11 @@ const Hotel = () => {
         </div>
       </div>
 
-      {services?.length > 0 ? <Test services={services} /> : ""}
+      {services?.length > 0 ? (
+        <Test services={services} smallBanners={smallBanners} />
+      ) : (
+        ""
+      )}
       {loading ? (
         <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
           <span className="loader  "></span>

@@ -14,7 +14,7 @@ import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
 import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
 import About from "./pages/staticpages/About";
 import Contact from "./pages/staticpages/Contact";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, Suspense, lazy } from "react";
 import { AuthContext } from "./context/AuthContext";
 
 import BookingFailure from "./components/BookingFailure";
@@ -113,7 +113,10 @@ function App() {
             <Route path="/shops" element={<List />} />
             <Route path="/cities" element={<AllCities />} />
 
-            <Route path="/shops/:id" element={<Hotel />} />
+            <Route
+              path="/shops/:id"
+              element={<Hotel smallBanners={smallBanners} />}
+            />
             <Route path="/shops/:id/:id1" element={<Reserve />} />
 
             {/* <Route

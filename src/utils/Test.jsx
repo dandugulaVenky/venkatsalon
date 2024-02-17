@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { SearchContext } from "../context/SearchContext";
 import { useEffect } from "react";
 import { useState } from "react";
-const Test = ({ services }) => {
+const Test = ({ services, smallBanners }) => {
   const { type } = useContext(SearchContext);
 
   const [mergedServices, setMergedServices] = useState();
@@ -28,30 +28,32 @@ const Test = ({ services }) => {
 
   return (
     <div className="  my-4  text-white ">
-      <Carousel cols={7} rows={1} gap={8}>
+      <Carousel cols={6} rows={1}>
         {mergedServices?.map((item, i) => {
           return (
             <Carousel.Item key={i}>
-              <div className="relative md:h-28 md:w-52 h-32 w-full">
+              <div
+                className="relative md:h-32 h-44 w-full cursor-pointer rounded-md slide-in-left"
+                id="section-id"
+              >
                 <img
-                  src={
-                    type === "salon"
-                      ? image
-                      : "https://img.freepik.com/premium-psd/top-view-beauty-salon-concept_23-2148600664.jpg?w=2000"
-                  }
+                  src={image}
+                  alt="images"
                   style={{
-                    width: 700,
-                    height: 110,
+                    width: "98%",
+                    height: smallBanners ? 170 : 110,
                     boxShadow: "1px 1.5px 2px black",
                     filter: "brightness(70%)",
+
+                    objectFit: "cover",
+                    objectPosition: "right top",
+                    borderRadius: 8,
                   }}
-                  alt="images"
-                  className="rounded-md img"
                 />
-                <p className="absolute md:bottom-3 bottom-6 left-4 text-white font-bold  text-lg ">
+                <p className="absolute  bottom-6 left-4 text-white font-bold  text-lg ">
                   {item?.service}
                 </p>
-                <p className="absolute top-0 right-2 text-white font-bold  text-xl space-x-4 ">
+                <p className="absolute top-0 right-4 text-white font-bold  text-xl space-x-4 ">
                   <span>
                     {item?.duration}{" "}
                     <FontAwesomeIcon icon={faClock} size="sm" color="white" />
