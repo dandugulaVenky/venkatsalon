@@ -843,30 +843,34 @@ const Reserve = () => {
                     const isDisabled = isAvailable(i);
                     return (
                       !isDisabled && (
-                        <div
-                          className="card  md:p-5 p-1.5 cursor-pointer"
-                          key={i}
-                          onClick={() =>
-                            setShowSeats((prevSeats) => ({
-                              ...prevSeats,
-                              [i + 1]: !showSeats[i + 1],
-                            }))
-                          }
-                        >
-                          <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right">
+                        <div className="card  md:p-5 p-1.5 " key={i}>
+                          <h2
+                            onClick={() =>
+                              setShowSeats((prevSeats) => ({
+                                ...prevSeats,
+                                [i + 1]: !showSeats[i + 1],
+                              }))
+                            }
+                            className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right"
+                          >
                             <span>
                               {t("seat")} {i + 1}
                             </span>
                             <span>&#8377; {seat ? seatValues.amount : 0} </span>
-                            <span>
+                            <p className="flex items-center justify-between ">
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
-                              {seat ? seatValues.time : 0}
-                            </span>
-                            {showSeats[i + 1] === true ? (
-                              <FontAwesomeIcon icon={faCaretUp} size="lg" />
-                            ) : (
-                              <FontAwesomeIcon icon={faCaretDown} size="lg" />
-                            )}
+                              <span className="ml-1">
+                                {" "}
+                                {seat ? seatValues.time : 0}
+                              </span>
+                            </p>
+                            <div>
+                              {showSeats[i + 1] === true ? (
+                                <FontAwesomeIcon icon={faCaretUp} size="lg" />
+                              ) : (
+                                <FontAwesomeIcon icon={faCaretDown} size="lg" />
+                              )}
+                            </div>
                           </h2>
 
                           {showSeats[i + 1] === true && (
