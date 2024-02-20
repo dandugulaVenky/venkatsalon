@@ -1,5 +1,5 @@
 import "./hotel.css";
-import { useTranslation } from "react-i18next";
+import { useSSR, useTranslation } from "react-i18next";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -86,6 +86,8 @@ const Hotel = ({ smallBanners }) => {
   //Appointment or Booking
 
   const [appointment, setAppointment] = useState("null");
+
+  const [higlightBookingBox, setHighlightBookingBox] = useState(false);
 
   const { user } = useContext(AuthContext);
   const { city, timeDifferenceInDays, time } = useContext(SearchContext);
@@ -750,6 +752,8 @@ const Hotel = ({ smallBanners }) => {
     );
   };
 
+  // console.log(higlightBookingBox);
+
   return (
     <div className="pt-6 pb-8 resp">
       <div className={` w-full mx-auto  md:rounded md:px-4 `}>
@@ -774,7 +778,9 @@ const Hotel = ({ smallBanners }) => {
 
       {appointment === "appointment" && <ShowAppointmentModals />}
 
-      <div className="md:px-4 px-2 my-4 ">
+      <div
+        className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
+      >
         <div
           className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
           style={{
@@ -845,7 +851,7 @@ const Hotel = ({ smallBanners }) => {
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+                  className="inline-flex heartbeat justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100  rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
                 >
                   <div className="w-full flex items-center justify-between">
                     <span className="md:text-md">
@@ -886,10 +892,10 @@ const Hotel = ({ smallBanners }) => {
                   onChange={(e) => setAppointment(e.target.value)}
                 >
                   <option value={"null"} disabled selected>
-                    Select type of booking
+                    Select Booking Type
                   </option>
-                  <option value={"appointment"}>Book an appointment</option>
                   <option value={"booking"}>Book Time And Services</option>
+                  <option value={"appointment"}>Book an appointment</option>
                 </select>
               )}
             </div>
@@ -906,8 +912,14 @@ const Hotel = ({ smallBanners }) => {
         </div>
       </div>
 
+      <h1 className="hotelTitle px-4 pt-4">Popular Packages</h1>
       {services?.length > 0 ? (
-        <Test services={services} smallBanners={smallBanners} />
+        <Test
+          services={services}
+          smallBanners={smallBanners}
+          setHighlightBookingBox={setHighlightBookingBox}
+          higlightBookingBox={higlightBookingBox}
+        />
       ) : (
         ""
       )}

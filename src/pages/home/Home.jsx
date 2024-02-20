@@ -219,19 +219,31 @@ const Home = ({ endRef, smallBanners }) => {
       </div> */}
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
         <div
-          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5"
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5 md:pt-0 pt-5"
           style={{ minHeight: "430px" }}
         >
           <div className="">
-            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem]">
+            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
               {t("welcome")}
             </h1>
-            <h1 className="md:text-gray-700 font-bold py-3">
+
+            <div className="col-span-12 md:col-span-6 block md:hidden">
+              <img
+                src={Giffer}
+                alt="gif"
+                style={{
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div>
+
+            <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
               {t("welcomeMessage")}
             </h1>
           </div>
         </div>
-        <div className="col-span-12 md:col-span-6">
+        <div className="col-span-12 md:col-span-6 hidden md:block">
           <img
             src={Giffer}
             alt="gif"

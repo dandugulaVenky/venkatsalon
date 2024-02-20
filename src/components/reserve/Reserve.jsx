@@ -3,7 +3,12 @@ import React, { useCallback, useContext } from "react";
 import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretDown,
+  faCaretUp,
+  faClock,
+  faClose,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -79,6 +84,12 @@ const Reserve = () => {
   const { ownerEmail, ownerNumber } = shopOwnerData;
   const [totalTime, setTotalTime] = useState(0);
   const { t } = useTranslation();
+
+  const [showSeats, setShowSeats] = useState({
+    1: false,
+    2: false,
+    3: false,
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -832,7 +843,16 @@ const Reserve = () => {
                     const isDisabled = isAvailable(i);
                     return (
                       !isDisabled && (
-                        <div className="card  md:p-5 p-1.5 " key={i}>
+                        <div
+                          className="card  md:p-5 p-1.5 cursor-pointer"
+                          key={i}
+                          onClick={() =>
+                            setShowSeats((prevSeats) => ({
+                              ...prevSeats,
+                              [i + 1]: !showSeats[i + 1],
+                            }))
+                          }
+                        >
                           <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right">
                             <span>
                               {t("seat")} {i + 1}
@@ -842,87 +862,95 @@ const Reserve = () => {
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
                               {seat ? seatValues.time : 0}
                             </span>
+                            {showSeats[i + 1] === true ? (
+                              <FontAwesomeIcon icon={faCaretUp} size="lg" />
+                            ) : (
+                              <FontAwesomeIcon icon={faCaretDown} size="lg" />
+                            )}
                           </h2>
-                          <div className="overflow-x-auto w-full">
-                            <table className="min-w-full ">
-                              <thead className="border-b bg-gray-300 ">
-                                <tr className="border-b-2 border-gray-200">
-                                  <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                    {t("serviceName")}
-                                  </th>
-                                  <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                    {t("price")}
-                                  </th>
-                                  {category === "packages" && (
-                                    <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                      {t("showinclusions")}
+
+                          {showSeats[i + 1] === true && (
+                            <div className="overflow-x-auto w-full">
+                              <table className="min-w-full ">
+                                <thead className="border-b bg-gray-300 ">
+                                  <tr className="border-b-2 border-gray-200">
+                                    <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                      {t("serviceName")}
                                     </th>
-                                  )}
+                                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                                      {t("price")}
+                                    </th>
+                                    {category === "packages" && (
+                                      <th className="md:p-5 p-4  md:text-md text-sm text-right ">
+                                        {t("showinclusions")}
+                                      </th>
+                                    )}
 
-                                  <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                    {t("duration")}
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {show &&
-                                  categoriesOptions?.map((option, j) => {
-                                    const selectedOptions = new Set(
-                                      seat.options
-                                    );
-                                    return (
-                                      <tr
-                                        key={j}
-                                        className="border-b-2 border-gray-200"
-                                      >
-                                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                          <input
-                                            type="checkbox"
-                                            name={option.service}
-                                            checked={selectedOptions.has(
-                                              option.service
-                                            )}
-                                            className="h-6 w-6"
-                                            id={option.service}
-                                            onChange={(event) =>
-                                              handleOptionChange(
-                                                event,
-                                                seat.id,
-                                                option,
-                                                seat.index
-                                              )
-                                            }
-                                            // disabled={isAvailable(i)}
-                                          />
-                                          <label className="text-gray-900">
-                                            {option.service}
-                                          </label>
-                                        </td>
-                                        <td className="p-5 text-right md:text-md text-sm">
-                                          &#8377; {option.price}
-                                        </td>
-
-                                        {category === "packages" && (
-                                          <td className="p-5 text-right md:text-md text-sm">
-                                            <label
-                                              className="text-gray-900 underline"
-                                              onClick={(e) =>
-                                                handleInclusions(e, option)
+                                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                      {t("duration")}
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {show &&
+                                    categoriesOptions?.map((option, j) => {
+                                      const selectedOptions = new Set(
+                                        seat.options
+                                      );
+                                      return (
+                                        <tr
+                                          key={j}
+                                          className="border-b-2 border-gray-200"
+                                        >
+                                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                            <input
+                                              type="checkbox"
+                                              name={option.service}
+                                              checked={selectedOptions.has(
+                                                option.service
+                                              )}
+                                              className="h-6 w-6"
+                                              id={option.service}
+                                              onChange={(event) =>
+                                                handleOptionChange(
+                                                  event,
+                                                  seat.id,
+                                                  option,
+                                                  seat.index
+                                                )
                                               }
-                                            >
-                                              {t("showinclusions")}
+                                              // disabled={isAvailable(i)}
+                                            />
+                                            <label className="text-gray-900">
+                                              {option.service}
                                             </label>
                                           </td>
-                                        )}
-                                        <td className="p-5 text-right md:text-md text-sm">
-                                          {option.duration} {t("min")}
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                              </tbody>
-                            </table>
-                          </div>
+                                          <td className="p-5 text-right md:text-md text-sm">
+                                            &#8377; {option.price}
+                                          </td>
+
+                                          {category === "packages" && (
+                                            <td className="p-5 text-right md:text-md text-sm">
+                                              <label
+                                                className="text-gray-900 underline"
+                                                onClick={(e) =>
+                                                  handleInclusions(e, option)
+                                                }
+                                              >
+                                                {t("showinclusions")}
+                                              </label>
+                                            </td>
+                                          )}
+                                          <td className="p-5 text-right md:text-md text-sm">
+                                            {option.duration} {t("min")}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
                         </div>
                       )
                     );

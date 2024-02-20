@@ -200,7 +200,7 @@ const List = () => {
               <div className=" min-h-screen w-full  md:pt-0 ">
                 {!loading && (
                   <>
-                    <div className="grid grid-cols-12  gap-8 mx-auto">
+                    <div className="grid grid-cols-12   mx-auto">
                       {filteredArray?.map((item) => (
                         <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
                           <SearchItem item={item} key={item._id} />
