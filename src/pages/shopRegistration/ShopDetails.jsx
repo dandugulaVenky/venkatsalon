@@ -50,7 +50,7 @@ const ShopDetails = () => {
   const states = {
     Telangana: {
       Rangareddy: {
-        509228: [
+        509325: [
           {
             name: "Thimmapur",
           },
