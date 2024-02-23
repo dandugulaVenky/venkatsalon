@@ -130,119 +130,6 @@ const ShopDetails = () => {
 
   const [selectedDistrict, setSelectedDistrict] = useState();
 
-  // const submitHandlerr = ({
-  //   shopName,
-
-  //   phone,
-
-  //   description,
-  // }) => {
-
-  //   if (!typeOfShop || typeOfShop === "undefined") {
-  //     return alert(t("selectTypeOfTheShop"));
-  //   } else if (!genderType || genderType === "undefined") {
-  //     return alert(t("pleaseSelectCategoryOfTheParlour"));
-  //   } else if (spaIncluded === null) {
-  //     return alert(t("pleaseSelectWhetherShopHaveSpaServices"));
-  //   } else if (!latLong) {
-  //     return alert(t("selectAddressInMap"));
-  //   } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
-  //     return alert(t("selectShopStartEndTimeCorrectly"));
-  //   } else if (selectedStartTime === "" || selectedEndTime === "") {
-  //     return alert(t("selectLunchStartEndTimeCorrectly"));
-  //   } else if (
-  //     selectedStartTime !== selectedEndTime &&
-  //     selectedShopStartTime !== selectedShopEndTime
-  //   ) {
-  //     // const x = existingUserData.number.includes(phone);
-  //     // if (x) {
-  //     //   alert(t("alternateNumberShouldBeDifferent"));
-  //     //   return;
-  //     // }
-  //     const selectedShopStartIndex = options.find((option) => {
-  //       return option.value === selectedShopStartTime;
-  //     })?.id;
-  //     const selectedShopEndIndex = options.find((option) => {
-  //       return option.value === selectedShopEndTime;
-  //     })?.id;
-
-  //     const selectedStartIndex = options.find((option) => {
-  //       return option.value === selectedStartTime;
-  //     })?.id;
-  //     const selectedEndIndex = options.find((option) => {
-  //       return option.value === selectedEndTime;
-  //     })?.id;
-
-  //     if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
-  //       return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
-  //     }
-  //     // console.log(selectedEndIndex * 10);
-  //     // console.log(selectedStartIndex * 10 > 60);
-  //     // console.log(selectedEndIndex * 10 - selectedStartIndex * 10 > 60);
-
-  //     let diff = selectedEndIndex * 10 - selectedStartIndex * 10;
-
-  //     if (diff > 60) {
-  //       return alert(t("lunchTimeMax1HrOnly"));
-  //     }
-  //     if (diff < 10) {
-  //       return alert(t("selectLunchTimeCorrectly10min"));
-  //     }
-
-  //     const shopTime = options.filter((option) => {
-  //       return (
-  //         option.id >= selectedShopStartIndex &&
-  //         option.id < selectedShopEndIndex
-  //       );
-  //     });
-  //     const shopTimeArray = shopTime.map((option) => {
-  //       return option.id;
-  //     });
-
-  //     const lunchTime = options.filter((option) => {
-  //       return option.id >= selectedStartIndex && option.id < selectedEndIndex;
-  //     });
-  //     const lunchTimeArray = lunchTime.map((option) => {
-  //       return option.id;
-  //     });
-  //     // console.log(lunchTimeArray, "lunch array in shop-details");
-  //     // console.log(shopTimeArray, "Shop array in shop-details");
-
-  //     const hotelInfo = {
-  //       name: shopName,
-
-  //       alternatePhone: phone,
-  //       city: selectedState + "," + selectedDistrict + "," + selectedPincode,
-  //       desc: description,
-  //       type: typeOfShop.toLowerCase(),
-
-  //       subType: genderType.toLowerCase(),
-  //       spaIncluded,
-  //       lunchTimeArray,
-  //       shopTimeArray,
-  //       latLong,
-  //     };
-
-  //     function setCookieObject(name1, value, daysToExpire) {
-  //       const expires = new Date();
-  //       expires.setDate(expires.getDate() + daysToExpire);
-
-  //       // Serialize the object to JSON and encode it
-  //       const cookieValue =
-  //         encodeURIComponent(JSON.stringify(value)) +
-  //         (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
-  //       document.cookie = `${name1}=${cookieValue}; path=/`;
-  //     }
-  //     setCookieObject("shop_info", hotelInfo, 7);
-
-  //     console.log("done");
-  //     navigate("/shop-final-registration");
-  //   } else {
-  //     alert(t("somethingWrong"));
-  //   }
-  // };
-
   const handleStartTimeChange = (event) => {
     setSelectedStartTime(event.target.value);
     clearError("selectedStartTime");
@@ -309,7 +196,6 @@ const ShopDetails = () => {
   };
 
   useEffect(() => {
-    console.log(formErrors);
     if (Object.keys(formErrors)?.length === 0 && isSubmit) {
       if (
         !selectedStartTime ||
@@ -386,7 +272,7 @@ const ShopDetails = () => {
 
             alternatePhone: "phone",
             city:
-              selectedState + "," + selectedDistrict + "," + selectedPincode,
+              selectedState + ", " + selectedDistrict + ", " + selectedPincode,
             desc: "description",
             type: typeOfShop.toLowerCase(),
 
