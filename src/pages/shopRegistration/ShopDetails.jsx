@@ -438,46 +438,46 @@ const ShopDetails = () => {
     const errors = {};
     // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!shopName) {
-      errors.shopName = "shopName is required!";
+      errors.shopName = "shop name is required!";
     }
     if (!selectedStartTime) {
-      errors.selectedStartTime = "selectedStartTime is required!";
+      errors.selectedStartTime = "shop startTime is required!";
     }
     if (!selectedEndTime) {
-      errors.selectedEndTime = "selectedEndTime is required!";
+      errors.selectedEndTime = "shop endTime is required!";
       // } else if (!regex.test(values.email)) {
       //   errors.email = "This is not a valid email format!";
       // }
     }
     if (!selectedShopStartTime) {
-      errors.selectedShopStartTime = "selectedShopStartTime is required";
+      errors.selectedShopStartTime = "lunch start time is required";
     }
     if (!selectedShopEndTime) {
-      errors.selectedShopEndTime = "selectedShopEndTime is required";
+      errors.selectedShopEndTime = "lunch end time is required";
     }
     if (!selectedDistrict) {
-      errors.selectedDistrict = "selectedDistrict is required";
+      errors.selectedDistrict = "district is required";
     }
     if (!selectedPincode) {
-      errors.selectedPincode = "selectedPincode is required";
+      errors.selectedPincode = "pincode is required";
     }
     if (!selectedState) {
-      errors.selectedState = "selectedState  is required";
+      errors.selectedState = "state  is required";
     }
     if (!latLong) {
-      errors.latLong = "latLong is required";
+      errors.latLong = "latitudes, longitudes are required";
     }
 
     if (!genderType) {
-      errors.genderType = "genderType is required";
+      errors.genderType = "gender is required";
     }
 
     if (!typeOfShop) {
-      errors.typeOfShop = "type Of Shop is required";
+      errors.typeOfShop = "type is required";
     }
 
     if (spaIncluded === null) {
-      errors.spaIncluded = "spaIncluded is required";
+      errors.spaIncluded = "spa inclusion is required";
     }
 
     return errors;
