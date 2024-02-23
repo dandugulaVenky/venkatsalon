@@ -8,15 +8,10 @@ import { useNavigate } from "react-router-dom";
 import options from "../../utils/time";
 import RegistrationWizard from "./RegistrationWizard";
 import MapComponent from "../../components/MapComponent";
-import { Combobox } from "@headlessui/react";
+
 import { AuthContext } from "../../context/AuthContext";
 
 const ShopDetails = () => {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
   const navigate = useNavigate();
 
   const { t } = useTranslation();
@@ -26,189 +21,250 @@ const ShopDetails = () => {
 
   const [selectedEndTime, setSelectedEndTime] = useState("");
   const [selectedShopEndTime, setSelectedShopEndTime] = useState("");
-
+  const [shopName, setShopName] = useState();
   const [latLong, setLatLong] = useState(null);
-  const [type, setType] = useState(null);
-  const [salonOrParlourType, setParlourOrSalonType] = useState(null);
+  const [typeOfShop, setTypeOfShop] = useState(null);
+  const [genderType, setGenderType] = useState(null);
   const [map, setMap] = useState(false);
   const [spaIncluded, setSpaIncluded] = useState(null);
 
-  function getCookieObject(name) {
-    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
-    for (const cookie of cookies) {
-      if (cookie.startsWith(name + "=")) {
-        const encodedValue = cookie.substring(name.length + 1);
-        return JSON.parse(decodeURIComponent(encodedValue));
-      }
-    }
+  // function getCookieObject(name) {
+  //   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
 
-    return null;
-  }
+  //   for (const cookie of cookies) {
+  //     if (cookie.startsWith(name + "=")) {
+  //       const encodedValue = cookie.substring(name.length + 1);
+  //       return JSON.parse(decodeURIComponent(encodedValue));
+  //     }
+  //   }
 
-  const cities = [
-    "shadnagar, telangana 509216, india",
-    "kothur, telangana 509228, india",
-    "thimmapur, telangana 509325, india",
-    "shamshabad, telangana 501218, india",
+  //   return null;
+  // }
+
+  const [selectedState, setSelectedState] = useState();
+  const [selectedPincode, setSelectedPincode] = useState();
+
+  const states = {
+    Telangana: {
+      Rangareddy: {
+        509228: [
+          {
+            name: "Thimmapur",
+          },
+          {
+            name: "Kothur",
+          },
+          {
+            name: "Shapur",
+          },
+        ],
+        509216: [
+          {
+            name: "Shadnagar",
+          },
+          {
+            name: "Farooqnagar",
+          },
+        ],
+      },
+    },
+
+    Karnataka: {
+      Bangalore: {
+        509228: [
+          {
+            name: "Thimmapur",
+          },
+          {
+            name: "Kothur",
+          },
+          {
+            name: "Shapur",
+          },
+        ],
+        509216: [
+          {
+            name: "Shadnagar",
+          },
+          {
+            name: "Farooqnagar",
+          },
+        ],
+      },
+    },
+  };
+
+  const statesInIndia = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
   ];
 
-  const [query, setQuery] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState();
 
-  const filteredCities =
-    query === ""
-      ? cities
-      : cities.filter((city) => {
-          return city.toLowerCase().includes(query.toLowerCase());
-        });
+  // const submitHandlerr = ({
+  //   shopName,
 
-  const [selectedCity, setSelectedCity] = useState("");
+  //   phone,
 
-  const submitHandler = ({
-    shopName,
+  //   description,
+  // }) => {
 
-    phone,
+  //   if (!typeOfShop || typeOfShop === "undefined") {
+  //     return alert(t("selectTypeOfTheShop"));
+  //   } else if (!genderType || genderType === "undefined") {
+  //     return alert(t("pleaseSelectCategoryOfTheParlour"));
+  //   } else if (spaIncluded === null) {
+  //     return alert(t("pleaseSelectWhetherShopHaveSpaServices"));
+  //   } else if (!latLong) {
+  //     return alert(t("selectAddressInMap"));
+  //   } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
+  //     return alert(t("selectShopStartEndTimeCorrectly"));
+  //   } else if (selectedStartTime === "" || selectedEndTime === "") {
+  //     return alert(t("selectLunchStartEndTimeCorrectly"));
+  //   } else if (
+  //     selectedStartTime !== selectedEndTime &&
+  //     selectedShopStartTime !== selectedShopEndTime
+  //   ) {
+  //     // const x = existingUserData.number.includes(phone);
+  //     // if (x) {
+  //     //   alert(t("alternateNumberShouldBeDifferent"));
+  //     //   return;
+  //     // }
+  //     const selectedShopStartIndex = options.find((option) => {
+  //       return option.value === selectedShopStartTime;
+  //     })?.id;
+  //     const selectedShopEndIndex = options.find((option) => {
+  //       return option.value === selectedShopEndTime;
+  //     })?.id;
 
-    description,
-  }) => {
-    // console.log(type);
-    // console.log(salonOrParlourType);
-    // console.log(spaIncluded, "spaIncluded");
+  //     const selectedStartIndex = options.find((option) => {
+  //       return option.value === selectedStartTime;
+  //     })?.id;
+  //     const selectedEndIndex = options.find((option) => {
+  //       return option.value === selectedEndTime;
+  //     })?.id;
 
-    if (!type || type === "undefined") {
-      return alert(t("selectTypeOfTheShop"));
-    } else if (!salonOrParlourType || salonOrParlourType === "undefined") {
-      return alert(t("pleaseSelectCategoryOfTheParlour"));
-    } else if (spaIncluded === null) {
-      return alert(t("pleaseSelectWhetherShopHaveSpaServices"));
-    } else if (!latLong) {
-      return alert(t("selectAddressInMap"));
-    } else if (selectedShopStartTime === "" || selectedShopEndTime === "") {
-      return alert(t("selectShopStartEndTimeCorrectly"));
-    } else if (selectedStartTime === "" || selectedEndTime === "") {
-      return alert(t("selectLunchStartEndTimeCorrectly"));
-    } else if (
-      selectedStartTime !== selectedEndTime &&
-      selectedShopStartTime !== selectedShopEndTime
-    ) {
-      // const x = existingUserData.number.includes(phone);
-      // if (x) {
-      //   alert(t("alternateNumberShouldBeDifferent"));
-      //   return;
-      // }
-      const selectedShopStartIndex = options.find((option) => {
-        return option.value === selectedShopStartTime;
-      })?.id;
-      const selectedShopEndIndex = options.find((option) => {
-        return option.value === selectedShopEndTime;
-      })?.id;
+  //     if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
+  //       return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
+  //     }
+  //     // console.log(selectedEndIndex * 10);
+  //     // console.log(selectedStartIndex * 10 > 60);
+  //     // console.log(selectedEndIndex * 10 - selectedStartIndex * 10 > 60);
 
-      const selectedStartIndex = options.find((option) => {
-        return option.value === selectedStartTime;
-      })?.id;
-      const selectedEndIndex = options.find((option) => {
-        return option.value === selectedEndTime;
-      })?.id;
+  //     let diff = selectedEndIndex * 10 - selectedStartIndex * 10;
 
-      if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
-        return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
-      }
-      console.log(selectedEndIndex * 10);
-      console.log(selectedStartIndex * 10 > 60);
-      console.log(selectedEndIndex * 10 - selectedStartIndex * 10 > 60);
+  //     if (diff > 60) {
+  //       return alert(t("lunchTimeMax1HrOnly"));
+  //     }
+  //     if (diff < 10) {
+  //       return alert(t("selectLunchTimeCorrectly10min"));
+  //     }
 
-      let diff = selectedEndIndex * 10 - selectedStartIndex * 10;
+  //     const shopTime = options.filter((option) => {
+  //       return (
+  //         option.id >= selectedShopStartIndex &&
+  //         option.id < selectedShopEndIndex
+  //       );
+  //     });
+  //     const shopTimeArray = shopTime.map((option) => {
+  //       return option.id;
+  //     });
 
-      if (diff > 60) {
-        return alert(t("lunchTimeMax1HrOnly"));
-      }
-      if (diff < 10) {
-        return alert(t("selectLunchTimeCorrectly10min"));
-      }
+  //     const lunchTime = options.filter((option) => {
+  //       return option.id >= selectedStartIndex && option.id < selectedEndIndex;
+  //     });
+  //     const lunchTimeArray = lunchTime.map((option) => {
+  //       return option.id;
+  //     });
+  //     // console.log(lunchTimeArray, "lunch array in shop-details");
+  //     // console.log(shopTimeArray, "Shop array in shop-details");
 
-      const shopTime = options.filter((option) => {
-        return (
-          option.id >= selectedShopStartIndex &&
-          option.id < selectedShopEndIndex
-        );
-      });
-      const shopTimeArray = shopTime.map((option) => {
-        return option.id;
-      });
+  //     const hotelInfo = {
+  //       name: shopName,
 
-      const lunchTime = options.filter((option) => {
-        return option.id >= selectedStartIndex && option.id < selectedEndIndex;
-      });
-      const lunchTimeArray = lunchTime.map((option) => {
-        return option.id;
-      });
-      // console.log(lunchTimeArray, "lunch array in shop-details");
-      // console.log(shopTimeArray, "Shop array in shop-details");
+  //       alternatePhone: phone,
+  //       city: selectedState + "," + selectedDistrict + "," + selectedPincode,
+  //       desc: description,
+  //       type: typeOfShop.toLowerCase(),
 
-      const hotelInfo = {
-        name: shopName,
+  //       subType: genderType.toLowerCase(),
+  //       spaIncluded,
+  //       lunchTimeArray,
+  //       shopTimeArray,
+  //       latLong,
+  //     };
 
-        alternatePhone: phone,
-        city: selectedCity.toLowerCase(),
-        desc: description,
-        type: type.toLowerCase(),
+  //     function setCookieObject(name1, value, daysToExpire) {
+  //       const expires = new Date();
+  //       expires.setDate(expires.getDate() + daysToExpire);
 
-        subType: salonOrParlourType.toLowerCase(),
-        spaIncluded,
-        lunchTimeArray,
-        shopTimeArray,
-        latLong,
-      };
+  //       // Serialize the object to JSON and encode it
+  //       const cookieValue =
+  //         encodeURIComponent(JSON.stringify(value)) +
+  //         (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
 
-      function setCookieObject(name1, value, daysToExpire) {
-        const expires = new Date();
-        expires.setDate(expires.getDate() + daysToExpire);
+  //       document.cookie = `${name1}=${cookieValue}; path=/`;
+  //     }
+  //     setCookieObject("shop_info", hotelInfo, 7);
 
-        // Serialize the object to JSON and encode it
-        const cookieValue =
-          encodeURIComponent(JSON.stringify(value)) +
-          (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
-        document.cookie = `${name1}=${cookieValue}; path=/`;
-      }
-      setCookieObject("shop_info", hotelInfo, 7);
-
-      console.log("done");
-      navigate("/shop-final-registration");
-    } else {
-      alert(t("somethingWrong"));
-    }
-  };
+  //     console.log("done");
+  //     navigate("/shop-final-registration");
+  //   } else {
+  //     alert(t("somethingWrong"));
+  //   }
+  // };
 
   const handleStartTimeChange = (event) => {
-    if (event.target.value === "null") {
-      return;
-    }
     setSelectedStartTime(event.target.value);
+    clearError("selectedStartTime");
   };
   const handleEndTimeChange = (event) => {
-    if (event.target.value === "null") {
-      return;
-    }
     setSelectedEndTime(event.target.value);
+    clearError("selectedEndTime");
   };
 
   const handleShopStartTimeChange = (event) => {
-    if (event.target.value === "null") {
-      return;
-    }
     setSelectedShopStartTime(event.target.value);
+    clearError("selectedShopStartTime");
   };
   const handleShopEndTimeChange = (event) => {
-    if (event.target.value === "null") {
-      return;
-    }
     setSelectedShopEndTime(event.target.value);
+    clearError("selectedShopEndTime");
   };
 
   const handleMapClick = (coords) => {
     setLatLong(coords);
     setMap(!map);
+    clearError("latLong");
   };
 
   const handleClick = () => {
@@ -216,17 +272,15 @@ const ShopDetails = () => {
   };
 
   const handleType = (e) => {
-    if (e.target.value === "null") {
-      return;
-    }
-    setType(e.target.value);
+    console.log(e.target.value, "ufufufu");
+    setTypeOfShop(e.target.value);
+    clearError("typeOfShop");
   };
 
   const handleParlourType = (e) => {
-    if (e.target.value === "null") {
-      return;
-    }
-    setParlourOrSalonType(e.target.value);
+    setGenderType(e.target.value);
+
+    clearError("genderType");
   };
 
   useEffect(() => {
@@ -235,6 +289,228 @@ const ShopDetails = () => {
     if (!user || user === "undefined") {
     }
   }, [navigate, user]);
+
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+    setSelectedDistrict(null); // Reset district when state changes
+    setSelectedPincode(null); // Reset pincode when state changes
+    clearError("selectedState");
+  };
+
+  const handleDistrictChange = (e) => {
+    setSelectedDistrict(e.target.value);
+    setSelectedPincode(null); // Reset pincode when district changes
+    clearError("selectedDistrict");
+  };
+
+  const handlePincodeChange = (e) => {
+    setSelectedPincode(e.target.value);
+    clearError("selectedPincode");
+  };
+
+  useEffect(() => {
+    console.log(formErrors);
+    if (Object.keys(formErrors)?.length === 0 && isSubmit) {
+      if (
+        !selectedStartTime ||
+        !selectedEndTime ||
+        !selectedShopStartTime ||
+        !selectedShopEndTime ||
+        !selectedDistrict ||
+        !selectedPincode ||
+        !selectedState ||
+        !latLong ||
+        !genderType ||
+        !typeOfShop ||
+        !shopName
+      ) {
+        alert("Please ensure you have entered all the fields !");
+      } else {
+        if (
+          selectedStartTime !== selectedEndTime &&
+          selectedShopStartTime !== selectedShopEndTime
+        ) {
+          const selectedShopStartIndex = options.find((option) => {
+            return option.value === selectedShopStartTime;
+          })?.id;
+          const selectedShopEndIndex = options.find((option) => {
+            return option.value === selectedShopEndTime;
+          })?.id;
+
+          const selectedStartIndex = options.find((option) => {
+            return option.value === selectedStartTime;
+          })?.id;
+          const selectedEndIndex = options.find((option) => {
+            return option.value === selectedEndTime;
+          })?.id;
+
+          if (selectedShopEndIndex * 10 - selectedShopStartIndex * 10 < 480) {
+            return alert(t("min8HrsNeededBetweenOpeningClosingTime"));
+          }
+          // console.log(selectedEndIndex * 10);
+          // console.log(selectedStartIndex * 10 > 60);
+          // console.log(selectedEndIndex * 10 - selectedStartIndex * 10 > 60);
+
+          let diff = selectedEndIndex * 10 - selectedStartIndex * 10;
+
+          if (diff > 60) {
+            return alert(t("lunchTimeMax1HrOnly"));
+          }
+          if (diff < 10) {
+            return alert(t("selectLunchTimeCorrectly10min"));
+          }
+
+          const shopTime = options.filter((option) => {
+            return (
+              option.id >= selectedShopStartIndex &&
+              option.id < selectedShopEndIndex
+            );
+          });
+          const shopTimeArray = shopTime.map((option) => {
+            return option.id;
+          });
+
+          const lunchTime = options.filter((option) => {
+            return (
+              option.id >= selectedStartIndex && option.id < selectedEndIndex
+            );
+          });
+          const lunchTimeArray = lunchTime.map((option) => {
+            return option.id;
+          });
+          // console.log(lunchTimeArray, "lunch array in shop-details");
+          // console.log(shopTimeArray, "Shop array in shop-details");
+
+          const hotelInfo = {
+            name: shopName,
+
+            alternatePhone: "phone",
+            city:
+              selectedState + "," + selectedDistrict + "," + selectedPincode,
+            desc: "description",
+            type: typeOfShop.toLowerCase(),
+
+            subType: genderType.toLowerCase(),
+            spaIncluded,
+            lunchTimeArray,
+            shopTimeArray,
+            latLong,
+          };
+
+          function setCookieObject(name1, value, daysToExpire) {
+            const expires = new Date();
+            expires.setDate(expires.getDate() + daysToExpire);
+
+            // Serialize the object to JSON and encode it
+            const cookieValue =
+              encodeURIComponent(JSON.stringify(value)) +
+              (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+            document.cookie = `${name1}=${cookieValue}; path=/`;
+          }
+          setCookieObject("shop_info", hotelInfo, 7);
+
+          console.log("done");
+          navigate("/shop-final-registration");
+        } else {
+          alert(t("somethingWrong"));
+        }
+      }
+    }
+  }, [formErrors]);
+
+  const validate = (
+    shopName,
+    selectedStartTime,
+    selectedEndTime,
+    selectedShopStartTime,
+    selectedShopEndTime,
+    selectedDistrict,
+    selectedPincode,
+    selectedState,
+    latLong,
+
+    typeOfShop,
+    genderType,
+    spaIncluded
+  ) => {
+    console.log(spaIncluded, "jj");
+    const errors = {};
+    // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!shopName) {
+      errors.shopName = "shopName is required!";
+    }
+    if (!selectedStartTime) {
+      errors.selectedStartTime = "selectedStartTime is required!";
+    }
+    if (!selectedEndTime) {
+      errors.selectedEndTime = "selectedEndTime is required!";
+      // } else if (!regex.test(values.email)) {
+      //   errors.email = "This is not a valid email format!";
+      // }
+    }
+    if (!selectedShopStartTime) {
+      errors.selectedShopStartTime = "selectedShopStartTime is required";
+    }
+    if (!selectedShopEndTime) {
+      errors.selectedShopEndTime = "selectedShopEndTime is required";
+    }
+    if (!selectedDistrict) {
+      errors.selectedDistrict = "selectedDistrict is required";
+    }
+    if (!selectedPincode) {
+      errors.selectedPincode = "selectedPincode is required";
+    }
+    if (!selectedState) {
+      errors.selectedState = "selectedState  is required";
+    }
+    if (!latLong) {
+      errors.latLong = "latLong is required";
+    }
+
+    if (!genderType) {
+      errors.genderType = "genderType is required";
+    }
+
+    if (!typeOfShop) {
+      errors.typeOfShop = "type Of Shop is required";
+    }
+
+    if (spaIncluded === null) {
+      errors.spaIncluded = "spaIncluded is required";
+    }
+
+    return errors;
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    console.log(typeOfShop, "uiuiuiuiuiuiuiuiui");
+    setFormErrors(
+      validate(
+        shopName,
+        selectedStartTime,
+        selectedEndTime,
+        selectedShopStartTime,
+        selectedShopEndTime,
+        selectedDistrict,
+        selectedPincode,
+        selectedState,
+        latLong,
+
+        typeOfShop,
+        genderType,
+        spaIncluded
+      )
+    );
+    setIsSubmit(true);
+  };
+
+  const clearError = (fieldName) => {
+    setFormErrors((prevErrors) => {
+      return { ...prevErrors, [fieldName]: "" };
+    });
+  };
 
   return (
     <div className="pt-10 pb-20">
@@ -256,7 +532,7 @@ const ShopDetails = () => {
       <form
         className="card mx-auto max-w-screen-md py-0.5 md:px-12 px-7 pb-20 
                  "
-        onSubmit={handleSubmit(submitHandler)}
+        onSubmit={submitHandler}
       >
         <h1 className="my-4 text-xl">{t("shopDetails")}</h1>
         <div className="mb-4">
@@ -266,26 +542,18 @@ const ShopDetails = () => {
             placeholder="salon name"
             id="shopName"
             autoFocus
-            {...register("shopName", {
-              required: "Please enter shop name",
-              minLength: {
-                value: 6,
-                message: "Username must be more than 5 chars",
-              },
-              pattern: {
-                value: /^[a-z" "A-Z" "0-9_.+-@#]+$/i,
-                message: "Please enter valid shop name",
-              },
-            })}
+            onChange={(e) => {
+              setShopName(e.target.value);
+
+              clearError("shopName");
+            }}
           />
-          {errors.shopName && (
-            <div className="text-red-500">{errors.shopName.message}</div>
-          )}
+          <p className="text-red-500 py-2">{formErrors?.shopName}</p>
         </div>
 
         <div className="flex w-full ">
           <div className="mb-4 mr-4 flex flex-col w-full">
-            <label htmlFor="type">{t("shopStartTime")}</label>
+            <label htmlFor="shopStartTime">{t("shopStartTime")}</label>
             <select
               className="w-full"
               value={selectedShopStartTime}
@@ -300,6 +568,9 @@ const ShopDetails = () => {
                 </option>
               ))}
             </select>
+            <p className="text-red-500 py-2">
+              {formErrors?.selectedShopStartTime}
+            </p>
           </div>
           <div className="mb-4 flex flex-col  w-full">
             <label htmlFor="type">{t("shopEndTime")}</label>
@@ -318,12 +589,14 @@ const ShopDetails = () => {
                 </option>
               ))}
             </select>
+            <p className="text-red-500 py-2">
+              {formErrors?.selectedShopEndTime}
+            </p>
           </div>
         </div>
-
         <div className="flex w-full ">
           <div className="mb-4 mr-4 flex flex-col w-full">
-            <label htmlFor="type">{t("lunchStartTime")}</label>
+            <label htmlFor="lunchStartTime">{t("lunchStartTime")}</label>
             <select
               className="w-full"
               value={selectedStartTime}
@@ -338,9 +611,11 @@ const ShopDetails = () => {
                 </option>
               ))}
             </select>
+            <p className="text-red-500 py-2">{formErrors?.selectedStartTime}</p>
           </div>
+
           <div className="mb-4 flex flex-col  w-full">
-            <label htmlFor="type">{t("lunchEndTime")}</label>
+            <label htmlFor="lunchEndTime">{t("lunchEndTime")}</label>
             <select
               className="w-full"
               value={selectedEndTime}
@@ -355,117 +630,128 @@ const ShopDetails = () => {
                 </option>
               ))}
             </select>
+            <p className="text-red-500 py-2">{formErrors?.selectedEndTime}</p>
           </div>
         </div>
-
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="phone">{t("alternatePhoneNumber")}</label>
-          <input
-            className="w-full"
-            type="number"
-            id="phone"
-            {...register("phone", {
-              required: "Please enter phone number",
-              minLength: {
-                value: 10,
-                message: "Phone must be 10 numbers",
-              },
-            })}
-          />
+          <input className="w-full" type="number" id="phone" />
           {errors.phone && (
             <div className="text-red-500 ">{errors.phone.message}</div>
           )}
-        </div>
-        {/* <div className="mb-4">
-          <label htmlFor="city">City/Town</label>
-          <input
-            className="w-full"
-            id="city"
-            value={storedUser?.address}
-            readOnly
-            {...register("city", {
-              required: "Please enter city",
-              minLength: {
-                value: 3,
-                message: "City must be more than 3 chars",
-              },
-
-
-            })}
-          />
-          {errors.city && (
-            <div className="text-red-500 ">{errors.city.message}</div>
-          )}
         </div> */}
 
-        <div className="w-full flex  flex-wrap">
-          <div className=" mb-4 w-full">
-            <label htmlFor="city" className="block">
-              {t("city")}
-            </label>
-            <div className="relative inline-block bg-slate-100 rounded-md  text-black items-center w-full">
-              <Combobox value={selectedCity} onChange={setSelectedCity}>
-                <Combobox.Input
-                  onChange={(event) => setQuery(event.target.value)}
-                  className="pl-2 w-full "
-                  id="city"
-                  {...register("city", {
-                    required: "Please enter city name",
-                  })}
-                />
-
-                <Combobox.Options
-                  style={{ zIndex: 999 }}
-                  className="absolute top-[2.2rem]  cursor-pointer text-gray-500 bg-gray-100 md:p-3 p-2.5 w-full rounded  md:max-h-32 max-h-48 border border-gray-300 shadow-md  overflow-y-auto"
-                >
-                  {filteredCities.map((person) => (
-                    <Combobox.Option
-                      key={person}
-                      value={person}
-                      className="p-1"
-                    >
-                      {person}
-                    </Combobox.Option>
-                  ))}
-                  {filteredCities.length <= 0 && (
-                    <Combobox.Option>{t("OOPSWeDidNotFound")}</Combobox.Option>
-                  )}
-                </Combobox.Options>
-              </Combobox>
-            </div>
-            {errors.city && (
-              <div className="text-red-500 ">{errors.city.message}</div>
-            )}
+        <div>
+          <div>
+            <label htmlFor="stateSelect">Select a State:</label>
+            <select
+              id="stateSelect"
+              onChange={handleStateChange}
+              value={selectedState}
+            >
+              <option value="" disabled selected>
+                Select a state
+              </option>
+              {statesInIndia.map((location, index) => (
+                <option key={index} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+            <p className="text-red-500 py-2">{formErrors?.selectedState}</p>
           </div>
+
+          {selectedState && (
+            <div>
+              <label htmlFor="districtSelect">Select a District:</label>
+              <select
+                id="districtSelect"
+                onChange={handleDistrictChange}
+                value={selectedDistrict}
+              >
+                <option value="" disabled selected>
+                  Select a district
+                </option>
+                {Object.keys(states[selectedState])?.map((district, index) => (
+                  <option key={index} value={district}>
+                    {district}
+                  </option>
+                ))}
+              </select>
+              <p className="text-red-500 py-2">
+                {formErrors?.selectedDistrict}
+              </p>
+            </div>
+          )}
+
+          {selectedState && selectedDistrict && (
+            <div>
+              <label htmlFor="pincodeSelect">Select a Pincode:</label>
+              <select
+                id="pincodeSelect"
+                onChange={handlePincodeChange}
+                value={selectedPincode}
+              >
+                <option value="" disabled selected>
+                  Select a pincode
+                </option>
+                {Object.keys(states[selectedState][selectedDistrict])?.map(
+                  (postalCode, index) =>
+                    states[selectedState][selectedDistrict][postalCode]?.map(
+                      (pincodeObj, pincodeIndex) => (
+                        <option
+                          key={pincodeIndex}
+                          value={`${pincodeObj.name}, ${postalCode}`}
+                        >
+                          {`${pincodeObj.name}, ${postalCode}`}
+                        </option>
+                      )
+                    )
+                )}
+              </select>
+              <p className="text-red-500 py-2">{formErrors?.selectedPincode}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="w-full flex  flex-wrap">
+          {/* <div className="mb-4">
+            <label htmlFor="village">Village</label>
+            <input className="w-full" placeholder="address" id="village" />
+          </div> */}
           <div className="mb-4 w-full">
             <label htmlFor="type">{t("type")}</label>
-            <select className="w-full p-1.5" onChange={handleType} value={type}>
-              <option value="null">{t("selectType")}</option>
+            <select
+              className="w-full p-1.5"
+              onChange={handleType}
+              value={typeOfShop}
+            >
+              <option value="null" selected>
+                {t("selectType")}
+              </option>
               <option value="salon">{t("salon")}</option>
               <option value="parlour">{t("parlour")}</option>
               <option value="spa">{t("spa")}</option>
             </select>
+            <p className="text-red-500 py-2">{formErrors?.typeOfShop}</p>
           </div>
 
-          {
-            <div className="mb-4 w-full">
-              <label htmlFor="salonOrParlourType">
-                {type} {t("type")}
-              </label>
-              <select
-                className="w-full p-1.5"
-                onChange={handleParlourType}
-                value={salonOrParlourType}
-              >
-                <option value="null">
-                  {t("select")} {type} {t("type")}
-                </option>
-                <option value="women">{t("women")}</option>
-                <option value="men">{t("men")}</option>
-                <option value="unisex">{t("unisex")}</option>
-              </select>
-            </div>
-          }
+          <div className="mb-4 w-full">
+            <label htmlFor="genderType">Gender {t("type")}</label>
+            <select
+              className="w-full p-1.5"
+              onChange={handleParlourType}
+              value={genderType}
+            >
+              <option value="null" selected>
+                {t("select")} Gender {t("type")}
+              </option>
+              <option value="women">{t("women")}</option>
+              <option value="men">{t("men")}</option>
+              <option value="unisex">{t("unisex")}</option>
+            </select>
+            <p className="text-red-500 py-2">{formErrors?.genderType}</p>
+          </div>
         </div>
 
         <div className="mb-4 w-full flex items-start justify-around">
@@ -477,11 +763,15 @@ const ShopDetails = () => {
               checked={spaIncluded === true}
               className="h-6 w-6"
               id="Yes"
-              onChange={(event) => setSpaIncluded(true)}
+              onChange={(event) => {
+                setSpaIncluded(true);
+                clearError("spaIncluded");
+              }}
               // disabled={isAvailable(i)}
             />
             <label className="text-gray-900">{t("yesIncluded")}</label>
           </div>
+
           <div className="flex items-center justify-center space-x-2">
             <input
               type="checkbox"
@@ -490,33 +780,26 @@ const ShopDetails = () => {
               className="h-6 w-6"
               id="No"
               value={false}
-              onChange={(event) => setSpaIncluded(false)}
+              onChange={(event) => {
+                setSpaIncluded(false);
+                clearError("spaIncluded");
+              }}
 
               // disabled={isAvailable(i)}
             />
             <label className="text-gray-900">{t("notIncluded")}</label>
           </div>
         </div>
+        <p className="text-red-500 py-2">{formErrors?.spaIncluded}</p>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="description">{t("description")}</label>
           <input
             className="w-full"
             placeholder="unique point about your shop"
             id="description"
-            {...register("description", {
-              required: "Please enter description",
-              minLength: {
-                value: 10,
-                message: "City must be more than 10 chars",
-              },
-            })}
           />
-          {errors.description && (
-            <div className="text-red-500 ">{errors.description.message}</div>
-          )}
-        </div>
-
+        </div> */}
         <div className="mb-4" onClick={handleClick}>
           <label htmlFor="address">Exact Address</label>
           <p className="w-full px-5 py-2 bg-green-200 rounded-md cursor-pointer">
@@ -524,9 +807,7 @@ const ShopDetails = () => {
               ? `lat:${latLong?.lat} , lng:${latLong?.lng}`
               : "Select on map"}
           </p>
-          {errors.address && (
-            <div className="text-red-500">{errors.address.message}</div>
-          )}
+          <p className="text-red-500 py-2">{formErrors?.latLong}</p>
         </div>
 
         <div className="mb-4 flex justify-between">

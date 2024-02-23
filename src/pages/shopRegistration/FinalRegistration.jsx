@@ -80,7 +80,7 @@ const FinalRegistration = () => {
         return;
       }
     } catch (err) {
-      console.log(err);
+      console.log(err, "err1");
       setLoading(false);
 
       alert(err.response.data.message);
@@ -93,7 +93,7 @@ const FinalRegistration = () => {
       userId: user?._id,
       city: user?.city,
       phone: user?.phone,
-      email: user?.city,
+      email: user?.email,
       isAdmin: true,
     };
 
@@ -126,7 +126,7 @@ const FinalRegistration = () => {
       alert(err.response.data.message);
       setLoading(false);
 
-      console.log(err);
+      console.log(err, "err2");
     }
 
     console.log(user);
