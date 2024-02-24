@@ -11,6 +11,9 @@ const INITIAL_STATE = {
     ? JSON.parse(localStorage.getItem("bookingDetails")).time
     : "",
   open: false,
+  pincode: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).pincode
+    : "",
   type: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).type
     : "salon",
@@ -25,6 +28,7 @@ const SearchReducer = (state, action) => {
   switch (action.type) {
     case "NEW_SEARCH":
       const city = action.payload.destination;
+      const pincode = action.payload.pincode;
       const date = action.payload.value;
       const time = action.payload.time;
       const type = action.payload.type;
@@ -33,7 +37,14 @@ const SearchReducer = (state, action) => {
       // console.log("payload", action.payload);
       localStorage.setItem(
         "bookingDetails",
-        JSON.stringify({ city, date, time, type, timeDifferenceInDays })
+        JSON.stringify({
+          city,
+          date,
+          time,
+          type,
+          timeDifferenceInDays,
+          pincode,
+        })
       );
       return { ...state, date, city, time, type, timeDifferenceInDays };
     case "RESET_SEARCH":

@@ -12,7 +12,6 @@
 .home-imgs {
   background-image: url("../images/svgType10.gif");
 
-  
   background-position: center;
   background-size: cover;
 }
@@ -20,10 +19,7 @@
   background-image: url("../images/main.webp");
   height: 100vh;
   width: 100%;
-  background-position: center;
   background-size: cover;
-  /* background-attachment: fixed; */
-  transition: 0.6s;
 }
 
 /* .home-img2 {
@@ -66,12 +62,15 @@
 
 @media screen and (max-width: 767px) {
   .home-img1 {
-    background-image: url("https://res.cloudinary.com/duk9xkcp5/image/upload/v1692466776/Untitled_uihmo2.webp");
+    background-image: url("../images/home-image-mobile.jpg");
     height: 100%;
-    background-position: center;
-    background-attachment: local;
-
-    background-color: rgba(0, 0, 0, 33%);
+    background-position: bottom;
+    object-position: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    transition: 0.6s;
+    margin-bottom: 13px;
   }
   .text-container {
     height: 5vh;

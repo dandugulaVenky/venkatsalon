@@ -19,7 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
-  const { type: type1, city } = useContext(SearchContext);
+  const { type: type1, city, pincode } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
@@ -27,7 +27,7 @@ const BestSaloons = ({ smallBanners }) => {
   const getBestSalons = async () => {
     return await axios.get(
       `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city=${
-        city ? city : "shadnagar, telangana 509216, india"
+        city ? pincode : "shadnagar, telangana 509216, india"
       }`
     );
   };
