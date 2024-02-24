@@ -60,6 +60,9 @@ const ShopDetails = () => {
           {
             name: "Shapur",
           },
+          {
+            name: "Palmakole",
+          },
         ],
         509216: [
           {
