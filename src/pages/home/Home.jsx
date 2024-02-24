@@ -202,53 +202,62 @@ const Home = ({ endRef, smallBanners }) => {
 
   return (
     <div className="h-auto">
+      {/* {w < 768 && <Greeting bestRef={endRef} />} */}
       <Seo props={siteMetadata} />
 
-      {!smallBanners ? (
-        <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
-          <div
-            className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5 md:pt-0 pt-5"
-            style={{ minHeight: "430px" }}
-          >
-            <div className="">
-              <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
-                {t("welcome")}
-              </h1>
-
-              <div className="col-span-12 md:col-span-6 block md:hidden">
-                <img
-                  src={Giffer}
-                  alt="gif"
-                  style={{
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                />
-              </div>
-
-              <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
-                {t("welcomeMessage")}
-              </h1>
-            </div>
+      {/* <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div> */}
+      {/* <div className="home-img1 mb-3">
+        <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
+          <div className="text-container">
+            <h1 className=" md:text-6xl text-4xl text-center font-bold ">
+              {t("welcome")}
+            </h1>
           </div>
-          <div className="col-span-12 md:col-span-6 hidden md:block">
-            <img
-              src={Giffer}
-              alt="gif"
-              style={{
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="home-img1 h-[71.5vh]">
-          <h1 className=" text-5xl text-center pt-16 text-white font-extrabold md:leading-[4rem] ">
-            {t("welcome")}
+          <h1 className="md:text-gray-700 text-white md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
+            {t("welcomeMessage")}
           </h1>
         </div>
-      )}
+      </div> */}
+      {/* <div>
+        <VideoBackground videoUrl={videoUrl} />
+      </div> */}
+      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
+        <div
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5 md:pt-0 pt-5"
+          style={{ minHeight: "430px" }}
+        >
+          <div className="">
+            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
+              {t("welcome")}
+            </h1>
+
+            <div className="col-span-12 md:col-span-6 block md:hidden">
+              <img
+                src={Giffer}
+                alt="gif"
+                style={{
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+            </div>
+
+            <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
+              {t("welcomeMessage")}
+            </h1>
+          </div>
+        </div>
+        <div className="col-span-12 md:col-span-6 hidden md:block">
+          <img
+            src={Giffer}
+            alt="gif"
+            style={{
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
+        </div>
+      </div>
       <div className={` w-full mx-auto  md:rounded md:px-4`}>
         <CarouselBanner autoSlide={true}>
           {images.map((s) => {
