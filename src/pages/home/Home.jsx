@@ -243,7 +243,11 @@ const Home = ({ endRef, smallBanners }) => {
           </div>
         </div>
       ) : (
-        <div className="home-img1 h-[71.5vh]"></div>
+        <div className="home-img1 h-[71.5vh]">
+          <h1 className=" text-5xl text-center pt-16 text-white font-extrabold md:leading-[4rem] ">
+            {t("welcome")}
+          </h1>
+        </div>
       )}
       <div className={` w-full mx-auto  md:rounded md:px-4`}>
         <CarouselBanner autoSlide={true}>
