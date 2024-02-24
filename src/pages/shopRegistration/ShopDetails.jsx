@@ -128,6 +128,8 @@ const ShopDetails = () => {
     "West Bengal",
   ];
 
+  const [village, setVillage] = useState();
+
   const [selectedDistrict, setSelectedDistrict] = useState();
 
   const handleStartTimeChange = (event) => {
@@ -179,20 +181,25 @@ const ShopDetails = () => {
 
   const handleStateChange = (e) => {
     setSelectedState(e.target.value);
-    setSelectedDistrict(null); // Reset district when state changes
-    setSelectedPincode(null); // Reset pincode when state changes
+    setSelectedDistrict(""); // Reset district when state changes
+    setSelectedPincode(""); // Reset pincode when state changes
     clearError("selectedState");
   };
 
   const handleDistrictChange = (e) => {
     setSelectedDistrict(e.target.value);
-    setSelectedPincode(null); // Reset pincode when district changes
+    setSelectedPincode(""); // Reset pincode when district changes
     clearError("selectedDistrict");
   };
 
   const handlePincodeChange = (e) => {
     setSelectedPincode(e.target.value);
+    setVillage("");
     clearError("selectedPincode");
+  };
+  const handleVillageChange = (e) => {
+    setVillage(e.target.value);
+    clearError("village");
   };
 
   useEffect(() => {
@@ -205,6 +212,7 @@ const ShopDetails = () => {
         !selectedDistrict ||
         !selectedPincode ||
         !selectedState ||
+        !village ||
         !latLong ||
         !genderType ||
         !typeOfShop ||
@@ -271,8 +279,8 @@ const ShopDetails = () => {
             name: shopName,
 
             alternatePhone: "phone",
-            city:
-              selectedState + ", " + selectedDistrict + ", " + selectedPincode,
+            city: ` ${village}, ${selectedState} ${selectedPincode}, india`,
+
             desc: "description",
             type: typeOfShop.toLowerCase(),
 
@@ -314,6 +322,7 @@ const ShopDetails = () => {
     selectedDistrict,
     selectedPincode,
     selectedState,
+    village,
     latLong,
 
     typeOfShop,
@@ -366,6 +375,10 @@ const ShopDetails = () => {
       errors.spaIncluded = "spa inclusion is required";
     }
 
+    if (!village) {
+      errors.village = "village is required";
+    }
+
     return errors;
   };
 
@@ -382,6 +395,7 @@ const ShopDetails = () => {
         selectedDistrict,
         selectedPincode,
         selectedState,
+        village,
         latLong,
 
         typeOfShop,
@@ -572,7 +586,7 @@ const ShopDetails = () => {
 
           {selectedState && selectedDistrict && (
             <div>
-              <label htmlFor="pincodeSelect">Select a Pincode:</label>
+              <label htmlFor="pincodeSelect">Select a Pincode :</label>
               <select
                 id="pincodeSelect"
                 onChange={handlePincodeChange}
@@ -585,17 +599,39 @@ const ShopDetails = () => {
                   (postalCode, index) =>
                     states[selectedState][selectedDistrict][postalCode]?.map(
                       (pincodeObj, pincodeIndex) => (
-                        <option
-                          key={pincodeIndex}
-                          value={`${pincodeObj.name}, ${postalCode}`}
-                        >
-                          {`${pincodeObj.name}, ${postalCode}`}
+                        <option key={pincodeIndex} value={`${postalCode}`}>
+                          {`${postalCode}`}
                         </option>
                       )
                     )
                 )}
               </select>
+
               <p className="text-red-500 py-2">{formErrors?.selectedPincode}</p>
+            </div>
+          )}
+
+          {selectedState && selectedDistrict && selectedPincode && (
+            <div>
+              <label htmlFor="pincodeSelect">Select Your place :</label>
+              <select
+                id="pincodeSelect"
+                onChange={handleVillageChange}
+                value={village}
+              >
+                <option value="" disabled selected>
+                  Select Your place
+                </option>
+                {states[selectedState][selectedDistrict][selectedPincode].map(
+                  (villageObj, index) => (
+                    <option key={index} value={villageObj.name}>
+                      {villageObj.name}
+                    </option>
+                  )
+                )}
+              </select>
+
+              <p className="text-red-500 py-2">{formErrors?.village}</p>
             </div>
           )}
         </div>
