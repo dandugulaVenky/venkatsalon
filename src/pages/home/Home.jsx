@@ -70,14 +70,16 @@ const Home = ({ endRef, smallBanners }) => {
           geocoder.geocode({ location: latlng }, (results, status) => {
             console.log(results);
             // Find the first address component with types including "postal_code"
-            const postalCodeComponent = results.find((component) =>
-              component.types.includes("plus_code")
+            const postalCodeComponent = results.find(
+              (component) =>
+                component.types.includes("premise") ||
+                component.types.includes("plus_code")
             );
             const postalCodeComponent1 = results.find((component) =>
               component.types.includes("postal_code")
             );
 
-            console.log(postalCodeComponent);
+            console.log(postalCodeComponent1);
 
             // Find the colony or locality name
 
@@ -89,9 +91,8 @@ const Home = ({ endRef, smallBanners }) => {
                 //   results[1]?.address_components[3]?.long_name +
                 //   ", " +
                 //   results[1]?.address_components[4]?.long_name;
-                const city1 = postalCodeComponent.formatted_address
-                  ?.trim()
-                  .toLowerCase();
+                const city1 =
+                  postalCodeComponent.formatted_address?.toLowerCase();
 
                 // Dispatch the necessary information
                 dispatch({

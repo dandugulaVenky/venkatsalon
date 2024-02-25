@@ -46,7 +46,15 @@ const SearchReducer = (state, action) => {
           pincode,
         })
       );
-      return { ...state, date, city, time, type, timeDifferenceInDays };
+      return {
+        ...state,
+        date,
+        city,
+        time,
+        type,
+        timeDifferenceInDays,
+        pincode,
+      };
     case "RESET_SEARCH":
       return INITIAL_STATE;
     case "SIDEBAR_OPEN":
@@ -68,6 +76,7 @@ export const SearchContextProvider = ({ children }) => {
         open: state.open,
         type: state.type,
         timeDifferenceInDays: state.timeDifferenceInDays,
+        pincode: state.pincode,
         dispatch,
       }}
     >

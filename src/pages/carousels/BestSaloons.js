@@ -23,12 +23,13 @@ const BestSaloons = ({ smallBanners }) => {
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
+  console.log(pincode, "pincode");
 
   const getBestSalons = async () => {
     return await axios.get(
-      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city=${
-        city ? pincode : "shadnagar, telangana 509216, india"
-      }`
+      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city1=${
+        city ? city : "shadnagar, telangana 509216, india"
+      }&city2=${pincode ? pincode : "shadnagar, telangana 509216, india"}`
     );
   };
   const size = GetSize();

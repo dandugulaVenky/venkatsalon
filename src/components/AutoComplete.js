@@ -35,6 +35,7 @@ export default class AutoComplete extends React.Component {
             payload: {
               type: !type ? "salon" : type,
               destination: city,
+              pincode: city,
             },
           });
         })
