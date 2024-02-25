@@ -20,7 +20,7 @@ const List = () => {
   const { locale, setLocale } = useContext(LanguageContext);
 
   const { data, loading } = useFetch(
-    `${baseUrl}/api/hotels?type=${type}&city=${city}&min=${min || 0}&max=${
+    `${baseUrl}/api/hotels?type=${type}&city1=${city}&min=${min || 0}&max=${
       max || 999
     }`
   );

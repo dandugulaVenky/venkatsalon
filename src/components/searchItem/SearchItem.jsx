@@ -21,7 +21,10 @@ const SearchItem = ({ item }) => {
           <div className="  rounded-md">
             <div className="w-full">
               <img
-                src={item?.images[0]?.url}
+                src={
+                  item?.images[0]?.url ||
+                  "https://picsum.photos/800/600?random=5"
+                }
                 alt=""
                 className="siImg md:w-[80%] w-[100%] h-52"
                 style={{
