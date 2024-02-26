@@ -25,7 +25,7 @@ const Services = ({ refer }) => {
   };
 
   return (
-    <div className=" mt-10  text-black " ref={refer}>
+    <div className=" mt-8  text-black " ref={refer}>
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
         {t("selectService")}
       </h1>
