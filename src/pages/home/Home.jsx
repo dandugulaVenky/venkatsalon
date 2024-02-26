@@ -70,8 +70,10 @@ const Home = ({ endRef, smallBanners }) => {
           geocoder.geocode({ location: latlng }, (results, status) => {
             console.log(results);
             // Find the first address component with types including "postal_code"
-            const postalCodeComponent = results.find((component) =>
-              component.types.includes("sublocality")
+            const postalCodeComponent = results.find(
+              (component) =>
+                component.types.includes("sublocality") ||
+                component.types.includes("postal_code")
             );
             const postalCodeComponent1 = results.find((component) =>
               component.types.includes("postal_code")
