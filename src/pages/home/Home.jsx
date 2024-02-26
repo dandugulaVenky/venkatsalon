@@ -222,7 +222,7 @@ const Home = ({ endRef, smallBanners }) => {
       {/* <div>
         <VideoBackground videoUrl={videoUrl} />
       </div> */}
-      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
+      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-2 md:py-6   lg:py-0 lg:pb-5">
         <div
           className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-5"
           style={{ minHeight: "430px" }}
