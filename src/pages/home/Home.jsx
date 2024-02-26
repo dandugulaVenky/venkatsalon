@@ -13,7 +13,7 @@ import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
-
+import mobileImg from "../images/home-image-mobile.png";
 import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
@@ -224,7 +224,7 @@ const Home = ({ endRef, smallBanners }) => {
       </div> */}
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-8 md:py-6   lg:py-0 lg:pb-5">
         <div
-          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start px-5 md:pt-0 pt-5"
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-5"
           style={{ minHeight: "430px" }}
         >
           <div className="">
@@ -233,14 +233,25 @@ const Home = ({ endRef, smallBanners }) => {
             </h1>
 
             <div className="col-span-12 md:col-span-6 block md:hidden">
-              <img
-                src={Giffer}
-                alt="gif"
-                style={{
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-              />
+              {!smallBanners ? (
+                <img
+                  src={Giffer}
+                  alt="gif"
+                  style={{
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              ) : (
+                <img
+                  src={mobileImg}
+                  alt="gif"
+                  style={{
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              )}
             </div>
 
             <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
