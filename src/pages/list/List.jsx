@@ -135,6 +135,7 @@ const List = () => {
     );
 
     setFilteredArray(areaData);
+    setAreaFilter(e.target.value);
 
     if (e.target.value === "null") {
       setFilteredArray(data);
@@ -210,9 +211,11 @@ const List = () => {
                     border: "2.4px solid gray",
                     caretColor: "#00ccbb",
                   }}
-                  value={areas}
+                  value={areaFilter}
                 >
-                  <option value="null">Sort By Area</option>
+                  <option value="null" selected>
+                    Sort By Area
+                  </option>
                   {areas?.map((item, i) => {
                     return <option value={item}>{item}</option>;
                   })}
