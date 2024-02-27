@@ -13,7 +13,7 @@ import DryCleaning from "../pages/images/dry.jpeg";
 const Services = ({ refer }) => {
   let { city = "shadnagar", type, dispatch } = useContext(SearchContext);
   const [active, setActive] = useState(type ? type : "salon");
-  const navigate = useNavigate();
+
   const { t } = useTranslation();
   const handler = (service) => {
     setActive(service);

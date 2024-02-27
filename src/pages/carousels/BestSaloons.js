@@ -29,7 +29,7 @@ const BestSaloons = ({ smallBanners }) => {
     return await axios.get(
       `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city1=${
         city ? city : "shadnagar, telangana 509216, india"
-      }&city2=${pincode ? pincode : "shadnagar, telangana 509216, india"}`
+      }&pincode=${pincode === "postal_code" ? true : false}`
     );
   };
   const size = GetSize();
@@ -95,41 +95,47 @@ const BestSaloons = ({ smallBanners }) => {
           <Carousel cols={columns} rows={1} gap={7}>
             {query?.data?.data &&
               query?.data?.data?.slice(0, 6)?.map((item, i) => {
+                const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <div
-                      className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
-                      id="section-id"
-                      onClick={() => gotoHotel(item._id)}
-                    >
-                      <img
-                        src={
-                          item.images[0]?.url ||
-                          "https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
-                        }
-                        alt="images"
-                        style={{
-                          width: "98%",
-                          height: 170,
-                          boxShadow: "1px 1.5px 2px black",
-                          filter: "brightness(70%)",
+                    <>
+                      <div
+                        className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
+                        id="section-id"
+                        onClick={() => gotoHotel(item._id)}
+                      >
+                        <img
+                          src={
+                            item.images[0]?.url ||
+                            "https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
+                          }
+                          alt="images"
+                          style={{
+                            width: "98%",
+                            height: 170,
+                            boxShadow: "1px 1.5px 2px black",
+                            filter: "brightness(70%)",
 
-                          objectFit: "cover",
-                          objectPosition: "right top",
-                          borderRadius: 8,
-                        }}
-                      />
-                      <p className="absolute md:bottom-[2.55rem] bottom-10 left-4 text-white font-bold  text-xl content break-words">
-                        {/* {item.name} */}
-                        {t("salonName", { name: item.name })}
+                            objectFit: "cover",
+                            objectPosition: "right top",
+                            borderRadius: 8,
+                          }}
+                        />
+                        <p className="absolute md:bottom-[2.55rem] bottom-11 left-4 text-white font-bold  text-xl content break-words">
+                          {/* {item.name} */}
+                          {t("salonName", { name: item.name })}
+                        </p>
+                        <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
+                          <span className="font-semibold">
+                            {Math.ceil(item.rating)}{" "}
+                          </span>
+                          <FontAwesomeIcon icon={faStar} size="lg" />
+                        </p>
+                      </div>
+                      <p className="pl-1 font-semibold text-gray-700 ">
+                        {cityName}
                       </p>
-                      <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                        <span className="font-semibold">
-                          {Math.ceil(item.rating)}{" "}
-                        </span>
-                        <FontAwesomeIcon icon={faStar} size="lg" />
-                      </p>
-                    </div>
+                    </>
                   </Carousel.Item>
                 );
               })}

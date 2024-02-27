@@ -5,6 +5,7 @@ import "./searchItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
+  faLocationDot,
   faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,12 +14,12 @@ const SearchItem = ({ item }) => {
     <>
       <Link to={`/shops/${item._id}`}>
         <div
-          className=" hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer mx-4 "
+          className=" hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer mx-4 my-4"
           style={{
             filter: " drop-shadow(0px 0px 0.3px gray)",
           }}
         >
-          <div className="  rounded-md">
+          <div className=" rounded-md bg-slate-100 shadow-custom border-2 border-gray-100">
             <div className="w-full">
               <img
                 src={
@@ -26,13 +27,13 @@ const SearchItem = ({ item }) => {
                   "https://picsum.photos/800/600?random=5"
                 }
                 alt=""
-                className="siImg md:w-[80%] w-[100%] h-52"
+                className="siImg  w-[100%] h-52"
                 style={{
                   objectPosition: "top",
                 }}
               />
             </div>
-            <div className=" grid grid-cols-12 p-2 text-gray-800 ">
+            <div className=" grid grid-cols-12 p-4 text-gray-800 ">
               <div className="space-y-2.5 col-span-8">
                 <h1 className=" md:text-md text-sm">
                   {item.name}{" "}
@@ -49,6 +50,15 @@ const SearchItem = ({ item }) => {
                 <h1 className="text-sm siTaxiOp">
                   Reviews : {item.numReviews}
                 </h1>
+              </div>
+              <div className="flex items-center justify-start space-x-2">
+                <FontAwesomeIcon
+                  icon={faLocationDot}
+                  color="#00ccbb"
+                  size="xs"
+                  className="flex-1"
+                />
+                <p>{item.city.split(",")[0]}</p>
               </div>
               {/* <div className="siDetail col-span-4">
                 <div className="siDetailTexts">

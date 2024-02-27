@@ -10,19 +10,19 @@ import { t } from "i18next";
 import LanguageContext from "../../context/LanguageContext";
 
 const List = () => {
-  let { city, type } = useContext(SearchContext);
   const [data1, setData1] = useState();
-  const min = useState(0);
-  const max = useState(999);
+  // const min = useState(0);
+  // const max = useState(999);
   const [subType, setSubType] = useState();
   const [gender, setGender] = useState();
-  city = city.toLowerCase().trim();
+
   const { locale, setLocale } = useContext(LanguageContext);
+  const { type, city, pincode } = useContext(SearchContext);
 
   const { data, loading } = useFetch(
-    `${baseUrl}/api/hotels?type=${type}&city1=${city}&min=${min || 0}&max=${
-      max || 999
-    }`
+    `${baseUrl}/api/hotels?type=${type ? type : "salon"}&city1=${
+      city ? city : "shadnagar, telangana 509216, india"
+    }&pincode=${pincode === "postal_code" ? true : false}`
   );
 
   const navigate = useNavigate();
@@ -50,6 +50,8 @@ const List = () => {
   }
 
   const [filteredArray, setFilteredArray] = useState();
+  const [areas, setAreas] = useState(null);
+  const [areaFilter, setAreaFilter] = useState(null);
 
   useEffect(() => {
     setData1(data);
@@ -57,6 +59,10 @@ const List = () => {
     setGender("null");
     let filteredArray = filterArray(data, userInput);
     setFilteredArray(filteredArray);
+
+    const areass = filteredArray.map((item, i) => item.city.split(",")[0]);
+
+    setAreas(areass);
   }, [data, userInput]);
 
   // useEffect(() => {
@@ -96,6 +102,7 @@ const List = () => {
 
     return;
   };
+
   const filteredTypeofShopType = (e) => {
     setGender("null");
     setSubType(e.target.value);
@@ -115,7 +122,24 @@ const List = () => {
 
     setData1(matter);
     setFilteredArray(matter);
+
     return;
+  };
+
+  const filteredArea = (e) => {
+    setSubType("null");
+    setGender("null");
+
+    const areaData = data1.filter(
+      (item) => item.city.split(",")[0] === e.target.value
+    );
+
+    setFilteredArray(areaData);
+
+    if (e.target.value === "null") {
+      setFilteredArray(data);
+      return;
+    }
   };
 
   return (
@@ -177,6 +201,23 @@ const List = () => {
                   </option>
                 </select>
               </div>
+              <div className="md:col-span-2 col-span-6">
+                <select
+                  className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                  onChange={filteredArea}
+                  style={{
+                    filter: " drop-shadow(0px 0px 0.35px gray)",
+                    border: "2.4px solid gray",
+                    caretColor: "#00ccbb",
+                  }}
+                  value={areas}
+                >
+                  <option value="null">Sort By Area</option>
+                  {areas?.map((item, i) => {
+                    return <option value={item}>{item}</option>;
+                  })}
+                </select>
+              </div>
 
               <div className="md:col-span-2 col-span-6">
                 <select
@@ -202,7 +243,7 @@ const List = () => {
                   <>
                     <div className="grid grid-cols-12   mx-auto">
                       {filteredArray?.map((item) => (
-                        <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-auto ">
+                        <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-4 ">
                           <SearchItem item={item} key={item._id} />
                         </div>
                       ))}

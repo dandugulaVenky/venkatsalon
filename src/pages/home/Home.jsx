@@ -75,11 +75,8 @@ const Home = ({ endRef, smallBanners }) => {
                 component.types.includes("sublocality") ||
                 component.types.includes("postal_code")
             );
-            const postalCodeComponent1 = results.find((component) =>
-              component.types.includes("postal_code")
-            );
 
-            console.log(postalCodeComponent1);
+            console.log(postalCodeComponent);
 
             // Find the colony or locality name
 
@@ -100,7 +97,7 @@ const Home = ({ endRef, smallBanners }) => {
                   payload: {
                     type: "salon",
                     destination: city1,
-                    pincode: postalCodeComponent1.formatted_address,
+                    pincode: postalCodeComponent.types[0],
                   },
                 });
               } else {
