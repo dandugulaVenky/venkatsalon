@@ -18,6 +18,9 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
+import img1 from "../images/1.png";
+import img2 from "../images/2.png";
+import img3 from "../images/3.png";
 import banner6 from "../images/you-have-the-power-to-protect-your-time.png";
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -190,13 +193,7 @@ const Home = ({ endRef, smallBanners }) => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
       ])
-    : (images = [
-        banner6,
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-      ]);
+    : (images = [img1, img2, img3]);
 
   return (
     <div className="h-auto">
