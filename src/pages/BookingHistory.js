@@ -15,8 +15,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 
-import { SearchContext } from "../context/SearchContext";
-
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
@@ -118,7 +116,7 @@ const BookingHistory = () => {
     }
 
     return (
-      <div className="reserve">
+      <div className="reserve pt-20">
         <div className="overflow-x-auto relative ">
           <FontAwesomeIcon
             icon={faClose}
@@ -135,6 +133,7 @@ const BookingHistory = () => {
                     <p className="font-semibold">
                       {t("seat")} - {seats[i] || "Any Seat"}
                     </p>
+                    <p> Category : {item?.superCategory}</p>
                     <span key={i}>
                       {t("services")} :{" "}
                       {seat.options.map((option, i) => {

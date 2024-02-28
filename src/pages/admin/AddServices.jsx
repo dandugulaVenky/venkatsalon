@@ -17,6 +17,8 @@ import { spaCategories } from "../../utils/spaServices";
 const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const [category, setCategory] = useState();
+  const [superCategory, setSuperCategory] = useState();
+  const [superCategories, setSuperCategories] = useState();
   const { user } = useContext(AuthContext);
   const [allServices, setAllServices] = useState({
     service: "",
@@ -40,7 +42,7 @@ const AddServices = () => {
         ? salonCategories[typeOfPerson]
         : spaCategories[typeOfPerson];
 
-    setCategories(categories);
+    setSuperCategories(categories);
   }, [shopType, typeOfPerson]);
 
   const { t } = useTranslation();
@@ -82,12 +84,31 @@ const AddServices = () => {
     fetchData();
   }, [navigate, user?.shopId]);
 
+  // const handleCategoryChange = (e) => {
+  //   setCategory(e.target.value);
+  //   const result = categories.filter((category, i) =>
+  //     category.superCategory === e.target.value ? category.services : null
+  //   );
+  //   console.log(result, "res");
+  //   setCategoriesOptions(result[0].services);
+  // };
+
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
     const result = categories.filter((category, i) =>
       category.category === e.target.value ? category.services : null
     );
     setCategoriesOptions(result[0].services);
+  };
+
+  const handleSuperCategoryChange = (e) => {
+    setSuperCategory(e.target.value);
+    const result = superCategories.filter((superCategory, i) =>
+      superCategory.superCategory === e.target.value
+        ? superCategory.services
+        : null
+    );
+    setCategories(result);
   };
 
   const allHandleChange = (e, option) => {
@@ -100,6 +121,7 @@ const AddServices = () => {
 
   const handleSubmit = (e) => {
     if (
+      !superCategory ||
       category === "" ||
       allServices.service === "" ||
       allServices.price === 0 ||
@@ -114,13 +136,15 @@ const AddServices = () => {
       category: category,
       subCategory: typeOfPerson,
       services: allServices,
+      superCategory,
     };
 
     if (shopServices?.length > 0) {
       const res = shopServices.map((shopService) => {
         if (
           shopService.category === category &&
-          shopService.subCategory === typeOfPerson
+          shopService.subCategory === typeOfPerson &&
+          shopService.superCategory === superCategory
         ) {
           const existing = shopService.services.service === allServices.service;
 
@@ -157,6 +181,7 @@ const AddServices = () => {
       (item) =>
         !(
           item.category === removeService.category &&
+          item.superCategory === removeService.superCategory &&
           item.subCategory === removeService.subCategory &&
           item.services.service === removeService.services.service
         )
@@ -185,6 +210,7 @@ const AddServices = () => {
       const key = JSON.stringify({
         category: item.category,
         subCategory: item.subCategory,
+        superCategory: item.superCategory,
       });
       if (mergedObj[key]) {
         mergedObj[key].services.push(item.services);
@@ -204,16 +230,20 @@ const AddServices = () => {
           ...service,
           category: mergedService.category,
           subCategory: mergedService.subCategory,
+          superCategory: mergedService.superCategory,
         };
       });
 
       return {
         category: mergedService.category,
         subCategory: mergedService.subCategory,
+        superCategory: mergedService.superCategory,
 
         services: ans,
       };
     });
+
+    console.log(finalMergedServices, "finalMergedServices");
 
     try {
       const res = await axios.post(
@@ -292,6 +322,19 @@ const AddServices = () => {
                 1
               </span>
             </div>
+
+            <select
+              onChange={handleSuperCategoryChange}
+              className="border-2 border-[#00ccbb]  md:w-auto w-full mx-1"
+              value={superCategory}
+            >
+              <option selected value="">
+                Super category
+              </option>
+              {superCategories?.map((superCategory, i) => {
+                return <option key={i}>{superCategory.superCategory}</option>;
+              })}
+            </select>
             <select
               onChange={handleCategoryChange}
               className="border-2 border-[#00ccbb]  md:w-auto w-full"
@@ -376,12 +419,18 @@ const AddServices = () => {
             </button>
           </div>
         </div>
+        <p className="py-2 text-red-500">
+          Note: Try adding one super category at a time
+        </p>
         <div class="relative overflow-x-auto">
           <table class="w-full text-sm text-left text-gray-500 ">
             <thead class="text-xs text-white uppercase bg-gray-700">
               <tr>
                 <th scope="col" class="px-6 py-3">
                   {t("gender")}
+                </th>
+                <th scope="col" class="px-6 py-3">
+                  Super Category
                 </th>
                 <th scope="col" class="px-6 py-3">
                   {t("categoryName")}{" "}
@@ -410,6 +459,12 @@ const AddServices = () => {
                         class="px-6 py-4 font-medium  whitespace-nowrap text-white"
                       >
                         {service.subCategory}
+                      </th>
+                      <th
+                        scope="row"
+                        class="px-6 py-4 font-medium  whitespace-nowrap text-white"
+                      >
+                        {service.superCategory}
                       </th>
                       <th class="px-6 py-4 ">{service.category}</th>
                       <td class="px-6 py-4 ">{service.services.service}</td>

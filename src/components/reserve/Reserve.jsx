@@ -49,6 +49,8 @@ const Reserve = () => {
   const [allServices, setAllServices] = useState();
   const [showInclusions, setShowInclusions] = useState();
   const [category, setCategory] = useState();
+  const [superCategories, setSuperCategories] = useState();
+  const [superCategory, setSuperCategory] = useState();
   const [gender, setGender] = useState(subType);
 
   const [loading, setLoading] = useState(false);
@@ -284,11 +286,11 @@ const Reserve = () => {
     const filtered = categories?.filter((item) => item.subCategory === gender);
 
     const services = (filtered || []).reduce((arr, item) => {
-      arr.push(item.category);
+      arr.push(item.superCategory);
       return arr;
     }, []);
 
-    setSalonServices(services);
+    setSuperCategories(services);
   }, [categories, gender]);
 
   const handleChange = (e) => {
@@ -299,6 +301,23 @@ const Reserve = () => {
         : null
     );
     setCategoriesOptions(result[0].services);
+  };
+  const handleSuperCategoryChange = (e) => {
+    setSuperCategory(e.target.value);
+    const result = categories.filter((category, i) =>
+      category.superCategory === e.target.value &&
+      category.subCategory === gender
+        ? category.services
+        : null
+    );
+    const services = result.reduce((arr, item) => {
+      arr.push(item.category);
+      return arr;
+    }, []);
+
+    console.log(services);
+    setSalonServices(services);
+    // setCategoriesOptions(result[0].services);
   };
 
   const handleSortChange = (e) => {
@@ -329,6 +348,7 @@ const Reserve = () => {
     } else {
       result = services?.filter((category, i) => !category.includes(sortBy));
     }
+
     setSalonServices(result);
   }, [sortBy]); //this id wantedly kept missing dependencies
 
@@ -678,6 +698,7 @@ const Reserve = () => {
             previewServices,
             type,
             subCategory: gender,
+            superCategory,
           });
           setSalonPreview(true);
         } else {
@@ -779,7 +800,7 @@ const Reserve = () => {
       )
     );
   };
-
+  console.log(show, "categoriesOptions");
   return (
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
@@ -813,6 +834,15 @@ const Reserve = () => {
                 <option value={"women"}>women</option>
               </select>
             )} */}
+            <select
+              className="md:w-52 w-auto"
+              onChange={handleSuperCategoryChange}
+            >
+              <option selected>{t("selectCategory")}</option>
+              {superCategories?.map((service, i) => {
+                return <option key={i}>{service}</option>;
+              })}
+            </select>
             <select className="md:w-52 w-auto" onChange={handleChange}>
               <option selected>{t("selectCategory")}</option>
               {salonServices?.map((service, i) => {

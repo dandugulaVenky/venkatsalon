@@ -112,6 +112,7 @@ const Preview = (props) => {
       dates,
       type,
       subCategory,
+      superCategory,
     } = state;
 
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
@@ -145,6 +146,7 @@ const Preview = (props) => {
           dates,
           type,
           subCategory,
+          superCategory,
         },
         { withCredentials: true }
       );
