@@ -12,16 +12,12 @@ import {
   faLocationDot,
   faScissors,
   faSpa,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  Fragment,
-  memo,
-} from "react";
+
+import { faHeart as faHeart1 } from "@fortawesome/free-solid-svg-icons";
+
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { useContext, useEffect, useState, useCallback, memo } from "react";
 import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
@@ -66,6 +62,7 @@ function getCurrentTimeRounded() {
   }${minutes} ${amOrPm}`;
   return roundedTime;
 }
+
 const Hotel = ({ smallBanners }) => {
   const location = useLocation();
 
@@ -120,7 +117,7 @@ const Hotel = ({ smallBanners }) => {
 
   const lunch = data?.lunchTimeArray || [];
   const [breakTime, setBreakTime] = useState();
-
+  const [fav, setFav] = useState(false);
   const [block, setBlock] = useState();
   const [minutesValues, setMinutesvalues] = useState([]);
   const today = moment(value).format("MMM Do YY");
@@ -194,6 +191,15 @@ const Hotel = ({ smallBanners }) => {
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     fetchReviews();
+    const favTrueOrNot = user?.favourites.map((item) =>
+      item.shopId === shopIdLocation ? true : false
+    );
+
+    // if (favTrueOrNot) {
+    //   setFav((favTrueOrNot) => (favTrueOrNot?.includes(true) ? true : false));
+    // }
+
+    setFav(favTrueOrNot?.includes(true) || false);
   }, [fetchReviews]);
 
   useEffect(() => {
@@ -754,6 +760,34 @@ const Hotel = ({ smallBanners }) => {
 
   // console.log(higlightBookingBox);
 
+  const handleFavourites = async () => {
+    if (!user) {
+      return alert("Please login to add to favourites!");
+    }
+
+    try {
+      const fav = await axios.post(
+        `${baseUrl}/api/users/favourites`,
+        {
+          shopId: shopIdLocation,
+          shopName: data.name,
+          shopLocation: data.city,
+          userId: user._id,
+          image: data.images[0] || "null",
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (fav.status === 200) {
+        alert("Addedto your favourites");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="pt-6 pb-8 resp">
       <div className={` w-full mx-auto  md:rounded md:px-4 `}>
@@ -990,11 +1024,22 @@ const Hotel = ({ smallBanners }) => {
                 {/* {t("shopAbovePrice", { price: data.cheapestPrice })} */}
                 {/* </span> */}
               </div>
-              <img
-                src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1679746627/716z0eWdZjL._SL1500__t4foon.webp"
-                alt={data?.title}
-                className="opacity-70 sm:h-auto sm:w-auto md:h-36 md:w-36 "
-              ></img>
+              {fav ? (
+                <FontAwesomeIcon
+                  icon={faHeart1}
+                  size="lg"
+                  className="cursor-pointer"
+                  color="red"
+                  onClick={handleFavourites}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  size="lg"
+                  className="cursor-pointer"
+                  onClick={handleFavourites}
+                />
+              )}
             </div>
             <div className="hotelImages">
               {data.images?.map((photo, i) => (

@@ -14,6 +14,7 @@ import { useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
@@ -22,8 +23,10 @@ const siteMetadata = {
   canonical: "https://easytym.com/contact-us",
 };
 
-export default function Contact() {
+export default function Contact({ company }) {
   const [loading, setLoading] = useState("");
+
+  console.log(company);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,16 +43,16 @@ export default function Contact() {
   const submitHandler = async ({ name, email, phone, message }) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/sendmail", {
-        type: "contact",
-        contactName: name,
+      const res = await axios.post("http://localhost:8800/api/contact", {
+        name,
         email,
         phone,
         message,
+        company,
       });
 
-      if (res.status === 201) {
-        toast("Email Sent Successfully!!👍");
+      if (res.status === 200) {
+        alert(" Submitted Successfully!!👍");
         setValue("name", "");
         setValue("email", "");
         setValue("phone", "");
@@ -146,16 +149,14 @@ export default function Contact() {
               )}
             </div>
             <div className="mb-1">
-              <button className="primary-button" disabled={loading}>
-                {t("submit")}
-              </button>
+              <button className="primary-button">{t("submit")}</button>
             </div>
           </form>
-          <div className="card h-auto  w-96 p-8 flex items-center justify-center">
+          {/* <div className="card h-auto  w-96 p-8 flex items-center justify-center">
             <p>{t("aboutAddress")} </p>
             <p>{t("callUs")}</p>
             <p>{t("aboutUsEmail")}</p>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

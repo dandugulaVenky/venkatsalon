@@ -12,7 +12,6 @@ import {
   faBagShopping,
   faChevronCircleDown,
   faLocation,
-  faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../header/Header";

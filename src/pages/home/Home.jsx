@@ -200,22 +200,6 @@ const Home = ({ endRef, smallBanners }) => {
       {/* {w < 768 && <Greeting bestRef={endRef} />} */}
       <Seo props={siteMetadata} />
 
-      {/* <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div> */}
-      {/* <div className="home-img1 mb-3">
-        <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
-          <div className="text-container">
-            <h1 className=" md:text-6xl text-4xl text-center font-bold ">
-              {t("welcome")}
-            </h1>
-          </div>
-          <h1 className="md:text-gray-700 text-white md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
-            {t("welcomeMessage")}
-          </h1>
-        </div>
-      </div> */}
-      {/* <div>
-        <VideoBackground videoUrl={videoUrl} />
-      </div> */}
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-2 md:py-6   lg:py-0 lg:pb-5">
         <div
           className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-5"
@@ -307,10 +291,6 @@ const Home = ({ endRef, smallBanners }) => {
           </div>
         </div>
       </div>
-
-      {/* <button onClick={handleButton} className="mb-20">
-        press me
-      </button> */}
     </div>
   );
 };

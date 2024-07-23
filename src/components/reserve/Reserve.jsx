@@ -24,6 +24,32 @@ import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 
+function compareTimeDiff(time) {
+  let time1 = time;
+  // do some task
+  let time2 = new Date().getTime();
+  let difference = time2 - time1;
+  let diffInHours = difference / (1000 * 60 * 60);
+  return Math.floor(diffInHours);
+}
+
+function convertToMilliseconds(timeReserve) {
+  var date = new Date();
+  var timeArray = timeReserve.split(":");
+  var hours = parseInt(timeArray[0]) % 12;
+  var minutes = parseInt(timeArray[1]);
+  var ampm = timeArray[1].split("")[3];
+  // console.log(ampm);
+
+  if (ampm === "P" && hours !== 12) {
+    hours += 12;
+  }
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+  return date.getTime();
+}
+
 const Reserve = () => {
   const location = useLocation();
   const state = location?.state;
@@ -301,6 +327,14 @@ const Reserve = () => {
         : null
     );
     setCategoriesOptions(result[0].services);
+    setSuperCategory(() => {
+      const result = categories.filter((category, i) =>
+        category.category === e.target.value && category.subCategory === gender
+          ? category.superCategory
+          : null
+      );
+      return result[0]?.superCategory || "";
+    });
   };
   const handleSuperCategoryChange = (e) => {
     setSuperCategory(e.target.value);
@@ -315,7 +349,6 @@ const Reserve = () => {
       return arr;
     }, []);
 
-    console.log(services);
     setSalonServices(services);
     // setCategoriesOptions(result[0].services);
   };
@@ -326,6 +359,12 @@ const Reserve = () => {
 
     setCategoriesOptions(null);
 
+    let currentCategory = superCategories?.filter((item) =>
+      item.toLowerCase().includes(e.target.value)
+    );
+    setSuperCategory(currentCategory[0] || "");
+
+    // console.log(superCategories, e.target.value);
     // setAllServices()
   };
 
@@ -470,6 +509,16 @@ const Reserve = () => {
 
   const previewHandler = async (amount, e) => {
     e.preventDefault();
+    let day1 = moment(value).format("MMM Do YY");
+    let day2 = moment(new Date()).format("MMM Do YY");
+
+    let result = convertToMilliseconds(time);
+    let result2 = compareTimeDiff(result);
+
+    if (day1 === day2 && result2 >= 0) {
+      return toast("Please select a valid time!");
+    }
+
     if (amount < 10) {
       return alert(t("SelectOption"));
     }
@@ -636,7 +685,7 @@ const Reserve = () => {
           }
         }
 
-        console.log("I am coming!sd");
+        // console.log("I am coming!sd");
         //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
         //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
 
@@ -680,7 +729,7 @@ const Reserve = () => {
             createdAt: new Date().toISOString(),
           };
         });
-        console.log("doneRajaDan");
+        // console.log(superCategory, "doneRajaDan");
         if (dates) {
           setReserveState({
             selectedSeats: seats,
@@ -800,7 +849,7 @@ const Reserve = () => {
       )
     );
   };
-  console.log(show, "categoriesOptions");
+
   return (
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
@@ -837,8 +886,11 @@ const Reserve = () => {
             <select
               className="md:w-52 w-auto"
               onChange={handleSuperCategoryChange}
+              value={superCategory}
             >
-              <option selected>{t("selectCategory")}</option>
+              <option selected value="">
+                {t("selectCategory")}
+              </option>
               {superCategories?.map((service, i) => {
                 return <option key={i}>{service}</option>;
               })}
@@ -1045,13 +1097,13 @@ const Reserve = () => {
             </div>
           ) : (
             <div className="md:min-h-[75vh] min-h-[65vh] flex items-center flex-col justify-center">
-              {gender !== undefined && salonServices?.length <= 0 ? (
-                !loading && !ownerDetailsLoading ? (
-                  "loading"
-                ) : (
-                  "Oops no services found !"
-                )
+              {salonServices?.length <= 0 && categoriesOptions?.length <= 0 ? (
+                // !loading && !ownerDetailsLoading ? (
+                //   "loading"
+                // ) : (
+                "Oops no services found !"
               ) : (
+                // )
                 <>
                   <img src={Select} alt="select category" className="h-72" />
                   <p className="font-semibold">

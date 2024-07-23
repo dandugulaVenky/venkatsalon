@@ -321,9 +321,10 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                   {item.selectedSeats.map((seat, i) => {
                     return (
                       <span
-                        className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white"
+                        className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white my-1 rounded"
                         key={i}
                       >
+                        <p className="text-white">{item.superCategory}</p>
                         {seat.options.map((option, j) => {
                           return (
                             <span className="">

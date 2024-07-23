@@ -282,7 +282,7 @@ const ShopDetails = () => {
             name: shopName,
 
             alternatePhone: "phone",
-            city: ` ${village}, ${selectedState} ${selectedPincode}, india`,
+            city: `${village}, ${selectedState} ${selectedPincode}, india`,
 
             desc: "description",
             type: typeOfShop.toLowerCase(),
