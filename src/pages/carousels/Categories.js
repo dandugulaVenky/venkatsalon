@@ -297,9 +297,9 @@ const Categories = ({ type }) => {
           </div>
         </div>
       ) : !query?.isError ? (
-        <Skeleton cards={size} />
+        ""
       ) : (
-        "Fetching Error!"
+        <Skeleton cards={size} />
       )}
     </>
   );

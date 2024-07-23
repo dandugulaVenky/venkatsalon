@@ -36,6 +36,7 @@ import baseUrl from "../../utils/client";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
+import secureLocalStorage from "react-secure-storage";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -191,15 +192,15 @@ const Hotel = ({ smallBanners }) => {
   useEffectOnce(() => {
     window.scrollTo(0, 0);
     fetchReviews();
-    const favTrueOrNot = user?.favourites.map((item) =>
-      item.shopId === shopIdLocation ? true : false
+    const favTrueOrNot = user?.favourites.find(
+      (item) => item.shopId === shopIdLocation
     );
 
     // if (favTrueOrNot) {
     //   setFav((favTrueOrNot) => (favTrueOrNot?.includes(true) ? true : false));
     // }
 
-    setFav(favTrueOrNot?.includes(true) || false);
+    setFav(favTrueOrNot ? true : false);
   }, [fetchReviews]);
 
   useEffect(() => {
@@ -766,25 +767,55 @@ const Hotel = ({ smallBanners }) => {
     }
 
     try {
-      const fav = await axios.post(
+      const favs = await axios.post(
         `${baseUrl}/api/users/favourites`,
         {
           shopId: shopIdLocation,
           shopName: data.name,
           shopLocation: data.city,
           userId: user._id,
-          image: data.images[0] || "null",
+          image: data?.images[0] || "null",
+          addingOrRemoving: fav ? "remove" : "add",
         },
         {
           withCredentials: true,
         }
       );
 
-      if (fav.status === 200) {
-        alert("Addedto your favourites");
+      if (favs.status === 200) {
+        alert("Added to favs!");
+        setFav(true);
+        let favs = user.favourites.find(
+          (item) => item.shopId === shopIdLocation
+        );
+
+        if (!fav) {
+          if (favs) return;
+          user.favourites.push({
+            shopId: shopIdLocation,
+            shopName: data.name,
+            shopLocation: data.city,
+            userId: user._id,
+            image: data.images[0] || "null",
+          });
+          secureLocalStorage.setItem("easytym-user", user);
+        }
+
+        // dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+      } else if (favs.status === 201) {
+        alert("removed from favs!");
+        setFav(false);
+        user.favourites = user.favourites.filter(
+          (item) => item.shopId !== shopIdLocation
+        );
+
+        secureLocalStorage.setItem("easytym-user", user);
+      } else {
+        return;
       }
     } catch (error) {
       console.log(error);
+      alert(error?.response?.data?.message || "Error occured!");
     }
   };
 
