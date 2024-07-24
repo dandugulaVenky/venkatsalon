@@ -7,7 +7,7 @@ import Select from "../images/select.png";
 
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const FinalRegistration = () => {
   const [seats, setSeats] = useState("");
@@ -52,7 +52,7 @@ const FinalRegistration = () => {
     }
     console.log(user);
     try {
-      const res = await axios.get(
+      const res = await axiosInstance.get(
         `${baseUrl}/api/users/checkAlreadyShopPresent/${user?._id}`,
         { withCredentials: true }
       );
@@ -63,7 +63,7 @@ const FinalRegistration = () => {
         return;
       }
 
-      const res1 = await axios.post(
+      const res1 = await axiosInstance.post(
         `${baseUrl}/api/shop_registration/checkIfRegistrationExists`,
 
         {
@@ -105,7 +105,7 @@ const FinalRegistration = () => {
         ownerDetails,
       };
 
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${baseUrl}/api/shop_registration/new_registration`,
         newhotel,
         { withCredentials: true }

@@ -3,13 +3,12 @@ import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import axios from "axios";
-
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../components/axiosInterceptor";
 
 export default function Profile() {
   //   const { data: session } = useSession();
@@ -35,7 +34,7 @@ export default function Profile() {
       return toast("Enter full details!");
     }
     try {
-      let res = await axios.put(`${baseUrl}/api/users/${user._id}`, {
+      let res = await axiosInstance.put(`${baseUrl}/api/users/${user._id}`, {
         username: name.toLowerCase(),
 
         password,
@@ -50,7 +49,7 @@ export default function Profile() {
 
       dispatch({ type: "LOGIN_START" });
       try {
-        const res = await axios.post(`${baseUrl}/api/auth/login`, {
+        const res = await axiosInstance.post(`${baseUrl}/api/auth/login`, {
           username: name,
           password,
         });

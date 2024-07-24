@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import React, { useContext, useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -9,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -22,9 +21,12 @@ const Admin = () => {
     window.scrollTo(0, 0);
     const getAdmin = async () => {
       try {
-        let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-          withCredentials: true,
-        });
+        let isAdmin = await axiosInstance.get(
+          `${baseUrl}/api/users/${user?._id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         setIsAdmin(isAdmin.data);
         setLoading(false);

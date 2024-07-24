@@ -20,7 +20,7 @@ import OtpVerification from "./OtpVerification";
 
 import { useTranslation } from "react-i18next";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -139,9 +139,12 @@ const Register = () => {
 
     try {
       const sendOtp = async () => {
-        const res = await axios.post(`${baseUrl}/send-email-verification-otp`, {
-          email,
-        });
+        const res = await axiosInstance.post(
+          `${baseUrl}/send-email-verification-otp`,
+          {
+            email,
+          }
+        );
 
         if (res.status === 200) {
           setCanShowNumber(true);

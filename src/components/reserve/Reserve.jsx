@@ -12,7 +12,7 @@ import {
 
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
-import axios from "axios";
+
 import { useTranslation } from "react-i18next";
 
 import Select from "../../pages/images/select.png";
@@ -23,6 +23,7 @@ import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
+import axiosInstance from "../axiosInterceptor";
 
 function compareTimeDiff(time) {
   let time1 = time;
@@ -143,7 +144,9 @@ const Reserve = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+      const { data } = await axiosInstance.get(
+        `${baseUrl}/api/hotels/room/${shopId}`
+      );
       // console.log(data[0].roomNumbers);
       setData(data);
       const res =

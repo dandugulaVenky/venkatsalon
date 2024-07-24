@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-import axios from "axios";
 import baseUrl from "../../utils/client";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
 import { SearchContext } from "../../context/SearchContext";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const AppointmentPaymentSuccess = () => {
   let navigate = useNavigate();
@@ -54,7 +54,7 @@ const AppointmentPaymentSuccess = () => {
   useEffectOnce(async () => {
     const handleAppointment = async () => {
       try {
-        await axios.put(
+        await axiosInstance.put(
           `${baseUrl}/api/users/makeAnAppointment/${mainUser._id}`,
           {
             date: state.date,
@@ -71,7 +71,7 @@ const AppointmentPaymentSuccess = () => {
           { withCredentials: true }
         );
 
-        await axios.put(
+        await axiosInstance.put(
           `${baseUrl}/api/hotels/makeAnAppointment/${state.id}`,
           {
             date: state.date,

@@ -3,12 +3,12 @@ import { useContext } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
-import axios from "axios";
 
 import { toast } from "react-toastify";
 import PackagePreview from "../../components/admin/PackagePreview";
 
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const Packages = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -53,11 +53,11 @@ const Packages = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
-        const { data: data1 } = await axios.get(
+        const { data: data1 } = await axiosInstance.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
 

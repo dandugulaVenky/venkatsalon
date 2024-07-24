@@ -7,13 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import "./otp.css";
-import axios from "axios";
+
 import baseUrl from "../../utils/client";
 
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import OtpInput from "./OtpInput";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
@@ -56,7 +57,7 @@ const OtpVerification = (props) => {
 
   const saveToken = async (id, token) => {
     try {
-      await axios.post(`${baseUrl}/tokens`, {
+      await axiosInstance.post(`${baseUrl}/tokens`, {
         userId: id,
         token,
       });
@@ -125,7 +126,7 @@ const OtpVerification = (props) => {
     const { name, email, password, city } = storedUser;
 
     try {
-      const res = await axios.post(`${baseUrl}/api/auth/register`, {
+      const res = await axiosInstance.post(`${baseUrl}/api/auth/register`, {
         username: name.trim().toLowerCase(),
         email: email.trim().toLowerCase(),
         password: password.trim(),
@@ -137,7 +138,7 @@ const OtpVerification = (props) => {
       if (res.status === 200) {
         dispatch({ type: "LOGIN_START" });
         try {
-          const res = await axios.post(
+          const res = await axiosInstance.post(
             `${baseUrl}/api/auth/login`,
             {
               phone: number,

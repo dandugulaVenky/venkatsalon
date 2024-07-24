@@ -4,7 +4,6 @@ import Carousel from "react-grid-carousel";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
@@ -15,6 +14,7 @@ import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
@@ -26,7 +26,7 @@ const BestSaloons = ({ smallBanners }) => {
   console.log(pincode, "pincode");
 
   const getBestSalons = async () => {
-    return await axios.get(
+    return await axiosInstance.get(
       `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city1=${
         city ? city : "shadnagar, telangana 509216, india"
       }&pincode=${pincode === "postal_code" ? true : false}`

@@ -4,12 +4,13 @@ import { useEffect } from "react";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import baseUrl from "../../utils/client";
 
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import time from "../../utils/time";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
@@ -129,7 +130,7 @@ const Preview = (props) => {
     });
 
     try {
-      const { status } = await axios.post(
+      const { status } = await axiosInstance.post(
         `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
 
         {
@@ -155,12 +156,12 @@ const Preview = (props) => {
       if (status === 201) {
         const {
           data: { key },
-        } = await axios.get(`${baseUrl}/api/getkey`);
+        } = await axiosInstance.get(`${baseUrl}/api/getkey`);
 
         try {
           const {
             data: { order },
-          } = await axios.post(
+          } = await axiosInstance.post(
             `${baseUrl}/api/payments/checkout`,
             {
               amount: totalAmount,

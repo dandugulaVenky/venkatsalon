@@ -29,7 +29,7 @@ import DatePicker from "react-date-picker";
 import CarouselBanner from "../../components/CarouselBanner";
 import moment from "moment";
 import { toast } from "react-toastify";
-import axios from "axios";
+
 import options from "../../utils/time";
 import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
@@ -37,6 +37,7 @@ import baseUrl from "../../utils/client";
 import useEffectOnce from "../../utils/UseEffectOnce";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
 import secureLocalStorage from "react-secure-storage";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -180,7 +181,7 @@ const Hotel = ({ smallBanners }) => {
   }
 
   const fetchReviews = useCallback(async () => {
-    return await axios
+    return await axiosInstance
       .get(`${baseUrl}/api/hotels/getReviews/${shopIdLocation}`)
       .then((res) => {
         // console.log("reviewsfromdb", res.data);
@@ -210,7 +211,7 @@ const Hotel = ({ smallBanners }) => {
     });
     try {
       const fetchData = async () => {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${shopIdLocation}`
         );
         setServices(data[0]?.services);
@@ -437,7 +438,7 @@ const Hotel = ({ smallBanners }) => {
       return toast.error("Please enter all fields");
     }
     setLoadingg(true);
-    await axios
+    await axiosInstance
       .post(
         `${baseUrl}/api/hotels/createReview/${shopIdLocation}`,
         {
@@ -534,7 +535,7 @@ const Hotel = ({ smallBanners }) => {
       });
 
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
           { date: moment(value).format("MMM Do YY") },
           { withCredentials: true }
@@ -546,11 +547,11 @@ const Hotel = ({ smallBanners }) => {
 
       const {
         data: { key },
-      } = await axios.get(`${baseUrl}/api/getkey`);
+      } = await axiosInstance.get(`${baseUrl}/api/getkey`);
       try {
         const {
           data: { order },
-        } = await axios.post(
+        } = await axiosInstance.post(
           `${baseUrl}/api/payments/appointment/checkout`,
           {
             amount: 20,
@@ -767,7 +768,7 @@ const Hotel = ({ smallBanners }) => {
     }
 
     try {
-      const favs = await axios.post(
+      const favs = await axiosInstance.post(
         `${baseUrl}/api/users/favourites`,
         {
           shopId: shopIdLocation,

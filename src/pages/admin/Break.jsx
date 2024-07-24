@@ -7,11 +7,12 @@ import "react-date-range/dist/theme/default.css"; // Import the default theme st
 import options from "../../utils/time";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -81,7 +82,7 @@ function Break() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `${baseUrl}/api/hotels/room/${user?.shopId}`
       );
 
@@ -165,7 +166,7 @@ function Break() {
     console.log(formattedDates1);
     if (formattedDates1 !== undefined) {
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/rooms/updateBlockDays/${shopData.rooms[0]}`,
           {
             formattedDates1,
@@ -331,7 +332,7 @@ function Break() {
 
     if (blockArray.length > 0) {
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/rooms/updateBlockTimings/${shopData.rooms[0]}`,
           {
             date: moment(new Date()).format("MMM Do YY"),

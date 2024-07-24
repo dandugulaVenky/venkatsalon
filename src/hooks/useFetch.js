@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { useRef } from "react";
 import axiosInstance from "../components/axiosInterceptor";
 
@@ -63,7 +63,7 @@ const useFetch = (url, credentials) => {
   //   const fetchData = async () => {
   //     setLoading(true);
   //     try {
-  //       const res = await axios.get(url);
+  //       const res = await axiosInstance.get(url);
   //       setData(res.data);
   //     } catch (err) {
   //       setError(err);

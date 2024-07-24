@@ -42,7 +42,7 @@ const Home = ({ endRef, smallBanners }) => {
 
   // const handleButton = async () => {
   //   try {
-  //     const res = await axios.post(
+  //     const res = await axiosInstance.post(
   //       `${baseUrl}/api/firebase/send-mobile-notifications`,
   //       {
   //         title: "Hi Easytymers",

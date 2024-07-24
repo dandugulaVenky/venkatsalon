@@ -1,6 +1,6 @@
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+
 import moment from "moment";
 import React, { useContext, useState } from "react";
 
@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import baseUrl from "../../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../axiosInterceptor";
 
 const CustomerDetails = ({ item, setOpenModal }) => {
   const [loading, setLoading] = useState(false);
@@ -112,7 +113,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     try {
       await Promise.all(
         uniqueArr.map((item) => {
-          axios.put(
+          axiosInstance.put(
             `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
             {
               isAccepted: "cancelled",
@@ -128,7 +129,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
 
     await Promise.all(
       uniqueArr1.map((item) => {
-        axios.put(
+        axiosInstance.put(
           `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
           {
             isDone: "cancelled",
@@ -138,7 +139,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
       })
     );
     await Promise.resolve(
-      axios.put(
+      axiosInstance.put(
         `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
         {
           isDone: "cancelled",
@@ -149,7 +150,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
 
     try {
       const { email, phone } = user;
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/sendmail`,
         {
           email: item.email,
@@ -191,7 +192,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
       try {
         await Promise.all(
           uniqueArr.map((item) => {
-            return axios.put(
+            return axiosInstance.put(
               `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
               {
                 isAccepted: "true",
@@ -202,7 +203,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
         );
         await Promise.all(
           uniqueArr1.map((item) => {
-            return axios.put(
+            return axiosInstance.put(
               `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
               {
                 isDone: "true",
@@ -212,7 +213,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           })
         );
         await Promise.resolve(
-          axios.put(
+          axiosInstance.put(
             `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
             {
               isDone: "true",
@@ -221,7 +222,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           )
         );
 
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/sendmail`,
           {
             email: item.email,

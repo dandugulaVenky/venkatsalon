@@ -16,9 +16,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useState } from "react";
-import axios from "axios";
+
 import { useEffect } from "react";
 import baseUrl from "../../utils/client";
+import axiosInstance from "../axiosInterceptor";
 
 const SIdebar = () => {
   const { open, dispatch } = useContext(SearchContext);
@@ -29,9 +30,12 @@ const SIdebar = () => {
 
   useEffect(() => {
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-        withCredentials: true,
-      });
+      let isAdmin = await axiosInstance.get(
+        `${baseUrl}/api/users/${user?._id}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setIsAdmin(isAdmin.data);
     };

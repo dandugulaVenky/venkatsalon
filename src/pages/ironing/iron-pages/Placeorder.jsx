@@ -2,17 +2,14 @@ import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { Store } from "../ironing-utils/Store";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import CheckoutWizard from "../ironing-utils/CheckoutWizard";
-
-import Seo from "../../../utils/Seo";
-
-import { SearchContext } from "../../../context/SearchContext";
 
 import useEffectOnce from "../../../utils/UseEffectOnce";
 import { AuthContext } from "../../../context/AuthContext";
 import baseUrl from "../../../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../../components/axiosInterceptor";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
@@ -55,12 +52,12 @@ export default function PlaceOrder() {
     if (userId !== undefined) {
       const {
         data: { key },
-      } = await axios.get(`${baseUrl}/api/getkey`);
+      } = await axiosInstance.get(`${baseUrl}/api/getkey`);
 
       try {
         const {
           data: { order },
-        } = await axios.post(
+        } = await axiosInstance.post(
           `${baseUrl}/api/payments/iron/checkout`,
           {
             amount: 200,

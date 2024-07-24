@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import React from "react";
 import { useState } from "react";
 import { useRef } from "react";
@@ -11,6 +9,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../context/AuthContext";
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../components/axiosInterceptor";
 
 const useEffectOnce = (effect) => {
   const destroyFunc = useRef();
@@ -54,7 +53,7 @@ export const PaymentSuccess = () => {
 
   const getFinalBookingDetails = async () => {
     try {
-      const { data, status } = await axios.get(
+      const { data, status } = await axiosInstance.get(
         `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
         { withCredentials: true }
       );
@@ -88,7 +87,7 @@ export const PaymentSuccess = () => {
     });
 
     try {
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/hotels/updateRequests/${finalBookingDetails?.shopId}`,
         {
           dates: finalBookingDetails.dates,
@@ -109,7 +108,7 @@ export const PaymentSuccess = () => {
         { withCredentials: true }
       );
 
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/users/bookings/${finalBookingDetails?.user._id}`,
         {
           dates: finalBookingDetails.dates,
@@ -129,7 +128,7 @@ export const PaymentSuccess = () => {
         { withCredentials: true }
       );
 
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser._id}`,
         null,
         {
@@ -137,7 +136,7 @@ export const PaymentSuccess = () => {
         }
       );
 
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/sendmail`,
         {
           email: finalBookingDetails?.user.email,
@@ -173,7 +172,7 @@ export const PaymentSuccess = () => {
 
         return (
           room.options.length > 0 &&
-          axios
+          axiosInstance
             .put(
               `${baseUrl}/api/rooms/availability/${room.id}`,
               {

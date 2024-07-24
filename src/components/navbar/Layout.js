@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
 
 import "./navbar.scss";
-import axios from "axios";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBagShopping,
@@ -22,6 +22,7 @@ import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
 import i18next from "../../i18n";
+import axiosInstance from "../axiosInterceptor";
 
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
@@ -92,9 +93,12 @@ const Layout = ({ bestRef }) => {
   useEffect(() => {
     const getAdmin = async () => {
       try {
-        let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-          withCredentials: true,
-        });
+        let isAdmin = await axiosInstance.get(
+          `${baseUrl}/api/users/${user?._id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         setIsAdmin(isAdmin.data);
       } catch (err) {

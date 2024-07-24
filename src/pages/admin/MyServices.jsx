@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
 import { useEffect } from "react";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const MyServices = () => {
   const [shopAllServices, setShopAllServices] = useState();
@@ -46,7 +47,7 @@ const MyServices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
@@ -113,7 +114,7 @@ const MyServices = () => {
       setIsDisabled(true);
       setDeleteItemLoader(option.service);
       try {
-        const res = await axios.post(
+        const res = await axiosInstance.post(
           `${baseUrl}/api/rooms/deleteRoomService/${roomId}`,
           {
             service: option,
@@ -152,7 +153,7 @@ const MyServices = () => {
     setIsDisabled(true);
 
     try {
-      const { status } = await axios.post(
+      const { status } = await axiosInstance.post(
         `${baseUrl}/api/rooms/updateRoomService/${roomId}`,
         {
           editedService,
@@ -252,7 +253,7 @@ const MyServices = () => {
 
     if (finalArr.services.length >= 2) {
       try {
-        const { status } = await axios.post(
+        const { status } = await axiosInstance.post(
           `${baseUrl}/api/rooms/updateRoomPackageServices/${roomId}`,
           { finalArr, updatePackage: showInclusions.package, allServices },
           { withCredentials: true }
@@ -292,7 +293,7 @@ const MyServices = () => {
   };
   const addSeat = async (type, seatId = null) => {
     try {
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/rooms/updateRoomSeat/${roomId}`,
         {
           type,

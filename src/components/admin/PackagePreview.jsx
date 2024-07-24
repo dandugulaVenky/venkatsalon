@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axiosInstance from "../axiosInterceptor";
 
 const PackagePreview = (props) => {
   console.log(props);
@@ -51,7 +51,7 @@ const PackagePreview = (props) => {
     };
 
     try {
-      const { status } = await axios.post(
+      const { status } = await axiosInstance.post(
         `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
         { services: finalArr },
         { withCredentials: true }

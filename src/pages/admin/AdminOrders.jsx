@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+
 import { useEffect } from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import CustomerDetails from "../../components/admin/CustomerDetails";
 
 import Charts from "../../utils/Charts";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -60,7 +61,7 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
         setShopType(data?.type);
@@ -74,7 +75,7 @@ const AdminOrders = () => {
   const requests = useCallback(async () => {
     setLoading(true);
 
-    await axios
+    await axiosInstance
       .post(
         `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
         {
@@ -85,7 +86,9 @@ const AdminOrders = () => {
       .then(async (res) => {
         setData(res.data);
         try {
-          const res1 = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+          const res1 = await axiosInstance.get(
+            `${baseUrl}/api/hotels/room/${shopId}`
+          );
 
           //merge all the services from utils
 

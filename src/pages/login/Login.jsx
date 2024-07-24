@@ -3,18 +3,15 @@ import { toast } from "react-toastify";
 import LoginImage from "../images/login.jpeg";
 import { messaging } from "../../firebase";
 import { getToken } from "firebase/messaging";
-import axios from "axios";
+
 import "./login.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import Layout from "../../components/navbar/Layout";
 
-import Footer from "../../components/footer/Footer";
 import { useState } from "react";
 
 import { SearchContext } from "../../context/SearchContext";
-import Sidebar from "../../components/navbar/SIdebar";
-import Greeting from "../../components/navbar/Greeting";
+
 import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
 import secureLocalStorage from "react-secure-storage";

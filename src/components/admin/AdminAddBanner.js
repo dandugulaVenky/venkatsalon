@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "../axiosInterceptor";
 
 const AdminAddBanner = () => {
   const [images, setImages] = useState([]);
@@ -15,7 +16,7 @@ const AdminAddBanner = () => {
   const [data, setData] = useState();
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `${baseUrl}/api/hotels/find/${user?.shopId}`
       );
 
@@ -56,7 +57,7 @@ const AdminAddBanner = () => {
     }
 
     try {
-      const { data: shopData } = await axios.get(
+      const { data: shopData } = await axiosInstance.get(
         `${baseUrl}/api/hotels/find/${user?.shopId}`,
         {
           withCredentials: true,
@@ -75,7 +76,7 @@ const AdminAddBanner = () => {
         );
       }
       if (!(images?.length > 6 - shopData?.images?.length)) {
-        const { data } = await axios.put(
+        const { data } = await axiosInstance.put(
           `${baseUrl}/api/hotels/hotelImagesUpdate/${user?.shopId}`,
           {
             images,
@@ -130,7 +131,7 @@ const AdminAddBanner = () => {
       return;
     }
     try {
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         `${baseUrl}/api/hotels/hotelImagesDelete/${user?.shopId}`,
         image,
         { withCredentials: true }
@@ -156,7 +157,7 @@ const AdminAddBanner = () => {
   const handlePayment = async (e) => {
     e.preventDefault();
     setLoading2(true);
-    await axios
+    await axiosInstance
       .post(`${baseUrl}/api/phonepe/payment`, { ...data1 })
       .then((res) => {
         setTimeout(() => {

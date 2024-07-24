@@ -3,7 +3,6 @@ import Carousel from "react-grid-carousel";
 import { useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faBuilding } from "@fortawesome/free-solid-svg-icons";
 import baseUrl from "../../utils/client";
@@ -14,6 +13,7 @@ import GetSize from "../../utils/GetSize";
 import { useQuery } from "@tanstack/react-query";
 import LanguageContext from "../../context/LanguageContext";
 import { AuthContext } from "../../context/AuthContext";
+import axiosInstance from "../../components/axiosInterceptor";
 const Categories = ({ type }) => {
   const { type: type1, dispatch } = useContext(SearchContext);
 
@@ -25,7 +25,7 @@ const Categories = ({ type }) => {
   // Queries
 
   const shopsCount = async () => {
-    return await axios.get(
+    return await axiosInstance.get(
       `${baseUrl}/api/hotels/countByCity?cities=shadnagar, telangana 509216, india-kothur, telangana 509228, india-thimmapur, telangana 509325, india-shamshabad, telangana 501218, india&&type=${type1}&&userId=${
         user ? user._id : null
       }`

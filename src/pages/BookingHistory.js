@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
-import axios from "axios";
+
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../components/axiosInterceptor";

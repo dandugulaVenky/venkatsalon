@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, {
   useCallback,
   useContext,
@@ -13,6 +12,7 @@ import DatePicker from "react-date-picker";
 import { useTranslation } from "react-i18next";
 import Charts from "../../utils/Charts";
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function tileClassName({ date, view }) {
   // Add logic to check if it's Tuesday
@@ -68,7 +68,7 @@ const AdminAppointments = () => {
       } else {
         console.log("nothing selected");
       }
-      await axios
+      await axiosInstance
         .post(
           `${baseUrl}/api/hotels/getShopAppointmentsCompare/${user?.shopId}`,
           {
@@ -121,7 +121,7 @@ const AdminAppointments = () => {
 
     if (initialSelectedDates.includes(date)) {
       try {
-        let { status } = await axios.put(
+        let { status } = await axiosInstance.put(
           `${baseUrl}/api/hotels/updateAppointment/${user?.shopId}`,
           { date: date, status: "Accepted", userId },
           { withCredentials: true }
@@ -158,7 +158,7 @@ const AdminAppointments = () => {
 
     if (initialSelectedDates.includes(date)) {
       try {
-        let { status } = await axios.put(
+        let { status } = await axiosInstance.put(
           `${baseUrl}/api/hotels/updateAppointment/${user?.shopId}`,
           { date: date, status: "Cancelled", userId },
           { withCredentials: true }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "axiosInstance";
 const Admins = () => {
   const [data, setData] = useState();
 
   const getData = async () => {
-    let { data } = await axios.get(
+    let { data } = await axiosInstance.get(
       "http://localhost:8800/api/get-all-contacts"
     );
 

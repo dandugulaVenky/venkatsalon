@@ -3,7 +3,6 @@ import { parlourCategories } from "../../utils/parlourServices";
 import { salonCategories } from "../../utils/salonServices";
 import { useTranslation } from "react-i18next";
 
-import axios from "axios";
 import { useState } from "react";
 
 import baseUrl from "../../utils/client";
@@ -13,6 +12,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { spaCategories } from "../../utils/spaServices";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -50,7 +50,7 @@ const AddServices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
         setShopType({
@@ -70,7 +70,7 @@ const AddServices = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
@@ -246,7 +246,7 @@ const AddServices = () => {
     console.log(finalMergedServices, "finalMergedServices");
 
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         `${baseUrl}/api/rooms/addRoomServices/${roomId}`,
         {
           services: finalMergedServices,
