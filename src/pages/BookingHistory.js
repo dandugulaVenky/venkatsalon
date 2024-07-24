@@ -21,6 +21,7 @@ import moment from "moment";
 import axios from "axios";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../components/axiosInterceptor";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
@@ -48,7 +49,7 @@ const BookingHistory = () => {
   useEffect(() => {
     const fetchData = async (item) => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${shopId}`
         );
 

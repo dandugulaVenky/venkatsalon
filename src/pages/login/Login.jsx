@@ -19,6 +19,7 @@ import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
 import secureLocalStorage from "react-secure-storage";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 export default function Login() {
   const location = useLocation();
@@ -56,10 +57,13 @@ export default function Login() {
 
   const saveToken = async (id, token) => {
     try {
-      const response = await axios.post(`${baseUrl}/api/firebase/tokens`, {
-        userId: id,
-        token,
-      });
+      const response = await axiosInstance.post(
+        `${baseUrl}/api/firebase/tokens`,
+        {
+          userId: id,
+          token,
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -80,7 +84,7 @@ export default function Login() {
       dispatch({ type: "LOGIN_START" });
 
       try {
-        const res = await axios.post(
+        const res = await axiosInstance.post(
           `${baseUrl}/api/auth/login`,
           {
             phone: number,
@@ -88,7 +92,7 @@ export default function Login() {
           },
           { withCredentials: true }
         );
-
+        sessionStorage.setItem("access_token", res.data.token);
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
 
         token !== "" && saveToken(res.data.details._id, token);
