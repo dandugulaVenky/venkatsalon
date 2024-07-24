@@ -168,7 +168,7 @@ const Preview = (props) => {
             },
             { withCredentials: true }
           );
-
+          const token = sessionStorage.getItem("access_token");
           const options = {
             key,
             amount: order.amount,
@@ -177,7 +177,7 @@ const Preview = (props) => {
             description: "SALOONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
-            callback_url: `${baseUrl}/api/payments/paymentverification`,
+            callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}`,
             prefill: {
               name: "Test Team",
               email: "test.test@example.com",
