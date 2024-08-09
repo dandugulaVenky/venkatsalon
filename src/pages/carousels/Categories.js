@@ -276,7 +276,10 @@ const Categories = ({ type }) => {
                       style={{ cursor: "pointer" }}
                     >
                       <img
-                        src="https://picsum.photos/800/600?random=5"
+                        src={
+                          item?.image?.url ||
+                          "https://res.cloudinary.com/duk9xkcp5/image/upload/v1678872396/Hair_cutting_in_salon_illustration_vector_concept_generated_1_ywx6vs.webp"
+                        }
                         alt="images"
                         style={{
                           width: "98%",
