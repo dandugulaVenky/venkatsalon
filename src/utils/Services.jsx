@@ -171,7 +171,7 @@ const Services = ({ refer }) => {
             ></span>
           </div>
         </Carousel.Item> */}
-        <Carousel.Item>
+        {/* <Carousel.Item>
           <div
             className="relative h-auto w-full cursor-pointer"
             onClick={() =>
@@ -201,7 +201,7 @@ const Services = ({ refer }) => {
               {t("dryCleaning")}
             </p>
           </div>
-        </Carousel.Item>
+        </Carousel.Item> */}
 
         {/* ... */}
       </Carousel>

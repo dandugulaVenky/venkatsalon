@@ -601,7 +601,7 @@ const Hotel = ({ smallBanners }) => {
           className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
-        <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[45%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+        <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[75%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
           <p className="font-bold font-verdana text-center">
             Date Selected - {moment(value).format("MMM Do YY")}
           </p>

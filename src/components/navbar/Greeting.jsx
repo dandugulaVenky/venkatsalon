@@ -135,7 +135,7 @@ const Greeting = ({ bestRef }) => {
               )}
             </div>
             <div className="col-span-2 flex items-center justify-center ">
-              {pathname.includes("iron") && (
+              {/* {pathname.includes("iron") && (
                 <Link to="/iron/cart">
                   <a className=" font-semibold md:text-lg text-xs " href="###">
                     <FontAwesomeIcon icon={faCartShopping} color="black" />
@@ -146,7 +146,7 @@ const Greeting = ({ bestRef }) => {
                     )}
                   </a>
                 </Link>
-              )}
+              )} */}
               {user ? (
                 ""
               ) : (

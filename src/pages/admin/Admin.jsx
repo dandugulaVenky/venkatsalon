@@ -14,29 +14,39 @@ const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [shopData, setShopData] = useState();
   const { t } = useTranslation();
 
   useEffect(() => {
-    setLoading(true);
-    window.scrollTo(0, 0);
-    const getAdmin = async () => {
-      try {
-        let isAdmin = await axiosInstance.get(
-          `${baseUrl}/api/users/${user?._id}`,
-          {
-            withCredentials: true,
-          }
-        );
+    if (!user?._id || !user?.shopId) return;
 
-        setIsAdmin(isAdmin.data);
-        setLoading(false);
+    const fetchData = async () => {
+      setLoading(true);
+      window.scrollTo(0, 0);
+
+      try {
+        // Fetch admin status
+        const adminResponse = await axiosInstance.get(
+          `${baseUrl}/api/users/${user._id}`,
+          { withCredentials: true }
+        );
+        setIsAdmin(adminResponse.data);
+
+        // Fetch shop data
+        const shopResponse = await axiosInstance.get(
+          `${baseUrl}/api/hotels/find/${user.shopId}`
+        );
+        setShopData(shopResponse.data);
       } catch (err) {
-        console.log(err);
-        toast("finding admin failed!");
+        console.error(err);
+        toast("Fetching data failed!");
+      } finally {
+        setLoading(false);
       }
     };
-    getAdmin();
-  }, [user?._id]);
+
+    fetchData();
+  }, [user?._id, user?.shopId]);
 
   const handleClick = (value) => {
     const input = value;
@@ -75,56 +85,66 @@ const Admin = () => {
   return (
     <div className="pt-6 pb-20">
       {loading ? (
-        <div className="min-h-[85vh]  flex items-center justify-center">
+        <div className="min-h-[80vh]  flex items-center justify-center">
           <span className="loader "></span>
         </div>
       ) : isAdmin ? (
-        <div className="min-h-[85vh] flex flex-col justify-center md:w-[30vw] w-[80vw] mx-auto cursor-pointer">
-          <p>{isAdmin?.shopName}</p>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("transactions")}
-          >
-            <p>{t("transactions")}</p>
+        <div className="flex   md:flex-row flex-column items-center justify-center gap-8  md:w-[80vw] w-[85%] mx-auto">
+          <div className="flex flex-1 items-center justify-center ">
+            <p className="text-gray-500 font-bold text-4xl scroll-pb-3">
+              {" "}
+              Hi, welcome to {shopData?.name}
+            </p>
           </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("orders")}
-          >
-            <p>{t("viewOrders")}</p>
-          </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("appointments")}
-          >
-            <p>View Appointments</p>
-          </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("services")}
-          >
-            <p>{t("myServices")}</p>
-          </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("addServices")}
-          >
-            <p>{t("addServices")}</p>
-          </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("packages")}
-          >
-            <p>{t("addPackages")}</p>
-          </div>
-          <div className="card p-5 w-full" onClick={() => handleClick("block")}>
-            <p>{t("takeBreak")} </p>
-          </div>
-          <div
-            className="card p-5 w-full"
-            onClick={() => handleClick("updateShopDetails")}
-          >
-            <p>Add/Del Shop Photos</p>
+          <div className="min-h-[85vh] flex flex-col justify-center w-[50%] cursor-pointer">
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("transactions")}
+            >
+              <p>{t("transactions")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("orders")}
+            >
+              <p>{t("viewOrders")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("appointments")}
+            >
+              <p>View Appointments</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("services")}
+            >
+              <p>{t("myServices")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("addServices")}
+            >
+              <p>{t("addServices")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("packages")}
+            >
+              <p>{t("addPackages")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("block")}
+            >
+              <p>{t("takeBreak")} </p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("updateShopDetails")}
+            >
+              <p>Add/Del Shop Photos</p>
+            </div>
           </div>
         </div>
       ) : (

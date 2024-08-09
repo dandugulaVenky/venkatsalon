@@ -275,13 +275,7 @@ const Layout = ({ bestRef }) => {
                         </Link>
                         {/* </DropdownLink> */}
                       </Menu.Item>
-                      <Menu.Item>
-                        {/* <DropdownLink className="dropdown-link p-1"> */}
-                        <Link className="dropdown-link p-1" to="/iron-orders">
-                          {t("ironOrders")}
-                        </Link>
-                        {/* </DropdownLink> */}
-                      </Menu.Item>
+
                       {isAdmin && (
                         <Menu.Item>
                           {/* <DropdownLink className="dropdown-link p-1"> */}
