@@ -212,10 +212,8 @@ const Layout = ({ bestRef }) => {
                   </h1>
                 </Link>
                 {/* <button onClick={handleLanguageChange}>Change Language</button> */}
-                <div>
-                  {/* <label className="mr-1">
-                      <FontAwesomeIcon icon={faGlobe} size="xl" color="black" />
-                    </label> */}
+                {/* <div>
+                
                   <select
                     value={locale}
                     onChange={handleChange}
@@ -225,8 +223,8 @@ const Layout = ({ bestRef }) => {
                     <option value="te">తెలుగు</option>
                     <option value="hi">हिंदी</option>
                   </select>
-                </div>
-                {ironing && (
+                </div> */}
+                {/* {ironing && (
                   <Link to="/iron/cart">
                     <label className="mr-1">
                       <FontAwesomeIcon
@@ -247,7 +245,7 @@ const Layout = ({ bestRef }) => {
                       )}
                     </a>
                   </Link>
-                )}
+                )} */}
 
                 {user ? (
                   <Menu as="div" className="relative inline-block  z-10 ">

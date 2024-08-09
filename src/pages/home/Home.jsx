@@ -202,7 +202,7 @@ const Home = ({ endRef, smallBanners }) => {
 
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-2 md:py-6   lg:py-0 lg:pb-5">
         <div
-          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-5"
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-10"
           style={{ minHeight: "430px" }}
         >
           <div className="">
@@ -211,17 +211,17 @@ const Home = ({ endRef, smallBanners }) => {
             </h1>
 
             <div className="col-span-12 md:col-span-6 block md:hidden">
-              {!smallBanners ? (
-                <img
-                  src={Giffer}
-                  alt="gif"
-                  style={{
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                />
-              ) : (
-                <img
+              {/* {!smallBanners ? ( */}
+              <img
+                src={Giffer}
+                alt="gif"
+                style={{
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+              {/* ) : ( */}
+              {/* <img
                   src={mobileImg}
                   alt="gif"
                   style={{
@@ -229,7 +229,7 @@ const Home = ({ endRef, smallBanners }) => {
                     backgroundPosition: "center",
                   }}
                 />
-              )}
+              )} */}
             </div>
 
             <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">

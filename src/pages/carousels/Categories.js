@@ -57,19 +57,25 @@ const Categories = ({ type }) => {
       <div className=" mt-8 text-black min-w-full ">
         <div className="flex flex-row justify-between">
           <h1 className="px-2.5 md:px-5  md:text-xl font-semibold ">
-            {t("browseAreaWise")}{" "}
+            {/* {t("browseAreaWise")}{" "} */}
             {type1
-              ? locale === "en-US" || locale === "en"
-                ? t("browseAreaWiseType", {
-                    type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
-                  }) + "s"
-                : locale === "te"
-                ? t("browseAreaWiseType", {
-                    type1: type1 === "salon" ? "సెలూన్లు" : "పార్లర్లు",
-                  })
-                : t("browseAreaWiseType", {
-                    type1: type1 === "salon" ? "सैलून" : "पार्लर",
-                  })
+              ? // ? locale === "en-US" || locale === "en"
+                //   ? t("browseAreaWiseType", {
+                //       type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
+                //     }) + "s"
+                //   : locale === "te"
+                //   ? t("browseAreaWiseType", {
+                //       type1: type1 === "salon" ? "సెలూన్లు" : "పార్లర్లు",
+                //     })
+                //   : t("browseAreaWiseType", {
+                //       type1: type1 === "salon" ? "सैलून" : "पार्लर",
+                //     })
+
+                "Browse Area Wise" +
+                " " +
+                type1?.charAt(0)?.toUpperCase() +
+                type1?.slice(1) +
+                "s"
               : "loading"}
           </h1>
           <button
