@@ -52,7 +52,7 @@ const Register = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   let { dispatch: dispatch1, type } = useContext(SearchContext);
 
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("Thimmapur");
   const [header, setHeader] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
@@ -112,7 +112,7 @@ const Register = () => {
 
   const submitHandler = async ({ name, email, password }) => {
     setLoading(true);
-    if (!name || !email || !password || !address) {
+    if (!name || !password || !address) {
       setLoading(false);
       return alert(t("pleaseEnterAllDetails"));
     }
@@ -127,8 +127,8 @@ const Register = () => {
     const normalUserData = {
       name,
       city: address,
-      email,
-      emailVerified,
+      // email,
+      // emailVerified,
       phoneVerified,
       password,
       termsAccepted,
@@ -136,30 +136,30 @@ const Register = () => {
     };
     setStoredUser(normalUserData);
     setCookieObject("normalUser_info", normalUserData, 7);
+    setCanShowNumber(true);
+    setLoading(false);
+    // try {
+    // const sendOtp = async () => {
+    // const res = await axiosInstance.post(
+    //   `${baseUrl}/send-email-verification-otp`,
+    //   {
+    //     email,
+    //   }
+    // );
 
-    try {
-      const sendOtp = async () => {
-        const res = await axiosInstance.post(
-          `${baseUrl}/send-email-verification-otp`,
-          {
-            email,
-          }
-        );
+    // if (res.status === 200) {
 
-        if (res.status === 200) {
-          setCanShowNumber(true);
-          setLoading(false);
-        } else {
-          alert("Something went wrong!");
-          setLoading(false);
-        }
-      };
+    // } else {
+    //   alert("Something went wrong!");
+    //   setLoading(false);
+    // }
+    // };
 
-      sendOtp();
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
+    // sendOtp();
+    // } catch (err) {
+    //   console.log(err);
+    //   setLoading(false);
+    // }
   };
   const handleLocation = () => {
     setHeader(true);
@@ -195,7 +195,7 @@ const Register = () => {
           <div className="md:px-10 px-5 pt-10 card text-sm ">
             <OtpVerification
               token={token}
-              emailVerified={emailVerified}
+              emailVerified={false}
               setEmailVerified={setEmailVerified}
               phoneVerified={phoneVerified}
               setPhoneVerified={setPhoneVerified}
@@ -236,7 +236,7 @@ const Register = () => {
                 <div className="text-red-500">{errors.name.message}</div>
               )}
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label htmlFor="email">{t("emailTitle")}</label>
               <input
                 type="email"
@@ -253,7 +253,7 @@ const Register = () => {
               {errors.email && (
                 <div className="text-red-500">{errors.email.message}</div>
               )}
-            </div>
+            </div> */}
 
             <div className="mb-4">
               <label htmlFor="password">{t("password")}</label>

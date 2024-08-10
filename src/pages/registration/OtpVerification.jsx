@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
 import PhoneInput from "react-phone-number-input";
@@ -7,38 +6,31 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import "./otp.css";
-
 import baseUrl from "../../utils/client";
-
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
-import OtpInput from "./OtpInput";
 import axiosInstance from "../../components/axiosInterceptor";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
   expires.setDate(expires.getDate() + daysToExpire);
-
-  // Serialize the object to JSON and encode it
   const cookieValue =
     encodeURIComponent(JSON.stringify(value)) +
     (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
   document.cookie = `${name1}=${cookieValue}; path=/`;
 }
 
 function removeCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
+
 const OtpVerification = (props) => {
   const {
     token,
-    emailVerified,
     setEmailVerified,
     phoneVerified,
     setPhoneVerified,
-
     storedUser,
     setCanShowNumber,
   } = props;
@@ -47,11 +39,11 @@ const OtpVerification = (props) => {
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
-  let { dispatch } = useContext(AuthContext);
   const [number, setNumber] = useState("");
-  let [disablenow, setDisableNow] = useState();
+  const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -65,14 +57,24 @@ const OtpVerification = (props) => {
       console.error(error);
     }
   };
-  function setUpRecaptha(number) {
+
+  function setUpRecaptcha(number) {
     const recaptchaVerifier = new RecaptchaVerifier(
       "recaptcha-container",
-      {},
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved - allow signInWithPhoneNumber.
+        },
+        "expired-callback": () => {
+          // Response expired. Ask user to re-enter.
+        },
+      },
       auth
     );
-    recaptchaVerifier.render();
-    return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+    return recaptchaVerifier.verify().then(() => {
+      return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+    });
   }
 
   const getOtp = async (e) => {
@@ -83,18 +85,14 @@ const OtpVerification = (props) => {
     if (number.toString().length !== 13 || number === undefined) return;
     try {
       setDisable(true);
-      const response = await setUpRecaptha(number);
+      const response = await setUpRecaptcha(number);
       setResult(response);
       setFlag(true);
       setDisable(false);
     } catch (err) {
       toast(err.message);
       setFlag(false);
-
       setDisable(false);
-      setTimeout(() => {
-        window.location.replace("/register");
-      }, 3000);
     }
   };
 
@@ -108,29 +106,24 @@ const OtpVerification = (props) => {
     try {
       await result.confirm(otp);
       setPhoneVerified(true);
-
       storedUser.phoneVerified = true;
-
       storedUser.number = number;
-
       setCookieObject("normalUser_info", storedUser, 7);
       setDisable(false);
     } catch (err) {
-      alert(`${err.message} please recheck the otp and try again!`);
+      toast.error(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
     }
   };
 
   const RegisterNow = async () => {
     setLoading(true);
-    const { name, email, password, city } = storedUser;
+    const { name, password, city } = storedUser;
 
     try {
       const res = await axiosInstance.post(`${baseUrl}/api/auth/register`, {
         username: name.trim().toLowerCase(),
-        email: email.trim().toLowerCase(),
         password: password.trim(),
-
         city: city.toLowerCase(),
         phone: number || storedUser.number,
       });
@@ -149,7 +142,6 @@ const OtpVerification = (props) => {
           dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
           token !== "" && saveToken(res.data.details._id, token);
           setLoading(false);
-
           removeCookie("normalUser_info");
           navigate("/");
         } catch (err) {
@@ -159,8 +151,9 @@ const OtpVerification = (props) => {
       }
     } catch (err) {
       if (err.response.status === 409) {
-        alert(`${err.response.data.message} please try with another email!`);
-
+        toast.error(
+          `${err.response.data.message} please try with another email!`
+        );
         setEmailVerified(false);
         storedUser.emailVerified = false;
         setCanShowNumber(false);
@@ -168,12 +161,13 @@ const OtpVerification = (props) => {
       } else if (err.response.status === 400) {
         setPhoneVerified(false);
         storedUser.phoneVerified = false;
-
-        alert(`${err.response.data.message} please try with another number!`);
+        toast.error(
+          `${err.response.data.message} please try with another number!`
+        );
         setFlag(false);
         setCookieObject("normalUser_info", storedUser, 7);
       } else {
-        console.log("Everything is fine!");
+        console.log("Unexpected error:", err);
       }
     }
     setLoading(false);
@@ -182,28 +176,11 @@ const OtpVerification = (props) => {
   return (
     <>
       <div className="w-full transition-all delay-1000 ease-linear py-5">
-        {!storedUser.emailVerified && !emailVerified && (
-          <>
-            <p className="bg-green-300 p-2 my-5 rounded-md">
-              Check your email for otp!
-            </p>
-            <OtpInput
-              length={4}
-              email={storedUser?.email}
-              setIsVerifiedEmail={setEmailVerified}
-              emailVerified={emailVerified}
-              storedUser={storedUser}
-            />
-          </>
-        )}
+        <div>
+          <p className="bg-green-300 p-2 mt-5 rounded-md">Successful!</p>
+        </div>
 
-        {storedUser.emailVerified && emailVerified && (
-          <div>
-            <p className="bg-green-300 p-2 mt-5 rounded-md">Successfull!</p>
-          </div>
-        )}
-
-        {!phoneVerified && emailVerified && (
+        {!phoneVerified && (
           <div
             style={{ display: !flag ? "block" : "none" }}
             className="space-y-2 mt-7"
@@ -214,7 +191,7 @@ const OtpVerification = (props) => {
               value={number}
               onChange={setNumber}
               placeholder="Enter Phone Number"
-              readOnly={disablenow}
+              readOnly={disableNow}
               className="w-full"
             />
             <div id="recaptcha-container"></div>
@@ -245,10 +222,9 @@ const OtpVerification = (props) => {
             placeholder="Enter otp"
             className="w-full"
           />
-
           <div id="recaptcha-container"></div>
           <button
-            className="primary-button "
+            className="primary-button"
             onClick={verifyOtp}
             disabled={disable}
           >
@@ -260,18 +236,16 @@ const OtpVerification = (props) => {
           <input
             type="text"
             value={"Verified"}
-            onChange={(e) => setOtp(e.target.value)}
             placeholder="Verified"
             readOnly
           />
-
           <FontAwesomeIcon icon={faCheckCircle} size="lg" className="ml-3" />
         </div>
       </div>
 
       {storedUser.phoneVerified && storedUser.emailVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
-          {loading ? "loading" : "Proceed"}
+          {loading ? "Loading..." : "Proceed"}
         </button>
       ) : (
         ""
