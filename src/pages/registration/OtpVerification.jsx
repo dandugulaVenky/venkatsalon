@@ -243,7 +243,7 @@ const OtpVerification = (props) => {
         </div>
       </div>
 
-      {storedUser.phoneVerified && storedUser.emailVerified ? (
+      {storedUser.phoneVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
           {loading ? "Loading..." : "Proceed"}
         </button>
