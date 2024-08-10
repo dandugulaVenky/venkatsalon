@@ -163,7 +163,7 @@ const BookingHistory = () => {
       {showServices !== null && <GetPushed />}
 
       <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
-        <div className="flex items-center justify-around ">
+        <div className="flex items-center justify-around flex-wrap px-4 gap-5">
           <p className=" md:text-xl text-xs font-semibold">
             {t("bookingHistory")}
           </p>
@@ -181,7 +181,7 @@ const BookingHistory = () => {
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            className="  rounded-md md:w-[14.3rem] w-[9.3rem]"
+            className="  rounded-md md:w-[65rem] md:flex-grow-0 flex-1"
             placeholder="Filter by date,time,ref.."
           />
 

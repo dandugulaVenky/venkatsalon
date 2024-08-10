@@ -896,9 +896,10 @@ const Reserve = () => {
               <option selected value="">
                 {t("selectCategory")}
               </option>
-              {superCategories?.map((service, i) => {
+              {/* {superCategories?.map((service, i) => {
                 return <option key={i}>{service}</option>;
-              })}
+              })} */}
+              <option>regular</option>
             </select>
             <select className="md:w-52 w-auto" onChange={handleChange}>
               <option selected>{t("selectCategory")}</option>

@@ -331,9 +331,10 @@ const AddServices = () => {
               <option selected value="">
                 Super category
               </option>
-              {superCategories?.map((superCategory, i) => {
+              {/* {superCategories?.map((superCategory, i) => {
                 return <option key={i}>{superCategory.superCategory}</option>;
-              })}
+              })} */}
+              <option>regular</option>;
             </select>
             <select
               onChange={handleCategoryChange}

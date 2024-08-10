@@ -232,7 +232,12 @@ const OtpVerification = (props) => {
           </button>
         </div>
 
-        <div style={{ display: storedUser.phoneVerified ? "block" : "none" }}>
+        <div
+          style={{
+            display: storedUser.phoneVerified ? "block" : "none",
+            marginTop: 10,
+          }}
+        >
           <input
             type="text"
             value={"Verified"}
