@@ -558,6 +558,8 @@ const Hotel = ({ smallBanners }) => {
           },
           { withCredentials: true }
         );
+        const token = sessionStorage.getItem("access_token");
+
         const options = {
           key,
           amount: order.amount,
@@ -566,7 +568,7 @@ const Hotel = ({ smallBanners }) => {
           description: "SALONS & PARLOURS",
           image: "https://avatars.githubusercontent.com/u/25058652?v=4",
           order_id: order.id,
-          callback_url: `${baseUrl}/api/payments/appointment/paymentverification`,
+          callback_url: `${baseUrl}/api/payments/appointment/paymentverification?token=${token}`,
           prefill: {
             name: "Test Team",
             email: "test.test@example.com",
