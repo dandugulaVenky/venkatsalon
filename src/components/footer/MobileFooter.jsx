@@ -9,9 +9,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
+import { t } from "i18next";
 
 const MobileFooter = () => {
   const { open, dispatch } = useContext(SearchContext);
+
   const navigate = useNavigate();
 
   function goBack() {
@@ -31,6 +33,7 @@ const MobileFooter = () => {
             <Link to="/history">
               <FontAwesomeIcon icon={faHistory} size="xl" />
             </Link>
+
             {/* <Link to="/iron-orders">
               <FontAwesomeIcon icon={faShirt} size="xl" />
             </Link> */}

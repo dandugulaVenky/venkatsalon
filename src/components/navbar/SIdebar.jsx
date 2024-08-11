@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import baseUrl from "../../utils/client";
 import axiosInstance from "../axiosInterceptor";
+import { t } from "i18next";
 
 const SIdebar = () => {
   const { open, dispatch } = useContext(SearchContext);
@@ -102,6 +103,7 @@ const SIdebar = () => {
                 <span>Contact Us</span>
               </Link>
             </li>
+
             <li>
               <Link
                 to="/privacy-policy"
@@ -151,11 +153,25 @@ const SIdebar = () => {
               )}
             </li>
           </ul>
+
+          <span
+            className="flex items-start space-x-2 p-2  rounded-md cursor-pointer"
+            onClick={() => {
+              if (user) {
+                navigate("/shop-details");
+              } else {
+                alert("Please login to join with us!");
+              }
+            }}
+          >
+            {t("joinUs")}
+          </span>
+
           <p
-            className="pt-4 pb-2 space-y-1 text-sm fixed bottom-2 "
+            className="  text-sm fixed top-1 right-5 border border-gray-300 rounded-full px-1.5 py-0.5 cursor-pointer"
             onClick={() => dispatch({ type: "SIDEBAR_OPEN", payload: !open })}
           >
-            <FontAwesomeIcon icon={faClose} size="2x" />
+            <FontAwesomeIcon icon={faClose} size="1x" />
           </p>
         </div>
       </div>
