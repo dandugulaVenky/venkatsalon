@@ -12,10 +12,10 @@ const AllCities = () => {
   }, []);
 
   const allCitiesArray = [
-    { cityName: "shadnagar" },
-    { cityName: "kothur" },
-    { cityName: "shamshabad" },
-    { cityName: "kothur" },
+    { cityName: "shadnagar, telangana 509216, india" },
+    { cityName: "kothur, telangana 509228, india" },
+    { cityName: "thimmapur, telangana 509325, india" },
+    { cityName: "shamshabad, telangana 501218, india" },
   ];
 
   const [userInput, setUserInput] = useState("");
@@ -35,7 +35,7 @@ const AllCities = () => {
       type: "NEW_SEARCH",
       payload: { type: type1, destination },
     });
-    navigate("/shops", { state: { destination } });
+    navigate("/shops");
   };
 
   return (
@@ -60,21 +60,21 @@ const AllCities = () => {
         <div className=" min-h-screen w-full pb-24 md:pt-0 pt-2 ">
           <>
             <div className="grid grid-cols-12 md:gap-6 gap-4 md:mx-0 mx-3">
-              {filteredArray.map((city) => {
+              {filteredArray.map((city, i) => {
                 return (
                   <div
-                    className="flex items-center justify-center md:h-52 h-24 lg:col-span-4 md:col-span-5 col-span-6 
+                    className={`flex items-center justify-center md:h-14 h-14 lg:col-span-4 md:col-span-5 col-span-6 
                           cursor-pointer
                          rounded-lg hover:shadow-2xl hover:scale-105 transition duration-300
-                         bg-[url('https://picsum.photos/800/600?random=5')] bg-center bg-cover bg-no-repeat 
-                         "
-                    style={{
-                      filter: "drop-shadow(0px 0px 2px black)",
-                    }}
+                         border-2 shadow-custom border-gray-200
+                         `}
+                    // style={{
+                    //   filter: "drop-shadow(0px 0px 5px black)",
+                    // }}
                     onClick={() => handleNavigateCity(city.cityName)}
                   >
-                    <p className="text-white font-bold  text-xl w-full text-center content break-words ">
-                      {city.cityName}
+                    <p className="text-black font-bold  text-xl w-full text-center content break-words ">
+                      {city.cityName.split(",")[0]}
                     </p>
                   </div>
                 );

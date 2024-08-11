@@ -8,7 +8,19 @@ import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { t } from "i18next";
 import LanguageContext from "../../context/LanguageContext";
-
+function filterArray(array, userInput, city) {
+  if (!userInput) {
+    return array?.filter(
+      (item) => item.city.split(",")[0] === city.split(",")[0]
+    );
+  }
+  return array?.filter((shop) => {
+    return (
+      shop.name.toLowerCase().includes(userInput.toLowerCase()) &&
+      shop.city.split(",")[0] === city.split(",")[0]
+    );
+  });
+}
 const List = () => {
   const [data1, setData1] = useState();
   // const min = useState(0);
@@ -40,30 +52,22 @@ const List = () => {
   }, [city, navigate, type]);
 
   const [userInput, setUserInput] = useState("");
-  function filterArray(array, userInput) {
-    if (!userInput) {
-      return array;
-    }
-    return array?.filter((shop) => {
-      return shop.name.toLowerCase().includes(userInput.toLowerCase());
-    });
-  }
 
   const [filteredArray, setFilteredArray] = useState();
   const [areas, setAreas] = useState(null);
-  const [areaFilter, setAreaFilter] = useState(null);
+  const [areaFilter, setAreaFilter] = useState(city?.split(",")[0] || null);
 
   useEffect(() => {
     setData1(data);
     setSubType("null");
     setGender("null");
-    let filteredArray = filterArray(data, userInput);
+    let filteredArray = filterArray(data, userInput, city);
     setFilteredArray(filteredArray);
 
     const areass = filteredArray.map((item, i) => item.city.split(",")[0]);
 
     setAreas(areass);
-  }, [data, userInput]);
+  }, [city, data, userInput]);
 
   // useEffect(() => {
   //   if (gender === "null" && subType === "null") {
@@ -97,7 +101,11 @@ const List = () => {
       return;
     }
 
-    const matter = data1?.filter((item) => item.subType === e.target.value);
+    const matter = data1?.filter(
+      (item) =>
+        item.subType === e.target.value &&
+        item.city.split(",")[0] === city.split(",")[0]
+    );
     setFilteredArray(matter);
 
     return;
@@ -114,9 +122,15 @@ const List = () => {
 
     const matter = data.filter((item) => {
       if (e.target.value === type) {
-        return item.spaIncluded === false;
+        return (
+          item.spaIncluded === false &&
+          item.city.split(",")[0] === city.split(",")[0]
+        );
       } else {
-        return item.spaIncluded === true;
+        return (
+          item.spaIncluded === true &&
+          item.city.split(",")[0] === city.split(",")[0]
+        );
       }
     });
 
@@ -179,7 +193,7 @@ const List = () => {
                 >
                   <option value="null">{t("sortByType")}</option>
                   <option value={type}>
-                    {locale === "en"
+                    {/* {locale === "en"
                       ? t("onlyType", { type: type })
                       : locale === "te"
                       ? t("onlyType", {
@@ -187,10 +201,11 @@ const List = () => {
                         })
                       : t("onlyType", {
                           type: type === "saloon" ? "सैलून" : "पार्लर",
-                        })}
+                        })} */}
+                    only {type}
                   </option>
                   <option value="spaIncluded">
-                    {locale === "en"
+                    {/* {locale === "en"
                       ? t("typeSpa", { type: type })
                       : locale === "te"
                       ? t("typeSpa", {
@@ -198,7 +213,8 @@ const List = () => {
                         })
                       : t("typeSpa", {
                           type: type === "saloon" ? "सैलून" : "पार्लर",
-                        })}
+                        })} */}
+                    {type} & spa
                   </option>
                 </select>
               </div>
@@ -212,6 +228,7 @@ const List = () => {
                     caretColor: "#00ccbb",
                   }}
                   value={areaFilter}
+                  disabled
                 >
                   <option value="null" selected>
                     Sort By Area
@@ -256,7 +273,7 @@ const List = () => {
                 {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
                     <p className="text-2xl font-semibold">
-                      {locale === "en"
+                      {/* {locale === "en"
                         ? t("noTypeFound1", { type: type })
                         : locale === "te"
                         ? t("noTypeFound1", {
@@ -264,7 +281,8 @@ const List = () => {
                           })
                         : t("noTypeFound1", {
                             type: type === "saloon" ? "सैलून" : "पार्लर",
-                          })}
+                          })} */}{" "}
+                      No {type}s found!
                     </p>
                   </div>
                 )}
