@@ -34,7 +34,7 @@ const Services = ({ refer }) => {
           <div
             className="relative  h-[8.5rem]  w-full cursor-pointer rounded-md"
             id="section-id"
-            onClick={() => handler("salon")}
+            onClick={() => ("salon")}
           >
             <img
               src={Salon}
@@ -46,7 +46,7 @@ const Services = ({ refer }) => {
                 filter: `${
                   active === "salon" ? "brightness(40%)" : "brightness(70%)"
                 }`,
-                borderRadius: 8,
+                borderRadius: 10,
                 objectFit: "cover",
                 objectPosition: "right top",
               }}

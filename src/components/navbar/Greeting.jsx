@@ -151,7 +151,7 @@ const Greeting = ({ bestRef }) => {
                 ""
               ) : (
                 <Link to="/login" className="ml-5 text-sm font-bold">
-                  Login
+                  Log
                 </Link>
               )}
             </div>

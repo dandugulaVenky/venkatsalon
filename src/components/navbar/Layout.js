@@ -23,6 +23,7 @@ import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
 import i18next from "../../i18n";
+import About from './../../pages/staticpages/About';
 
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
@@ -190,7 +191,7 @@ const Layout = ({ bestRef }) => {
                     </h1>
                   </Link>
                 } */}
-                <Link to="/about-us">
+                <Link to="/About-us">
                   <h1
                     className={` font-semibold md:text-lg text-xs ${
                       pathname?.includes("/about") ? "text-[#00ccbb]" : ""
@@ -221,6 +222,7 @@ const Layout = ({ bestRef }) => {
                     <option value="en">English</option>
                     <option value="te">తెలుగు</option>
                     <option value="hi">हिंदी</option>
+                    <option value="ka">ಕನ್ನಡ</option>
                   </select>
                 </div>
                 {ironing && (

@@ -192,6 +192,7 @@ const Home = ({ endRef, smallBanners }) => {
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+        
       ])
     : (images = [img1, img2, img3]);
 

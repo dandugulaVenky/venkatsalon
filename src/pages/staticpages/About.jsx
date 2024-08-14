@@ -25,12 +25,12 @@ const About = () => {
       <Seo props={siteMetadata} />
 
       <div className=" px-10 flex flex-col space-y-3 justify-center">
-        <div>
+        {/* <div>
           <h1 className="text-2xl font-bold">{t("introduction")}</h1>
           <p className="text-sm md:text-[15px] leading-6 ">
             {t("aboutIntroMessage")}
           </p>
-        </div>
+        </div> */}
 
         <div>
           <h1 className="text-2xl font-bold">{t("commitmentToConvenience")}</h1>
