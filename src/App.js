@@ -68,11 +68,11 @@ function App() {
   };
   const [locale, setLocale] = useState(i18next.language);
   const { open } = useContext(SearchContext);
-  const [smallBanners, setSmallBanners] = useState(window.innerWidth < 540);
+  const [smallBanners, setSmallBanners] = useState(window.innerWidth < 431);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const handleResize = (e) => {
     setSmallScreen(window.innerWidth < 1064);
-    setSmallBanners(window.innerWidth < 540);
+    setSmallBanners(window.innerWidth < 431);
   };
 
   useEffect(() => {

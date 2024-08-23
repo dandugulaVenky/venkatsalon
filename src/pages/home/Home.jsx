@@ -13,15 +13,15 @@ import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
-import mobileImg from "../images/home-image-mobile.png";
+
 import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
-import img1 from "../images/1.png";
-import img2 from "../images/2.png";
-import img3 from "../images/3.png";
-import banner6 from "../images/you-have-the-power-to-protect-your-time.png";
+import img1 from "../images/1.jpg";
+import img2 from "../images/2.jpg";
+import img3 from "../images/3.jpg";
+
 const siteMetadata = {
   title: "Home | Effortless Appointments With Easytym",
   description:
@@ -255,11 +255,11 @@ const Home = ({ endRef, smallBanners }) => {
               <img
                 src={s}
                 className="md:rounded"
+                width={"100%"}
                 style={{
                   backgroundPosition: "center",
 
-                  backgroundSize: "cover",
-                  width: "100%",
+                  backgroundSize: "fit",
                 }}
                 alt="carousel-img"
               />
