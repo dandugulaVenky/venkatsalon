@@ -139,6 +139,7 @@ const OtpVerification = (props) => {
             },
             { withCredentials: true }
           );
+          sessionStorage.setItem("access_token", res.data.token);
           dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
           token !== "" && saveToken(res.data.details._id, token);
           setLoading(false);
@@ -197,7 +198,7 @@ const OtpVerification = (props) => {
             <div id="recaptcha-container"></div>
             <button
               className={` ${
-                number?.toString()?.length !== 13
+                number?.toString()?.length !== 13 || disable
                   ? "default-button"
                   : "primary-button"
               } `}
@@ -224,11 +225,11 @@ const OtpVerification = (props) => {
           />
           <div id="recaptcha-container"></div>
           <button
-            className="primary-button"
+            className={`${disable ? "default-button" : "primary-button"}`}
             onClick={verifyOtp}
             disabled={disable}
           >
-            {t("verifyOtp")}
+            {disable ? "Verifying..." : "Verify"}
           </button>
         </div>
 
