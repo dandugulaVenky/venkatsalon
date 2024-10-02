@@ -91,14 +91,14 @@ const Hotel = ({ smallBanners }) => {
   const [higlightBookingBox, setHighlightBookingBox] = useState(false);
 
   const { user } = useContext(AuthContext);
-  const { city, timeDifferenceInDays, time } = useContext(SearchContext);
+  const { city, timeDifferenceInDays, time, dispatch, lat, lng } =
+    useContext(SearchContext);
   const [value, setValue] = useState(
     moment().add(timeDifferenceInDays, "days").toDate()
   );
 
   const [timeReserve, setTimeReserve] = useState(time ? time : "");
 
-  const { dispatch } = useContext(SearchContext);
   const { dispatch: appointmentDispatch } = useContext(FinalBookingContext);
 
   const [services, setServices] = useState([]);
@@ -388,6 +388,8 @@ const Hotel = ({ smallBanners }) => {
         type: data.type,
         destination: city,
         value,
+        lat,
+        lng,
         time: timeReserve,
         timeDifferenceInDays:
           timeDifferenceInDays > 0 ? timeDifferenceInDays : 0,
