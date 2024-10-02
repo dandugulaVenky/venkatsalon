@@ -268,7 +268,7 @@ const List = () => {
                     </div>
                   </>
                 )}
-                {!loading && data?.length <= 0 ? (
+                {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
                     <p className="text-2xl font-semibold">
                       {/* {locale === "en"
@@ -283,10 +283,6 @@ const List = () => {
                       No {type}s found!
                     </p>
                   </div>
-                ) : (
-                  <p className="min-h-[55vh] text-center flex items-center justify-center">
-                    Sorry no {type}s found!
-                  </p>
                 )}
               </div>
             </div>
