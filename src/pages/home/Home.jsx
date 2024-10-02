@@ -62,12 +62,9 @@ const Home = ({ endRef, smallBanners }) => {
     const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("came");
           const { latitude, longitude } = position.coords;
           const geocoder = new window.google.maps.Geocoder();
           const latlng = { lat: latitude, lng: longitude };
-
-          console.log(latlng, "llllllllllllllllllllll");
 
           geocoder.geocode({ location: latlng }, (results, status) => {
             console.log(results);
@@ -78,21 +75,11 @@ const Home = ({ endRef, smallBanners }) => {
                 component.types.includes("postal_code")
             );
 
-            console.log(postalCodeComponent);
             const city1 = postalCodeComponent.formatted_address?.toLowerCase();
 
             // Find the colony or locality name
             // Dispatch the necessary information
-            dispatch({
-              type: "NEW_SEARCH",
-              payload: {
-                type: "salon",
-                destination: city1,
-                pincode: postalCodeComponent.types[0],
-                lat: latitude,
-                lng: longitude,
-              },
-            });
+
             if (status === "OK") {
               if (results[0]) {
                 // let string =
@@ -101,6 +88,17 @@ const Home = ({ endRef, smallBanners }) => {
                 //   results[1]?.address_components[3]?.long_name +
                 //   ", " +
                 //   results[1]?.address_components[4]?.long_name;
+
+                dispatch({
+                  type: "NEW_SEARCH",
+                  payload: {
+                    type: "salon",
+                    destination: city1,
+                    pincode: postalCodeComponent.types[0],
+                    lat: latitude,
+                    lng: longitude,
+                  },
+                });
               } else {
                 console.log("No results found");
               }
