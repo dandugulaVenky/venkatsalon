@@ -27,6 +27,14 @@ export default class AutoComplete extends React.Component {
     const handleSelect = (address) => {
       geocodeByAddress(address)
         .then((results) => {
+          const location = results[0]?.geometry.location;
+          const lat = location?.lat();
+          const lng = location?.lng();
+
+          // Use the latitude and longitude as needed
+          console.log("Latitude:", lat);
+          console.log("Longitude:", lng);
+
           setAddress(results[0]?.formatted_address.trim().toLowerCase());
           const city = results[0]?.formatted_address.trim().toLowerCase();
           console.log(type, "type");
@@ -36,10 +44,11 @@ export default class AutoComplete extends React.Component {
               type: !type ? "salon" : type,
               destination: city,
               pincode: city,
+              lat: lat,
+              lng: lng,
             },
           });
         })
-
         .catch((error) => console.error("Error", error));
 
       setTimeout(() => {
@@ -50,20 +59,16 @@ export default class AutoComplete extends React.Component {
         if (bestRef.current) {
           setTimeout(() => {
             bestRef.current.scrollIntoView({ behavior: "smooth" });
-
-            // After the initial scrolling is completed, add more scrolling
             setTimeout(() => {
               if (this.inputRef.current) {
                 this.inputRef.current.blur();
               }
-              const additionalScrollAmount = -200; // Adjust this value to determine how many additional pixels you want to scroll
+              const additionalScrollAmount = -200;
               window.scrollBy({
                 top: additionalScrollAmount,
                 behavior: "smooth",
               });
             }, 1300);
-
-            // Adjust the delay as needed
           }, 1150);
         }
       }

@@ -59,16 +59,15 @@ const Home = ({ endRef, smallBanners }) => {
   // };
 
   useEffectOnce(() => {
-    //prompting user to retrive location if not enabled
-
-    //setting users current location
-
     const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.log("came");
           const { latitude, longitude } = position.coords;
           const geocoder = new window.google.maps.Geocoder();
           const latlng = { lat: latitude, lng: longitude };
+
+          console.log(latlng, "llllllllllllllllllllll");
 
           geocoder.geocode({ location: latlng }, (results, status) => {
             console.log(results);
@@ -80,9 +79,20 @@ const Home = ({ endRef, smallBanners }) => {
             );
 
             console.log(postalCodeComponent);
+            const city1 = postalCodeComponent.formatted_address?.toLowerCase();
 
             // Find the colony or locality name
-
+            // Dispatch the necessary information
+            dispatch({
+              type: "NEW_SEARCH",
+              payload: {
+                type: "salon",
+                destination: city1,
+                pincode: postalCodeComponent.types[0],
+                lat: latitude,
+                lng: longitude,
+              },
+            });
             if (status === "OK") {
               if (results[0]) {
                 // let string =
@@ -91,18 +101,6 @@ const Home = ({ endRef, smallBanners }) => {
                 //   results[1]?.address_components[3]?.long_name +
                 //   ", " +
                 //   results[1]?.address_components[4]?.long_name;
-                const city1 =
-                  postalCodeComponent.formatted_address?.toLowerCase();
-
-                // Dispatch the necessary information
-                dispatch({
-                  type: "NEW_SEARCH",
-                  payload: {
-                    type: "salon",
-                    destination: city1,
-                    pincode: postalCodeComponent.types[0],
-                  },
-                });
               } else {
                 console.log("No results found");
               }

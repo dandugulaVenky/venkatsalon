@@ -19,7 +19,7 @@ import axiosInstance from "../../components/axiosInterceptor";
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
-  const { type: type1, city, pincode } = useContext(SearchContext);
+  const { type: type1, city, pincode, lat, lng } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
@@ -27,9 +27,9 @@ const BestSaloons = ({ smallBanners }) => {
 
   const getBestSalons = async () => {
     return await axiosInstance.get(
-      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city1=${
-        city ? city : "shadnagar, telangana 509216, india"
-      }&pincode=${pincode === "postal_code" ? true : false}`
+      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&lat=${
+        lat ? lat : 0.0
+      }&lng=${lng ? lng : 0.0}&limit=4`
     );
   };
   const size = GetSize();

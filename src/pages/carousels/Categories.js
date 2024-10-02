@@ -20,9 +20,28 @@ const Categories = ({ type }) => {
   const { t } = useTranslation();
 
   const size = GetSize();
-  const { locale, setLocale } = useContext(LanguageContext);
+
   const { user } = useContext(AuthContext);
   // Queries
+
+  const allCitiesArray = [
+    {
+      cityName: "shadnagar, telangana 509216, india",
+      latLng: { lat: 17.065974, lng: 78.2020139 },
+    },
+    {
+      cityName: "kothur, telangana 509228, india",
+      latLng: { lat: 17.1544274, lng: 78.2785622 },
+    },
+    {
+      cityName: "thimmapur, telangana 509325, india",
+      latLng: { lat: 17.168843, lng: 78.2861414 },
+    },
+    {
+      cityName: "shamshabad, telangana 501218, india",
+      latLng: { lat: 17.2444338, lng: 78.3849922 },
+    },
+  ];
 
   const shopsCount = async () => {
     return await axiosInstance.get(
@@ -41,9 +60,14 @@ const Categories = ({ type }) => {
   const navigate = useNavigate();
 
   const handleSearch = (destination) => {
+    const destinationCity = allCitiesArray.find(
+      (city) => city.cityName === destination
+    );
+    console.log(destinationCity, "destination");
+    const { lat, lng } = destinationCity?.latLng;
     dispatch({
       type: "NEW_SEARCH",
-      payload: { type: type1, destination },
+      payload: { type: type1, destination, lat, lng },
     });
     navigate("/shops");
   };

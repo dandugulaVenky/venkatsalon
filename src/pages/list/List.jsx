@@ -7,7 +7,7 @@ import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { t } from "i18next";
-import LanguageContext from "../../context/LanguageContext";
+
 function filterArray(array, userInput, city) {
   if (!userInput) {
     return array?.filter(
@@ -23,18 +23,16 @@ function filterArray(array, userInput, city) {
 }
 const List = () => {
   const [data1, setData1] = useState();
-  // const min = useState(0);
-  // const max = useState(999);
+
   const [subType, setSubType] = useState();
   const [gender, setGender] = useState();
 
-  const { locale, setLocale } = useContext(LanguageContext);
-  const { type, city, pincode } = useContext(SearchContext);
-
+  const { type, city, lat, lng } = useContext(SearchContext);
+  console.log(lat, lng);
   const { data, loading } = useFetch(
-    `${baseUrl}/api/hotels?type=${type ? type : "salon"}&city1=${
-      city ? city : "shadnagar, telangana 509216, india"
-    }&pincode=${pincode === "postal_code" ? true : false}`
+    `${baseUrl}/api/hotels?type=${type ? type : "salon"}&lat=${
+      lat ? lat : 0.0
+    }&lng=${lng ? lng : 0.0}`
   );
 
   const navigate = useNavigate();
@@ -270,7 +268,7 @@ const List = () => {
                     </div>
                   </>
                 )}
-                {!loading && data?.length <= 0 && (
+                {!loading && data?.length <= 0 ? (
                   <div className="min-h-[55vh] grid place-items-center">
                     <p className="text-2xl font-semibold">
                       {/* {locale === "en"
@@ -285,6 +283,10 @@ const List = () => {
                       No {type}s found!
                     </p>
                   </div>
+                ) : (
+                  <p className="min-h-[55vh] text-center flex items-center justify-center">
+                    Sorry no {type}s found!
+                  </p>
                 )}
               </div>
             </div>

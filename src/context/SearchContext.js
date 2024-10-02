@@ -17,6 +17,12 @@ const INITIAL_STATE = {
   type: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).type
     : "salon",
+  lat: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).lat
+    : null,
+  lng: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).lng
+    : null,
   timeDifferenceInDays: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).timeDifferenceInDays
     : 0,
@@ -33,6 +39,8 @@ const SearchReducer = (state, action) => {
       const time = action.payload.time;
       const type = action.payload.type;
       const timeDifferenceInDays = action.payload.timeDifferenceInDays;
+      const lat = action.payload.lat;
+      const lng = action.payload.lng;
 
       // console.log("payload", action.payload);
       localStorage.setItem(
@@ -44,6 +52,8 @@ const SearchReducer = (state, action) => {
           type,
           timeDifferenceInDays,
           pincode,
+          lat,
+          lng,
         })
       );
       return {
@@ -54,6 +64,8 @@ const SearchReducer = (state, action) => {
         type,
         timeDifferenceInDays,
         pincode,
+        lat,
+        lng,
       };
     case "RESET_SEARCH":
       return INITIAL_STATE;
@@ -77,6 +89,8 @@ export const SearchContextProvider = ({ children }) => {
         type: state.type,
         timeDifferenceInDays: state.timeDifferenceInDays,
         pincode: state.pincode,
+        lat: state.lat,
+        lng: state.lng,
         dispatch,
       }}
     >

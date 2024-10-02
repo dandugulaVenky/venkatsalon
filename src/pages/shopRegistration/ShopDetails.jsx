@@ -291,7 +291,10 @@ const ShopDetails = () => {
             spaIncluded,
             lunchTimeArray,
             shopTimeArray,
-            latLong,
+            latLong: {
+              type: "Point",
+              coordinates: [latLong.lng, latLong.lat], // Note: [lng, lat]
+            },
           };
 
           function setCookieObject(name1, value, daysToExpire) {
