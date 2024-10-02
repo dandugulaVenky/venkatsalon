@@ -10,15 +10,15 @@ import { t } from "i18next";
 
 function filterArray(array, userInput, city) {
   if (!userInput) {
-    return array?.filter(
-      (item) => item.city.split(",")[0] === city.split(",")[0]
-    );
+    return array;
+    // ?.filter(
+    //   (item) => item.city.split(",")[0] === city.split(",")[0]
+    // );
   }
   return array?.filter((shop) => {
-    return (
-      shop.name.toLowerCase().includes(userInput.toLowerCase()) &&
-      shop.city.split(",")[0] === city.split(",")[0]
-    );
+    return shop.name.toLowerCase().includes(userInput.toLowerCase());
+    //  &&
+    // shop.city.split(",")[0] === city.split(",")[0]
   });
 }
 const List = () => {
@@ -154,6 +154,8 @@ const List = () => {
       return;
     }
   };
+
+  console.log({ data, mata: data.length });
 
   return (
     <div className="pt-6 pb-20">
