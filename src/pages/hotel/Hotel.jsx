@@ -73,6 +73,8 @@ const Hotel = ({ smallBanners }) => {
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
+
+  console.log(data, "daaaaaaaaaaaaaata");
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -1044,7 +1046,7 @@ const Hotel = ({ smallBanners }) => {
                     className="text-[#00ccbb]"
                     target="_blank"
                     rel="noreferrer"
-                    href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.lat},${data?.latLong?.lng}`}
+                    href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.coordinates[1]},${data?.latLong?.coordinates[0]}`}
                   >
                     {t("getDirectionsToShop")}
                   </a>

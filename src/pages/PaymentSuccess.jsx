@@ -153,7 +153,7 @@ export const PaymentSuccess = () => {
         },
         { withCredentials: true }
       );
-      localStorage.removeItem("bookingDetails");
+
       navigate("/", {
         state: { referenceNum: referenceNum },
       });
