@@ -379,7 +379,7 @@ const Header = (props) => {
   return (
     header !== null && (
       <div
-        className={`header  z-20 ${
+        className={`header  z-50 ${
           header === null
             ? "hidden"
             : header
@@ -388,8 +388,8 @@ const Header = (props) => {
         }`}
       >
         <p className="text-center  md:text-lg text-xs space-x-1  font-semibold">
-          <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" />
-          <span>{city}</span>
+          {/* <FontAwesomeIcon icon={faLocationDot} size="lg" color="#00ccbb" /> */}
+          {/* <span>{city}</span> */}
         </p>
 
         <AutoComplete

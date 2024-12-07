@@ -72,7 +72,7 @@ export default function Login() {
 
   const { loading, error: errorContext, dispatch } = useContext(AuthContext);
 
-  const { open } = useContext(SearchContext);
+  // const { open } = useContext(SearchContext);
 
   const handleSubmit1 = async (e) => {
     e.preventDefault();
@@ -142,6 +142,8 @@ export default function Login() {
             </button>
           </div>
           <p className="text-md underline text-blue-600 mt-3">
+            <Link to="/forgot-password">Forgot Password</Link>
+            <br></br>
             <Link to="/register">{t("dontHaveAccountClickHere")}</Link>
           </p>
           {errorContext && (

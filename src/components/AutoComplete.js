@@ -75,7 +75,7 @@ export default class AutoComplete extends React.Component {
     };
 
     return (
-      <div className="flex items-center justify-center  my-5 overflow-auto ">
+      <div className="flex items-center justify-center  overflow-auto ">
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}

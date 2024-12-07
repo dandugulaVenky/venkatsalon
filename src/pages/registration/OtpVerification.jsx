@@ -205,7 +205,7 @@ const OtpVerification = (props) => {
               onClick={getOtp}
               disabled={disable || number?.toString()?.length !== 13}
             >
-              {t("getOtp")}
+              {disable ? "Sending..." : t("getOtp")}
             </button>
           </div>
         )}

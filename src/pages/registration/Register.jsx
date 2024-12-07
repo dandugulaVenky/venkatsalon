@@ -166,7 +166,7 @@ const Register = () => {
   };
 
   return (
-    <div className="pt-10 pb-20">
+    <div className="py-5">
       {header ? (
         <Header
           city={address}

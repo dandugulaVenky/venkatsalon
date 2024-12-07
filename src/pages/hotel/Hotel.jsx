@@ -74,7 +74,7 @@ const Hotel = ({ smallBanners }) => {
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
 
-  console.log(data, "daaaaaaaaaaaaaata");
+  // console.log(data, "daaaaaaaaaaaaaata");
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);

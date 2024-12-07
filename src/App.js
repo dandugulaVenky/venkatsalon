@@ -54,6 +54,8 @@ import SIdebar from "./components/navbar/SIdebar";
 import UpdateShopDetails from "./pages/admin/UpdateShopDetails";
 import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
 import AdminAppointments from "./pages/admin/AdminAppointments";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import ResetPassword from "./pages/login/ResetPassword";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -103,6 +105,12 @@ function App() {
             {/* <Route path="/get-started" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/reset_password/:phone/:token"
+              element={<ResetPassword />}
+            />
+
             {/* <Route path="/shop-registration" element={<RegistrationForm />} /> */}
             <Route path="/shop-details" element={<ShopDetails />} />
             <Route
