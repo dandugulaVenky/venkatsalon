@@ -402,20 +402,20 @@ const Reserve = () => {
     // setCategoriesOptions(result[0].services);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-    setSalonServices(null);
+  // const handleSortChange = (e) => {
+  //   setSortBy(e.target.value);
+  //   setSalonServices(null);
 
-    setCategoriesOptions(null);
+  //   setCategoriesOptions(null);
 
-    let currentCategory = superCategories?.filter((item) =>
-      item.toLowerCase().includes(e.target.value)
-    );
-    setSuperCategory(currentCategory[0] || "");
+  //   let currentCategory = superCategories?.filter((item) =>
+  //     item.toLowerCase().includes(e.target.value)
+  //   );
+  //   setSuperCategory(currentCategory[0] || "");
 
-    // console.log(superCategories, e.target.value);
-    // setAllServices()
-  };
+  //   // console.log(superCategories, e.target.value);
+  //   // setAllServices()
+  // };
 
   useEffect(() => {
     let result = [];
@@ -962,7 +962,7 @@ const Reserve = () => {
               <option selected>regular</option>
             </select>
             <select className="md:w-52 w-auto" onChange={handleChange}>
-              <option selected>{t("selectCategory")}</option>
+              <option selected>Select Sub Category</option>
 
               {salonServices?.map((service, i) => {
                 return (
@@ -972,13 +972,13 @@ const Reserve = () => {
                 );
               })}
             </select>
-            {(sortBy !== null || categoriesOptions?.length > 0) && (
+            {/* {(sortBy !== null || categoriesOptions?.length > 0) && (
               <select className="md:w-52 w-auto" onChange={handleSortChange}>
                 <option selected>Sort By</option>
                 <option value="salon">salon services</option>
                 <option value="spa">spa services</option>
               </select>
-            )}
+            )} */}
             {(sortBy !== null || categoriesOptions?.length > 0) && (
               <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
                 {gender ? gender : ""}
