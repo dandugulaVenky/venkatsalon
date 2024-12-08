@@ -75,9 +75,9 @@ const Reserve = () => {
   const [reserveState, setReserveState] = useState(null);
   const [allServices, setAllServices] = useState();
   const [showInclusions, setShowInclusions] = useState();
-  const [category, setCategory] = useState();
+  const [superCategory, setSuperCategory] = useState("regular");
+  const [category, setCategory] = useState("Waxing");
   const [superCategories, setSuperCategories] = useState();
-  const [superCategory, setSuperCategory] = useState();
   const [gender, setGender] = useState(subType);
 
   const [loading, setLoading] = useState(false);
@@ -189,10 +189,42 @@ const Reserve = () => {
 
       // setSalonServices(services);
       setCategories(data[0]?.services);
+
+      //setting directly main category
+
+      setSuperCategory("regular");
+      const result1 = categories.filter((category, i) =>
+        category.superCategory === "regular" && category.subCategory === gender
+          ? category.services
+          : null
+      );
+      const services = result1.reduce((arr, item) => {
+        arr.push(item.category);
+        return arr;
+      }, []);
+
+      setSalonServices(services);
+
+      //setting directly subcategory
+      setCategory("Waxing");
+      const result = categories.filter((category, i) =>
+        category.category === "Waxing" && category.subCategory === gender
+          ? category.services
+          : null
+      );
+      setCategoriesOptions(result[0].services);
+      setSuperCategory(() => {
+        const result = categories.filter((category, i) =>
+          category.category === "Waxing" && category.subCategory === gender
+            ? category.superCategory
+            : null
+        );
+        return result[0]?.superCategory || "";
+      });
       setLoading(true);
     };
     !loading && gender && fetchData();
-  }, [gender, loading, shopId]);
+  }, [categories, gender, loading, shopId]);
 
   //Second Step----------------------------------------------------------------------------->
   //finding wether there is booking in front of this selected time here
@@ -224,6 +256,8 @@ const Reserve = () => {
 
       const arrays = filteredUnavailableDates();
 
+      console.log(arrays, "newArrays");
+
       const minFound = []; // declare an array to store objects
 
       //here we are storing all the varaibles with the true or false vaiables based on wether the block values found from the unavailableDates
@@ -248,6 +282,7 @@ const Reserve = () => {
         //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
         //  finding smallest number because if 10min found from options[selectedValue + 1]
 
+        console.log(matchedIndexes, "matchedIndexes");
         const smallestNumber = Math.min(...matchedIndexes);
 
         // dynamically declare and assign boolean variables
@@ -258,6 +293,8 @@ const Reserve = () => {
           minFound[i][`min${l * 10}found${i + 1}`] = smallestNumber === l;
         }
       });
+
+      console.log(minFound, "minFound");
 
       const allKeys = [];
 
@@ -274,14 +311,21 @@ const Reserve = () => {
 
       const filteredKeys = getFilteredKeys();
 
+      console.log({ allKeys, filteredKeys, minFound, seats }, "filteredKeys");
+
       const getDurations = () => {
         return filteredKeys
           .filter((key) => allKeys?.includes(key))
-          .map((key) => parseInt(key.match(/\d+/)[0]));
+          .map((key) => {
+            return {
+              dur: parseInt(key.match(/\d+/)[0]),
+              key,
+            };
+          });
       };
 
       const durations = getDurations();
-
+      console.log(durations, "durations");
       setDurations(durations);
       setShow(true);
 
@@ -577,30 +621,33 @@ const Reserve = () => {
         return null; // Stop execution of the whole function
       }
     }
-
+    console.log({ num1, num2, durationBySeat, seats }, "durationBySeat");
     const check = durationBySeat.map((duration) =>
       duration.value > (num1 - num2) * 10
         ? { seatNo: duration.seatNo, isReachedEnd: true }
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
+
+    console.log(check, "check");
+    //this is to compare with the whole shop time
     if (check) {
       const showEnd = check.map((item) => {
         if (item.isReachedEnd) {
-          // alert(
-          // `You can only book until ${
-          //     options[options.length - 1].value
-          //   }, so please select only ${
-          //     (num1 - num2) * 10
-          //   } mins in Seat No.${item.seatNo + 1} `
-          // )
-
           alert(
-            t("lessTimeLeft", {
-              time: options[options.length - 1].value,
-              mins: (num1 - num2) * 10,
-              seatNum: item.seatNo + 1,
-            })
+            `You can only book until ${
+              options[options.length - 1].value
+            }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
+              item.seatNo + 1
+            } `
           );
+
+          // alert(
+          //   t("lessTimeLeft", {
+          //     time: options[options.length - 1].value,
+          //     mins: (num1 - num2) * 10,
+          //     seatNum: item.seatNo + 1,
+          //   })
+          // );
           return true;
         } else {
           return false;
@@ -623,29 +670,41 @@ const Reserve = () => {
                   seatNum: item2 + 1,
                 })
               )
-            : //  alert(
-              //   `Others have a booking at ${
-              //     options[selectedValue + item1 / 10].value
-              //   }. Please choose only a option which is of ${item1} minutes in seat${
-              //     item2 + 1
-              //   } `
-              // );
-              alert(
-                t("reachingOthersTime1", {
-                  time: options[selectedValue + item1 / 10].value,
-                  mins: item1,
-                  seatNum: item2 + 1,
-                })
+            : alert(
+                `Others have a booking at ${
+                  options[selectedValue + item1 / 10].value
+                }. Please choose only a option which is of ${item1} minutes in seat${
+                  item2 + 1
+                } `
               );
+
+          // alert(
+          //   t("reachingOthersTime1", {
+          //     time: options[selectedValue + item1 / 10].value,
+          //     mins: item1,
+          //     seatNum: item2 + 1,
+          //   })
+          // );
 
           return 0;
         };
 
         const error = seats?.map((item) => {
           const output = durationBySeat?.map((item1) => {
-            return item?.id === item1?.id
-              ? item1?.value > durations[item?.index]
-                ? getReturn(durations[item?.index], item?.index)
+            return item?.id === item1?.id &&
+              item.index ===
+                Number(
+                  durations[durations.length > 1 ? item?.index : 0]?.key
+                    .split("")
+                    ?.reverse()[0]
+                ) -
+                  1
+              ? item1?.value >
+                durations[durations.length > 1 ? item?.index : 0]?.dur
+                ? getReturn(
+                    durations[durations.length > 1 ? item?.index : 0]?.dur,
+                    item?.index
+                  )
                 : null
               : null;
           });
@@ -754,6 +813,7 @@ const Reserve = () => {
             subCategory: gender,
             superCategory,
           });
+          // toast("preview");
           setSalonPreview(true);
         } else {
           toast("something wrong!");
@@ -899,12 +959,17 @@ const Reserve = () => {
               {/* {superCategories?.map((service, i) => {
                 return <option key={i}>{service}</option>;
               })} */}
-              <option>regular</option>
+              <option selected>regular</option>
             </select>
             <select className="md:w-52 w-auto" onChange={handleChange}>
               <option selected>{t("selectCategory")}</option>
+
               {salonServices?.map((service, i) => {
-                return <option key={i}>{service}</option>;
+                return (
+                  <option key={i} selected={service === category}>
+                    {service}
+                  </option>
+                );
               })}
             </select>
             {(sortBy !== null || categoriesOptions?.length > 0) && (
@@ -1111,9 +1176,9 @@ const Reserve = () => {
               ) : (
                 // )
                 <>
-                  <img src={Select} alt="select category" className="h-72" />
+                  {/* <img src={Select} alt="select category" className="h-72" /> */}
                   <p className="font-semibold">
-                    {t("selectCategoryToViewServices")}
+                    <span className="loader"></span>
                   </p>
                 </>
               )}
