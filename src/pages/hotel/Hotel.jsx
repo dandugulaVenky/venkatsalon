@@ -984,7 +984,7 @@ const Hotel = ({ smallBanners }) => {
         </div>
       </div>
 
-      <h1 className="hotelTitle px-4 pt-4">Popular Packages</h1>
+      {/* <h1 className="hotelTitle px-4 pt-4">Popular Packages</h1>
       {services?.length > 0 ? (
         <Test
           services={services}
@@ -994,7 +994,7 @@ const Hotel = ({ smallBanners }) => {
         />
       ) : (
         ""
-      )}
+      )} */}
       {loading ? (
         <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
           <span className="loader  "></span>
