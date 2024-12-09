@@ -856,7 +856,7 @@ const Hotel = ({ smallBanners }) => {
         <div
           className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
           style={{
-            boxShadow: "1px 0.75px 1.5px black",
+            boxShadow: "1px 0.76px 1.5px black",
           }}
         >
           <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
