@@ -23,10 +23,10 @@ import img2 from "../images/2.jpg";
 import img3 from "../images/3.jpg";
 
 const siteMetadata = {
-  title: "Home | Effortless Appointments With Easytym",
+  title: "Home | Effortless Appointments With Saalons",
   description:
-    "Easytym provides reliable salon booking services, connecting customers with top-quality beauty parlours and professional ironing services.",
-  canonical: "https://easytym.com",
+    "Saalons provides reliable salon booking services, connecting customers with top-quality beauty parlours",
+  canonical: "https://saalons.com",
 };
 
 const Home = ({ endRef, smallBanners }) => {

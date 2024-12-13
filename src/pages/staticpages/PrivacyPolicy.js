@@ -10,7 +10,7 @@ const siteMetadata = {
   title: "Ensuring User Privacy: SEO Privacy Policy",
   description:
     "Learn how we collect, use, and protect personal information to ensure a secure and transparent online experience. Discover our data handling practices, cookie usage, and user rights to empower you with control over your privacy.",
-  canonical: "https://easytym.com/privacy-policy",
+  canonical: "https://saalons.com/privacy-policy",
 };
 
 const PrivacyPolicy = () => {

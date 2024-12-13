@@ -806,7 +806,7 @@ const Reserve = () => {
             ownerNumber,
             bookId: id,
             user,
-            link: "https://easytym.com/history",
+            link: "https://saalons.com/history",
             dates,
             previewServices,
             type,

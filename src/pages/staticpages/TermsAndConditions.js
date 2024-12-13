@@ -9,7 +9,7 @@ const siteMetadata = {
   title: "Clear Guidelines : Terms and Conditions",
   description:
     "Understand the rights and responsibilities of both users and our company, ensuring a fair and transparent relationship. Explore the terms regarding content usage, intellectual property, limitations of liability, and dispute resolution. By reading and agreeing to our terms and conditions, you can confidently engage with our SEO services.",
-  canonical: "https://easytym.com/terms-and-conditions",
+  canonical: "https://saalons.com/terms-and-conditions",
 };
 
 const TermsAndConditions = () => {
@@ -26,16 +26,16 @@ const TermsAndConditions = () => {
           <strong>Terms and Conditions</strong>
         </h2>
 
-        <p>Welcome to easytym!</p>
+        <p>Welcome to Saalons!</p>
 
         <p>
           These terms and conditions outline the rules and regulations for the
-          use of easytym's Website, located at www.easytym.com.
+          use of saalons's Website, located at www.saalons.com.
         </p>
 
         <p>
           By accessing this website we assume you accept these terms and
-          conditions. Do not continue to use easytym if you do not agree to take
+          conditions. Do not continue to use saalons if you do not agree to take
           all of the terms and conditions stated on this page.
         </p>
 
@@ -75,8 +75,8 @@ const TermsAndConditions = () => {
         </h3>
 
         <p>
-          We employ the use of cookies. By accessing easytym, you agreed to use
-          cookies in agreement with the easytym's Privacy Policy.{" "}
+          We employ the use of cookies. By accessing saalons, you agreed to use
+          cookies in agreement with the saalon's Privacy Policy.{" "}
         </p>
 
         <p>
@@ -92,36 +92,36 @@ const TermsAndConditions = () => {
         </h3>
 
         <p>
-          Unless otherwise stated, easytym and/or its licensors own the
-          intellectual property rights for all material on easytym. All
+          Unless otherwise stated, saalons and/or its licensors own the
+          intellectual property rights for all material on saalons. All
           intellectual property rights are reserved. You may access this from
-          easytym for your own personal use subjected to restrictions set in
+          saalons for your own personal use subjected to restrictions set in
           these terms and conditions.
         </p>
 
         <p>You must not:</p>
         <ul>
-          <li>Republish material from easytym</li>
-          <li>Sell, rent or sub-license material from easytym</li>
-          <li>Reproduce, duplicate or copy material from easytym</li>
-          <li>Redistribute content from easytym</li>
+          <li>Republish material from saalons</li>
+          <li>Sell, rent or sub-license material from saalons</li>
+          <li>Reproduce, duplicate or copy material from saalons</li>
+          <li>Redistribute content from saalons</li>
         </ul>
 
         <p>
           Parts of this website offer an opportunity for users to post and
           exchange opinions and information in certain areas of the website.
-          easytym does not filter, edit, publish or review Comments prior to
+          saalons does not filter, edit, publish or review Comments prior to
           their presence on the website. Comments do not reflect the views and
-          opinions of easytym,its agents and/or affiliates. Comments reflect the
+          opinions of saalons,its agents and/or affiliates. Comments reflect the
           views and opinions of the person who post their views and opinions. To
-          the extent permitted by applicable laws, easytym shall not be liable
+          the extent permitted by applicable laws, saalons shall not be liable
           for the Comments or for any liability, damages or expenses caused
           and/or suffered as a result of any use of and/or posting of and/or
           appearance of the Comments on this website.
         </p>
 
         <p>
-          easytym reserves the right to monitor all Comments and to remove any
+          saalons reserves the right to monitor all Comments and to remove any
           Comments which can be considered inappropriate, offensive or causes
           breach of these Terms and Conditions.
         </p>
@@ -150,7 +150,7 @@ const TermsAndConditions = () => {
         </ul>
 
         <p>
-          You hereby grant easytym a non-exclusive license to use, reproduce,
+          You hereby grant saalons a non-exclusive license to use, reproduce,
           edit and authorize others to use, reproduce and edit any of your
           Comments in any and all forms, formats or media.
         </p>
@@ -208,7 +208,7 @@ const TermsAndConditions = () => {
           that: (a) the link would not make us look unfavorably to ourselves or
           to our accredited businesses; (b) the organization does not have any
           negative records with us; (c) the benefit to us from the visibility of
-          the hyperlink compensates the absence of easytym; and (d) the link is
+          the hyperlink compensates the absence of saalons; and (d) the link is
           in the context of general resource information.
         </p>
 
@@ -222,7 +222,7 @@ const TermsAndConditions = () => {
         <p>
           If you are one of the organizations listed in paragraph 2 above and
           are interested in linking to our website, you must inform us by
-          sending an e-mail to easytym. Please include your name, your
+          sending an e-mail to saalons. Please include your name, your
           organization name, contact information as well as the URL of your
           site, a list of any URLs from which you intend to link to our Website,
           and a list of the URLs on our site to which you would like to link.
@@ -242,7 +242,7 @@ const TermsAndConditions = () => {
         </ul>
 
         <p>
-          No use of easytym's logo or other artwork will be allowed for linking
+          No use of saalons's logo or other artwork will be allowed for linking
           absent a trademark license agreement.
         </p>
 

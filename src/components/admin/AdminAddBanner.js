@@ -104,7 +104,7 @@ const AdminAddBanner = () => {
             6 - shopData?.images?.length
           } images because this shop already has ${
             shopData?.images?.length
-          } images! As Easytym supports only 6 images as per today!`
+          } images! As Saalons supports only 6 images as per today!`
         );
       }
     } catch (error) {
@@ -178,7 +178,7 @@ const AdminAddBanner = () => {
           </p>
           <p className="text-red-400 font-semibold px-4">
             Note2 : If you want to update any other details, please contact
-            easytym
+            Saalons
           </p>
           <form
             onSubmit={submitForm}

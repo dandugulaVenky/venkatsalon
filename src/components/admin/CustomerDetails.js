@@ -160,7 +160,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           shopName: shopData.name,
           ownerEmail: email,
           ownerNumber: phone,
-          link: "https://easytym.com/history",
+          link: "https://saalons.com/history",
         },
         { withCredentials: true }
       );
@@ -231,7 +231,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
             shopName: shopData.name,
             ownerEmail: email,
             ownerNumber: phone,
-            link: "https://easytym.com/history",
+            link: "https://saalons.com/history",
           },
           { withCredentials: true }
         );

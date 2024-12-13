@@ -13,8 +13,8 @@ import axiosInstance from "../../components/axiosInterceptor";
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
   description:
-    "Join EasyTym today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
-  canonical: "https://easytym.com/contact-us",
+    "Join Saalons today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
+  canonical: "https://saalons.com/contact-us",
 };
 
 export default function Contact({ company }) {

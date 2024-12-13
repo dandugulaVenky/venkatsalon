@@ -7,10 +7,10 @@ import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
-  title: "Discover EasyTym | Know About Us",
+  title: "Discover Saalons | Know About Us",
   description:
-    "Join EasyTym today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
-  canonical: "https://easytym.com/about-us",
+    "Join Saalons today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
+  canonical: "https://saalons.com/about-us",
 };
 
 const About = () => {
