@@ -75,7 +75,7 @@ export default class AutoComplete extends React.Component {
     };
 
     return (
-      <div className="flex items-center justify-center  overflow-auto ">
+      <div className="flex items-center justify-center overflow-auto ">
         <PlacesAutocomplete
           value={this.state.address}
           onChange={this.handleChange}
@@ -88,7 +88,7 @@ export default class AutoComplete extends React.Component {
             loading,
           }) => (
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-16 md:mt-4">
                 <input
                   {...getInputProps({
                     placeholder: "Search Places ...",

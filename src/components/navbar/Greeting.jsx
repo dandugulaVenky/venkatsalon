@@ -14,6 +14,7 @@ import { SearchContext } from "../../context/SearchContext";
 import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { ToastContainer } from "react-toastify";
+import SaalonsLogo from "../../pages/images/saalonsT.png";
 import "./greeting.scss";
 
 // const shortenString = (inputString) => {
@@ -109,7 +110,7 @@ const Greeting = ({ bestRef }) => {
             <div className="flex items-center justify-center col-span-2">
               <Link to="/">
                 <img
-                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  src={SaalonsLogo}
                   alt="logo"
                   className={`${
                     isScrolled ? "greeting-imgs1" : "greeting-imgs2"

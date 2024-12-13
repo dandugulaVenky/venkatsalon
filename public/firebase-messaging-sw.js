@@ -89,11 +89,7 @@ self.addEventListener("notificationclick", (event) => {
       .then(function (clientList) {
         for (var i = 0; i < clientList.length; i++) {
           var client = clientList[i];
-          if (
-            client.url ===
-              "https://main--profound-babka-e67f58.netlify.app/getStarted" &&
-            "focus" in client
-          ) {
+          if (client.url === "https://saalons.com" && "focus" in client) {
             return client.focus();
           }
         }

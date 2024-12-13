@@ -48,8 +48,8 @@ const SIdebar = () => {
       <div className="min-h-screen p-3 space-y-2 w-60 bg-gray-200  fixed right-0 top-0 bottom-0 z-50 scale-in-center ">
         <div className="flex items-center p-2 space-x-4">
           <img
-            src="https://source.unsplash.com/100x100/?portrait"
-            alt=""
+            src="https://th.bing.com/th?id=OIP.4j4jNaPU3bIzDJHBj6HDSwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
+            alt="https://th.bing.com/th?id=OIP.4j4jNaPU3bIzDJHBj6HDSwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
             className="w-12 h-12 rounded-full dark:bg-gray-500"
           />
           <div>

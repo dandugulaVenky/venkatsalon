@@ -59,6 +59,8 @@ const Home = ({ endRef, smallBanners }) => {
   // };
 
   useEffectOnce(() => {
+    toast("Currently in the testing phase...Live coming soon..");
+
     const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {

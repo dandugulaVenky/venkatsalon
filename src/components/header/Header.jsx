@@ -358,8 +358,6 @@ import React, { memo, useMemo } from "react";
 
 import "./header.css";
 import AutoComplete from "../AutoComplete";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 
 const Header = (props) => {
   const {

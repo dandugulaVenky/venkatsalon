@@ -4,12 +4,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
-
+import SaalonsLogo from "../../pages/images/saalonsT.png";
 import "./navbar.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBagShopping,
   faChevronCircleDown,
   faLocation,
 } from "@fortawesome/free-solid-svg-icons";
@@ -156,7 +155,7 @@ const Layout = ({ bestRef }) => {
             <div className="flex items-center justify-center">
               <Link to="/" onClick={scrollNow}>
                 <img
-                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  src={SaalonsLogo}
                   alt="logo"
                   className={`${isScrolled ? "imgs1" : "imgs2"}`}
                 />
