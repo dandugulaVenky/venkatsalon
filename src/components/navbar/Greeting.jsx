@@ -36,7 +36,7 @@ const Greeting = ({ bestRef }) => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      if (scrollY >= 170) {
+      if (scrollY >= 1) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
@@ -119,7 +119,7 @@ const Greeting = ({ bestRef }) => {
                 />
               </Link>
             </div>
-            <div className="pl-9 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-10">
+            <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-8">
               <FontAwesomeIcon
                 icon={faLocationPinLock}
                 size="lg"
@@ -135,8 +135,8 @@ const Greeting = ({ bestRef }) => {
                 />
               )}
             </div>
-            {/* <div className="col-span-2 flex items-center justify-center "> */}
-            {/* {pathname.includes("iron") && (
+            <div className="col-span-2 flex items-center justify-center ">
+              {/* {pathname.includes("iron") && (
                 <Link to="/iron/cart">
                   <a className=" font-semibold md:text-lg text-xs " href="###">
                     <FontAwesomeIcon icon={faCartShopping} color="black" />
@@ -148,14 +148,14 @@ const Greeting = ({ bestRef }) => {
                   </a>
                 </Link>
               )} */}
-            {/* {user ? ( */}
-            {/* "" */}
-            {/* ) : ( */}
-            {/* <Link to="/login" className="ml-5 text-sm font-bold">
+              {user ? (
+                ""
+              ) : (
+                <Link to="/login" className="ml-5 text-sm font-bold">
                   Login
                 </Link>
-              )} */}
-            {/* </div> */}
+              )}
+            </div>
           </div>
         </div>
       </div>

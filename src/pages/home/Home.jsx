@@ -198,22 +198,20 @@ const Home = ({ endRef, smallBanners }) => {
       {/* {w < 768 && <Greeting bestRef={endRef} />} */}
       <Seo props={siteMetadata} />
 
-      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5   md:py-6   lg:py-0 lg:pb-5">
+      <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-2 md:py-6   lg:py-0 lg:pb-5">
         <div
-          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 "
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-10"
           style={{ minHeight: "430px" }}
         >
           <div className="">
-            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] absolute z-10 top-40 md:static">
+            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
               {t("welcome")}
             </h1>
 
-            <div className="col-span-12 md:col-span-6 block md:hidden relative md:static">
+            <div className="col-span-12 md:col-span-6 block md:hidden">
               {/* {!smallBanners ? ( */}
               <img
-                src={
-                  "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734166304/mob_fdgtcd.png"
-                }
+                src={Giffer}
                 alt="gif"
                 style={{
                   backgroundSize: "cover",
@@ -232,7 +230,7 @@ const Home = ({ endRef, smallBanners }) => {
               )} */}
             </div>
 
-            <h1 className="text-white md:text-gray-700 font-bold py-3 absolute bottom-8 right-2/4 left-5 md:static md:block">
+            <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
               {t("welcomeMessage")}
             </h1>
           </div>
