@@ -20,7 +20,7 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 // import banner5 from "../images/banner5.jpg";
 import img1 from "../images/1.jpg";
 import img2 from "../images/2.jpg";
-import img3 from "../images/3.jpg";
+import img3 from "../images/5.jpg";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Saalons",
