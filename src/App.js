@@ -56,6 +56,7 @@ import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
 import AdminAppointments from "./pages/admin/AdminAppointments";
 import ForgotPassword from "./pages/login/ForgotPassword";
 import ResetPassword from "./pages/login/ResetPassword";
+import MyBarbers from "./pages/admin/MyBarbers";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -193,6 +194,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <MyServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-barbers"
+              element={
+                <ProtectedRoute>
+                  <MyBarbers />
                 </ProtectedRoute>
               }
             />

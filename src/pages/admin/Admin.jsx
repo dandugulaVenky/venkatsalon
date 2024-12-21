@@ -67,6 +67,9 @@ const Admin = () => {
       case "services":
         navigate("/admin/my-services");
         break;
+      case "myBarbers":
+        navigate("/admin/my-barbers");
+        break;
       case "addServices":
         navigate("/admin/add-services");
         break;
@@ -120,6 +123,12 @@ const Admin = () => {
               onClick={() => handleClick("services")}
             >
               <p>{t("myServices")}</p>
+            </div>
+            <div
+              className="card p-5 w-full"
+              onClick={() => handleClick("myBarbers")}
+            >
+              <p>My Barbers</p>
             </div>
             <div
               className="card p-5 w-full"

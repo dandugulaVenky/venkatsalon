@@ -1,0 +1,487 @@
+import React, { useContext, useState, useEffect, useRef } from "react";
+import axios from "axios";
+import baseUrl from "../../utils/client";
+import { AuthContext } from "../../context/AuthContext";
+import axiosInstance from "../../components/axiosInterceptor";
+
+const MyBarbers = () => {
+  const [barberList, setBarberList] = useState([]);
+  const [existingBarberList, setExistingBarberList] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [loading1, setLoading1] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const fileInputRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [barberData, setBarberData] = useState({
+    name: "",
+    profileImage: null,
+    rawProfileImage: null,
+    experience: "",
+  });
+
+  const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
+
+  // Fetch existing barbers when the component mounts
+  useEffect(() => {
+    const fetchBarbers = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `${baseUrl}/api/hotels/barbers/${user?.shopId}`
+        );
+
+        setExistingBarberList(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+
+        console.error("Error fetching barbers:", error);
+        alert("Failed to fetch barbers.");
+      }
+    };
+
+    if (user?.shopId) {
+      setLoading(true);
+      fetchBarbers();
+    }
+  }, [user?.shopId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBarberData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // const handleFileChange = (e) => {
+  //   setBarberData((prev) => ({ ...prev, profileImage: e.target.files[0] }));
+  // };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileURL = URL.createObjectURL(file);
+
+      setBarberData((prev) => ({
+        ...prev,
+        profileImage: fileURL, // For preview
+        rawProfileImage: file, // For submission
+      }));
+    }
+  };
+
+  // const handleAddBarber = (e) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   if (
+  //     !barberData.name ||
+  //     !barberData.profileImage ||
+  //     !barberData.experience
+  //   ) {
+  //     alert("Please fill all the fields!");
+  //     setLoading(false);
+
+  //     return;
+  //   }
+
+  //   setBarberList((prev) => [...prev, barberData]);
+  //   setBarberData({ name: "", profileImage: null, experience: "" });
+  //   setLoading(false);
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.value = "";
+  //   }
+  // };
+
+  const handleAddBarber = (e) => {
+    e.preventDefault();
+
+    if (
+      !barberData.name ||
+      !barberData.rawProfileImage ||
+      !barberData.experience
+    ) {
+      alert("Please fill all the fields!");
+      return;
+    }
+
+    setBarberList((prev) => [
+      ...prev,
+      {
+        name: barberData.name,
+        experience: barberData.experience,
+        profileImage: barberData.profileImage, // Preview URL
+        rawProfileImage: barberData.rawProfileImage, // Actual file object
+      },
+    ]);
+
+    setBarberData({
+      name: "",
+      profileImage: null,
+      rawProfileImage: null,
+      experience: "",
+    });
+  };
+
+  const handleSubmitAll = async () => {
+    setLoading1(true);
+
+    const barbersToSend = barberList.map((barber) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        if (barber.rawProfileImage) {
+          reader.readAsDataURL(barber.rawProfileImage); // Use rawProfileImage
+          reader.onloadend = () => {
+            resolve({
+              shopId: user?.shopId,
+              barberId: barber._id || null,
+              name: barber.name,
+              experience: barber.experience,
+              profileImage: reader.result, // Base64-encoded image
+            });
+          };
+          reader.onerror = reject;
+        } else {
+          reject(new Error("No rawProfileImage found for barber"));
+        }
+      });
+    });
+
+    try {
+      const barbersData = await Promise.all(barbersToSend);
+
+      await axiosInstance.put(
+        `${baseUrl}/api/hotels/barbersUpdate/${user?.shopId}`,
+        {
+          barbers: barbersData,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      alert("Data submitted successfully!");
+      setBarberList([]);
+      setLoading1(false);
+      setCompleted(true);
+    } catch (err) {
+      console.error(err);
+      alert("Submission failed!");
+    } finally {
+      setLoading1(false);
+    }
+  };
+
+  // Edit Barber: Fill the form with the existing barber data
+  const handleEditBarber = (barber) => {
+    setEditingBarber(barber); // Set barber being edited
+    setBarberData({
+      name: barber.name,
+      experience: barber.experience,
+      profileImage: null,
+    });
+  };
+
+  // Update Barber
+  const handleUpdateBarber = async (e) => {
+    e.preventDefault();
+
+    if (!barberData.name || !barberData.experience) {
+      alert("Please fill all the fields!");
+      return;
+    }
+
+    try {
+      // Check if a new profile image is uploaded
+      let updatedProfileImage = barberData.profileImage;
+      let profileImageBase64 = null;
+
+      if (
+        updatedProfileImage &&
+        updatedProfileImage !== editingBarber.profileImage
+      ) {
+        // Convert the new profile image to Base64
+        const reader = new FileReader();
+        profileImageBase64 = await new Promise((resolve, reject) => {
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+          reader.readAsDataURL(updatedProfileImage);
+        });
+      }
+
+      // Prepare the payload to send to the backend
+      const payload = {
+        barberId: editingBarber._id, // Pass barberId to identify the barber
+        name: barberData.name,
+        experience: barberData.experience,
+        profileImage: profileImageBase64 || editingBarber.profileImage, // Use new image if provided
+      };
+
+      // Send the PUT request to the backend
+      const response = await axiosInstance.put(
+        `${baseUrl}/api/hotels/updateBarber/${payload.barberId}/${user?.shopId}`,
+        {
+          barber: payload,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Barber updated successfully!");
+        window.location.reload();
+      } else {
+        alert(response.data.data.message || "Failed to update barber.");
+      }
+    } catch (error) {
+      console.error("Error updating barber:", error);
+      alert("An error occurred while updating the barber.");
+    }
+  };
+
+  useEffect(() => {
+    const fetchBarbers = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `${baseUrl}/api/hotels/barbers/${user?.shopId}`
+        );
+
+        setExistingBarberList(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+
+        console.error("Error fetching barbers:", error);
+        alert("Failed to fetch barbers.");
+      }
+    };
+
+    fetchBarbers();
+  }, [completed]);
+
+  const handleDeleteBarber = async (barberId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this barber?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      // If this barber is from the backend (existing barber)
+      if (barberId) {
+        const response = await axiosInstance.delete(
+          `${baseUrl}/api/hotels/deleteBarber/${barberId}/${user?.shopId}`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          alert("Barber deleted successfully!");
+        } else {
+          alert(response.data.message || "Failed to delete barber.");
+          return;
+        }
+      }
+
+      // Update local state
+      setExistingBarberList((prevList) =>
+        prevList.filter((barber) => barber._id !== barberId)
+      );
+      setBarberList((prevList) =>
+        prevList.filter((barber) => barber._id !== barberId)
+      );
+    } catch (error) {
+      console.error("Error deleting barber:", error);
+      alert("An error occurred while deleting the barber.");
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-4">
+      {/* Existing Barbers List */}
+
+      {loading ? (
+        "loading..."
+      ) : existingBarberList?.length > 0 ? (
+        <div className="overflow-x-auto">
+          <h1>Existing Barbers</h1>
+          <table className="w-full bg-white rounded-md shadow-md mt-3 mb-6">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-2 text-left">Name</th>
+                <th className="px-4 py-2 text-left">Experience</th>
+                <th className="px-4 py-2 text-left">Profile Image</th>
+                <th className="px-4 py-2 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {existingBarberList.map((barber, index) => (
+                <tr key={index} className="border-t">
+                  <td className="px-4 py-2">{barber.name}</td>
+                  <td className="px-4 py-2">{barber.experience} years</td>
+                  <td className="px-4 py-2">
+                    <img
+                      src={barber.profileImage}
+                      alt="Profile"
+                      className="w-16 h-16 object-cover rounded-full"
+                    />
+                  </td>
+                  <td className="px-4 py-2">
+                    <button
+                      onClick={() => handleEditBarber(barber)}
+                      className="text-blue-500 hover:underline mr-4"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteBarber(barber._id)}
+                      className="text-red-500 hover:underline"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        "No exisitng barbers found! please add!"
+      )}
+
+      <form
+        onSubmit={editingBarber ? handleUpdateBarber : handleAddBarber}
+        className="bg-white p-6 rounded-md shadow-md mb-6"
+      >
+        <h2 className="text-2xl font-bold mb-4">
+          {editingBarber ? "Edit Barber Details" : "Add Barber Details"}
+        </h2>
+
+        {/* Name */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={barberData.name}
+            onChange={handleChange}
+            placeholder="Enter barber's name"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Profile Image */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Profile Image{" "}
+            {editingBarber && (
+              <span className="text-yellow-500">
+                *Upload a new photo otherwise previous will remain same
+              </span>
+            )}
+          </label>
+          <input
+            type="file"
+            ref={fileInputRef}
+            name="profileImage"
+            onChange={handleFileChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-gray-300 file:text-gray-700 file:bg-white hover:file:bg-gray-100"
+          />
+          {/* {editingBarber && barberData.profileImage && (
+            <img
+              src={barberData.profileImage}
+              alt="Profile"
+              className="w-16 h-16 object-cover mt-2"
+            />
+          )} */}
+        </div>
+
+        {/* Experience */}
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Experience (in years)
+          </label>
+          <input
+            type="number"
+            name="experience"
+            value={barberData.experience}
+            onChange={handleChange}
+            placeholder="Enter experience"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          {editingBarber
+            ? loading
+              ? "loading..."
+              : "Update Barber"
+            : "Add Barber"}
+        </button>
+      </form>
+
+      {barberList?.length > 0 && (
+        <div>
+          <h1>Add New Barbers</h1>
+
+          {
+            <div className="overflow-x-auto">
+              <table className="w-full bg-white rounded-md shadow-md mb-6">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-4 py-2 text-left">Name</th>
+                    <th className="px-4 py-2 text-left">Experience</th>
+                    <th className="px-4 py-2 text-left">Profile Image</th>
+                    <th className="px-4 py-2 text-left">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {barberList.map((barber, index) => (
+                    <tr key={index} className="border-t">
+                      <td className="px-4 py-2">{barber.name}</td>
+                      <td className="px-4 py-2">{barber.experience} years</td>
+                      <td className="px-4 py-2">
+                        <img
+                          src={barber.profileImage}
+                          alt="Profile"
+                          className="w-16 h-16 object-cover rounded-full"
+                        />
+                      </td>
+                      <td className="px-4 py-2">
+                        <button
+                          onClick={() => handleEditBarber(barber)}
+                          className="text-blue-500 hover:underline mr-4"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBarber(barber._id)}
+                          className="text-red-500 hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      )}
+
+      {barberList?.length > 0 && (
+        <button
+          onClick={handleSubmitAll}
+          className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 mb-20"
+        >
+          {loading1 ? "loading..." : "Submit All"}
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default MyBarbers;
