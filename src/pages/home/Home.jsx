@@ -187,11 +187,21 @@ const Home = ({ endRef, smallBanners }) => {
 
   !smallBanners
     ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979201/2_ojl5nt.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979205/3_jeyh64.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979556/com_1_h7kdal.svg",
       ])
-    : (images = [img1, img2, img3]);
+    : (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180221/2_l4nngn.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180240/1_vn4gd1.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180222/5_i5nu2y.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180218/4_wyl4vp.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180217/3_vwo4mk.svg",
+
+        // img1,
+        // img2,
+        // img3,
+      ]);
 
   return (
     <div className="h-auto">

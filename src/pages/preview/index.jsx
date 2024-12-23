@@ -16,7 +16,7 @@ const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
   const { state, setPreview, mergedServices } = props;
-
+  console.log(state, "state");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -52,6 +52,7 @@ const Preview = (props) => {
           options: seat.options,
           index: seat.index,
           show: push,
+          barber: seat?.barber?.name,
         };
       }
     });
@@ -128,6 +129,8 @@ const Preview = (props) => {
         return seat;
       }
     });
+
+    // console.log(manipulatedSelectedSeats, "manipulatedSelectedSeats");
 
     try {
       const { status } = await axiosInstance.post(
@@ -278,6 +281,9 @@ const Preview = (props) => {
                           <th className="md:p-5 p-4  md:text-md text-sm text-right">
                             {t("gender")}
                           </th>
+                          <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                            Barber/Beautician
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -299,6 +305,11 @@ const Preview = (props) => {
                             <td className="p-5 text-right md:text-md text-sm">
                               {state?.subCategory}
                             </td>
+                            {seat?.barber && (
+                              <td className="p-5 text-right md:text-md text-sm">
+                                {seat?.barber}
+                              </td>
+                            )}
                           </tr>
                         ))}
                       </tbody>

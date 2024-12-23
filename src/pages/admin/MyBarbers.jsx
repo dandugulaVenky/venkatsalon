@@ -3,6 +3,7 @@ import axios from "axios";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
 import axiosInstance from "../../components/axiosInterceptor";
+import { toast } from "react-toastify";
 
 const MyBarbers = () => {
   const [barberList, setBarberList] = useState([]);
@@ -20,7 +21,7 @@ const MyBarbers = () => {
   });
 
   const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
-
+  const [roomData, setRoomData] = useState([]);
   // Fetch existing barbers when the component mounts
   useEffect(() => {
     const fetchBarbers = async () => {
@@ -28,6 +29,12 @@ const MyBarbers = () => {
         const response = await axiosInstance.get(
           `${baseUrl}/api/hotels/barbers/${user?.shopId}`
         );
+
+        const { data } = await axiosInstance.get(
+          `${baseUrl}/api/hotels/room/${user?.shopId}`
+        );
+
+        setRoomData(data[0]?.roomNumbers);
 
         setExistingBarberList(response.data.data);
         setLoading(false);
@@ -101,6 +108,11 @@ const MyBarbers = () => {
       alert("Please fill all the fields!");
       return;
     }
+    console.log({ existingBarberList, barberList });
+
+    if (existingBarberList?.length + barberList?.length >= roomData?.length) {
+      return alert(`You can only add maximum of ${roomData?.length} barbers!`);
+    }
 
     setBarberList((prev) => [
       ...prev,
@@ -118,6 +130,9 @@ const MyBarbers = () => {
       rawProfileImage: null,
       experience: "",
     });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSubmitAll = async () => {
@@ -160,6 +175,13 @@ const MyBarbers = () => {
 
       alert("Data submitted successfully!");
       setBarberList([]);
+
+      setBarberData({
+        name: "",
+        profileImage: null,
+        rawProfileImage: null,
+        experience: "",
+      });
       setLoading1(false);
       setCompleted(true);
     } catch (err) {
@@ -294,7 +316,17 @@ const MyBarbers = () => {
       alert("An error occurred while deleting the barber.");
     }
   };
+  const handleDeleteBarber1 = async (index) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this barber?"
+    );
+    if (!confirmDelete) return;
 
+    // If this barber is from the backend (existing barber)
+    setBarberList((prevList) => prevList.filter((_, i) => i !== index));
+
+    // Update local state
+  };
   return (
     <div className="max-w-4xl mx-auto p-4">
       {/* Existing Barbers List */}
@@ -457,7 +489,7 @@ const MyBarbers = () => {
                           Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteBarber(barber._id)}
+                          onClick={() => handleDeleteBarber1(index)}
                           className="text-red-500 hover:underline"
                         >
                           Delete

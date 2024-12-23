@@ -15,7 +15,6 @@ import moment from "moment";
 
 import { useTranslation } from "react-i18next";
 
-import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
@@ -66,6 +65,7 @@ const Reserve = () => {
     breakTime,
     type,
     subType,
+    barbers,
   } = state !== null && state;
   const [data, setData] = useState();
 
@@ -108,7 +108,7 @@ const Reserve = () => {
     credentials: true,
   });
 
-  console.log(shopOwnerData, "shopOwnerData");
+  console.log(barbers, "shopOwnerData");
 
   const navigate = useNavigate();
 
@@ -332,7 +332,7 @@ const Reserve = () => {
       console.log("Done");
     };
     data && data[0]?.roomNumbers && totalTime && findDurationsToBlock();
-  }, [data, options, selectedValue, totalTime, value]);
+  }, [data, options, selectedValue, totalTime, value]); //wantedly i guesss
 
   //starting here checking availability of options, if not disable the select boxes accordingly
 
@@ -621,7 +621,7 @@ const Reserve = () => {
         return null; // Stop execution of the whole function
       }
     }
-    console.log({ num1, num2, durationBySeat, seats }, "durationBySeat");
+    // console.log({ num1, num2, durationBySeat, seats }, "durationBySeat");
     const check = durationBySeat.map((duration) =>
       duration.value > (num1 - num2) * 10
         ? { seatNo: duration.seatNo, isReachedEnd: true }
@@ -690,6 +690,10 @@ const Reserve = () => {
         };
 
         const error = seats?.map((item) => {
+          if (item.options.length > 0 && !item?.barber) {
+            alert(`Please select a barber for seat number ${item?.index + 1}`);
+            throw new Error("Please select a barber for seat number");
+          }
           const output = durationBySeat?.map((item1) => {
             return item?.id === item1?.id &&
               item.index ===
@@ -773,6 +777,7 @@ const Reserve = () => {
 
         // updates dates with all the options to send to room unavilableDates with all the options to backend.
 
+        console.log(seats, "mawaaaaa");
         const dates = updatedDurationBySeat?.map((item, i) => {
           return {
             time: time,
@@ -915,6 +920,21 @@ const Reserve = () => {
     );
   };
 
+  const handleBarberSelection = (selectedBarber, seatId) => {
+    const updatedSeats = seats.map((seat) => {
+      if (seat.id === seatId) {
+        // Assign the selected barber to the current seat
+        return { ...seat, barber: selectedBarber };
+      } else if (seat.barber?._id === selectedBarber._id) {
+        // Remove the barber from other seats if already assigned
+        return { ...seat, barber: null };
+      }
+      return seat;
+    });
+
+    setSeats(updatedSeats);
+  };
+
   return (
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
@@ -992,11 +1012,11 @@ const Reserve = () => {
                 {show ? (
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
-
+                    const selectedOptions = new Set(seat.options);
                     const isDisabled = isAvailable(i);
                     return (
                       !isDisabled && (
-                        <div className="card  md:p-5 p-1.5 " key={i}>
+                        <div className="card md:p-5 p-1.5 " key={i}>
                           <h2
                             onClick={() =>
                               setShowSeats((prevSeats) => ({
@@ -1004,16 +1024,15 @@ const Reserve = () => {
                                 [i + 1]: !showSeats[i + 1],
                               }))
                             }
-                            className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right"
+                            className="mb-2 text-lg flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right"
                           >
                             <span>
                               {t("seat")} {i + 1}
                             </span>
-                            <span>&#8377; {seat ? seatValues.amount : 0} </span>
-                            <p className="flex items-center justify-between ">
+                            <span>&#8377; {seat ? seatValues.amount : 0}</span>
+                            <p className="flex items-center justify-between">
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
                               <span className="ml-1">
-                                {" "}
                                 {seat ? seatValues.time : 0}
                               </span>
                             </p>
@@ -1027,34 +1046,25 @@ const Reserve = () => {
                           </h2>
 
                           {showSeats[i + 1] === true && (
-                            <div className="overflow-x-auto w-full">
-                              <table className="min-w-full ">
-                                <thead className="border-b bg-gray-300 ">
-                                  <tr className="border-b-2 border-gray-200">
-                                    <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                      {t("serviceName")}
-                                    </th>
-                                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                      {t("price")}
-                                    </th>
-                                    {category === "packages" && (
-                                      <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                        {t("showinclusions")}
+                            <div>
+                              <div className="overflow-x-auto w-full">
+                                <table className="min-w-full">
+                                  <thead className="border-b bg-gray-300">
+                                    <tr className="border-b-2 border-gray-200">
+                                      <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                        {t("serviceName")}
                                       </th>
-                                    )}
-
-                                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                      {t("duration")}
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {show &&
-                                    categoriesOptions?.map((option, j) => {
-                                      const selectedOptions = new Set(
-                                        seat.options
-                                      );
-                                      return (
+                                      <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                        {t("price")}
+                                      </th>
+                                      <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                        {t("duration")}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {show &&
+                                      categoriesOptions?.map((option, j) => (
                                         <tr
                                           key={j}
                                           className="border-b-2 border-gray-200"
@@ -1076,7 +1086,6 @@ const Reserve = () => {
                                                   seat.index
                                                 )
                                               }
-                                              // disabled={isAvailable(i)}
                                             />
                                             <label className="text-gray-900">
                                               {option.service}
@@ -1102,10 +1111,56 @@ const Reserve = () => {
                                             {option.duration} {t("min")}
                                           </td>
                                         </tr>
-                                      );
-                                    })}
-                                </tbody>
-                              </table>
+                                      ))}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              <div>
+                                <h3 className="text-lg font-bold mt-5">
+                                  {t("Select a Barber")}
+                                </h3>
+                                <div className="grid grid-cols-3 gap-4 mt-3">
+                                  {barbers.map((barber) => {
+                                    const isBarberAssigned = seats.some(
+                                      (seat) => seat.barber?._id === barber._id
+                                    );
+
+                                    return (
+                                      <div
+                                        key={barber._id}
+                                        className={`p-3 border rounded-md ${
+                                          isBarberAssigned
+                                            ? "bg-gray-300 cursor-not-allowed"
+                                            : "bg-white"
+                                        }`}
+                                        onClick={() => {
+                                          if (!isBarberAssigned) {
+                                            handleBarberSelection(
+                                              barber,
+                                              seat.id
+                                            );
+                                          }
+                                        }}
+                                      >
+                                        <img
+                                          src={barber.profileImage}
+                                          alt={barber.name}
+                                          className="w-16 h-16 rounded-full"
+                                        />
+                                        <h4 className="mt-2 font-semibold">
+                                          {barber.name}
+                                        </h4>
+
+                                        <p>
+                                          {t("Experience")}: {barber.experience}{" "}
+                                          {t("years")}
+                                        </p>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>

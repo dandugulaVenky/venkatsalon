@@ -410,6 +410,7 @@ const Hotel = ({ smallBanners }) => {
           breakTime,
           type: data.type,
           subType: data.subType,
+          barbers: data.barbers,
         },
       });
       // } else if (user && type === "parlour") {

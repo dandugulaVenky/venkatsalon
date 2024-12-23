@@ -144,6 +144,9 @@ const BookingHistory = () => {
                             <span>
                               {i !== seat.options.length - 1 ? "," : "."}
                             </span>
+                            <span className="pl-3">
+                              Barber/Beautician: {seat.barber.name || ""}
+                            </span>
                           </span>
                         );
                       })}
