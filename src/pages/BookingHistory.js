@@ -142,10 +142,10 @@ const BookingHistory = () => {
                           <span className="ml-1 font-bold" key={i}>
                             {option.service}{" "}
                             <span>
-                              {i !== seat.options.length - 1 ? "," : "."}
+                              - Barber/Beautician: {seat.barber.name || ""}
                             </span>
-                            <span className="pl-3">
-                              Barber/Beautician: {seat.barber.name || ""}
+                            <span className="pr-3">
+                              {i !== seat.options.length - 1 ? "," : "."}
                             </span>
                           </span>
                         );
