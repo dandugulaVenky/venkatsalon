@@ -649,6 +649,8 @@ const Hotel = ({ smallBanners }) => {
       moment(value).format("Do MM") === moment(new Date()).format("Do MM")
         ? options.find((option) => option.value === roundedTime)?.id
         : 0;
+
+    // console.log(id, "idddddddddddddd");
     return (
       <div className="reserve  overscroll-none">
         <FontAwesomeIcon
@@ -695,7 +697,7 @@ const Hotel = ({ smallBanners }) => {
                   }
                 }
                 return (
-                  i >= id && (
+                  (i >= id || id === undefined) && (
                     <div
                       onClick={() => handleTime(option)}
                       className={classNames(
