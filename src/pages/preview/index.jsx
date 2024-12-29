@@ -177,16 +177,12 @@ const Preview = (props) => {
             key,
             amount: order.amount,
             currency: "INR",
-            name: "EASYTYM",
+            name: "Saalons",
             description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
             callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}`,
-            prefill: {
-              name: "Saalons",
-              email: "theservices@saalons.com",
-              contact: "+918919788492",
-            },
+
             notes: {
               address: "EasyTym Corporate Office",
             },
