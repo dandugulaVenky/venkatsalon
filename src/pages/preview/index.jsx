@@ -167,7 +167,8 @@ const Preview = (props) => {
           } = await axiosInstance.post(
             `${baseUrl}/api/payments/checkout`,
             {
-              amount: totalAmount,
+              // amount: totalAmount,
+              amount: 1,
             },
             { withCredentials: true }
           );
@@ -177,14 +178,14 @@ const Preview = (props) => {
             amount: order.amount,
             currency: "INR",
             name: "EASYTYM",
-            description: "SALOONS",
+            description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
             callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}`,
             prefill: {
-              name: "Test Team",
-              email: "test.test@example.com",
-              contact: "9999999999",
+              name: "Saalons",
+              email: "theservices@saalons.com",
+              contact: "+918919788492",
             },
             notes: {
               address: "EasyTym Corporate Office",
