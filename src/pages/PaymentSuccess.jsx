@@ -209,11 +209,12 @@ export const PaymentSuccess = () => {
     <div className="">
       <div className="md:h-[75vh] h-[65vh] flex flex-col items-center justify-center">
         {t("referenceNo")}.{referenceNum}
-        <img
-          src="https://media.giphy.com/media/mks5DcSGjhQ1a/giphy.gif"
-          alt="gif"
-          className="mt-2"
-        />
+        <p className="text-xl text-red-600 font-bold">
+          Please do not refresh ❌❌
+        </p>
+        <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
+          <span className="loader  "></span>
+        </div>
       </div>
     </div>
   );
