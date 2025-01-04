@@ -698,7 +698,7 @@ const Hotel = ({ smallBanners }) => {
                   }
                 }
                 return (
-                  (i >= id || id === undefined) && (
+                  (i >= id + 6 || id === undefined) && (
                     <div
                       onClick={() => handleTime(option)}
                       className={classNames(

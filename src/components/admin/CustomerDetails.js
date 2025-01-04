@@ -42,9 +42,9 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     // Calculate the time difference in milliseconds between the given time and the current time
     let timeDiff = time1Date.getTime() - currentDate.getTime();
 
-    // Check if the time difference is less than or equal to 1.5 hours (90 minutes)
-    if (timeDiff >= 90 * 60 * 1000) {
-      return 10; // The current time is 1.5 hours or less before the given time
+    // Check if the time difference is less than or equal to .5 hours (30 minutes)
+    if (timeDiff >= 30 * 60 * 1000) {
+      return 10; // The current time is .5 hours or less before the given time
     } else {
       // Compare the year, month, and day components
       if (
@@ -179,9 +179,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    if (result2 === -1) {
-      return toast("Cannot approve past times!");
-    }
+
     if (result2 === 1 || result2 === 10) {
       setLoading(false);
       return toast("Cannot approve Future times!");
@@ -279,6 +277,8 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     uniqueArr1 = Array.from(new Set(userBookingIds));
   }
 
+  console.log(moment().format("MMM Do YY") === date, "moment().format");
+
   return (
     <div className="reserve-admin px-4">
       <div className="relative border-2 border-white rounded p-3">
@@ -330,12 +330,10 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                           return (
                             <span className="">
                               {option.service}{" "}
-                              <span>
-                                {j !== seat.options.length - 1 ? ", " : ". "}
+                              <span className="">
+                                - Barber/Beautician: {seat.barber.name || ""}
                               </span>
-                              <span className="pl-3">
-                                Barber/Beautician: {seat.barber.name || ""}
-                              </span>
+                              {j !== seat.options.length - 1 ? ", " : ". "}
                             </span>
                           );
                         })}
@@ -370,43 +368,47 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                 <span className="buttonloader ml-2"></span>
               </p>
             ) : (
-              <div className="space-x-3">
-                <button
-                  className={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? "siCheckButton bg-blue-400 px-4"
-                      : "primary-button"
-                  }
-                  onClick={() => {
-                    item.isDone === "false" &&
-                      handleClick(uniqueArr, uniqueArr1);
-                  }}
-                  disabled={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? true
-                      : false
-                  }
-                >
-                  {item.isDone === "true"
-                    ? `${t("accepted")}`
-                    : `${t("markDone")}`}
-                </button>
-                <button
-                  className={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? "siCheckButton bg-red-400 px-4"
-                      : "danger-button"
-                  }
-                  onClick={() => item.isDone === "false" && handleCancel(user)}
-                  disabled={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? true
-                      : false
-                  }
-                >
-                  {t("cancel")}
-                </button>
-              </div>
+              moment().format("MMM Do YY") === date && (
+                <div className="space-x-3">
+                  <button
+                    className={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? "siCheckButton bg-blue-400 px-4"
+                        : "primary-button"
+                    }
+                    onClick={() => {
+                      item.isDone === "false" &&
+                        handleClick(uniqueArr, uniqueArr1);
+                    }}
+                    disabled={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? true
+                        : false
+                    }
+                  >
+                    {item.isDone === "true"
+                      ? `${t("accepted")}`
+                      : `${t("markDone")}`}
+                  </button>
+                  <button
+                    className={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? "siCheckButton bg-red-400 px-4"
+                        : "danger-button"
+                    }
+                    onClick={() =>
+                      item.isDone === "false" && handleCancel(user)
+                    }
+                    disabled={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? true
+                        : false
+                    }
+                  >
+                    {t("cancel")}
+                  </button>
+                </div>
+              )
             )}
           </div>
         </div>
