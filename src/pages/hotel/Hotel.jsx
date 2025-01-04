@@ -408,6 +408,7 @@ const Hotel = ({ smallBanners }) => {
           value: value,
           options: options,
           breakTime,
+          lunch,
           type: data.type,
           subType: data.subType,
           barbers: data.barbers,

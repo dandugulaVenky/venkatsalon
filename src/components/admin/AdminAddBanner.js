@@ -144,31 +144,7 @@ const AdminAddBanner = () => {
       console.log(error);
     }
   };
-  const [loading2, setLoading2] = useState(false);
 
-  const data1 = {
-    name: "Waleed",
-    amount: 1,
-    number: "7498608775",
-    MUID: "MUID" + Date.now(),
-    transactionId: "T" + Date.now(),
-  };
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    setLoading2(true);
-    await axiosInstance
-      .post(`${baseUrl}/api/phonepe/payment`, { ...data1 })
-      .then((res) => {
-        setTimeout(() => {
-          setLoading2(false);
-        }, 1500);
-      })
-      .catch((error) => {
-        setLoading2(false);
-        console.error(error);
-      });
-  };
   return (
     <div className="pt-6 pb-20">
       <div className="min-h-[86.2vh] flex flex-col items-center justify-center mx-2 ">
@@ -235,41 +211,6 @@ const AdminAddBanner = () => {
               ? "No images found!"
               : "Loading...."}
           </div>
-        </div>
-      </div>
-
-      <div className="main">
-        <div className="center">
-          {/* <img width={300} src={phonepe} alt="" /> */}
-          <h2 className="fs-4 mt-2">
-            <span className="text-danger fw-bold">LIVE</span> Payment
-            Integration
-          </h2>
-        </div>
-        <div className="card px-5 py-4 mt-5">
-          <form onSubmit={handlePayment}>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Name:</strong> {data1.name}
-              </p>
-            </div>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Number:</strong> {data1.number}
-              </p>
-            </div>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Amount:</strong> {data1.amount}Rs
-              </p>
-            </div>
-
-            <div className="col-12 center">
-              <button className="w-100 " type="submit">
-                Pay Now
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

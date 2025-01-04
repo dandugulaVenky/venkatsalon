@@ -63,6 +63,7 @@ const Reserve = () => {
     options,
     mergedServices,
     breakTime,
+    lunch,
     type,
     subType,
     barbers,
@@ -76,7 +77,7 @@ const Reserve = () => {
   const [allServices, setAllServices] = useState();
   const [showInclusions, setShowInclusions] = useState();
   const [superCategory, setSuperCategory] = useState("regular");
-  const [category, setCategory] = useState("Waxing");
+  const [category, setCategory] = useState();
   const [superCategories, setSuperCategories] = useState();
   const [gender, setGender] = useState(subType);
 
@@ -108,7 +109,7 @@ const Reserve = () => {
     credentials: true,
   });
 
-  console.log(barbers, "shopOwnerData");
+  // console.log(barbers, "shopOwnerData");
 
   const navigate = useNavigate();
 
@@ -205,17 +206,19 @@ const Reserve = () => {
 
       setSalonServices(services);
 
+      // console.log({ d: data[0]?.services, k: services }, "data[0]?.services");
+
       //setting directly subcategory
-      setCategory("Waxing");
+      setCategory(services[0]);
       const result = categories.filter((category, i) =>
-        category.category === "Waxing" && category.subCategory === gender
+        category.category === services[0] && category.subCategory === gender
           ? category.services
           : null
       );
       setCategoriesOptions(result[0].services);
       setSuperCategory(() => {
         const result = categories.filter((category, i) =>
-          category.category === "Waxing" && category.subCategory === gender
+          category.category === services[0] && category.subCategory === gender
             ? category.superCategory
             : null
         );
@@ -256,7 +259,7 @@ const Reserve = () => {
 
       const arrays = filteredUnavailableDates();
 
-      console.log(arrays, "newArrays");
+      // console.log(arrays, "newArrays");
 
       const minFound = []; // declare an array to store objects
 
@@ -282,7 +285,7 @@ const Reserve = () => {
         //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
         //  finding smallest number because if 10min found from options[selectedValue + 1]
 
-        console.log(matchedIndexes, "matchedIndexes");
+        // console.log(matchedIndexes, "matchedIndexes");
         const smallestNumber = Math.min(...matchedIndexes);
 
         // dynamically declare and assign boolean variables
@@ -294,7 +297,7 @@ const Reserve = () => {
         }
       });
 
-      console.log(minFound, "minFound");
+      // console.log(minFound, "minFound");
 
       const allKeys = [];
 
@@ -311,7 +314,7 @@ const Reserve = () => {
 
       const filteredKeys = getFilteredKeys();
 
-      console.log({ allKeys, filteredKeys, minFound, seats }, "filteredKeys");
+      // console.log({ allKeys, filteredKeys, minFound, seats }, "filteredKeys");
 
       const getDurations = () => {
         return filteredKeys
@@ -325,7 +328,7 @@ const Reserve = () => {
       };
 
       const durations = getDurations();
-      console.log(durations, "durations");
+      // console.log(durations, "durations");
       setDurations(durations);
       setShow(true);
 
@@ -578,12 +581,7 @@ const Reserve = () => {
       options.filter((option) => option.id === selectedValue)[0].id
     );
 
-    const lunchStart = Number(options[24].id);
-    const lunchEnd = Number(
-      options.filter((option) => option.id === selectedValue)[0].id
-    );
-
-    console.log(lunchStart - lunchEnd, "lunchStart - lunchEnd");
+    // console.log(breakTime, "breakTime");
 
     if (breakTime !== undefined) {
       const breakTimeFiltered = breakTime?.block.filter(
@@ -628,7 +626,7 @@ const Reserve = () => {
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
 
-    console.log(check, "check");
+    // console.log(check, "check");
     //this is to compare with the whole shop time
     if (check) {
       const showEnd = check.map((item) => {
@@ -719,8 +717,16 @@ const Reserve = () => {
         if (mergedArr.includes(0)) {
           return;
         }
+
+        const lunchStart = Number(options[36].id);
+        // const lunchEnd = Number(
+        //   options.filter((option) => option.id === selectedValue)[0].id
+        // );
+
         const check1 = durationBySeat.map((duration) =>
-          duration.value > (lunchStart - lunchEnd) * 10
+          lunchStart > selectedValue &&
+          lunchStart - selectedValue > 0 &&
+          duration.value > (lunchStart - selectedValue) * 10
             ? { seatNo: duration.seatNo, isReachedEnd: true }
             : { seatNo: duration.seatNo, isReachedEnd: false }
         );
@@ -728,7 +734,7 @@ const Reserve = () => {
         // lunchStart - lunchEnd > 0  because lunch timeat 1pm will be - if we select at 2pm
         if (check1) {
           const lunch = check1.map((item) => {
-            if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
+            if (item.isReachedEnd && lunchStart - selectedValue > 0) {
               // alert(
               //   `You can only book2 until ${
               //     options[selectedValue + 1].value
@@ -739,7 +745,7 @@ const Reserve = () => {
               alert(
                 t("ownerLunchTime", {
                   time: options[lunchStart].value,
-                  mins: (lunchStart - lunchEnd) * 10,
+                  mins: (lunchStart - selectedValue) * 10,
                   seatNum: item.seatNo + 1,
                 })
               );
@@ -777,7 +783,7 @@ const Reserve = () => {
 
         // updates dates with all the options to send to room unavilableDates with all the options to backend.
 
-        console.log(seats, "mawaaaaa");
+        // console.log(seats, "mawaaaaa");
         const dates = updatedDurationBySeat?.map((item, i) => {
           return {
             time: time,
@@ -848,7 +854,7 @@ const Reserve = () => {
   const ShowInclusions = () => {
     return (
       showInclusions?.inclusions?.length > 0 && (
-        <div className="reserve">
+        <div className="reserve items-center justify-center">
           <div className="overflow-x-auto  ">
             <FontAwesomeIcon
               icon={faClose}
@@ -856,10 +862,10 @@ const Reserve = () => {
               onClick={() => {
                 setShowInclusions(null);
               }}
-              className="right-40 absolute top-40 text-white"
+              className="right-20 absolute top-10 text-white"
             />
             <>
-              <div className="flex items-center justify-between  ">
+              <div className="flex items-center justify-between h-[10vh]  ">
                 <p className="text-white">
                   Cost of Services : &#8377;&nbsp;
                   {showInclusions?.inclusions.reduce(
@@ -969,7 +975,7 @@ const Reserve = () => {
               </select>
             )} */}
             <select
-              className="md:w-52 w-auto"
+              className="md:w-52 w-auto hidden"
               onChange={handleSuperCategoryChange}
               value={superCategory}
             >
@@ -1057,6 +1063,11 @@ const Reserve = () => {
                                       <th className="md:p-5 p-4 md:text-md text-sm text-right">
                                         {t("price")}
                                       </th>
+                                      {category === "packages" && (
+                                        <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                          Inclusions
+                                        </th>
+                                      )}
                                       <th className="md:p-5 p-4 md:text-md text-sm text-right">
                                         {t("duration")}
                                       </th>

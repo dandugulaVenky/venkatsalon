@@ -39,16 +39,20 @@ const PackagePreview = (props) => {
     let finalArr = {
       category: "packages",
       subCategory: services[0]?.subCategory,
+      superCategory: services[0]?.superCategory,
+
       services: {
         service: packageName,
         price: price,
         duration,
         category: "packages",
         subCategory: services[0]?.subCategory,
-
+        superCategory: services[0]?.superCategory,
         inclusions: serviceNames,
       },
     };
+
+    console.log(finalArr, "final");
 
     try {
       const { status } = await axiosInstance.post(
