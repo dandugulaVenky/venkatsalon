@@ -1132,7 +1132,7 @@ const Reserve = () => {
                                   {t("Select a Barber")}
                                 </h3>
                                 <div className="grid grid-cols-3 gap-4 mt-3">
-                                  {barbers.map((barber) => {
+                                  {barbers?.map((barber) => {
                                     const isBarberAssigned = seats.some(
                                       (seat) => seat.barber?._id === barber._id
                                     );

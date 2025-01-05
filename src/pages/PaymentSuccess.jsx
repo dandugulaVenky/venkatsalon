@@ -149,7 +149,7 @@ export const PaymentSuccess = () => {
           totalAmount: finalBookingDetails?.totalAmount,
           selectedSeats: selectedSeats1,
           referenceNumber: referenceNum,
-          link: "https://easytym.com/history",
+          link: "https://saalons.com/history",
         },
         { withCredentials: true }
       );

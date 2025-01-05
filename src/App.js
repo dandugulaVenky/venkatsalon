@@ -30,7 +30,7 @@ import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSucces
 
 import Reserve from "./components/reserve/Reserve";
 // import ParlorReserve from "./components/reserve/ParlorReserve";
-import Transactions from "./pages/admin/Transactions";
+
 import AdminOrders from "./pages/admin/AdminOrders";
 import Packages from "./pages/admin/Packages";
 import MyServices from "./pages/admin/MyServices";
@@ -57,6 +57,7 @@ import AdminAppointments from "./pages/admin/AdminAppointments";
 import ForgotPassword from "./pages/login/ForgotPassword";
 import ResetPassword from "./pages/login/ResetPassword";
 import MyBarbers from "./pages/admin/MyBarbers";
+import Rewards from "./pages/admin/Rewards";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -158,10 +159,10 @@ function App() {
               }
             />
             <Route
-              path="/admin/transactions"
+              path="/admin/rewards"
               element={
                 <ProtectedRoute>
-                  <Transactions />
+                  <Rewards />
                 </ProtectedRoute>
               }
             />

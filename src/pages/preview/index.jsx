@@ -16,7 +16,8 @@ const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
   const { state, setPreview, mergedServices } = props;
-  console.log(state, "state");
+  // console.log(state, "state");
+  const ConvenienceFee = state?.totalAmount * (15 / 100);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -348,15 +349,25 @@ const Preview = (props) => {
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>{t("tax")}</div>
-                    <div>&#8377; 30</div>
+                    <div>Convenience Fee</div>
+                    <div>&#8377; {ConvenienceFee} </div>
                   </div>
                 </li>
 
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("total")}</div>
-                    <div>&#8377; {state?.totalAmount + 30}</div>
+                    <div>&#8377; {state?.totalAmount + ConvenienceFee}</div>
+                  </div>
+                </li>
+
+                <li>
+                  <div className="mb-2 flex justify-between">
+                    <div className="text-red-500">
+                      Note* - We charge only convenience fee, Kindly pay the
+                      amount of remaining amount of &#8377;
+                      {state?.totalAmount} at the shop.
+                    </div>
                   </div>
                 </li>
 

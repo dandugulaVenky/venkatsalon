@@ -52,8 +52,8 @@ const Admin = () => {
     const input = value;
 
     switch (input) {
-      case "transactions":
-        navigate("/admin/transactions");
+      case "rewards":
+        navigate("/admin/rewards");
         break;
       case "orders":
         navigate("/admin/orders");
@@ -102,9 +102,9 @@ const Admin = () => {
           <div className="min-h-[85vh] flex flex-col justify-center w-[50%] cursor-pointer">
             <div
               className="card p-5 w-full"
-              onClick={() => handleClick("transactions")}
+              onClick={() => handleClick("rewards")}
             >
-              <p>{t("transactions")}</p>
+              <p>Rewards</p>
             </div>
             <div
               className="card p-5 w-full"

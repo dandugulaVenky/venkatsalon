@@ -45,7 +45,7 @@ export default function Login() {
   let w = window.innerWidth;
   useEffect(() => {
     // Req user for notification permission
-    secureLocalStorage.clear();
+    // secureLocalStorage.clear();
     w <= 768
       ? window.scrollTo(0, document.body.scrollHeight)
       : window.scrollTo(0, 0);

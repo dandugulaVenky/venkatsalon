@@ -105,10 +105,10 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    if (result2 !== 10) {
-      setLoading(false);
-      return toast("Cannot cancel now!");
-    }
+    // if (result2 !== 10) {
+    //   setLoading(false);
+    //   return toast("Cannot cancel now!");
+    // }
 
     try {
       await Promise.all(
@@ -155,11 +155,15 @@ const CustomerDetails = ({ item, setOpenModal }) => {
         {
           email: item.email,
           userNumber: item.phone,
-
+          userName: item.username,
           type: "cancel",
           shopName: shopData.name,
           ownerEmail: email,
           ownerNumber: phone,
+          dates: {
+            date: item.date,
+            time: item.time,
+          },
           link: "https://saalons.com/history",
         },
         { withCredentials: true }
@@ -186,7 +190,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     }
 
     if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
-      const { email, phone } = user;
+      // const { email, phone } = user;
       try {
         await Promise.all(
           uniqueArr.map((item) => {
@@ -221,18 +225,39 @@ const CustomerDetails = ({ item, setOpenModal }) => {
         );
 
         await axiosInstance.post(
+          `${baseUrl}/api/hotels/postRewards/${item.shopId}`,
+          {
+            rewardAmount: item.totalAmount * (15 / 100) * (5 / 100),
+            referenceNumber: item.referenceNumber,
+            //shopName we are using already in backend
+            phone: item.phone,
+
+            fromCustomer: item.username,
+            date: item.date,
+            time: item.time,
+            settled: false,
+          },
+          { withCredentials: true }
+        );
+
+        await axiosInstance.post(
           `${baseUrl}/api/sendmail`,
           {
             email: item.email,
             userNumber: item.phone,
+            userName: item.username,
+            referenceNumber: item.referenceNumber,
             //shopName we are using already in backend
             shopName: shopData.name,
-            ownerEmail: email,
-            ownerNumber: phone,
+            dates: {
+              date: item.date,
+              time: item.time,
+            },
             link: "https://saalons.com/history",
           },
           { withCredentials: true }
         );
+
         setOpenModal(false);
         toast("Done Successfully");
         setLoading(false);

@@ -16,11 +16,11 @@ import {
 import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
-import { Store } from "../../pages/ironing/ironing-utils/Store";
+// import { Store } from "../../pages/ironing/ironing-utils/Store";
 // import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
-import LanguageContext from "../../context/LanguageContext";
-import i18next from "../../i18n";
+// import LanguageContext from "../../context/LanguageContext";
+// import i18next from "../../i18n";
 import axiosInstance from "../axiosInterceptor";
 
 const shortenString = (inputString) => {
@@ -37,24 +37,26 @@ const scrollNow = () => {
 const Layout = ({ bestRef }) => {
   const { user, dispatch } = useContext(AuthContext);
 
-  const { state } = useContext(Store);
-  const { cart } = state;
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  // const { state } = useContext(Store);
+  // const { cart } = state;
+  // const [cartItemsCount, setCartItemsCount] = useState(0);
   const { pathname } = useLocation();
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
+
+  console.log(city, "city");
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
-  const { locale, setLocale } = useContext(LanguageContext);
-  const [ironing, setIroning] = useState(false);
-  i18next.on("languageChanged", (ing) => setLocale(i18next.language));
-  const handleChange = (event) => {
-    i18next.changeLanguage(event.target.value); //fr or
-  };
+  // const { locale, setLocale } = useContext(LanguageContext);
+  // const [ironing, setIroning] = useState(false);
+  // i18next.on("languageChanged", (ing) => setLocale(i18next.language));
+  // const handleChange = (event) => {
+  //   i18next.changeLanguage(event.target.value); //fr or
+  // };
 
   useEffect(() => {
     setIsScrolled(false);
@@ -78,14 +80,14 @@ const Layout = ({ bestRef }) => {
 
     scrollTimeoutIdRef.current = setTimeout(() => {
       window.addEventListener("scroll", handleScroll);
-      pathname.includes("/iron") && setIroning(true);
+      // pathname.includes("/iron") && setIroning(true);
     }, timeout);
 
     // Clean up the event listener and clear the timeout on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeoutIdRef.current);
-      setIroning(false);
+      // setIroning(false);
     };
   }, [pathname]);
 
@@ -114,9 +116,9 @@ const Layout = ({ bestRef }) => {
     setHeader(true);
   };
 
-  useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+  // useEffect(() => {
+  //   setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  // }, [cart.cartItems]);
 
   // const handleLanguageChange = () => {
   //   console.log("update");
