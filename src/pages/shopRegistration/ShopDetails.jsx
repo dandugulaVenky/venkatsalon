@@ -183,6 +183,11 @@ const ShopDetails = () => {
   }, [navigate, user]);
 
   const handleStateChange = (e) => {
+    if (e.target.value !== "Telangana") {
+      setSelectedState("");
+
+      return alert("We are currently only accepting shops from Telangana");
+    }
     setSelectedState(e.target.value);
     setSelectedDistrict(""); // Reset district when state changes
     setSelectedPincode(""); // Reset pincode when state changes
@@ -601,7 +606,7 @@ const ShopDetails = () => {
                 <option value="" disabled selected>
                   Select a pincode
                 </option>
-                {Object.keys(states[selectedState][selectedDistrict])?.map(
+                {/* {Object.keys(states[selectedState][selectedDistrict])?.map(
                   (postalCode, index) =>
                     states[selectedState][selectedDistrict][postalCode]?.map(
                       (pincodeObj, pincodeIndex) => (
@@ -610,7 +615,22 @@ const ShopDetails = () => {
                         </option>
                       )
                     )
-                )}
+                )} */}
+                {Array.from(
+                  new Set(
+                    Object.keys(
+                      states[selectedState][selectedDistrict]
+                    ).flatMap((postalCode) =>
+                      states[selectedState][selectedDistrict][postalCode].map(
+                        () => postalCode
+                      )
+                    )
+                  )
+                ).map((postalCode, index) => (
+                  <option key={index} value={postalCode}>
+                    {postalCode}
+                  </option>
+                ))}
               </select>
 
               <p className="text-red-500 py-2">{formErrors?.selectedPincode}</p>
