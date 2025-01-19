@@ -86,7 +86,7 @@ const Hotel = ({ smallBanners }) => {
 
   //Appointment or Booking
 
-  const [appointment, setAppointment] = useState("null");
+  const [appointment, setAppointment] = useState("booking");
 
   const [higlightBookingBox, setHighlightBookingBox] = useState(false);
 
@@ -964,7 +964,7 @@ const Hotel = ({ smallBanners }) => {
                 "Book an appointment!"
               ) : (
                 <select
-                  className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                  className="hidden  justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
                   onChange={(e) => setAppointment(e.target.value)}
                 >
                   <option value={"null"} disabled selected>
