@@ -145,10 +145,11 @@ export const PaymentSuccess = () => {
           dates: finalBookingDetails?.dates,
           shopName: finalBookingDetails?.shopName,
           ownerEmail: finalBookingDetails?.ownerEmail,
-          ownerNumber: finalBookingDetails?.ownerEmail,
+          ownerNumber: finalBookingDetails?.ownerNumber,
           totalAmount: finalBookingDetails?.totalAmount,
           selectedSeats: selectedSeats1,
           referenceNumber: referenceNum,
+          type: "newBooking",
           link: "https://saalons.com/history",
         },
         { withCredentials: true }

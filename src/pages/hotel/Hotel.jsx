@@ -964,14 +964,17 @@ const Hotel = ({ smallBanners }) => {
                 "Book an appointment!"
               ) : (
                 <select
+                  disabled
                   className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
                   onChange={(e) => setAppointment(e.target.value)}
                 >
                   <option value={"null"} disabled selected>
                     Select Booking Type
                   </option>
-                  <option value={"booking"}>Book Time And Services</option>
-                  <option value={"appointment"}>Book an appointment</option>
+                  <option value={"booking"} selected>
+                    Book an appointment
+                  </option>
+                  {/* <option value={"appointment"}>Book an appointment</option> */}
                 </select>
               )}
             </div>
