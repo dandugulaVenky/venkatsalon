@@ -37,6 +37,7 @@ const MyBarbers = () => {
   const [number, setNumber] = useState("");
   const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   // Fetch existing barbers when the component mounts
   useEffect(() => {
@@ -361,7 +362,6 @@ const MyBarbers = () => {
       const response = await setUpRecaptcha(number);
       setResult(response);
       setFlag(true);
-      setDisable(false);
     } catch (err) {
       toast(err.message);
       setFlag(false);
@@ -375,9 +375,13 @@ const MyBarbers = () => {
       {
         size: "invisible",
         callback: (response) => {
+          setDisable(false);
+          setOtpSent(true);
           // reCAPTCHA solved - allow signInWithPhoneNumber.
         },
         "expired-callback": () => {
+          setOtpSent(false);
+          setDisable(false);
           // Response expired. Ask user to re-enter.
         },
       },
@@ -524,7 +528,7 @@ const MyBarbers = () => {
           />
         </div>
 
-        {!phoneVerified && (
+        {
           <div className="space-y-2 mt-7">
             <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
@@ -537,19 +541,21 @@ const MyBarbers = () => {
               disabled={flag}
             />
             <div id="recaptcha-container"></div>
-            <button
-              className={` ${
-                number?.toString()?.length !== 13 || disable
-                  ? "default-button"
-                  : "primary-button"
-              } `}
-              onClick={getOtp}
-              disabled={disable || number?.toString()?.length !== 13}
-            >
-              {disable ? "Sending..." : t("getOtp")}
-            </button>
+            {!otpSent && (
+              <button
+                className={` ${
+                  number?.toString()?.length !== 13 || disable
+                    ? "default-button"
+                    : "primary-button"
+                } `}
+                onClick={getOtp}
+                disabled={disable || number?.toString()?.length !== 13}
+              >
+                {disable ? "Sending..." : t("getOtp")}
+              </button>
+            )}
           </div>
-        )}
+        }
 
         <div className="space-y-2">
           <input
