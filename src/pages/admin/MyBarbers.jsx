@@ -75,8 +75,7 @@ const MyBarbers = () => {
     const { name, value } = e.target;
     setBarberData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleChangeNumber = (e) => {
-    const { name, value } = e.target;
+  const handleChangeNumber = (name, value) => {
     setBarberData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -557,7 +556,7 @@ const MyBarbers = () => {
               defaultCountry="IN"
               name="number"
               value={barberData.number}
-              onChange={handleChangeNumber}
+              onChange={() => handleChangeNumber("number", barberData.number)}
               placeholder="Enter Phone Number"
               readOnly={disableNow}
               className="w-full"
