@@ -963,6 +963,7 @@ const Hotel = ({ smallBanners }) => {
               ) : appointment === "appointment" ? (
                 "Book an appointment!"
               ) : (
+                // inline-flex
                 <select
                   className="hidden  justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
                   onChange={(e) => setAppointment(e.target.value)}

@@ -1,9 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import axios from "axios";
+
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
 import axiosInstance from "../../components/axiosInterceptor";
 import { toast } from "react-toastify";
+import PhoneInput from "react-phone-number-input";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { auth } from "../../firebase";
+import { t } from "i18next";
 
 const MyBarbers = () => {
   const [barberList, setBarberList] = useState([]);
@@ -12,7 +16,7 @@ const MyBarbers = () => {
   const [loading1, setLoading1] = useState(false);
   const [completed, setCompleted] = useState(false);
   const fileInputRef = useRef(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [barberData, setBarberData] = useState({
     name: "",
     profileImage: null,
@@ -22,6 +26,16 @@ const MyBarbers = () => {
 
   const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
   const [roomData, setRoomData] = useState([]);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+
+  const [flag, setFlag] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [result, setResult] = useState("");
+  const [disable, setDisable] = useState(false);
+  const [number, setNumber] = useState("");
+  const [disableNow, setDisableNow] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   // Fetch existing barbers when the component mounts
   useEffect(() => {
     const fetchBarbers = async () => {
@@ -327,6 +341,63 @@ const MyBarbers = () => {
 
     // Update local state
   };
+
+  const getOtp = async (e) => {
+    e.preventDefault();
+    setDisableNow(true);
+    if (!number) return toast("Something is wrong!");
+
+    if (number.toString().length !== 13 || number === undefined) return;
+    try {
+      setDisable(true);
+      const response = await setUpRecaptcha(number);
+      setResult(response);
+      setFlag(true);
+      setDisable(false);
+    } catch (err) {
+      toast(err.message);
+      setFlag(false);
+      setDisable(false);
+    }
+  };
+
+  function setUpRecaptcha(number) {
+    const recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved - allow signInWithPhoneNumber.
+        },
+        "expired-callback": () => {
+          // Response expired. Ask user to re-enter.
+        },
+      },
+      auth
+    );
+    return recaptchaVerifier.verify().then(() => {
+      return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+    });
+  }
+
+  const verifyOtp = async (e) => {
+    e.preventDefault();
+
+    setDisableNow(false);
+    if (otp === "" || otp === null) return;
+    setDisable(true);
+
+    try {
+      await result.confirm(otp);
+      setPhoneVerified(true);
+      toast.success("Phone number verified successfully!");
+      setDisable(false);
+    } catch (err) {
+      toast.error(`${err.message} please recheck the otp and try again!`);
+      setDisable(false);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       {/* Existing Barbers List */}
@@ -440,6 +511,53 @@ const MyBarbers = () => {
             placeholder="Enter experience"
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+        </div>
+
+        {!phoneVerified && (
+          <div
+            style={{ display: !flag ? "block" : "none" }}
+            className="space-y-2 mt-7"
+          >
+            <label htmlFor="phone">{t("phoneTitle")}</label>
+            <PhoneInput
+              defaultCountry="IN"
+              value={number}
+              onChange={setNumber}
+              placeholder="Enter Phone Number"
+              readOnly={disableNow}
+              className="w-full"
+            />
+            <div id="recaptcha-container"></div>
+            <button
+              className={` ${
+                number?.toString()?.length !== 13 || disable
+                  ? "default-button"
+                  : "primary-button"
+              } `}
+              onClick={getOtp}
+              disabled={disable || number?.toString()?.length !== 13}
+            >
+              {disable ? "Sending..." : t("getOtp")}
+            </button>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <input
+            type="number"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter otp"
+            className="w-full"
+          />
+          <div id="recaptcha-container"></div>
+          <button
+            className={`${disable ? "default-button" : "primary-button"}`}
+            onClick={verifyOtp}
+            disabled={disable}
+          >
+            Verify
+          </button>
         </div>
 
         <button
