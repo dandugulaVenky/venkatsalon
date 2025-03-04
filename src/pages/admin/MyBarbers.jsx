@@ -557,23 +557,31 @@ const MyBarbers = () => {
           </div>
         }
 
-        <div className="space-y-2">
-          <input
-            type="number"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter otp"
-            className="w-full"
-          />
-          <div id="recaptcha-container"></div>
-          <button
-            className={`${disable ? "default-button" : "primary-button"}`}
-            onClick={verifyOtp}
-            disabled={disable1}
-          >
-            Verify
-          </button>
-        </div>
+        {phoneVerified && (
+          <div className="space-y-2"> Phone number verified successfully!</div>
+        )}
+
+        {!phoneVerified && (
+          <div className="space-y-2">
+            <input
+              type="number"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              placeholder="Enter otp"
+              className="w-full"
+            />
+            <div id="recaptcha-container"></div>
+            {
+              <button
+                className={`${disable ? "default-button" : "primary-button"}`}
+                onClick={verifyOtp}
+                disabled={disable1}
+              >
+                {disable1 ? "Verifying..." : "Verify"}
+              </button>
+            }
+          </div>
+        )}
 
         <button
           type="submit"
