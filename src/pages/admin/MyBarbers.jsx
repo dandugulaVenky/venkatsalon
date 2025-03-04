@@ -32,6 +32,8 @@ const MyBarbers = () => {
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
+  const [disable1, setDisable1] = useState(false);
+
   const [number, setNumber] = useState("");
   const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -220,7 +222,12 @@ const MyBarbers = () => {
   const handleUpdateBarber = async (e) => {
     e.preventDefault();
 
-    if (!barberData.name || !barberData.experience) {
+    if (
+      !barberData.name ||
+      !barberData.experience ||
+      !phoneVerified ||
+      !number
+    ) {
       alert("Please fill all the fields!");
       return;
     }
@@ -249,6 +256,7 @@ const MyBarbers = () => {
         name: barberData.name,
         experience: barberData.experience,
         profileImage: profileImageBase64 || editingBarber.profileImage, // Use new image if provided
+        phone: number,
       };
 
       // Send the PUT request to the backend
@@ -392,9 +400,12 @@ const MyBarbers = () => {
       setPhoneVerified(true);
       toast.success("Phone number verified successfully!");
       setDisable(false);
+      setDisable1(true);
     } catch (err) {
       toast.error(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
+      setFlag(false);
+      setDisable1(false);
     }
   };
 
@@ -514,10 +525,7 @@ const MyBarbers = () => {
         </div>
 
         {!phoneVerified && (
-          <div
-            style={{ display: !flag ? "block" : "none" }}
-            className="space-y-2 mt-7"
-          >
+          <div className="space-y-2 mt-7">
             <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
               defaultCountry="IN"
@@ -526,6 +534,7 @@ const MyBarbers = () => {
               placeholder="Enter Phone Number"
               readOnly={disableNow}
               className="w-full"
+              disabled={flag}
             />
             <div id="recaptcha-container"></div>
             <button
@@ -554,7 +563,7 @@ const MyBarbers = () => {
           <button
             className={`${disable ? "default-button" : "primary-button"}`}
             onClick={verifyOtp}
-            disabled={disable}
+            disabled={disable1}
           >
             Verify
           </button>
