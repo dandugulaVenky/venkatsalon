@@ -22,11 +22,13 @@ const MyBarbers = () => {
     profileImage: null,
     rawProfileImage: null,
     experience: "",
+    number: "",
+    phoneVerified: false,
   });
 
   const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
   const [roomData, setRoomData] = useState([]);
-  const [phoneVerified, setPhoneVerified] = useState(false);
+  // const [phoneVerified, setPhoneVerified] = useState(false);
 
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
@@ -34,7 +36,7 @@ const MyBarbers = () => {
   const [disable, setDisable] = useState(false);
   const [disable1, setDisable1] = useState(false);
 
-  const [number, setNumber] = useState("");
+  // const [number, setNumber] = useState("");
   const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -70,6 +72,10 @@ const MyBarbers = () => {
   }, [user?.shopId]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    setBarberData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleChangeNumber = (e) => {
     const { name, value } = e.target;
     setBarberData((prev) => ({ ...prev, [name]: value }));
   };
@@ -120,7 +126,9 @@ const MyBarbers = () => {
     if (
       !barberData.name ||
       !barberData.rawProfileImage ||
-      !barberData.experience
+      !barberData.experience ||
+      !barberData.phoneVerified ||
+      !barberData.number
     ) {
       alert("Please fill all the fields!");
       return;
@@ -137,7 +145,10 @@ const MyBarbers = () => {
         name: barberData.name,
         experience: barberData.experience,
         profileImage: barberData.profileImage, // Preview URL
-        rawProfileImage: barberData.rawProfileImage, // Actual file object
+        rawProfileImage: barberData.rawProfileImage,
+        phone: barberData.number,
+        phoneVerified: barberData.phoneVerified,
+        // Actual file object
       },
     ]);
 
@@ -146,6 +157,8 @@ const MyBarbers = () => {
       profileImage: null,
       rawProfileImage: null,
       experience: "",
+      phoneVerified: false,
+      number: "",
     });
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -167,7 +180,10 @@ const MyBarbers = () => {
               barberId: barber._id || null,
               name: barber.name,
               experience: barber.experience,
-              profileImage: reader.result, // Base64-encoded image
+              profileImage: reader.result,
+              phone: barber.number,
+              phoneVerified: barber.phoneVerified,
+              // Base64-encoded image
             });
           };
           reader.onerror = reject;
@@ -198,6 +214,8 @@ const MyBarbers = () => {
         profileImage: null,
         rawProfileImage: null,
         experience: "",
+        number: "",
+        phoneVerified: false,
       });
       setLoading1(false);
       setCompleted(true);
@@ -354,12 +372,16 @@ const MyBarbers = () => {
   const getOtp = async (e) => {
     e.preventDefault();
     setDisableNow(true);
-    if (!number) return toast("Something is wrong!");
+    if (!barberData.number) return toast("Something is wrong!");
 
-    if (number.toString().length !== 13 || number === undefined) return;
+    if (
+      barberData.number.toString().length !== 13 ||
+      barberData.number === undefined
+    )
+      return;
     try {
       setDisable(true);
-      const response = await setUpRecaptcha(number);
+      const response = await setUpRecaptcha(barberData.number);
       setResult(response);
       setFlag(true);
     } catch (err) {
@@ -401,7 +423,7 @@ const MyBarbers = () => {
 
     try {
       await result.confirm(otp);
-      setPhoneVerified(true);
+      setBarberData((prev) => ({ ...prev, phoneVerified: "true" }));
       toast.success("Phone number verified successfully!");
       setDisable(false);
       setDisable1(true);
@@ -533,8 +555,9 @@ const MyBarbers = () => {
             <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
               defaultCountry="IN"
-              value={number}
-              onChange={setNumber}
+              name="number"
+              value={barberData.number}
+              onChange={handleChangeNumber}
               placeholder="Enter Phone Number"
               readOnly={disableNow}
               className="w-full"
@@ -544,12 +567,14 @@ const MyBarbers = () => {
             {!otpSent && (
               <button
                 className={` ${
-                  number?.toString()?.length !== 13 || disable
+                  barberData.number?.toString()?.length !== 13 || disable
                     ? "default-button"
                     : "primary-button"
                 } `}
                 onClick={getOtp}
-                disabled={disable || number?.toString()?.length !== 13}
+                disabled={
+                  disable || barberData.number?.toString()?.length !== 13
+                }
               >
                 {disable ? "Sending..." : t("getOtp")}
               </button>
@@ -557,11 +582,11 @@ const MyBarbers = () => {
           </div>
         }
 
-        {phoneVerified && (
+        {barberData.phoneVerified && (
           <div className="space-y-2"> Phone number verified successfully!</div>
         )}
 
-        {!phoneVerified && (
+        {!barberData.phoneVerified && (
           <div className="space-y-2">
             <input
               type="number"
