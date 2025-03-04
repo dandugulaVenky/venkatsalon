@@ -244,8 +244,8 @@ const MyBarbers = () => {
     if (
       !barberData.name ||
       !barberData.experience ||
-      !phoneVerified ||
-      !number
+      !barberData.phoneVerified ||
+      !barberData.number
     ) {
       alert("Please fill all the fields!");
       return;
@@ -275,7 +275,7 @@ const MyBarbers = () => {
         name: barberData.name,
         experience: barberData.experience,
         profileImage: profileImageBase64 || editingBarber.profileImage, // Use new image if provided
-        phone: number,
+        phone: barberData.number,
       };
 
       // Send the PUT request to the backend
