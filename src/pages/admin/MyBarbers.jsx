@@ -119,7 +119,7 @@ const MyBarbers = () => {
   //   }
   // };
 
-  const handleAddBarber = (e) => {
+  const handleAddBarber = async (e) => {
     e.preventDefault();
 
     if (
@@ -138,62 +138,55 @@ const MyBarbers = () => {
       return alert(`You can only add maximum of ${roomData?.length} barbers!`);
     }
 
-    setBarberList((prev) => [
-      ...prev,
-      {
-        name: barberData.name,
-        experience: barberData.experience,
-        profileImage: barberData.profileImage, // Preview URL
-        rawProfileImage: barberData.rawProfileImage,
-        phone: barberData.number,
-        phoneVerified: barberData.phoneVerified,
-        // Actual file object
-      },
-    ]);
+    // setBarberList((prev) => [
+    //   ...prev,
+    //   {
+    //     name: barberData.name,
+    //     experience: barberData.experience,
+    //     profileImage: barberData.profileImage, // Preview URL
+    //     rawProfileImage: barberData.rawProfileImage,
+    //     phone: barberData.number,
+    //     phoneVerified: barberData.phoneVerified,
+    //     // Actual file object
+    //   },
+    // ]);
 
-    setBarberData({
-      name: "",
-      profileImage: null,
-      rawProfileImage: null,
-      experience: "",
-      phoneVerified: false,
-      number: "",
-    });
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
+    // setBarberData({
+    //   name: "",
+    //   profileImage: null,
+    //   rawProfileImage: null,
+    //   experience: "",
+    //   phoneVerified: false,
+    //   number: "",
+    // });
 
-  const handleSubmitAll = async () => {
     setLoading1(true);
 
-    const barbersToSend = barberList.map((barber) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+    const barbersToSend = new Promise((resolve, reject) => {
+      const reader = new FileReader();
 
-        if (barber.rawProfileImage) {
-          reader.readAsDataURL(barber.rawProfileImage); // Use rawProfileImage
-          reader.onloadend = () => {
-            resolve({
-              shopId: user?.shopId,
-              barberId: barber._id || null,
-              name: barber.name,
-              experience: barber.experience,
-              profileImage: reader.result,
-              phone: barber.number,
-              phoneVerified: barber.phoneVerified,
-              // Base64-encoded image
-            });
-          };
-          reader.onerror = reject;
-        } else {
-          reject(new Error("No rawProfileImage found for barber"));
-        }
-      });
+      if (barberData.rawProfileImage) {
+        reader.readAsDataURL(barberData.rawProfileImage); // Use rawProfileImage
+        reader.onloadend = () => {
+          resolve({
+            shopId: user?.shopId,
+            barberDataId: barberData._id || null,
+            name: barberData.name,
+            experience: barberData.experience,
+            profileImage: reader.result,
+            phone: barberData.number,
+            phoneVerified: barberData.phoneVerified,
+            // Base64-encoded image
+          });
+        };
+        reader.onerror = reject;
+      } else {
+        reject(new Error("No rawProfileImage found for barber"));
+      }
     });
 
     try {
-      const barbersData = await Promise.all(barbersToSend);
+      const barbersData = await Promise.resolve(barbersToSend);
 
       await axiosInstance.put(
         `${baseUrl}/api/hotels/barbersUpdate/${user?.shopId}`,
@@ -206,7 +199,6 @@ const MyBarbers = () => {
       );
 
       alert("Data submitted successfully!");
-      setBarberList([]);
 
       setBarberData({
         name: "",
@@ -224,7 +216,15 @@ const MyBarbers = () => {
     } finally {
       setLoading1(false);
     }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
+
+  // const handleSubmitAll = async () => {
+
+  // };
 
   // Edit Barber: Fill the form with the existing barber data
   const handleEditBarber = (barber) => {
@@ -619,7 +619,7 @@ const MyBarbers = () => {
         </button>
       </form>
 
-      {barberList?.length > 0 && (
+      {/* {barberList?.length > 0 && (
         <div>
           <h1>Add New Barbers</h1>
 
@@ -667,16 +667,16 @@ const MyBarbers = () => {
             </div>
           }
         </div>
-      )}
+      )} */}
 
-      {barberList?.length > 0 && (
+      {/* {barberList?.length > 0 && (
         <button
           onClick={handleSubmitAll}
           className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 mb-20"
         >
-          {loading1 ? "loading..." : "Submit All"}
+          {loading1 ? "loading..." : "Submit"}
         </button>
-      )}
+      )} */}
     </div>
   );
 };
