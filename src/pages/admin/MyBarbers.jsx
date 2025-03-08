@@ -22,8 +22,8 @@ const MyBarbers = () => {
     profileImage: null,
     rawProfileImage: null,
     experience: "",
-    number: "",
-    phoneVerified: false,
+    number: "+918919788492",
+    phoneVerified: true,
   });
 
   const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
@@ -555,7 +555,7 @@ const MyBarbers = () => {
           />
         </div>
 
-        {
+        {/* {
           <div className="space-y-2 mt-7">
             <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
@@ -564,7 +564,7 @@ const MyBarbers = () => {
               value={barberData.number}
               onChange={(value) => handleChangeNumber("number", value)}
               placeholder="Enter Phone Number"
-              readOnly={disableNow}
+              readOnly={disableNow || editingBarber}
               className="w-full"
               disabled={flag}
             />
@@ -577,21 +577,30 @@ const MyBarbers = () => {
                     : "primary-button"
                 } `}
                 onClick={getOtp}
-                // disabled={
-                //   disable || barberData.number?.toString()?.length !== 13
-                // }
+                disabled={
+                  disable ||
+                  barberData.number?.toString()?.length !== 13 ||
+                  editingBarber
+                    ? true
+                    : false
+                }
               >
                 {disable ? "Sending..." : t("getOtp")}
               </button>
             )}
           </div>
-        }
+        } */}
 
         {barberData.phoneVerified && (
-          <div className="space-y-2"> Phone number verified successfully!</div>
+          <div className="space-y-2">
+            {editingBarber
+              ? "In case of editing barber, you can't change the phone number!. Please contact us for further changes."
+              : ""}
+            <p> {barberData.number} number verified successfully!</p>
+          </div>
         )}
 
-        {!barberData.phoneVerified && (
+        {/* {!barberData.phoneVerified && (
           <div className="space-y-2">
             <input
               type="number"
@@ -611,7 +620,7 @@ const MyBarbers = () => {
               </button>
             }
           </div>
-        )}
+        )} */}
 
         <button
           type="submit"
