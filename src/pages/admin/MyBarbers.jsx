@@ -409,7 +409,7 @@ const MyBarbers = () => {
       auth
     );
     return recaptchaVerifier.verify().then(() => {
-      return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+      return signInWithPhoneNumber(auth, barberData.number, recaptchaVerifier);
     });
   }
 
@@ -422,7 +422,7 @@ const MyBarbers = () => {
 
     try {
       await result.confirm(otp);
-      setBarberData((prev) => ({ ...prev, phoneVerified: "true" }));
+      setBarberData((prev) => ({ ...prev, phoneVerified: true }));
       toast.success("Phone number verified successfully!");
       setDisable(false);
       setDisable1(true);
@@ -556,7 +556,7 @@ const MyBarbers = () => {
               defaultCountry="IN"
               name="number"
               value={barberData.number}
-              onChange={() => handleChangeNumber("number", barberData.number)}
+              onChange={(value) => handleChangeNumber("number", value)}
               placeholder="Enter Phone Number"
               readOnly={disableNow}
               className="w-full"
@@ -566,14 +566,14 @@ const MyBarbers = () => {
             {!otpSent && (
               <button
                 className={` ${
-                  barberData.number?.toString()?.length !== 13 || disable
+                  barberData.number?.length !== 13
                     ? "default-button"
                     : "primary-button"
                 } `}
                 onClick={getOtp}
-                disabled={
-                  disable || barberData.number?.toString()?.length !== 13
-                }
+                // disabled={
+                //   disable || barberData.number?.toString()?.length !== 13
+                // }
               >
                 {disable ? "Sending..." : t("getOtp")}
               </button>
