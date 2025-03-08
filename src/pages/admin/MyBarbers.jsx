@@ -237,6 +237,8 @@ const MyBarbers = () => {
       name: barber.name,
       experience: barber.experience,
       profileImage: null,
+      phoneVerified: barber.phoneVerified,
+      number: barber.phone,
     });
   };
 
