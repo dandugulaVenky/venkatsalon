@@ -134,7 +134,7 @@ const MyBarbers = () => {
     }
     console.log({ existingBarberList, barberList });
 
-    if (existingBarberList?.length + barberList?.length >= roomData?.length) {
+    if (existingBarberList?.length >= roomData?.length) {
       return alert(`You can only add maximum of ${roomData?.length} barbers!`);
     }
 
@@ -198,8 +198,6 @@ const MyBarbers = () => {
         }
       );
 
-      alert("Data submitted successfully!");
-
       setBarberData({
         name: "",
         profileImage: null,
@@ -210,6 +208,7 @@ const MyBarbers = () => {
       });
       setLoading1(false);
       setCompleted(true);
+      alert("Data submitted successfully!");
     } catch (err) {
       console.error(err);
       alert("Submission failed!");
