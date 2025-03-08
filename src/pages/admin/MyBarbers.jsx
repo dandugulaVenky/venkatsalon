@@ -206,7 +206,12 @@ const MyBarbers = () => {
         number: "",
         phoneVerified: false,
       });
+      setOtpSent(false);
+      setDisableNow(false);
+      setOtp("");
+      setDisable(false);
       setLoading1(false);
+      setDisable1(false);
       setCompleted(true);
       alert("Data submitted successfully!");
     } catch (err) {
