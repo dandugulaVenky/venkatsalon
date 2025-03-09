@@ -1,7 +1,25 @@
+@keyframes borderAnimation {
+  0% {
+    border-color: rgb(208, 161, 161);
+  }
+  25% {
+    border-color: rgb(156, 156, 201);
+  }
+  50% {
+    border-color: rgb(154, 192, 154);
+  }
+  75% {
+    border-color: rgb(157, 157, 139);
+  }
+  100% {
+    border-color: rgb(185, 175, 193);
+  }
+}
 .active {
-  border: 1px solid whitesmoke;
   padding: 10px;
   border-radius: 20px;
+  border: 3px solid;
+  animation: borderAnimation 2s linear infinite;
 }
 .headerBtn {
   background-color: #5151c0;

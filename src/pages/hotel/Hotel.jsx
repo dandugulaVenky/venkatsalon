@@ -31,7 +31,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 
 import options from "../../utils/time";
-import Test from "../../utils/Test";
+// import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
@@ -73,8 +73,10 @@ const Hotel = ({ smallBanners }) => {
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
+  let requests = data?.requests || [];
 
-  // console.log(data, "daaaaaaaaaaaaaata");
+  // console.log(data, "daaaaaaaaaaaaaata");+
+
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -412,6 +414,7 @@ const Hotel = ({ smallBanners }) => {
           type: data.type,
           subType: data.subType,
           barbers: data.barbers,
+          requests,
         },
       });
       // } else if (user && type === "parlour") {
@@ -518,130 +521,130 @@ const Hotel = ({ smallBanners }) => {
   };
   const [showTimings, setShowTimings] = useState(false);
 
-  const ShowAppointmentModals = useCallback(() => {
-    const appointmentPayment = async () => {
-      if (!user) {
-        navigate("/login", {
-          state: { destination: `/shops/${shopIdLocation}` },
-        });
-        return;
-      }
+  // const ShowAppointmentModals = useCallback(() => {
+  //   const appointmentPayment = async () => {
+  //     if (!user) {
+  //       navigate("/login", {
+  //         state: { destination: `/shops/${shopIdLocation}` },
+  //       });
+  //       return;
+  //     }
 
-      appointmentDispatch({
-        type: "NEW_APPOINTMENT",
-        payload: {
-          totalAmount: 20,
-          date: moment(value).format("MMM Do YY"),
-          shopName: data.name,
-          city: data.city,
-          phone: data.alternatePhone,
-          id: data._id,
-          status: "pending",
-        },
-      });
+  //     appointmentDispatch({
+  //       type: "NEW_APPOINTMENT",
+  //       payload: {
+  //         totalAmount: 20,
+  //         date: moment(value).format("MMM Do YY"),
+  //         shopName: data.name,
+  //         city: data.city,
+  //         phone: data.alternatePhone,
+  //         id: data._id,
+  //         status: "pending",
+  //       },
+  //     });
 
-      try {
-        await axiosInstance.post(
-          `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
-          { date: moment(value).format("MMM Do YY") },
-          { withCredentials: true }
-        );
-      } catch (error) {
-        console.log(error);
-        return alert(error.response.data.message);
-      }
+  //     try {
+  //       await axiosInstance.post(
+  //         `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
+  //         { date: moment(value).format("MMM Do YY") },
+  //         { withCredentials: true }
+  //       );
+  //     } catch (error) {
+  //       console.log(error);
+  //       return alert(error.response.data.message);
+  //     }
 
-      const {
-        data: { key },
-      } = await axiosInstance.get(`${baseUrl}/api/getkey`);
-      try {
-        const {
-          data: { order },
-        } = await axiosInstance.post(
-          `${baseUrl}/api/payments/appointment/checkout`,
-          {
-            amount: 20,
-          },
-          { withCredentials: true }
-        );
-        const token = sessionStorage.getItem("access_token");
+  //     const {
+  //       data: { key },
+  //     } = await axiosInstance.get(`${baseUrl}/api/getkey`);
+  //     try {
+  //       const {
+  //         data: { order },
+  //       } = await axiosInstance.post(
+  //         `${baseUrl}/api/payments/appointment/checkout`,
+  //         {
+  //           amount: 20,
+  //         },
+  //         { withCredentials: true }
+  //       );
+  //       const token = sessionStorage.getItem("access_token");
 
-        const options = {
-          key,
-          amount: order.amount,
-          currency: "INR",
-          name: "EASYTYM",
-          description: "SALONS & PARLOURS",
-          image: "https://avatars.githubusercontent.com/u/25058652?v=4",
-          order_id: order.id,
-          callback_url: `${baseUrl}/api/payments/appointment/paymentverification?token=${token}`,
-          prefill: {
-            name: "Test Team",
-            email: "test.test@example.com",
-            contact: "9999999999",
-          },
-          notes: {
-            address: "EasyTym Corporate Office",
-          },
-          theme: {
-            color: "#121212",
-          },
-          modal: {
-            ondismiss: function () {},
-          },
-        };
-        const razor = new window.Razorpay(options);
-        razor.open();
-      } catch (err) {
-        alert(err.response.data.message);
-      }
-    };
-    return (
-      <div className="reserve  overscroll-none">
-        <FontAwesomeIcon
-          icon={faClose}
-          size="xl"
-          color="black"
-          onClick={() => {
-            setAppointment("null");
-            document.body.style.overflow = "unset";
-          }}
-          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
-        />
+  //       const options = {
+  //         key,
+  //         amount: order.amount,
+  //         currency: "INR",
+  //         name: "EASYTYM",
+  //         description: "SALONS & PARLOURS",
+  //         image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+  //         order_id: order.id,
+  //         callback_url: `${baseUrl}/api/payments/appointment/paymentverification?token=${token}`,
+  //         prefill: {
+  //           name: "Test Team",
+  //           email: "test.test@example.com",
+  //           contact: "9999999999",
+  //         },
+  //         notes: {
+  //           address: "EasyTym Corporate Office",
+  //         },
+  //         theme: {
+  //           color: "#121212",
+  //         },
+  //         modal: {
+  //           ondismiss: function () {},
+  //         },
+  //       };
+  //       const razor = new window.Razorpay(options);
+  //       razor.open();
+  //     } catch (err) {
+  //       alert(err.response.data.message);
+  //     }
+  //   };
+  //   return (
+  //     <div className="reserve  overscroll-none">
+  //       <FontAwesomeIcon
+  //         icon={faClose}
+  //         size="xl"
+  //         color="black"
+  //         onClick={() => {
+  //           setAppointment("null");
+  //           document.body.style.overflow = "unset";
+  //         }}
+  //         className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+  //       />
 
-        <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[75%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
-          <p className="font-bold font-verdana text-center">
-            Date Selected - {moment(value).format("MMM Do YY")}
-          </p>
-          <p>
-            Note: If confirmed, you will recieve a call from shop owner to know
-            about the services and your convenient time! We will collect a
-            amount of 20 rs/- for booking confirmation.
-          </p>
-          <p className="pb-4">
-            In case of any queries, please
-            <Link to="/contact-us" className="text-[#00ccbb]">
-              &nbsp; contact us
-            </Link>
-            .
-          </p>
-          <button className="primary-button mt-4" onClick={appointmentPayment}>
-            Confirm
-          </button>
-        </div>
-      </div>
-    );
-  }, [
-    appointmentDispatch,
-    data._id,
-    data.alternatePhone,
-    data.city,
-    data.name,
-    navigate,
-    shopIdLocation,
-    user,
-    value,
-  ]);
+  //       <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[75%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+  //         <p className="font-bold font-verdana text-center">
+  //           Date Selected - {moment(value).format("MMM Do YY")}
+  //         </p>
+  //         <p>
+  //           Note: If confirmed, you will recieve a call from shop owner to know
+  //           about the services and your convenient time! We will collect a
+  //           amount of 20 rs/- for booking confirmation.
+  //         </p>
+  //         <p className="pb-4">
+  //           In case of any queries, please
+  //           <Link to="/contact-us" className="text-[#00ccbb]">
+  //             &nbsp; contact us
+  //           </Link>
+  //           .
+  //         </p>
+  //         <button className="primary-button mt-4" onClick={appointmentPayment}>
+  //           Confirm
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }, [
+  //   appointmentDispatch,
+  //   data._id,
+  //   data.alternatePhone,
+  //   data.city,
+  //   data.name,
+  //   navigate,
+  //   shopIdLocation,
+  //   user,
+  //   value,
+  // ]);
 
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
@@ -852,7 +855,7 @@ const Hotel = ({ smallBanners }) => {
         </CarouselBanner>
       </div>
 
-      {appointment === "appointment" && <ShowAppointmentModals />}
+      {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
         className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
@@ -870,7 +873,7 @@ const Hotel = ({ smallBanners }) => {
                   {appointment}
                   <FontAwesomeIcon
                     icon={faCircleXmark}
-                    className=" ml-4 cursor-pointer"
+                    className=" ml-4 cursor-pointer hidden"
                     size="lg"
                     onClick={() => setAppointment("null")}
                   />

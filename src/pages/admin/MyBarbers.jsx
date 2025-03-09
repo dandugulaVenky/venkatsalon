@@ -22,8 +22,8 @@ const MyBarbers = () => {
     profileImage: null,
     rawProfileImage: null,
     experience: "",
-    number: "+918919788492",
-    phoneVerified: true,
+    number: "",
+    phoneVerified: false,
   });
 
   const [editingBarber, setEditingBarber] = useState(null); // To store barber being edited
@@ -216,6 +216,8 @@ const MyBarbers = () => {
       alert("Data submitted successfully!");
     } catch (err) {
       console.error(err);
+      setLoading1(false);
+
       alert("Submission failed!");
     } finally {
       setLoading1(false);
@@ -555,7 +557,7 @@ const MyBarbers = () => {
           />
         </div>
 
-        {/* {
+        {
           <div className="space-y-2 mt-7">
             <label htmlFor="phone">{t("phoneTitle")}</label>
             <PhoneInput
@@ -589,7 +591,7 @@ const MyBarbers = () => {
               </button>
             )}
           </div>
-        } */}
+        }
 
         {barberData.phoneVerified && (
           <div className="space-y-2">
@@ -600,7 +602,7 @@ const MyBarbers = () => {
           </div>
         )}
 
-        {/* {!barberData.phoneVerified && (
+        {!barberData.phoneVerified && (
           <div className="space-y-2">
             <input
               type="number"
@@ -620,10 +622,11 @@ const MyBarbers = () => {
               </button>
             }
           </div>
-        )} */}
+        )}
 
         <button
           type="submit"
+          disabled={loading1}
           className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
         >
           {editingBarber

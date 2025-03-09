@@ -67,7 +67,28 @@ const Reserve = () => {
     type,
     subType,
     barbers,
+    requests,
   } = state !== null && state;
+  const { date: dater, time } = useContext(SearchContext);
+  const barberBlock = requests?.filter(
+    (item) =>
+      item.date === moment(value).format("MMM Do YY") &&
+      item.time === options[selectedValue]?.value &&
+      item.shopId === shopId
+  );
+  let findBarbers;
+  // console.log(barberBlock, "barberBlock");
+  if (barberBlock.length > 0) {
+    findBarbers = barberBlock.flatMap((item) =>
+      item.selectedSeats?.map((seat) => seat.barber._id)
+    );
+  }
+
+  // const findBarbers =
+  //   barberBlock && barberBlock?.selectedSeats.map((item) => item.barber._id);
+
+  // console.log(findBarbers, "findBarbers");
+
   const [data, setData] = useState();
 
   const [salonPreview, setSalonPreview] = useState(false);
@@ -97,8 +118,6 @@ const Reserve = () => {
   const [salonServices, setSalonServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const { date: dater, time } = useContext(SearchContext);
-
   const { user } = useContext(AuthContext);
 
   const {
@@ -108,8 +127,6 @@ const Reserve = () => {
   } = useFetch(`${baseUrl}/api/users/getOwnerDetails/${shopOwner}`, {
     credentials: true,
   });
-
-  // console.log(barbers, "shopOwnerData");
 
   const navigate = useNavigate();
 
@@ -941,6 +958,16 @@ const Reserve = () => {
     setSeats(updatedSeats);
   };
 
+  if (seats?.length > barbers?.length) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center">
+        <h1 className="text-center text-2xl text-gray-700">
+          Barbers are not available currently!
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
@@ -1020,6 +1047,7 @@ const Reserve = () => {
                     const seatValues = getTotalTime(seat);
                     const selectedOptions = new Set(seat.options);
                     const isDisabled = isAvailable(i);
+
                     return (
                       !isDisabled && (
                         <div className="card md:p-5 p-1.5 " key={i}>
@@ -1133,14 +1161,23 @@ const Reserve = () => {
                                 </h3>
                                 <div className="grid grid-cols-3 gap-4 mt-3">
                                   {barbers?.map((barber) => {
-                                    const isBarberAssigned = seats.some(
+                                    const isBarberAssigned = seats?.some(
                                       (seat) => seat.barber?._id === barber._id
                                     );
+
+                                    // console.log(barbers, findBarbers, "barber");
+                                    const isBooked = findBarbers?.some(
+                                      (item) => item === barber._id
+                                    );
+
+                                    if (isBooked) {
+                                      return null;
+                                    }
 
                                     return (
                                       <div
                                         key={barber._id}
-                                        className={`p-3 border rounded-md ${
+                                        className={`p-3 border rounded-md  ${
                                           isBarberAssigned
                                             ? "bg-gray-300 cursor-not-allowed"
                                             : "bg-white"

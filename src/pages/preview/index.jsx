@@ -118,7 +118,7 @@ const Preview = (props) => {
       superCategory,
     } = state;
 
-    console.log(superCategory, "superCtegory");
+    // console.log(selectedSeats, "selectedSeats");
 
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
       if (seat.options.length > 0) {
