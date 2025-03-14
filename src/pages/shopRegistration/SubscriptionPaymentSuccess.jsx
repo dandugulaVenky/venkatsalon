@@ -4,6 +4,7 @@ import axiosInstance from "../../components/axiosInterceptor";
 import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import useEffectOnce from "../../utils/UseEffectOnce";
+import { t } from "i18next";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -35,7 +36,7 @@ const SubscriptionPaymentSuccess = () => {
           { withCredentials: true }
         );
         if (response.status === 200) {
-          alert("willContactYouShortly");
+          alert(t("willContactYouShortly"));
           // Usage example
           removeCookie("new_hotel");
           navigate("/");
