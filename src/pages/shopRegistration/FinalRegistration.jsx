@@ -162,7 +162,7 @@ const FinalRegistration = () => {
         `${baseUrl}/api/payments/subscription/checkout`,
         {
           // amount: totalAmount,
-          amount: plan.price,
+          amount: 1,
         },
         { withCredentials: true }
       );
