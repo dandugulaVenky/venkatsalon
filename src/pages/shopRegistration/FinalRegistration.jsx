@@ -8,6 +8,19 @@ import Select from "../images/select.png";
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
 import axiosInstance from "../../components/axiosInterceptor";
+import { toast } from "react-toastify";
+
+function setCookieObject(name1, value, daysToExpire) {
+  const expires = new Date();
+  expires.setDate(expires.getDate() + daysToExpire);
+
+  // Serialize the object to JSON and encode it
+  const cookieValue =
+    encodeURIComponent(JSON.stringify(value)) +
+    (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
+
+  document.cookie = `${name1}=${cookieValue}; path=/`;
+}
 
 const FinalRegistration = () => {
   const [seats, setSeats] = useState("");
@@ -15,6 +28,7 @@ const FinalRegistration = () => {
   const [shopDetails, setShopDetails] = useState();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [paymentOptionTrue, setPaymentOptionTrue] = useState(false);
   const { t } = useTranslation();
 
   function getCookieObject(name) {
@@ -37,28 +51,49 @@ const FinalRegistration = () => {
     if (!shopDetails) {
       return alert(t("detailsAreNotUpToTheMark"));
     }
-    setLoading(true);
-    const arrayOfObjects = [];
-    for (let i = 1; i <= seats; i++) {
-      const newObj = {
-        number: i,
-      };
+    setPaymentOptionTrue(true);
 
-      arrayOfObjects.push(newObj);
-    }
+    // setLoading(true);
 
-    function removeCookie(name) {
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    }
-    console.log(user);
+    // try {
+    //   const response = await axiosInstance.post(
+    //     `${baseUrl}/api/shop_registration/new_registration`,
+    //     newhotel,
+    //     { withCredentials: true }
+    //   );
+    //   if (response.status === 200) {
+    //     setLoading(false);
+    //     alert(t("willContactYouShortly"));
+    //     // Usage example
+    //     removeCookie("user_info");
+    //     navigate("/");
+    //   } else {
+    //     alert(
+    //       "Something went wrong, please contact us at services@easytym.com"
+    //     );
+    //     setLoading(false);
+    //   }
+    // } catch (err) {
+    //   alert(err.response.data.message);
+    //   setLoading(false);
+
+    //   console.log(err, "err2");
+    // }
+
+    // console.log(user);
+  };
+
+  const handleSubscription = async (plan) => {
     try {
       const res = await axiosInstance.get(
         `${baseUrl}/api/users/checkAlreadyShopPresent/${user?._id}`,
         { withCredentials: true }
       );
+
+      console.log(res, "res");
       if (res.data.status === 409) {
         alert(res.data.message);
-        setLoading(false);
+        // setLoading(false);
 
         return;
       }
@@ -74,18 +109,27 @@ const FinalRegistration = () => {
       );
 
       if (res1.data.status === 409) {
-        alert(res.data.message);
-        setLoading(false);
+        alert(res1.data.message);
+        // setLoading(false);
 
         return;
       }
     } catch (err) {
       console.log(err, "err1");
-      setLoading(false);
+      // setLoading(false);
 
       alert(err.response.data.message);
 
       return;
+    }
+
+    const arrayOfObjects = [];
+    for (let i = 1; i <= seats; i++) {
+      const newObj = {
+        number: i,
+      };
+
+      arrayOfObjects.push(newObj);
     }
 
     const ownerDetails = {
@@ -97,39 +141,116 @@ const FinalRegistration = () => {
       isAdmin: true,
     };
 
-    try {
-      const newhotel = {
-        ...shopDetails,
-        city: shopDetails.city.toLowerCase(),
-        roomNumbers: arrayOfObjects.length,
-        ownerDetails,
-      };
+    const newhotel = {
+      ...shopDetails,
+      city: shopDetails.city.toLowerCase(),
+      roomNumbers: arrayOfObjects.length,
+      ownerDetails,
+      plan,
+    };
 
-      const response = await axiosInstance.post(
-        `${baseUrl}/api/shop_registration/new_registration`,
-        newhotel,
+    setCookieObject("new_hotel", newhotel, 7);
+
+    const {
+      data: { key },
+    } = await axiosInstance.get(`${baseUrl}/api/getkey`);
+
+    try {
+      const {
+        data: { order },
+      } = await axiosInstance.post(
+        `${baseUrl}/api/payments/subscription/checkout`,
+        {
+          // amount: totalAmount,
+          amount: plan.price,
+        },
         { withCredentials: true }
       );
-      if (response.status === 200) {
-        setLoading(false);
-        alert(t("willContactYouShortly"));
-        // Usage example
-        removeCookie("user_info");
-        navigate("/");
-      } else {
-        alert(
-          "Something went wrong, please contact us at services@easytym.com"
-        );
-        setLoading(false);
-      }
-    } catch (err) {
-      alert(err.response.data.message);
+
+      const token = sessionStorage.getItem("access_token");
+
+      const options = {
+        key,
+        amount: order.amount,
+        currency: "INR",
+        name: "Saalons",
+        description: "SAALONS",
+        image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+        order_id: order.id,
+        callback_url: `${baseUrl}/api/payments/subscription/paymentverification?token=${token}`,
+
+        notes: {
+          address: "EasyTym Corporate Office",
+        },
+
+        theme: {
+          color: "#121212",
+        },
+
+        modal: {
+          ondismiss: function () {},
+        },
+      };
+
+      const razor = new window.Razorpay(options);
+      razor.open();
       setLoading(false);
-
-      console.log(err, "err2");
+    } catch (err) {
+      toast("Token expired! Please login");
+      setLoading(false);
+      console.log(err);
+      //   setTimeout(() => {
+      //     navigate("/login", { state: { destination: `/shops/${shopId}` } });
+      //   }, 3000);
     }
+  };
 
-    console.log(user);
+  const PaymentOption = () => {
+    const plans = [
+      {
+        duration: "3 Months",
+        price: "119",
+        description: "Basic access for 3 months.",
+      },
+      {
+        duration: "6 Months",
+        price: "219",
+        description: "Save more with a 6-month plan.",
+      },
+      {
+        duration: "1 Year",
+        price: "399",
+        description: "Best value for a full year.",
+      },
+    ];
+
+    return (
+      <div className="flex flex-col items-center h-auto mt-5 bg-gray-100 p-6 m-6">
+        <h2 className="text-3xl font-bold mb-6">Choose Your Subscription</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {plans.map((plan, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-2xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl"
+            >
+              <h3 className="text-xl font-semibold text-gray-800">
+                {plan.duration}
+              </h3>
+              <p className="text-2xl font-bold text-[#00ccbb] my-2">
+                Rs. {plan.price}
+              </p>
+              <p className="text-gray-600 mb-4">{plan.description}</p>
+              <button
+                onClick={() => handleSubscription(plan)}
+                className="w-full bg-[#00ccbb] text-white font-semibold py-2 rounded-lg hover:bg-indigo-700 transition duration-300"
+              >
+                Subscribe
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -152,44 +273,46 @@ const FinalRegistration = () => {
         <div className="md:py-0.5 py-5">
           <RegistrationWizard activeStep={2} />
         </div>
-        <div className="flex flex-col justify-center w-full min-h-[70vh] items-center">
-          <div className="space-y-2">
-            <p>
-              {t("shopName")} :{" "}
-              <span className="ml-4 w-52">{shopDetails?.name}</span>
-            </p>
-            <div className="mb-4">
-              <label htmlFor="phone">{t("noOfSeats")}: </label>
-              <input
-                className="ml-4 w-44"
-                type="number"
-                id="phone"
-                min={1}
-                max={15}
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-              />
-            </div>
-            <div className="mb-4 flex justify-between m">
-              <button
-                disabled={seats === undefined || seats === ""}
-                className={`${
-                  seats === undefined || seats === ""
-                    ? "default-button mt-4"
-                    : "primary-button mt-4"
-                }`}
-                onClick={handleRegister}
-              >
-                {loading ? (
-                  <span className="buttonloader ml-2"></span>
-                ) : (
-                  t("register")
-                )}
-              </button>
+        {!paymentOptionTrue && (
+          <div className="flex flex-col justify-center w-full min-h-[70vh] items-center">
+            <div className="space-y-2">
+              <p>
+                {t("shopName")} :{" "}
+                <span className="ml-4 w-52">{shopDetails?.name}</span>
+              </p>
+              <div className="mb-4">
+                <label htmlFor="phone">{t("noOfSeats")}: </label>
+                <input
+                  className="ml-4 w-44"
+                  type="number"
+                  id="phone"
+                  min={1}
+                  max={15}
+                  value={seats}
+                  onChange={(e) => setSeats(e.target.value)}
+                />
+              </div>
+              <div className="mb-4 flex justify-between m">
+                <button
+                  disabled={seats === undefined || seats === ""}
+                  className={`${
+                    seats === undefined || seats === ""
+                      ? "default-button mt-4"
+                      : "primary-button mt-4"
+                  }`}
+                  onClick={handleRegister}
+                >
+                  {loading ? (
+                    <span className="buttonloader ml-2"></span>
+                  ) : (
+                    t("register")
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-          <img src={Select} alt="select category" className="h-72" />
-        </div>
+        )}
+        {paymentOptionTrue && <PaymentOption />}
       </div>
     </div>
   );

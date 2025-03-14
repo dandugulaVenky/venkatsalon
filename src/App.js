@@ -58,6 +58,7 @@ import ForgotPassword from "./pages/login/ForgotPassword";
 import ResetPassword from "./pages/login/ResetPassword";
 import MyBarbers from "./pages/admin/MyBarbers";
 import Rewards from "./pages/admin/Rewards";
+import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -118,6 +119,14 @@ function App() {
             <Route
               path="/shop-final-registration"
               element={<FinalRegistration />}
+            />
+            <Route
+              path="/subscription-payment-success"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionPaymentSuccess />
+                </ProtectedRoute>
+              }
             />
 
             <Route path="/shops" element={<List />} />
@@ -265,7 +274,7 @@ function App() {
             <Route path="/about-us" element={<About />} />
             <Route path="/contact-us" element={<Contact />} />
             <Route path="/failure" element={<BookingFailure />} />
-            <Route path="/iron" element={<Ironing />} />
+            {/* <Route path="/iron" element={<Ironing />} />
             <Route path="/iron/product/:slug" element={<Slug />} />
             <Route path="/iron/cart" element={<Cart />} />
             <Route path="/iron/shipping" element={<Shipping />} />
@@ -275,7 +284,7 @@ function App() {
             <Route
               path="/iron/iron-payment-success"
               element={<IronPaymentSuccess />}
-            />
+            /> */}
             <Route path="/telugu" element={<Telugu />} />
           </Routes>
           {smallScreen ? <MobileFooter /> : <Footer />}
