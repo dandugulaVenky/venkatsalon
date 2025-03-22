@@ -39,8 +39,8 @@ const Preview = (props) => {
       }, [])
       .reduce((arr, item) => {
         return arr.concat(item);
-      }, [])
-      .filter((item) => item.subCategory === state.subCategory);
+      }, []);
+    // .filter((item) => item.subCategory === state.subCategory);
 
     const showPreviewServicess = state?.selectedSeats.map((seat, i) => {
       const push = mergedPreviewServices.filter((item) =>

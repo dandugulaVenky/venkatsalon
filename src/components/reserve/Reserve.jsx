@@ -23,6 +23,7 @@ import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 import axiosInstance from "../axiosInterceptor";
+import { set } from "date-fns";
 
 function compareTimeDiff(time) {
   let time1 = time;
@@ -69,6 +70,7 @@ const Reserve = () => {
     barbers,
     requests,
   } = state !== null && state;
+
   const { date: dater, time } = useContext(SearchContext);
   const barberBlock = requests?.filter(
     (item) =>
@@ -117,6 +119,8 @@ const Reserve = () => {
   const [seats, setSeats] = useState();
   const [salonServices, setSalonServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
+
+  const [unisexType, setUnisexType] = useState("men");
 
   const { user } = useContext(AuthContext);
 
@@ -191,7 +195,12 @@ const Reserve = () => {
         .reduce((arr, item) => {
           return arr.concat(item);
         }, [])
-        .filter((item) => item.subCategory === gender);
+        .filter(
+          (item) =>
+            item.subCategory === (gender === "unisex" ? unisexType : gender)
+        );
+
+      // console.log(mergedPreviewServices, "mergedPreviewServices");
 
       const totalTimeOfServices = mergedPreviewServices.reduce(
         (acc, service) => {
@@ -212,7 +221,8 @@ const Reserve = () => {
 
       setSuperCategory("regular");
       const result1 = categories.filter((category, i) =>
-        category.superCategory === "regular" && category.subCategory === gender
+        category.superCategory === "regular" &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
           ? category.services
           : null
       );
@@ -228,14 +238,16 @@ const Reserve = () => {
       //setting directly subcategory
       setCategory(services[0]);
       const result = categories.filter((category, i) =>
-        category.category === services[0] && category.subCategory === gender
+        category.category === services[0] &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
           ? category.services
           : null
       );
       setCategoriesOptions(result[0].services);
       setSuperCategory(() => {
         const result = categories.filter((category, i) =>
-          category.category === services[0] && category.subCategory === gender
+          category.category === services[0] &&
+          category.subCategory === (gender === "unisex" ? unisexType : gender)
             ? category.superCategory
             : null
         );
@@ -244,7 +256,7 @@ const Reserve = () => {
       setLoading(true);
     };
     !loading && gender && fetchData();
-  }, [categories, gender, loading, shopId]);
+  }, [categories, gender, loading, shopId, unisexType]);
 
   //Second Step----------------------------------------------------------------------------->
   //finding wether there is booking in front of this selected time here
@@ -391,14 +403,18 @@ const Reserve = () => {
   const handleChange = (e) => {
     setCategory(e.target.value);
     const result = categories.filter((category, i) =>
-      category.category === e.target.value && category.subCategory === gender
+      category.category === e.target.value &&
+      category.subCategory === (gender === "unisex" ? unisexType : gender)
         ? category.services
         : null
     );
+
+    // console.log(result);
     setCategoriesOptions(result[0].services);
     setSuperCategory(() => {
       const result = categories.filter((category, i) =>
-        category.category === e.target.value && category.subCategory === gender
+        category.category === e.target.value &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
           ? category.superCategory
           : null
       );
@@ -409,7 +425,7 @@ const Reserve = () => {
     setSuperCategory(e.target.value);
     const result = categories.filter((category, i) =>
       category.superCategory === e.target.value &&
-      category.subCategory === gender
+      category.subCategory === (gender === "unisex" ? unisexType : gender)
         ? category.services
         : null
     );
@@ -1014,6 +1030,26 @@ const Reserve = () => {
               })} */}
               <option selected>regular</option>
             </select>
+
+            <select
+              className={`md:w-52 w-auto ${gender !== "unisex" && "hidden"}`}
+              onChange={(e) => {
+                setUnisexType(e.target.value);
+                setLoading(false);
+                setCategoriesOptions(null);
+                setSalonServices(null);
+                setCategory(null);
+                setSuperCategory(null);
+                setSortBy(null);
+              }}
+              value={unisexType}
+            >
+              <option value="">Select Gender</option>
+
+              <option selected>men</option>
+              <option>women</option>
+            </select>
+
             <select className="md:w-52 w-auto" onChange={handleChange}>
               <option selected>Select Sub Category</option>
 

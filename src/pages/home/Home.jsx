@@ -69,7 +69,7 @@ const Home = ({ endRef, smallBanners }) => {
           const latlng = { lat: latitude, lng: longitude };
 
           geocoder.geocode({ location: latlng }, (results, status) => {
-            console.log(results);
+            // console.log(results);
             // Find the first address component with types including "postal_code"
             const postalCodeComponent = results.find(
               (component) =>
