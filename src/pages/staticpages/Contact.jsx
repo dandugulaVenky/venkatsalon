@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
+import baseUrl from "../../utils/client";
 
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
@@ -37,16 +38,13 @@ export default function Contact({ company }) {
   const submitHandler = async ({ name, email, phone, message }) => {
     try {
       setLoading(true);
-      const res = await axiosInstance.post(
-        "https://easytym-server.onrender.com/api/contact",
-        {
-          name,
-          email,
-          phone,
-          message,
-          company,
-        }
-      );
+      const res = await axiosInstance.post(`${baseUrl}/api/contact`, {
+        name,
+        email,
+        phone,
+        message,
+        company,
+      });
 
       if (res.status === 200) {
         alert(" Submitted Successfully!!👍");

@@ -110,15 +110,16 @@ const Hotel = ({ smallBanners }) => {
 
   w >= 539
     ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979201/2_ojl5nt.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979205/3_jeyh64.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979556/com_1_h7kdal.svg",
       ])
     : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180221/2_l4nngn.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180240/1_vn4gd1.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180222/5_i5nu2y.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180218/4_wyl4vp.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180217/3_vwo4mk.svg",
       ]);
 
   const lunch = data?.lunchTimeArray || [];

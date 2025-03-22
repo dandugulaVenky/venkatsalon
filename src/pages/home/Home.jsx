@@ -18,9 +18,6 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
-import img1 from "../images/1.jpg";
-import img2 from "../images/2.jpg";
-import img3 from "../images/5.jpg";
 
 const siteMetadata = {
   title: "Home | Effortless Appointments With Saalons",
@@ -214,7 +211,7 @@ const Home = ({ endRef, smallBanners }) => {
           style={{ minHeight: "430px" }}
         >
           <div className="">
-            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
+            <h1 className=" text-5xl  text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
               {t("welcome")}
             </h1>
 

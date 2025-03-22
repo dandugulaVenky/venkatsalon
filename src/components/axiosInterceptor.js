@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://easytym-server.onrender.com",
+  baseURL: "https://easytym-backend.onrender.com",
   withCredentials: true,
 });
 
