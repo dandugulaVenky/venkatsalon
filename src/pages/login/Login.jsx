@@ -39,7 +39,8 @@ export default function Login() {
       setToken(token);
       // Send this token  to server ( db)
     } else if (permission === "denied") {
-      alert(t("deniedForNotification"));
+      // alert(t("deniedForNotification"));
+      console.log("denied notification");
     }
   }
   let w = window.innerWidth;

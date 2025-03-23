@@ -3,8 +3,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import RegistrationWizard from "./RegistrationWizard";
-import Select from "../images/select.png";
-
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
 import axiosInstance from "../../components/axiosInterceptor";
@@ -162,7 +160,7 @@ const FinalRegistration = () => {
         `${baseUrl}/api/payments/subscription/checkout`,
         {
           // amount: totalAmount,
-          amount: 1,
+          amount: Number(plan.price),
         },
         { withCredentials: true }
       );

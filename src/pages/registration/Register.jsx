@@ -19,8 +19,6 @@ import Select from "../images/select.png";
 import OtpVerification from "./OtpVerification";
 
 import { useTranslation } from "react-i18next";
-import baseUrl from "../../utils/client";
-import axiosInstance from "../../components/axiosInterceptor";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
