@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,
+  faCaretLeft,
+  faCaretRight,
   faCaretUp,
   faClock,
   faClose,
@@ -24,6 +26,7 @@ import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 import axiosInstance from "../axiosInterceptor";
 import { set } from "date-fns";
+import MovingIcon from "./MovingIcon";
 
 function compareTimeDiff(time) {
   let time1 = time;
@@ -1078,6 +1081,10 @@ const Reserve = () => {
           {categoriesOptions?.length > 0 ? (
             <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  pb-10 md:w-[90vw] w-[95.5vw] mx-auto">
               <div className=" lg:col-span-3 md:col-span-3 overflow-x-auto">
+                <h1 className="text-md font-semibold my-4">
+                  Click below here to select services.
+                </h1>
+
                 {show ? (
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
@@ -1108,9 +1115,9 @@ const Reserve = () => {
                             </p>
                             <div>
                               {showSeats[i + 1] === true ? (
-                                <FontAwesomeIcon icon={faCaretUp} size="lg" />
+                                <MovingIcon direction="up" side={true} />
                               ) : (
-                                <FontAwesomeIcon icon={faCaretDown} size="lg" />
+                                <MovingIcon direction="down" side={false} />
                               )}
                             </div>
                           </h2>
@@ -1145,6 +1152,10 @@ const Reserve = () => {
                                           className="border-b-2 border-gray-200"
                                         >
                                           <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                            <MovingIcon
+                                              direction="right"
+                                              side={true}
+                                            />
                                             <input
                                               type="checkbox"
                                               name={option.service}
@@ -1162,18 +1173,27 @@ const Reserve = () => {
                                                 )
                                               }
                                             />
-                                            <label className="text-gray-900">
+                                            <label
+                                              htmlFor={option.service}
+                                              className="text-gray-900 cursor-pointer"
+                                            >
                                               {option.service}
                                             </label>
                                           </td>
                                           <td className="p-5 text-right md:text-md text-sm">
-                                            &#8377; {option.price}
+                                            <label
+                                              htmlFor={option.service}
+                                              className="cursor-pointer"
+                                            >
+                                              {" "}
+                                              &#8377; {option.price}
+                                            </label>
                                           </td>
 
                                           {category === "packages" && (
                                             <td className="p-5 text-right md:text-md text-sm">
                                               <label
-                                                className="text-gray-900 underline"
+                                                className="text-gray-900 underline cursor-pointer"
                                                 onClick={(e) =>
                                                   handleInclusions(e, option)
                                                 }
@@ -1183,7 +1203,12 @@ const Reserve = () => {
                                             </td>
                                           )}
                                           <td className="p-5 text-right md:text-md text-sm">
-                                            {option.duration} {t("min")}
+                                            <label
+                                              htmlFor={option.service}
+                                              className="cursor-pointer"
+                                            >
+                                              {option.duration} {t("min")}
+                                            </label>
                                           </td>
                                         </tr>
                                       ))}
@@ -1213,7 +1238,7 @@ const Reserve = () => {
                                     return (
                                       <div
                                         key={barber._id}
-                                        className={`p-3 border rounded-md  ${
+                                        className={`p-3 border rounded-md cursor-pointer  ${
                                           isBarberAssigned
                                             ? "bg-gray-300 cursor-not-allowed"
                                             : "bg-white"
