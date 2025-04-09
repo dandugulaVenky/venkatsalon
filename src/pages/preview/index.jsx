@@ -169,7 +169,7 @@ const Preview = (props) => {
             `${baseUrl}/api/payments/checkout`,
             {
               // amount: totalAmount,
-              amount: ConvenienceFee,
+              amount: 1,
             },
             { withCredentials: true }
           );

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Home from "./pages/home/Home";
 import Hotel from "./pages/hotel/Hotel";
 import List from "./pages/list/List";
@@ -19,14 +20,14 @@ import { AuthContext } from "./context/AuthContext";
 
 import BookingFailure from "./components/BookingFailure";
 
-import Ironing from "./pages/ironing/Ironing";
-import Slug from "./pages/ironing/iron-pages/Slug";
-import Cart from "./pages/ironing/iron-pages/Cart";
-import Shipping from "./pages/ironing/iron-pages/Shipping";
-import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
-import Orders from "./pages/ironing/iron-pages/Orders";
-import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
-import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
+// import Ironing from "./pages/ironing/Ironing";
+// import Slug from "./pages/ironing/iron-pages/Slug";
+// import Cart from "./pages/ironing/iron-pages/Cart";
+// import Shipping from "./pages/ironing/iron-pages/Shipping";
+// import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
+// import Orders from "./pages/ironing/iron-pages/Orders";
+// import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
+// import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
 
 import Reserve from "./components/reserve/Reserve";
 // import ParlorReserve from "./components/reserve/ParlorReserve";
@@ -60,6 +61,7 @@ import MyBarbers from "./pages/admin/MyBarbers";
 import Rewards from "./pages/admin/Rewards";
 import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
 
+
 function App() {
   const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
@@ -88,6 +90,7 @@ function App() {
   }, []);
 
   const endRef = useRef(null);
+ 
 
   return (
     <>
@@ -105,8 +108,10 @@ function App() {
               path="/"
               element={<Home endRef={endRef} smallBanners={smallBanners} />}
             />
+            
             {/* <Route path="/get-started" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
+           
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
