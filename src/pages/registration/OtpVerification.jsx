@@ -52,8 +52,8 @@ const OtpVerification = (props) => {
 
   let { dispatch: dispatch1, type } = useContext(SearchContext);
 
-  const [address, setAddress] = useState("Thimmapur");
-  const [header, setHeader] = useState(null);
+  const [address, setAddress] = useState("");
+  const [header, setHeader] = useState(false);
 
   const saveToken = async (id, token) => {
     try {
@@ -193,12 +193,19 @@ const OtpVerification = (props) => {
           setAddress={setAddress}
           dispatch={dispatch1}
           type={type}
-          z
           register={true}
           header={header}
         />
       ) : (
-        <Header header={header} />
+        <Header
+          city={address}
+          setHeader={setHeader}
+          setAddress={setAddress}
+          dispatch={dispatch1}
+          type={type}
+          register={true}
+          header={header}
+        />
       )}
       <div className="w-full transition-all delay-1000 ease-linear py-5">
         <div>
