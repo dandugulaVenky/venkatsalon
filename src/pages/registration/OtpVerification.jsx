@@ -134,7 +134,7 @@ const OtpVerification = (props) => {
         `${baseUrl}/api/auth/register`,
         {
           username: name.trim().toLowerCase(),
-          password: password.trim(),
+          password: google ? password.trim() : storedUser.password.trim(),
           city: city.toLowerCase() || city1.toLowerCase(),
           phone: number || storedUser.number,
         },
