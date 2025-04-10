@@ -33,6 +33,7 @@ const OtpVerification = (props) => {
     setPhoneVerified,
     storedUser,
     setCanShowNumber,
+    google,
   } = props;
 
   const [flag, setFlag] = useState(false);
@@ -42,7 +43,7 @@ const OtpVerification = (props) => {
   const [number, setNumber] = useState("");
   const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [password, setPassword] = useState("");
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -249,7 +250,26 @@ const OtpVerification = (props) => {
         </div>
       </div>
 
-      {storedUser.phoneVerified ? (
+      {google && storedUser.phoneVerified ? (
+        <div className="mb-4">
+          <label htmlFor="password">Set a Password</label>
+          <input
+            className="w-full"
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+      ) : (
+        ""
+      )}
+
+      {password && storedUser.phoneVerified ? (
+        <button className="primary-button" onClick={RegisterNow}>
+          {loading ? "Loading..." : "Google Proceed"}
+        </button>
+      ) : storedUser.password && storedUser.phoneVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
           {loading ? "Loading..." : "Proceed"}
         </button>

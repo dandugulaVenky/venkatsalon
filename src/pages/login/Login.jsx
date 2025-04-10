@@ -131,84 +131,19 @@ export default function Login() {
   };
 
   const HandleRegistrationNew = () => {
-    const handleRegistration = async (e) => {
-      e.preventDefault();
-
-      const storedUser1 = getCookieObject("normalUser_info");
-
-      const { name, password, city, number, email } = storedUser1;
-      try {
-        const res = await axiosInstance.post(`${baseUrl}/api/auth/register`, {
-          username: name.trim().toLowerCase(),
-          password: password.trim(),
-          city: city.toLowerCase(),
-          phone: number || storedUser.number,
-          email: email || "",
-        });
-
-        if (res.status === 200) {
-          dispatch({ type: "LOGIN_START" });
-          try {
-            const res = await axiosInstance.post(
-              `${baseUrl}/api/auth/login`,
-              {
-                phone: number,
-                password,
-              },
-              { withCredentials: true }
-            );
-            sessionStorage.setItem("access_token", res.data.token);
-            dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-            token !== "" && saveToken(res.data.details._id, token);
-            setStoredUser(null);
-            navigate(redirect || "/");
-          } catch (err) {
-            dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-          }
-          setStoredUser(null);
-          setCanShowNumber(false);
-          setEmailVerified(false);
-          setPhoneVerified(false);
-        }
-      } catch (err) {
-        if (err.response.status === 409) {
-          toast.error(
-            `${err.response.data.message} please try with another email!`
-          );
-          setEmailVerified(false);
-        } else if (err.response.status === 500) {
-          toast.error("Internal Server Error");
-        } else {
-          toast.error(err);
-        }
-      }
-    };
-
     return (
-      <form onSubmit={handleRegistration}>
-        <div className="md:px-10 px-5 pt-10 card text-sm ">
-          <OtpVerification
-            token=""
-            emailVerified={false}
-            setEmailVerified={setEmailVerified}
-            phoneVerified={phoneVerified}
-            setPhoneVerified={setPhoneVerified}
-            storedUser={storedUser}
-            setCanShowNumber={setCanShowNumber}
-          />
-
-          <div className="mb-4">
-            <label htmlFor="password">Set a Password</label>
-            <input
-              className="w-full"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-        </div>
-      </form>
+      <div className="md:px-10 px-5 pt-10 card text-sm ">
+        <OtpVerification
+          token=""
+          emailVerified={false}
+          setEmailVerified={setEmailVerified}
+          phoneVerified={phoneVerified}
+          setPhoneVerified={setPhoneVerified}
+          storedUser={storedUser}
+          setCanShowNumber={setCanShowNumber}
+          google={true}
+        />
+      </div>
     );
   };
 
