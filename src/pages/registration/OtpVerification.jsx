@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
+import { SearchContext } from "../../context/SearchContext";
+import Header from "../../components/header/Header";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
@@ -47,6 +49,11 @@ const OtpVerification = (props) => {
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  let { dispatch: dispatch1, type } = useContext(SearchContext);
+
+  const [address, setAddress] = useState("Thimmapur");
+  const [header, setHeader] = useState(null);
 
   const saveToken = async (id, token) => {
     try {
@@ -174,9 +181,25 @@ const OtpVerification = (props) => {
     }
     setLoading(false);
   };
-
+  const handleLocation = () => {
+    setHeader(true);
+  };
   return (
     <>
+      {header ? (
+        <Header
+          city={address}
+          setHeader={setHeader}
+          setAddress={setAddress}
+          dispatch={dispatch1}
+          type={type}
+          z
+          register={true}
+          header={header}
+        />
+      ) : (
+        <Header header={header} />
+      )}
       <div className="w-full transition-all delay-1000 ease-linear py-5">
         <div>
           <p className="bg-green-300 p-2 mt-5 rounded-md">Successful!</p>
@@ -260,6 +283,18 @@ const OtpVerification = (props) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <div className="mb-4" onClick={handleLocation}>
+            <label htmlFor="city">{t("address")}</label>
+
+            <input
+              type="text"
+              className="w-full"
+              id="city"
+              placeholder={"enter city name."}
+              readOnly
+              value={address}
+            />
+          </div>
         </div>
       ) : (
         ""

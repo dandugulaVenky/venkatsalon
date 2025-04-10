@@ -50,7 +50,7 @@ const Register = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   let { dispatch: dispatch1, type } = useContext(SearchContext);
 
-  const [address, setAddress] = useState("Thimmapur");
+  const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
@@ -172,7 +172,6 @@ const Register = () => {
           setAddress={setAddress}
           dispatch={dispatch1}
           type={type}
-          z
           register={true}
           header={header}
         />
