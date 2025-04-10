@@ -124,7 +124,7 @@ export default function Login() {
     const response = await signInWithPopup(auth, provider);
 
     const { user } = response;
-    let user1 = { name: user.name, email: user.email, city: "" };
+    let user1 = { name: user.displayName, email: user.email, city: "" };
     setStoredUser(user1);
     setCanShowNumber(true);
     setEmailVerified(true);
