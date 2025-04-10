@@ -197,15 +197,7 @@ const OtpVerification = (props) => {
           header={header}
         />
       ) : (
-        <Header
-          city={address}
-          setHeader={setHeader}
-          setAddress={setAddress}
-          dispatch={dispatch1}
-          type={type}
-          register={true}
-          header={header}
-        />
+        ""
       )}
       <div className="w-full transition-all delay-1000 ease-linear py-5">
         <div>
