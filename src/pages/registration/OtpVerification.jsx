@@ -164,6 +164,7 @@ const OtpVerification = (props) => {
         }
       }
     } catch (err) {
+      console.log(err);
       if (err.response.status === 409) {
         toast.error(
           `${err.response.data.message} please try with another email!`
