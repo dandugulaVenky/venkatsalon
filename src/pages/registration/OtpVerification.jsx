@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import { SearchContext } from "../../context/SearchContext";
 import Header from "../../components/header/Header";
+import { tr } from "date-fns/locale";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
@@ -126,15 +127,19 @@ const OtpVerification = (props) => {
 
   const RegisterNow = async () => {
     setLoading(true);
-    const { name, password, city } = storedUser;
+    const { name, password, city: city1 } = storedUser;
 
     try {
-      const res = await axiosInstance.post(`${baseUrl}/api/auth/register`, {
-        username: name.trim().toLowerCase(),
-        password: password.trim(),
-        city: city.toLowerCase(),
-        phone: number || storedUser.number,
-      });
+      const res = await axiosInstance.post(
+        `${baseUrl}/api/auth/register`,
+        {
+          username: name.trim().toLowerCase(),
+          password: password.trim(),
+          city: city.toLowerCase() || city1.toLowerCase(),
+          phone: number || storedUser.number,
+        },
+        { withCredentials: true }
+      );
 
       if (res.status === 200) {
         dispatch({ type: "LOGIN_START" });
