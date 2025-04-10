@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import LoginImage from "../images/login.jpeg";
-import { messaging } from "../../firebase";
+import { auth, messaging, provider } from "../../firebase";
 import { getToken } from "firebase/messaging";
 
 import "./login.css";
@@ -10,23 +10,40 @@ import { AuthContext } from "../../context/AuthContext";
 
 import { useState } from "react";
 
-import { SearchContext } from "../../context/SearchContext";
-
 import PhoneInput from "react-phone-number-input";
 import baseUrl from "../../utils/client";
-import secureLocalStorage from "react-secure-storage";
+
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
+import { signInWithPopup } from "firebase/auth";
+import OtpVerification from "../registration/OtpVerification";
+
+function getCookieObject(name) {
+  const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+
+  for (const cookie of cookies) {
+    if (cookie.startsWith(name + "=")) {
+      const encodedValue = cookie.substring(name.length + 1);
+      return JSON.parse(decodeURIComponent(encodedValue));
+    }
+  }
+
+  return null;
+}
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const [number, setNumber] = useState("");
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState("");
 
   const [token, setToken] = useState("");
   const { t } = useTranslation();
 
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
+  const [storedUser, setStoredUser] = useState(null);
+  const [canShowNumber, setCanShowNumber] = useState(false);
   async function requestPermission() {
     const permission = await Notification.requestPermission();
     if (permission === "granted") {
@@ -102,6 +119,99 @@ export default function Login() {
       toast.error(err);
     }
   };
+
+  const googleLogin = async () => {
+    const response = await signInWithPopup(auth, provider);
+
+    const { user } = response;
+    let user1 = { name: user.name, email: user.email, city: "" };
+    setStoredUser(user1);
+    setCanShowNumber(true);
+    setEmailVerified(true);
+  };
+
+  const HandleRegistrationNew = () => {
+    const handleRegistration = async (e) => {
+      e.preventDefault();
+
+      const storedUser1 = getCookieObject("normalUser_info");
+
+      const { name, password, city, number, email } = storedUser1;
+      try {
+        const res = await axiosInstance.post(`${baseUrl}/api/auth/register`, {
+          username: name.trim().toLowerCase(),
+          password: password.trim(),
+          city: city.toLowerCase(),
+          phone: number || storedUser.number,
+          email: email || "",
+        });
+
+        if (res.status === 200) {
+          dispatch({ type: "LOGIN_START" });
+          try {
+            const res = await axiosInstance.post(
+              `${baseUrl}/api/auth/login`,
+              {
+                phone: number,
+                password,
+              },
+              { withCredentials: true }
+            );
+            sessionStorage.setItem("access_token", res.data.token);
+            dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+            token !== "" && saveToken(res.data.details._id, token);
+            setStoredUser(null);
+            navigate(redirect || "/");
+          } catch (err) {
+            dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+          }
+          setStoredUser(null);
+          setCanShowNumber(false);
+          setEmailVerified(false);
+          setPhoneVerified(false);
+        }
+      } catch (err) {
+        if (err.response.status === 409) {
+          toast.error(
+            `${err.response.data.message} please try with another email!`
+          );
+          setEmailVerified(false);
+        } else if (err.response.status === 500) {
+          toast.error("Internal Server Error");
+        } else {
+          toast.error(err);
+        }
+      }
+    };
+
+    return (
+      <form onSubmit={handleRegistration}>
+        <div className="md:px-10 px-5 pt-10 card text-sm ">
+          <OtpVerification
+            token=""
+            emailVerified={false}
+            setEmailVerified={setEmailVerified}
+            phoneVerified={phoneVerified}
+            setPhoneVerified={setPhoneVerified}
+            storedUser={storedUser}
+            setCanShowNumber={setCanShowNumber}
+          />
+
+          <div className="mb-4">
+            <label htmlFor="password">Set a Password</label>
+            <input
+              className="w-full"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        </div>
+      </form>
+    );
+  };
+
   return (
     <div className="pt-10 pb-20">
       <div className="px-8 md:min-h-[60vh] md:flex justify-center  ">
@@ -112,47 +222,59 @@ export default function Login() {
           width={400}
           className="card"
         ></img>
-        <form className="px-10 py-5 card h-auto" onSubmit={handleSubmit1}>
-          <h1 className="mb-4 text-2xl font-semibold">{t("loginTitle")}</h1>
 
-          <div className="mb-4">
-            <label htmlFor="name">{t("phoneTitle")}</label>
-            <PhoneInput
-              defaultCountry="IN"
-              id="number"
-              value={number}
-              onChange={setNumber}
-              placeholder="Enter Phone Number"
-            />
-          </div>
+        {canShowNumber ? (
+          <HandleRegistrationNew />
+        ) : (
+          <div className="px-10 py-5 card h-auto">
+            <form onSubmit={handleSubmit1}>
+              <h1 className="mb-4 text-2xl font-semibold">{t("loginTitle")}</h1>
 
-          <div className="mb-4">
-            <label htmlFor="password">{t("password")}</label>
-            <input
-              className="w-full"
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+              <div className="mb-4">
+                <label htmlFor="name">{t("phoneTitle")}</label>
+                <PhoneInput
+                  defaultCountry="IN"
+                  id="number"
+                  value={number}
+                  onChange={setNumber}
+                  placeholder="Enter Phone Number"
+                />
+              </div>
 
-          <div className="mb-1">
-            <button className="primary-button" disabled={loading}>
-              {t("loginTitle")}
+              <div className="mb-4">
+                <label htmlFor="password">{t("password")}</label>
+                <input
+                  className="w-full"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="mb-1">
+                <button className="primary-button" disabled={loading}>
+                  {t("loginTitle")}
+                </button>
+              </div>
+              <p className="text-md underline text-blue-600 mt-3">
+                <Link to="/forgot-password">Forgot Password</Link>
+                <br></br>
+                <Link to="/register">{t("dontHaveAccountClickHere")}</Link>
+              </p>
+
+              {errorContext && (
+                <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
+                  {errorContext.message}
+                </p>
+              )}
+            </form>
+
+            <button onClick={googleLogin} className="primary-button mt-5">
+              Continue with Google
             </button>
           </div>
-          <p className="text-md underline text-blue-600 mt-3">
-            <Link to="/forgot-password">Forgot Password</Link>
-            <br></br>
-            <Link to="/register">{t("dontHaveAccountClickHere")}</Link>
-          </p>
-          {errorContext && (
-            <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
-              {errorContext.message}
-            </p>
-          )}
-        </form>
+        )}
       </div>
     </div>
   );
