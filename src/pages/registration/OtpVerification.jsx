@@ -127,7 +127,7 @@ const OtpVerification = (props) => {
 
   const RegisterNow = async () => {
     setLoading(true);
-    const { name, password: pass, city: city1 } = storedUser;
+    const { name, city: city1 } = storedUser;
 
     try {
       const res = await axiosInstance.post(
