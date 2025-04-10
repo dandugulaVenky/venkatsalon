@@ -50,7 +50,7 @@ const OtpVerification = (props) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  let { dispatch: dispatch1, type } = useContext(SearchContext);
+  let { dispatch: dispatch1, type, city } = useContext(SearchContext);
 
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
@@ -291,7 +291,7 @@ const OtpVerification = (props) => {
               id="city"
               placeholder={"enter city name."}
               readOnly
-              value={address}
+              value={address || city}
             />
           </div>
         </div>
