@@ -306,27 +306,27 @@ const OtpVerification = (props) => {
       {google && storedUser.phoneVerified ? (
         <div className="mb-4">
           <label htmlFor="password">Set a Password</label>
+
           <input
-            className="w-full"
+            className="w-full border p-2 rounded"
             type="password"
             id="password"
             value={password || storedUser.password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              storedUser.password = e.target.value;
-            }}
+            onChange={handlePasswordChange}
           />
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
           <div className="mb-4" onClick={handleLocation}>
             <label htmlFor="city">{t("address")}</label>
 
             <input
-              className="w-full border p-2 rounded"
-              type="password"
-              id="password"
-              value={password || storedUser.password}
-              onChange={handlePasswordChange}
+              type="text"
+              className="w-full"
+              id="city"
+              placeholder={"enter city name."}
+              readOnly
+              value={address || city}
             />
-            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
         </div>
       ) : (
