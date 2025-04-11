@@ -148,7 +148,8 @@ const OtpVerification = (props) => {
           const res = await axiosInstance.post(
             `${baseUrl}/api/auth/login`,
             {
-              phone: number,
+              phone: storedUser.number || number,
+              type: "normal",
               password,
             },
             { withCredentials: true }
