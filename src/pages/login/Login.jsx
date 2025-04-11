@@ -145,7 +145,7 @@ export default function Login() {
       navigate("/");
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-      if (err.response.status === 409) {
+      if (err.response.status === 404) {
         toast.error(`${err.response.data.message} creating a account!`);
 
         setStoredUser(user1);
