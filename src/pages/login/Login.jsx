@@ -17,27 +17,13 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import { signInWithPopup } from "firebase/auth";
 import OtpVerification from "../registration/OtpVerification";
-import { type } from "jquery";
-
-function getCookieObject(name) {
-  const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-
-  for (const cookie of cookies) {
-    if (cookie.startsWith(name + "=")) {
-      const encodedValue = cookie.substring(name.length + 1);
-      return JSON.parse(decodeURIComponent(encodedValue));
-    }
-  }
-
-  return null;
-}
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const [number, setNumber] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading1, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const { t } = useTranslation();
 
@@ -123,6 +109,7 @@ export default function Login() {
   };
 
   const googleLogin = async () => {
+    setLoading(true);
     const response = await signInWithPopup(auth, provider);
 
     const { user } = response;
@@ -141,7 +128,7 @@ export default function Login() {
       sessionStorage.setItem("access_token", res.data.token);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       token !== "" && saveToken(res.data.details._id, token);
-
+      setLoading(false);
       navigate("/");
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
@@ -151,6 +138,7 @@ export default function Login() {
         setStoredUser(user1);
         setCanShowNumber(true);
         setEmailVerified(true);
+        setLoading(false);
       }
     }
   };
@@ -230,8 +218,24 @@ export default function Login() {
               )}
             </form>
 
-            <button onClick={googleLogin} className="primary-button mt-5">
-              Continue with Google
+            <button onClick={googleLogin} className=" mt-5">
+              <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 488 512"
+                  className="w-5 h-5"
+                  fill="#00ccbb"
+                >
+                  <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+                </svg>
+                <div className="grid items-center">
+                  {loading1 ? (
+                    <div className="loaderGoogle ml-5"></div>
+                  ) : (
+                    "Continue with Google"
+                  )}
+                </div>
+              </div>
             </button>
           </div>
         )}
