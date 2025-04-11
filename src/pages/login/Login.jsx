@@ -208,7 +208,7 @@ export default function Login() {
               <p className="text-md underline text-blue-600 mt-3">
                 <Link to="/forgot-password">Forgot Password</Link>
                 <br></br>
-                <Link to="/register">{t("dontHaveAccountClickHere")}</Link>
+                {/* <Link to="/register">{t("dontHaveAccountClickHere")}</Link> */}
               </p>
 
               {errorContext && (
