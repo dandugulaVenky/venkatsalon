@@ -56,6 +56,29 @@ const OtpVerification = (props) => {
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
 
+  //paswword match
+  const [error, setError] = useState("");
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+
+    // Validate before updating
+    const isValid =
+      /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+        newPassword
+      );
+
+    if (isValid) {
+      setPassword(newPassword);
+      storedUser.password = newPassword;
+      setError("");
+    } else {
+      setError(
+        "Password must be at least 8 characters and include a special character"
+      );
+    }
+  };
+
   const saveToken = async (id, token) => {
     try {
       await axiosInstance.post(`${baseUrl}/tokens`, {
@@ -150,7 +173,7 @@ const OtpVerification = (props) => {
             {
               phone: storedUser.number || number,
               type: "normal",
-              password,
+              password: storedUser.password?.trim() || password?.trim(),
             },
             { withCredentials: true }
           );
@@ -297,13 +320,13 @@ const OtpVerification = (props) => {
             <label htmlFor="city">{t("address")}</label>
 
             <input
-              type="text"
-              className="w-full"
-              id="city"
-              placeholder={"enter city name."}
-              readOnly
-              value={address || city}
+              className="w-full border p-2 rounded"
+              type="password"
+              id="password"
+              value={password || storedUser.password}
+              onChange={handlePasswordChange}
             />
+            {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           </div>
         </div>
       ) : (
