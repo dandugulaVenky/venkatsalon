@@ -1057,7 +1057,7 @@ const Hotel = ({ smallBanners }) => {
                     className="text-[#00ccbb]"
                     target="_blank"
                     rel="noreferrer"
-                    href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.coordinates[1]},${data?.latLong?.coordinates[0]}`}
+                    href={`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${data?.latLong?.coordinates[1]},${data?.latLong?.coordinates[0]}`}
                   >
                     {t("getDirectionsToShop")}
                   </a>
