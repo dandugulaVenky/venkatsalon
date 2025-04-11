@@ -288,7 +288,10 @@ const OtpVerification = (props) => {
             type="password"
             id="password"
             value={password || storedUser.password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              storedUser.password = e.target.value;
+            }}
           />
           <div className="mb-4" onClick={handleLocation}>
             <label htmlFor="city">{t("address")}</label>
