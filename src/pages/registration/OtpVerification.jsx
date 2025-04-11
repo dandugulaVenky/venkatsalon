@@ -150,7 +150,7 @@ const OtpVerification = (props) => {
 
   const RegisterNow = async () => {
     setLoading(true);
-    const { name, city: city1 } = storedUser;
+    const { name, city: city1, password: passwordd } = storedUser;
 
     try {
       const res = await axiosInstance.post(
@@ -173,7 +173,7 @@ const OtpVerification = (props) => {
             {
               phone: storedUser.number || number,
               type: "normal",
-              password: storedUser.password?.trim() || password?.trim(),
+              password: passwordd?.trim() || password?.trim(),
             },
             { withCredentials: true }
           );
