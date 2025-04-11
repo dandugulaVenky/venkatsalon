@@ -287,7 +287,7 @@ const OtpVerification = (props) => {
             className="w-full"
             type="password"
             id="password"
-            value={password}
+            value={password || storedUser.password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <div className="mb-4" onClick={handleLocation}>
