@@ -133,11 +133,11 @@ const OtpVerification = (props) => {
       const res = await axiosInstance.post(
         `${baseUrl}/api/auth/register`,
         {
-          username: name.trim().toLowerCase(),
-          password: google ? password.trim() : storedUser.password.trim(),
-          city: city.toLowerCase() || city1.toLowerCase(),
-          phone: number || storedUser.number,
-          email: storedUser.email.trim().toLowerCase() || null,
+          username: name?.trim().toLowerCase(),
+          password: google ? password?.trim() : storedUser?.password.trim(),
+          city: city?.toLowerCase() || city1?.toLowerCase(),
+          phone: number || storedUser?.number,
+          email: storedUser?.email?.trim()?.toLowerCase() || null,
         },
         { withCredentials: true }
       );
@@ -167,8 +167,7 @@ const OtpVerification = (props) => {
       }
     } catch (err) {
       console.log(err);
-      if (true) {
-        console.log(err);
+      if (err.response.status === 409) {
         toast.error(
           `${err.response.data.message} please try with another email!`
         );
