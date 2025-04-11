@@ -137,6 +137,7 @@ const OtpVerification = (props) => {
           password: google ? password.trim() : storedUser.password.trim(),
           city: city.toLowerCase() || city1.toLowerCase(),
           phone: number || storedUser.number,
+          email: storedUser.email.trim().toLowerCase() || null,
         },
         { withCredentials: true }
       );

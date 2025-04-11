@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import { signInWithPopup } from "firebase/auth";
 import OtpVerification from "../registration/OtpVerification";
+import { type } from "jquery";
 
 function getCookieObject(name) {
   const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
@@ -104,6 +105,7 @@ export default function Login() {
           {
             phone: number,
             password,
+            type: "normal",
           },
           { withCredentials: true }
         );
@@ -125,9 +127,32 @@ export default function Login() {
 
     const { user } = response;
     let user1 = { name: user.displayName, email: user.email, city: "" };
-    setStoredUser(user1);
-    setCanShowNumber(true);
-    setEmailVerified(true);
+
+    dispatch({ type: "LOGIN_START" });
+    try {
+      const res = await axiosInstance.post(
+        `${baseUrl}/api/auth/login`,
+        {
+          email: user1.email,
+          type: "google",
+        },
+        { withCredentials: true }
+      );
+      sessionStorage.setItem("access_token", res.data.token);
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+      token !== "" && saveToken(res.data.details._id, token);
+
+      navigate("/");
+    } catch (err) {
+      dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+      if (err.response.status === 409) {
+        toast.error(`${err.response.data.message} creating a account!`);
+
+        setStoredUser(user1);
+        setCanShowNumber(true);
+        setEmailVerified(true);
+      }
+    }
   };
 
   const HandleRegistrationNew = () => {
