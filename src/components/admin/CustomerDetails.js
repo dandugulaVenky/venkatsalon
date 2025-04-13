@@ -369,20 +369,20 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col space-y-1 ">
+            <div className="flex flex-col space-y-2 ">
               <div>
-                <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
+                {/* <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
                   {t("paidStatus")} :{" "}
                   {item.isPaid === true ? "paid" : "Not paid"}
-                </span>
+                </span> */}
                 <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
                   {t("amount")} : {item.totalAmount}
                 </span>
               </div>
               <div>
-                <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
+                {/* <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
                   {t("email", { email: item.email })}
-                </span>
+                </span> */}
                 <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
                   {t("phone", { phone: item.phone })}
                 </span>

@@ -351,10 +351,10 @@ const AdminOrders = () => {
                       <span className="text-xs md:text-[15px] siTaxiOp px-2">
                         {item.username}
                       </span>
-                      <span className="text-xs md:text-[15px] siTaxiOp mr-2 ">
+                      {/* <span className="text-xs md:text-[15px] siTaxiOp mr-2 ">
                         {t("paidStatus")} :{" "}
                         {item.isPaid === true ? "paid" : "Not paid"}
-                      </span>
+                      </span> */}
                     </div>
                     <button
                       onClick={() => {
@@ -374,7 +374,7 @@ const AdminOrders = () => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-1 ">
-                  <div className=" flex space-x-1">
+                  {/* <div className=" flex space-x-1">
                     <p className="text-xs md:text-[15px] siTaxiOp ">
                       {t("on")}:{" "}
                       {moment(item.createdAt).format("MMM Do YY hh:mm:ss A")}
@@ -384,7 +384,7 @@ const AdminOrders = () => {
                         {t("ref")}: {item.referenceNumber}
                       </p>
                     )}
-                  </div>
+                  </div> */}
                   <span
                     className={
                       item.isDone === "true"

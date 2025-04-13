@@ -83,8 +83,9 @@ const FinalRegistration = () => {
 
   const handleSubscription = async (plan) => {
     try {
-      const res = await axiosInstance.get(
-        `${baseUrl}/api/users/checkAlreadyShopPresent/${user?._id}`,
+      const res = await axiosInstance.post(
+        `${baseUrl}/api/users/checkAlreadyShopPresent/${user?._id}/${shopDetails?.name}`,
+        { phone: user?.phone },
         { withCredentials: true }
       );
 
@@ -102,6 +103,7 @@ const FinalRegistration = () => {
         {
           email: user?.email,
           phone: user?.phone,
+          name: shopDetails?.name,
         },
         { withCredentials: true }
       );

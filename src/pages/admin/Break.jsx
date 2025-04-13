@@ -55,8 +55,6 @@ function Break() {
 
   const [value, setValue] = useState(new Date());
 
-  const lunch = [24, 25, 26, 27, 28, 29];
-
   const navigate = useNavigate();
 
   const initialSelectedDates = [
@@ -114,7 +112,7 @@ function Break() {
         });
         mergedReady.push(allValues);
       });
-      // console.log(mergedReady, "mergeready");
+      console.log(mergedReady, "mergeready");
 
       function findMatchingArrays(arr) {
         const matchedArrays = [];
@@ -127,6 +125,7 @@ function Break() {
       }
 
       const matchedArrays = findMatchingArrays(mergedReady);
+
       setMatchedArrays(matchedArrays);
       setTimeBlockArray(
         data[0]?.blockTimings.find((item) => item.date === today)
@@ -216,8 +215,8 @@ function Break() {
     );
 
     if (
-      lunch.includes(selectedOption1.id) ||
-      lunch.includes(selectedOption.id)
+      shopData.lunchTimeArray.includes(selectedOption1.id) ||
+      shopData.lunchTimeArray.includes(selectedOption.id)
     ) {
       return alert(
         t("messingUpYourLunchTime!", {
@@ -291,7 +290,7 @@ function Break() {
             //   `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
             // );
             break; // Exit from the innermost loop
-          } else if (lunch.includes(item1)) {
+          } else if (shopData.lunchTimeArray.includes(item1)) {
             matchFound = true;
             alert(
               t("cannotSelectBczOfAppointmentBetween!", {
@@ -453,7 +452,9 @@ function Break() {
                                               (timeBlockArray?.block.includes(
                                                 option.id
                                               ) ||
-                                                lunch.includes(option.id) ||
+                                                shopData.lunchTimeArray.includes(
+                                                  option.id
+                                                ) ||
                                                 !finalBooked) &&
                                               ` text-red-500 `
                                             }`}
@@ -569,7 +570,9 @@ function Break() {
                                               (timeBlockArray?.block.includes(
                                                 option.id
                                               ) ||
-                                                lunch.includes(option.id) ||
+                                                shopData.lunchTimeArray.includes(
+                                                  option.id
+                                                ) ||
                                                 !finalBooked) &&
                                               ` text-red-500 `
                                             }`}

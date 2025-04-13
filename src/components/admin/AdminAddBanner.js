@@ -146,7 +146,7 @@ const AdminAddBanner = () => {
   };
 
   return (
-    <div className="pt-6 pb-20">
+    <div className="pt-6 pb-20 border  border-gray-300 p-5 shadow-md">
       <div className="min-h-[86.2vh] flex flex-col items-center justify-center mx-2 ">
         <>
           <p className="text-red-400 font-semibold px-4">

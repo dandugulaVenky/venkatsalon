@@ -41,6 +41,15 @@ const AuthReducer = (state, action) => {
         loading: false,
         error: null,
       };
+    case "UPDATE_SHOP_ID":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          shopId: action.payload, // just update the shopId field
+        },
+      };
+
     default:
       return state;
   }

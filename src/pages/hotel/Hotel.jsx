@@ -17,7 +17,14 @@ import {
 import { faHeart as faHeart1 } from "@fortawesome/free-solid-svg-icons";
 
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { useContext, useEffect, useState, useCallback, memo } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  memo,
+  useRef,
+} from "react";
 import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
@@ -130,6 +137,7 @@ const Hotel = ({ smallBanners }) => {
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
   const { t } = useTranslation();
+  const pickerRef = useRef(null);
 
   function isSpecificDate(value, targetDate) {
     return value.toString() === targetDate.toString();
@@ -194,9 +202,13 @@ const Hotel = ({ smallBanners }) => {
       })
       .catch((err) => toast.error(err));
   }, [shopIdLocation]);
-
   useEffectOnce(() => {
     window.scrollTo(0, 0);
+    const inputs = pickerRef.current?.querySelectorAll("input");
+    inputs?.forEach((input) => {
+      input.setAttribute("readOnly", true); // Prevent typing
+      input.classList.add("cursor-pointer"); // Optional: show pointer cursor
+    });
     fetchReviews();
     const favTrueOrNot = user?.favourites.find(
       (item) => item.shopId === shopIdLocation
@@ -912,7 +924,7 @@ const Hotel = ({ smallBanners }) => {
 
           <div className="grid grid-cols-12 gap-5 pb-5">
             <div className="md:col-span-4 col-span-12">
-              <div className="">
+              <div className="" ref={pickerRef}>
                 <DatePicker
                   onChange={handleChange}
                   tileClassName={tileClassName}
@@ -1066,6 +1078,12 @@ const Hotel = ({ smallBanners }) => {
                   {/* Excellent location – {data.distance}m from center */}
                   {t("shopDistance", { distance: data.distance })}
                 </span>
+
+                {data?.fullAddress && (
+                  <span className="hotelDistance">
+                    Full Address: {data.fullAddress}
+                  </span>
+                )}
                 {/* <span className="hotelPriceHighlight"> */}
                 {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
                 {/* {t("shopAbovePrice", { price: data.cheapestPrice })} */}

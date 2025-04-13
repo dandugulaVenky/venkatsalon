@@ -15,7 +15,10 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [shopData, setShopData] = useState();
+  const { dispatch } = useContext(AuthContext);
   const { t } = useTranslation();
+  const [allShops, setAllShops] = useState([]);
+  const [fetchNow, setFetchNow] = useState(false);
 
   useEffect(() => {
     if (!user?._id || !user?.shopId) return;
@@ -45,8 +48,21 @@ const Admin = () => {
       }
     };
 
-    fetchData();
-  }, [user?._id, user?.shopId]);
+    fetchNow && fetchData();
+  }, [fetchNow, user._id, user.shopId]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const getAllShops = async () => {
+      const res = await axiosInstance.get(
+        `${baseUrl}/api/hotels/findUserShops/${user._id}`
+      );
+      setAllShops(res?.data?.data);
+      setFetchNow(res?.data?.data?.length > 1 ? false : true);
+    };
+
+    getAllShops();
+  }, []);
 
   const handleClick = (value) => {
     const input = value;
@@ -85,86 +101,109 @@ const Admin = () => {
     }
   };
 
+  const handleShop = (value) => {
+    dispatch({ type: "UPDATE_SHOP_ID", payload: value });
+    setFetchNow(true);
+  };
+
   return (
-    <div className="pt-6 pb-20">
-      {loading ? (
-        <div className="min-h-[80vh]  flex items-center justify-center">
-          <span className="loader "></span>
-        </div>
-      ) : isAdmin ? (
-        <div className="flex   md:flex-row flex-column items-center justify-center gap-8  md:w-[80vw] w-[85%] mx-auto">
-          <div className="flex flex-1 items-center justify-center ">
-            <p className="text-gray-500 font-bold text-4xl scroll-pb-3">
-              {" "}
-              Hi, welcome to {shopData?.name}
+    <>
+      <div>
+        {allShops?.length > 1 && (
+          <div className="p-5">
+            <select onChange={(e) => handleShop(e.target.value)}>
+              <option value="" disabled selected>
+                Select a shop
+              </option>
+              {allShops.map((shop) => (
+                <option key={shop._id} value={shop._id}>
+                  {shop.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+      <div className="pt-6 pb-20">
+        {loading && fetchNow ? (
+          <div className="min-h-[80vh]  flex items-center justify-center">
+            <span className="loader "></span>
+          </div>
+        ) : isAdmin ? (
+          <div className="flex   md:flex-row flex-column items-center justify-center gap-8  md:w-[80vw] w-[85%] mx-auto">
+            <div className="flex flex-1 items-center justify-center ">
+              <p className="text-gray-500 font-bold text-4xl scroll-pb-3">
+                {" "}
+                Hi, welcome to {shopData?.name}
+              </p>
+            </div>
+            <div className="min-h-[85vh] flex flex-col justify-center w-[50%] cursor-pointer">
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("rewards")}
+              >
+                <p>Rewards</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("orders")}
+              >
+                <p>View Appointments</p>
+              </div>
+              {/* <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("appointments")}
+              >
+                <p>View Appointments</p>
+              </div> */}
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("services")}
+              >
+                <p>{t("myServices")}</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("myBarbers")}
+              >
+                <p>My Barbers</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("addServices")}
+              >
+                <p>{t("addServices")}</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("packages")}
+              >
+                <p>{t("addPackages")}</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("block")}
+              >
+                <p>{t("takeBreak")} </p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("updateShopDetails")}
+              >
+                <p>Add/Del Shop Photos</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="min-h-screen flex items-center justify-center px-10">
+            <p>
+              Please select a shop to manage. If you don't have a shop,
+              <Link to="/contactus">{t("contactUs")}</Link>
             </p>
           </div>
-          <div className="min-h-[85vh] flex flex-col justify-center w-[50%] cursor-pointer">
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("rewards")}
-            >
-              <p>Rewards</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("orders")}
-            >
-              <p>{t("viewOrders")}</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("appointments")}
-            >
-              <p>View Appointments</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("services")}
-            >
-              <p>{t("myServices")}</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("myBarbers")}
-            >
-              <p>My Barbers</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("addServices")}
-            >
-              <p>{t("addServices")}</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("packages")}
-            >
-              <p>{t("addPackages")}</p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("block")}
-            >
-              <p>{t("takeBreak")} </p>
-            </div>
-            <div
-              className="card p-5 w-full"
-              onClick={() => handleClick("updateShopDetails")}
-            >
-              <p>Add/Del Shop Photos</p>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="min-h-screen flex items-center justify-center px-10">
-          <p>
-            {t("notAnAdmintoRegisterYourSaloonPlease")}
-            <Link to="/contactus">{t("contactUs")}</Link>
-          </p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

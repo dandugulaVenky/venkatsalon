@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "react-router-dom";
@@ -27,7 +25,7 @@ const ShopDetails = () => {
   const [genderType, setGenderType] = useState(null);
   const [map, setMap] = useState(false);
   const [spaIncluded, setSpaIncluded] = useState(null);
-
+  const [fullAddress, setFullAddress] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -153,6 +151,11 @@ const ShopDetails = () => {
     clearError("selectedShopEndTime");
   };
 
+  const handleFullAddress = (e) => {
+    setFullAddress(e.target.value);
+    clearError("fullAddress");
+  };
+
   const handleMapClick = (coords) => {
     setLatLong(coords);
     setMap(!map);
@@ -224,7 +227,8 @@ const ShopDetails = () => {
         !latLong ||
         !genderType ||
         !typeOfShop ||
-        !shopName
+        !shopName ||
+        !fullAddress
       ) {
         alert("Please ensure you have entered all the fields !");
       } else {
@@ -288,7 +292,7 @@ const ShopDetails = () => {
 
             alternatePhone: "phone",
             city: `${village}, ${selectedState} ${selectedPincode}, india`,
-
+            fullAddress,
             desc: "description",
             type: typeOfShop.toLowerCase(),
 
@@ -335,7 +339,7 @@ const ShopDetails = () => {
     selectedState,
     village,
     latLong,
-
+    fullAddress,
     typeOfShop,
     genderType,
     spaIncluded
@@ -369,6 +373,10 @@ const ShopDetails = () => {
     }
     if (!selectedState) {
       errors.selectedState = "state  is required";
+    }
+
+    if (!fullAddress) {
+      errors.fullAddress = "full address is required";
     }
     if (!latLong) {
       errors.latLong = "latitudes, longitudes are required";
@@ -660,6 +668,19 @@ const ShopDetails = () => {
               <p className="text-red-500 py-2">{formErrors?.village}</p>
             </div>
           )}
+        </div>
+
+        <div className="pb-2">
+          <label htmlFor="address">Full Address</label>
+          <textarea
+            rows="3"
+            className="w-full"
+            placeholder="Enter full address"
+            id="address"
+            value={fullAddress}
+            onChange={handleFullAddress}
+          />
+          <p className="text-red-500 py-2">{formErrors?.fullAddress}</p>
         </div>
 
         <div className="w-full flex  flex-wrap">
