@@ -22,7 +22,7 @@ const ShopDetails = () => {
   const [shopName, setShopName] = useState();
   const [latLong, setLatLong] = useState(null);
   const [typeOfShop, setTypeOfShop] = useState(null);
-  const [genderType, setGenderType] = useState(null);
+  const [genderType, setGenderType] = useState("");
   const [map, setMap] = useState(false);
   const [spaIncluded, setSpaIncluded] = useState(null);
   const [fullAddress, setFullAddress] = useState("");
@@ -167,7 +167,6 @@ const ShopDetails = () => {
   };
 
   const handleType = (e) => {
-    console.log(e.target.value, "ufufufu");
     setTypeOfShop(e.target.value);
     clearError("typeOfShop");
   };
@@ -216,22 +215,20 @@ const ShopDetails = () => {
   useEffect(() => {
     if (Object.keys(formErrors)?.length === 0 && isSubmit) {
       if (
-        !selectedStartTime ||
-        !selectedEndTime ||
-        !selectedShopStartTime ||
-        !selectedShopEndTime ||
-        !selectedDistrict ||
-        !selectedPincode ||
-        !selectedState ||
-        !village ||
-        !latLong ||
-        !genderType ||
-        !typeOfShop ||
-        !shopName ||
-        !fullAddress
+        (shopName,
+        selectedStartTime,
+        selectedEndTime,
+        selectedShopStartTime,
+        selectedShopEndTime,
+        selectedDistrict,
+        selectedPincode,
+        selectedState,
+        village,
+        latLong,
+        typeOfShop,
+        genderType,
+        spaIncluded !== null)
       ) {
-        alert("Please ensure you have entered all the fields !");
-      } else {
         if (
           selectedStartTime !== selectedEndTime &&
           selectedShopStartTime !== selectedShopEndTime
@@ -324,6 +321,8 @@ const ShopDetails = () => {
         } else {
           alert(t("somethingWrong"));
         }
+      } else {
+        alert("Please ensure you have entered all the fields !");
       }
     }
   }, [formErrors]);
@@ -339,12 +338,10 @@ const ShopDetails = () => {
     selectedState,
     village,
     latLong,
-    fullAddress,
     typeOfShop,
     genderType,
     spaIncluded
   ) => {
-    console.log(spaIncluded, "jj");
     const errors = {};
     // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!shopName) {
@@ -381,17 +378,16 @@ const ShopDetails = () => {
     if (!latLong) {
       errors.latLong = "latitudes, longitudes are required";
     }
-
-    if (!genderType) {
-      errors.genderType = "gender is required";
+    if (genderType === "") {
+      errors.genderType = "Gender type is required";
     }
 
     if (!typeOfShop) {
       errors.typeOfShop = "type is required";
     }
 
-    if (spaIncluded === null) {
-      errors.spaIncluded = "spa inclusion is required";
+    if (spaIncluded !== true && spaIncluded !== false) {
+      errors.spaIncluded = "Please select Yes or No";
     }
 
     if (!village) {
@@ -403,7 +399,7 @@ const ShopDetails = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(typeOfShop, "uiuiuiuiuiuiuiuiui");
+
     setFormErrors(
       validate(
         shopName,
@@ -416,7 +412,6 @@ const ShopDetails = () => {
         selectedState,
         village,
         latLong,
-
         typeOfShop,
         genderType,
         spaIncluded
@@ -707,7 +702,7 @@ const ShopDetails = () => {
 
           <div className="mb-4 w-full">
             <label htmlFor="genderType">Gender {t("type")}</label>
-            <select
+            {/* <select
               className="w-full p-1.5"
               onChange={handleParlourType}
               value={genderType}
@@ -718,7 +713,20 @@ const ShopDetails = () => {
               <option value="women">{t("women")}</option>
               <option value="men">{t("men")}</option>
               <option value="unisex">{t("unisex")}</option>
+            </select> */}
+            <select
+              className="w-full p-1.5"
+              onChange={handleParlourType}
+              value={genderType}
+            >
+              <option value="">
+                {t("select")} Gender {t("type")}
+              </option>
+              <option value="women">{t("women")}</option>
+              <option value="men">{t("men")}</option>
+              <option value="unisex">{t("unisex")}</option>
             </select>
+
             <p className="text-red-500 py-2">{formErrors?.genderType}</p>
           </div>
         </div>
@@ -729,8 +737,9 @@ const ShopDetails = () => {
             <input
               type="checkbox"
               name="Yes"
-              checked={spaIncluded === true}
+              checked={spaIncluded}
               className="h-6 w-6"
+              value={true}
               id="Yes"
               onChange={(event) => {
                 setSpaIncluded(true);
@@ -745,10 +754,10 @@ const ShopDetails = () => {
             <input
               type="checkbox"
               name="No"
+              value={false}
               checked={spaIncluded === false}
               className="h-6 w-6"
               id="No"
-              value={false}
               onChange={(event) => {
                 setSpaIncluded(false);
                 clearError("spaIncluded");
