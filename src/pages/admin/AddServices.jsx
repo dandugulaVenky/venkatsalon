@@ -219,6 +219,8 @@ const AddServices = () => {
       }
     });
 
+    console.log(mergedObj, "mergedObj");
+    // Convert the merged object back to an array
     const mergedArray = Object.values(mergedObj).map((item) => {
       item.services = item.services.flat(); // Flatten the services array
       return item;

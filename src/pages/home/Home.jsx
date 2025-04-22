@@ -7,7 +7,7 @@ import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
-import Services from "../../utils/Services";
+// import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
@@ -15,6 +15,7 @@ import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
+import OffersForYou from "../carousels/OffersForYou";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
@@ -274,7 +275,7 @@ const Home = ({ endRef, smallBanners }) => {
       </div>
       <div className=" md:my-10 xl:my-4">
         <div className="md:max-w-[1240px] w-full mx-auto">
-          <Services />
+          {/* <Services /> */}
         </div>
 
         <div
@@ -285,6 +286,9 @@ const Home = ({ endRef, smallBanners }) => {
             <div className="md:max-w-[1244px] w-full ">
               <div>
                 <BestSaloons smallBanners={smallBanners} />
+              </div>
+              <div>
+                <OffersForYou smallBanners={smallBanners} />
               </div>
               <div>
                 <Categories />

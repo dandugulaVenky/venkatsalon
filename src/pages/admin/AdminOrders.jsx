@@ -170,7 +170,7 @@ const AdminOrders = () => {
 
           setResultInServicesCount(arr);
           setResultInCategoriesCount(arr1);
-          console.log(arr);
+          // console.log(arr);
           //generating revenue based on gender
           const generateRevenue = statusDoneServices1.reduce((acc, item) => {
             if (item.subCategory) {

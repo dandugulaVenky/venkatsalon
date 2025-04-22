@@ -29,7 +29,7 @@ const BookingHistory = () => {
   const [showTypeOfOrders, setShowTypeOfOrders] = useState("directOrders");
   const [shopId, setShopId] = useState(user?.shopId);
   const [userInput, setUserInput] = useState("");
-
+  const [allServices, setAllServices] = useState([]);
   const [visible, setVisible] = useState(10);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
@@ -37,7 +37,7 @@ const BookingHistory = () => {
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
-  console.log(data);
+
   const { t } = useTranslation();
   useEffectOnce(() => {
     window.scrollTo(0, 0);
@@ -54,6 +54,16 @@ const BookingHistory = () => {
         );
 
         setRoomData(data[0].roomNumbers);
+        const mergedServices = data[0]?.services
+          ?.reduce((arr, item) => {
+            arr.push(item.services);
+            return arr;
+          }, [])
+          .reduce((arr, item) => {
+            return arr.concat(item);
+          }, []);
+
+        setAllServices(mergedServices);
       } catch (err) {
         console.log(err);
       }
@@ -102,6 +112,7 @@ const BookingHistory = () => {
   const filteredArray = filterArray(data[showTypeOfOrders], userInput);
 
   const GetPushed = () => {
+    const [showInclusions, setShowInclusions] = useState(null);
     const item = showServices;
 
     let seats = [];
@@ -109,12 +120,285 @@ const BookingHistory = () => {
     if (item && roomData) {
       item.selectedSeats.map((seat, i) => {
         const find = roomData.find((item) => item?._id === seat.id);
-        console.log(find);
+
         if (find) {
           seats.push(find.number);
         }
       });
     }
+
+    const handleInclusions = (e, option, subCategory) => {
+      e.preventDefault();
+
+      // const inclusions = option.inclusions.map((inclusion) => {
+      //   return allServices.filter(
+      //     (service) =>
+      //       service.service === inclusion.service &&
+      //       service.subCategory === option.subCategory
+      //   )[0];
+      // });
+
+      const inclusions = option.inclusions.map((inclusion) => {
+        const matchedService = allServices.find(
+          (service) =>
+            service.service === option.service &&
+            service.subCategory === subCategory
+        );
+
+        return matchedService;
+      })[0];
+
+      const inclusions1 = inclusions?.inclusions
+        .map((inclusion) => {
+          const matchedService = allServices.find(
+            (service) =>
+              service.service === inclusion.service &&
+              service.subCategory === subCategory
+          );
+
+          return inclusion
+            ? {
+                ...inclusion,
+                free: inclusion.free,
+                price: matchedService.price,
+                duration: matchedService.duration,
+              }
+            : null;
+        })
+        .filter(Boolean);
+
+      setShowInclusions({
+        inclusions: inclusions1,
+        package: option.service,
+        type: option.category,
+        // subCategory: option.subCategory,
+      });
+    };
+
+    const ShowInclusions = () => {
+      const freeInclusions = showInclusions?.inclusions?.filter(
+        (option) => option.free === true
+      );
+
+      const paidInclusions = showInclusions?.inclusions?.filter(
+        (option) => option.free !== true
+      );
+
+      if (showInclusions?.type === "offers") {
+        return (
+          showInclusions?.inclusions?.length > 0 && (
+            <div className="reserve items-center justify-center p-6">
+              <div className="overflow-auto ">
+                <FontAwesomeIcon
+                  icon={faClose}
+                  size="lg"
+                  onClick={() => {
+                    setShowInclusions(null);
+                  }}
+                  className="right-20 absolute top-10 text-white"
+                />
+                <>
+                  <div className="flex flex-col gap-4 items-center justify-between h-[10vh] mt-16 ">
+                    <p className="text-white">
+                      Cost of Free Services : &#8377;&nbsp;
+                      {freeInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+
+                    <p className="text-white">
+                      Cost of Paid Services : &#8377;&nbsp;
+                      {paidInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+
+                    <p className="text-white">
+                      Customer saving : &#8377;&nbsp;
+                      {freeInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Free Services Table */}
+                  {freeInclusions?.length > 0 && (
+                    <div className="mb-10 mt-16">
+                      <h2 className="text-lg font-semibold text-white mb-2">
+                        Free Services
+                      </h2>
+                      <table className="min-w-[70vw]">
+                        <thead className="border-b bg-gray-300">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {freeInclusions.map((option, j) => (
+                            <tr
+                              key={`free-${j}`}
+                              className="border-b-2 border-white"
+                            >
+                              <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                <label className="text-white">
+                                  {option?.service}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  &#8377; {option?.price}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  {option?.duration} min
+                                </label>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* Paid Services Table */}
+                  {paidInclusions?.length > 0 && (
+                    <div>
+                      <h2 className="text-lg font-semibold text-white mb-2">
+                        Paid Services
+                      </h2>
+                      <table className="min-w-[70vw]">
+                        <thead className="border-b bg-gray-300">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paidInclusions.map((option, j) => (
+                            <tr
+                              key={`paid-${j}`}
+                              className="border-b-2 border-white"
+                            >
+                              <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                <label className="text-white">
+                                  {option?.service}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  &#8377; {option?.price}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  {option?.duration} min
+                                </label>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
+              </div>
+            </div>
+          )
+        );
+      } else {
+        return (
+          showInclusions?.inclusions?.length > 0 && (
+            <div className="reserve items-center justify-center">
+              <div className="overflow-x-auto  ">
+                <FontAwesomeIcon
+                  icon={faClose}
+                  size="lg"
+                  onClick={() => {
+                    setShowInclusions(null);
+                  }}
+                  className="right-20 absolute top-10 text-white"
+                />
+                <>
+                  <div className="flex items-center justify-between h-[10vh]  ">
+                    <p className="text-white">
+                      Cost of Services : &#8377;&nbsp;
+                      {showInclusions?.inclusions.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+                  </div>
+                  <table className="min-w-[70vw] ">
+                    <thead className="border-b bg-gray-300 ">
+                      <tr className="border-b-2 border-gray-200">
+                        <th className="text-left md:text-md text-sm md:p-5 p-4">
+                          Service Name
+                        </th>
+                        <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                          Price
+                        </th>
+                        {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                      Category
+                                    </th> */}
+                        <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                          Duration
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {showInclusions?.inclusions?.map((option, j) => {
+                        return (
+                          <tr key={j} className="border-b-2 border-white">
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+
+                            {/* <td className="p-5 text-right md:text-md text-sm">
+                                            {option.category}
+                                          </td> */}
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </>
+              </div>
+            </div>
+          )
+        );
+      }
+    };
 
     return (
       <div className="reserve pt-20">
@@ -127,6 +411,7 @@ const BookingHistory = () => {
           />
 
           <>
+            <ShowInclusions />
             <div className="card p-5 overflow-auto md:max-w-[60vw] max-w-[90vw]">
               {item.selectedSeats.map((seat, i) => {
                 return (
@@ -147,6 +432,17 @@ const BookingHistory = () => {
                             <span className="pr-3">
                               {i !== seat.options.length - 1 ? "," : "."}
                             </span>
+                            {(seat?.options[0]?.category === "offers" ||
+                              seat?.options[0]?.category === "packages") && (
+                              <button
+                                onClick={(e) =>
+                                  handleInclusions(e, option, item?.subCategory)
+                                }
+                                className="primary-button"
+                              >
+                                Show Inclusions
+                              </button>
+                            )}
                           </span>
                         );
                       })}

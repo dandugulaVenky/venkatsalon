@@ -113,7 +113,7 @@ const Packages = () => {
     console.log({ packageName, all, price, duration });
     if (
       packageName?.length > 5 &&
-      all?.length >= 2 &&
+      all?.length >= 1 &&
       price > 10 &&
       duration === 0
     ) {

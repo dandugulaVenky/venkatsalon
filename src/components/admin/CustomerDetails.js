@@ -302,7 +302,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     uniqueArr1 = Array.from(new Set(userBookingIds));
   }
 
-  console.log(moment().format("MMM Do YY") === date, "moment().format");
+  // console.log(moment().format("MMM Do YY") === date, "moment().format");
 
   return (
     <div className="reserve-admin px-4">
@@ -376,7 +376,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                   {item.isPaid === true ? "paid" : "Not paid"}
                 </span> */}
                 <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
-                  {t("amount")} : {item.totalAmount}
+                  {t("amount")} : ₹{item.totalAmount}
                 </span>
               </div>
               <div>

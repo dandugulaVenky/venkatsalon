@@ -60,7 +60,8 @@ import ResetPassword from "./pages/login/ResetPassword";
 import MyBarbers from "./pages/admin/MyBarbers";
 import Rewards from "./pages/admin/Rewards";
 import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
-
+import MyOffers from "./pages/admin/MyOffers";
+import ShopsWithOffers from "./pages/list/ShopsWithOffers";
 
 function App() {
   const ProtectedRoute = ({ children }) => {
@@ -90,7 +91,6 @@ function App() {
   }, []);
 
   const endRef = useRef(null);
- 
 
   return (
     <>
@@ -108,10 +108,10 @@ function App() {
               path="/"
               element={<Home endRef={endRef} smallBanners={smallBanners} />}
             />
-            
+
             {/* <Route path="/get-started" element={<Home />} /> */}
             <Route path="/login" element={<Login />} />
-           
+
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
@@ -135,6 +135,8 @@ function App() {
             />
 
             <Route path="/shops" element={<List />} />
+            <Route path="/shops/with-offers" element={<ShopsWithOffers />} />
+
             <Route path="/cities" element={<AllCities />} />
 
             <Route
@@ -250,6 +252,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <UpdateShopDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-offers"
+              element={
+                <ProtectedRoute>
+                  <MyOffers />
                 </ProtectedRoute>
               }
             />

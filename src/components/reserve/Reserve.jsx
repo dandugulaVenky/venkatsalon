@@ -3,14 +3,7 @@ import React, { useCallback, useContext } from "react";
 import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCaretDown,
-  faCaretLeft,
-  faCaretRight,
-  faCaretUp,
-  faClock,
-  faClose,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClock, faClose, faTag } from "@fortawesome/free-solid-svg-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -25,7 +18,7 @@ import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
 import axiosInstance from "../axiosInterceptor";
-import { set } from "date-fns";
+
 import MovingIcon from "./MovingIcon";
 
 function compareTimeDiff(time) {
@@ -83,7 +76,7 @@ const Reserve = () => {
   );
   let findBarbers;
   // console.log(barberBlock, "barberBlock");
-  if (barberBlock.length > 0) {
+  if (barberBlock?.length > 0) {
     findBarbers = barberBlock.flatMap((item) =>
       item.selectedSeats?.map((seat) => seat.barber._id)
     );
@@ -101,6 +94,7 @@ const Reserve = () => {
   const [categories, setCategories] = useState();
   const [reserveState, setReserveState] = useState(null);
   const [allServices, setAllServices] = useState();
+  const [offerFound, setOfferFound] = useState(false);
   const [showInclusions, setShowInclusions] = useState();
   const [superCategory, setSuperCategory] = useState("regular");
   const [category, setCategory] = useState();
@@ -229,8 +223,16 @@ const Reserve = () => {
           ? category.services
           : null
       );
+
       const services = result1.reduce((arr, item) => {
-        arr.push(item.category);
+        const foundOffer = item.services.find((item) => item.offer > 0);
+
+        setOfferFound((prevOfferFound) => prevOfferFound || foundOffer);
+
+        arr.push({
+          category: item.category,
+          offer: foundOffer ? true : false,
+        });
         return arr;
       }, []);
 
@@ -241,7 +243,7 @@ const Reserve = () => {
       //setting directly subcategory
       setCategory(services[0]);
       const result = categories.filter((category, i) =>
-        category.category === services[0] &&
+        category.category === services[0]?.category &&
         category.subCategory === (gender === "unisex" ? unisexType : gender)
           ? category.services
           : null
@@ -249,7 +251,7 @@ const Reserve = () => {
       setCategoriesOptions(result[0].services);
       setSuperCategory(() => {
         const result = categories.filter((category, i) =>
-          category.category === services[0] &&
+          category.category === services[0]?.category &&
           category.subCategory === (gender === "unisex" ? unisexType : gender)
             ? category.superCategory
             : null
@@ -501,14 +503,22 @@ const Reserve = () => {
     let seatAmount = existingDuration ? existingDuration.amount : 0;
 
     if (event.target.name === service.service) {
+      let newPrice = Number(
+        service.offer > 0
+          ? (service.price * (1 - service.offer / 100)).toFixed(1)
+          : service.price
+      );
+
+      console.log({ newPrice }, "newPrice");
+
       if (event.target.checked) {
-        newAmount += service.price;
-        seatAmount += service.price;
+        newAmount += newPrice;
+        seatAmount += newPrice;
 
         newDuration += service.duration;
       } else {
-        newAmount -= service.price;
-        seatAmount -= service.price;
+        newAmount -= newPrice;
+        seatAmount -= newPrice;
 
         newDuration -= service.duration;
       }
@@ -607,7 +617,7 @@ const Reserve = () => {
       return toast("Please select a valid time!");
     }
 
-    if (amount < 10) {
+    if (amount < 1) {
       return alert(t("SelectOption"));
     }
 
@@ -873,93 +883,258 @@ const Reserve = () => {
   const handleInclusions = (e, option) => {
     e.preventDefault();
 
-    const inclusions = option.inclusions.map((inclusion) => {
-      return allServices.filter(
-        (service) =>
-          service.service === inclusion.service &&
-          service.subCategory === option.subCategory
-      )[0];
-    });
+    // const inclusions = option.inclusions.map((inclusion) => {
+    //   return allServices.filter(
+    //     (service) =>
+    //       service.service === inclusion.service &&
+    //       service.subCategory === option.subCategory
+    //   )[0];
+    // });
+
+    const inclusions = option.inclusions
+      .map((inclusion) => {
+        const matchedService = allServices.find(
+          (service) =>
+            service.service === inclusion.service &&
+            service.subCategory === option.subCategory
+        );
+
+        return matchedService
+          ? { ...matchedService, free: inclusion.free }
+          : null;
+      })
+      .filter(Boolean);
 
     setShowInclusions({
       inclusions: inclusions,
       package: option.service,
+      type: option.category,
     });
   };
 
   const ShowInclusions = () => {
-    return (
-      showInclusions?.inclusions?.length > 0 && (
-        <div className="reserve items-center justify-center">
-          <div className="overflow-x-auto  ">
-            <FontAwesomeIcon
-              icon={faClose}
-              size="lg"
-              onClick={() => {
-                setShowInclusions(null);
-              }}
-              className="right-20 absolute top-10 text-white"
-            />
-            <>
-              <div className="flex items-center justify-between h-[10vh]  ">
-                <p className="text-white">
-                  Cost of Services : &#8377;&nbsp;
-                  {showInclusions?.inclusions.reduce(
-                    (acc, service) => acc + service?.price,
-                    0
-                  )}
-                </p>
-              </div>
-              <table className="min-w-[70vw] ">
-                <thead className="border-b bg-gray-300 ">
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left md:text-md text-sm md:p-5 p-4">
-                      Service Name
-                    </th>
-                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                      Price
-                    </th>
-                    {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                Category
-                              </th> */}
-                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                      Duration
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {showInclusions?.inclusions?.map((option, j) => {
-                    return (
-                      <tr key={j} className="border-b-2 border-white">
-                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                          <label className="text-white">
-                            {option?.service}
-                          </label>
-                        </td>
-                        <td className="p-5 text-right md:text-md text-sm">
-                          <label className="text-white">
-                            &#8377; {option?.price}
-                          </label>
-                        </td>
-
-                        {/* <td className="p-5 text-right md:text-md text-sm">
-                                      {option.category}
-                                    </td> */}
-                        <td className="p-5 text-right md:text-md text-sm">
-                          <label className="text-white">
-                            {option?.duration} min
-                          </label>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </>
-          </div>
-        </div>
-      )
+    const freeInclusions = showInclusions?.inclusions?.filter(
+      (option) => option.free === true
     );
+
+    const paidInclusions = showInclusions?.inclusions?.filter(
+      (option) => option.free !== true
+    );
+
+    if (showInclusions?.type === "offers") {
+      return (
+        showInclusions?.inclusions?.length > 0 && (
+          <div className="reserve items-center justify-center p-6">
+            <div className="overflow-auto ">
+              <FontAwesomeIcon
+                icon={faClose}
+                size="lg"
+                onClick={() => {
+                  setShowInclusions(null);
+                }}
+                className="right-20 absolute top-10 text-white"
+              />
+              <>
+                <div className="flex flex-col gap-4 items-center justify-between h-[10vh] mt-16 ">
+                  <p className="text-white">
+                    Cost of Free Services : &#8377;&nbsp;
+                    {freeInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+
+                  <p className="text-white">
+                    Cost of Paid Services : &#8377;&nbsp;
+                    {paidInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+
+                  <p className="text-white">
+                    You are saving : &#8377;&nbsp;
+                    {freeInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+                </div>
+
+                {/* Free Services Table */}
+                {freeInclusions?.length > 0 && (
+                  <div className="mb-10 mt-16">
+                    <h2 className="text-lg font-semibold text-white mb-2">
+                      Free Services
+                    </h2>
+                    <table className="min-w-[70vw]">
+                      <thead className="border-b bg-gray-300">
+                        <tr className="border-b-2 border-gray-200">
+                          <th className="text-left md:text-md text-sm md:p-5 p-4">
+                            Service Name
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Price
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Duration
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {freeInclusions.map((option, j) => (
+                          <tr
+                            key={`free-${j}`}
+                            className="border-b-2 border-white"
+                          >
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Paid Services Table */}
+                {paidInclusions?.length > 0 && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-white mb-2">
+                      Paid Services
+                    </h2>
+                    <table className="min-w-[70vw]">
+                      <thead className="border-b bg-gray-300">
+                        <tr className="border-b-2 border-gray-200">
+                          <th className="text-left md:text-md text-sm md:p-5 p-4">
+                            Service Name
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Price
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Duration
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {paidInclusions.map((option, j) => (
+                          <tr
+                            key={`paid-${j}`}
+                            className="border-b-2 border-white"
+                          >
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            </div>
+          </div>
+        )
+      );
+    } else {
+      return (
+        showInclusions?.inclusions?.length > 0 && (
+          <div className="reserve items-center justify-center">
+            <div className="overflow-x-auto  ">
+              <FontAwesomeIcon
+                icon={faClose}
+                size="lg"
+                onClick={() => {
+                  setShowInclusions(null);
+                }}
+                className="right-20 absolute top-10 text-white"
+              />
+              <>
+                <div className="flex items-center justify-between h-[10vh]  ">
+                  <p className="text-white">
+                    Cost of Services : &#8377;&nbsp;
+                    {showInclusions?.inclusions.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+                </div>
+                <table className="min-w-[70vw] ">
+                  <thead className="border-b bg-gray-300 ">
+                    <tr className="border-b-2 border-gray-200">
+                      <th className="text-left md:text-md text-sm md:p-5 p-4">
+                        Service Name
+                      </th>
+                      <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                        Price
+                      </th>
+                      {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                  Category
+                                </th> */}
+                      <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                        Duration
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {showInclusions?.inclusions?.map((option, j) => {
+                      return (
+                        <tr key={j} className="border-b-2 border-white">
+                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                            <label className="text-white">
+                              {option?.service}
+                            </label>
+                          </td>
+                          <td className="p-5 text-right md:text-md text-sm">
+                            <label className="text-white">
+                              &#8377; {option?.price}
+                            </label>
+                          </td>
+
+                          {/* <td className="p-5 text-right md:text-md text-sm">
+                                        {option.category}
+                                      </td> */}
+                          <td className="p-5 text-right md:text-md text-sm">
+                            <label className="text-white">
+                              {option?.duration} min
+                            </label>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </>
+            </div>
+          </div>
+        )
+      );
+    }
   };
 
   const handleBarberSelection = (selectedBarber, seatId) => {
@@ -998,10 +1173,19 @@ const Reserve = () => {
             state={reserveState}
             setPreview={setSalonPreview}
             mergedServices={mergedServices}
+            offer={data && data[0]?.offer}
           />
         </div>
       ) : (
-        <div className="">
+        <div>
+          {data && data[0]?.offer ? (
+            <p className="text-center text-lg font-semibold text-green-500 mb-2">
+              <FontAwesomeIcon icon={faTag} className="mr-2" /> This Salon is
+              giving {data && data[0]?.offer}% discount on final booking Price.
+            </p>
+          ) : (
+            ""
+          )}
           <div className="flex items-center md:justify-start justify-center flex-wrap space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
             {/* {!categoriesOptions?.length > 0 && sortBy === null && (
               <select
@@ -1054,16 +1238,31 @@ const Reserve = () => {
             </select>
 
             <select className="md:w-52 w-auto" onChange={handleChange}>
-              <option selected>Select Sub Category</option>
+              <option>Select Sub Category</option>
 
               {salonServices?.map((service, i) => {
                 return (
-                  <option key={i} selected={service === category}>
-                    {service}
+                  <option
+                    key={i}
+                    selected={service.category === category.category}
+                    value={service.category}
+                    className={`${
+                      service.offer ? "text-green-400" : "text-gray-700"
+                    }`}
+                  >
+                    {service?.category} {service.offer ? "(Discount in %)" : ""}
                   </option>
                 );
               })}
             </select>
+
+            {offerFound && (
+              <img
+                src="https://cdn4.iconfinder.com/data/icons/flat-color-sale-tag-set/512/Accounts_label_promotion_sale_tag_32-512.png"
+                alt="offer"
+                className="w-20 h-20 absolute -right-3 top-16"
+              />
+            )}
             {/* {(sortBy !== null || categoriesOptions?.length > 0) && (
               <select className="md:w-52 w-auto" onChange={handleSortChange}>
                 <option selected>Sort By</option>
@@ -1134,7 +1333,8 @@ const Reserve = () => {
                                       <th className="md:p-5 p-4 md:text-md text-sm text-right">
                                         {t("price")}
                                       </th>
-                                      {category === "packages" && (
+                                      {(category === "packages" ||
+                                        category === "offers") && (
                                         <th className="md:p-5 p-4 md:text-md text-sm text-right">
                                           Inclusions
                                         </th>
@@ -1147,70 +1347,104 @@ const Reserve = () => {
                                   <tbody>
                                     {show &&
                                       categoriesOptions?.map((option, j) => (
-                                        <tr
-                                          key={j}
-                                          className="border-b-2 border-gray-200"
-                                        >
-                                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                            <MovingIcon
-                                              direction="right"
-                                              side={true}
-                                            />
-                                            <input
-                                              type="checkbox"
-                                              name={option.service}
-                                              checked={selectedOptions.has(
-                                                option.service
+                                        <>
+                                          {option.description !== "" && (
+                                            <>
+                                              <p className="text-green-400  text-sm pt-3 pl-3 pr-3">
+                                                *{option.description}
+                                              </p>
+                                              {option.offer !== 0 && (
+                                                <p className="text-green-400  text-sm pt-3 pl-3 pr-3">
+                                                  Offer : {option.offer}%
+                                                </p>
                                               )}
-                                              className="h-6 w-6"
-                                              id={option.service}
-                                              onChange={(event) =>
-                                                handleOptionChange(
-                                                  event,
-                                                  seat.id,
-                                                  option,
-                                                  seat.index
-                                                )
-                                              }
-                                            />
-                                            <label
-                                              htmlFor={option.service}
-                                              className="text-gray-900 cursor-pointer"
-                                            >
-                                              {option.service}
-                                            </label>
-                                          </td>
-                                          <td className="p-5 text-right md:text-md text-sm">
-                                            <label
-                                              htmlFor={option.service}
-                                              className="cursor-pointer"
-                                            >
-                                              {" "}
-                                              &#8377; {option.price}
-                                            </label>
-                                          </td>
-
-                                          {category === "packages" && (
-                                            <td className="p-5 text-right md:text-md text-sm">
-                                              <label
-                                                className="text-gray-900 underline cursor-pointer"
-                                                onClick={(e) =>
-                                                  handleInclusions(e, option)
+                                            </>
+                                          )}
+                                          <tr
+                                            key={j}
+                                            className="border-b-2 border-gray-200"
+                                          >
+                                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                              <MovingIcon
+                                                direction="right"
+                                                side={true}
+                                              />
+                                              <input
+                                                type="checkbox"
+                                                name={option.service}
+                                                checked={selectedOptions.has(
+                                                  option.service
+                                                )}
+                                                className="h-6 w-6"
+                                                id={option.service}
+                                                onChange={(event) =>
+                                                  handleOptionChange(
+                                                    event,
+                                                    seat.id,
+                                                    option,
+                                                    seat.index
+                                                  )
                                                 }
+                                              />
+                                              <label
+                                                htmlFor={option.service}
+                                                className="text-gray-900 cursor-pointer"
                                               >
-                                                {t("showinclusions")}
+                                                {option.service}
                                               </label>
                                             </td>
-                                          )}
-                                          <td className="p-5 text-right md:text-md text-sm">
-                                            <label
-                                              htmlFor={option.service}
-                                              className="cursor-pointer"
-                                            >
-                                              {option.duration} {t("min")}
-                                            </label>
-                                          </td>
-                                        </tr>
+
+                                            <td className="p-5 text-right md:text-md text-sm">
+                                              <label
+                                                htmlFor={option.service}
+                                                className="cursor-pointer "
+                                              >
+                                                {" "}
+                                                <span
+                                                  className={` ${
+                                                    option.offer !== 0 &&
+                                                    "line-through"
+                                                  } mr-2`}
+                                                >
+                                                  {" "}
+                                                  &#8377; {option.price}
+                                                </span>
+                                                {option.offer !== 0 && (
+                                                  <span>
+                                                    {" "}
+                                                    &#8377;{" "}
+                                                    {(
+                                                      option.price *
+                                                      (1 - option.offer / 100)
+                                                    ).toFixed(1)}
+                                                  </span>
+                                                )}
+                                              </label>
+                                            </td>
+
+                                            {(category === "packages" ||
+                                              category === "offers") && (
+                                              <td className="p-5 text-right md:text-md text-sm">
+                                                <label
+                                                  className="text-gray-900 underline cursor-pointer"
+                                                  onClick={(e) =>
+                                                    handleInclusions(e, option)
+                                                  }
+                                                >
+                                                  {t("showinclusions")}
+                                                </label>
+                                              </td>
+                                            )}
+                                            <td className="p-5 text-right md:text-md text-sm">
+                                              <label
+                                                htmlFor={option.service}
+                                                className="cursor-pointer"
+                                              >
+                                                {option.duration} {t("min")}
+                                              </label>
+                                            </td>
+                                          </tr>
+                                        </>
                                       ))}
                                   </tbody>
                                 </table>
@@ -1263,7 +1497,7 @@ const Reserve = () => {
 
                                         <p>
                                           {t("Experience")}: {barber.experience}{" "}
-                                          {t("years")}
+                                          years
                                         </p>
                                       </div>
                                     );
@@ -1306,13 +1540,32 @@ const Reserve = () => {
                     <li>
                       <div className="mb-2 flex justify-between">
                         <div> {t("time")}</div>
-                        <div> {options[selectedValue]?.value}</div>
+                        <div> {options?.[selectedValue]?.value}</div>
                       </div>
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
                         <div> {t("total")}</div>
-                        <div> &#8377; {totalAmount}</div>
+                        <div className="text-white">
+                          <span
+                            className={`${
+                              data &&
+                              data[0]?.offer &&
+                              "line-through text-red-400"
+                            } text-green-400 mr-2`}
+                          >
+                            ₹ {totalAmount}
+                          </span>
+                          {data && data[0]?.offer && (
+                            <span className="text-green-400 font-semibold">
+                              ₹{" "}
+                              {(
+                                totalAmount *
+                                (1 - (data && data[0]?.offer / 100))
+                              ).toFixed(1)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </li>
 

@@ -92,6 +92,9 @@ const Admin = () => {
       case "block":
         navigate("/admin/break");
         break;
+      case "myOffers":
+        navigate("/admin/my-offers");
+        break;
       case "updateShopDetails":
         navigate("/admin/update-shop-details");
         break;
@@ -190,7 +193,13 @@ const Admin = () => {
                 className="card p-5 w-full"
                 onClick={() => handleClick("updateShopDetails")}
               >
-                <p>Add/Del Shop Photos</p>
+                <p>Update Shop Details</p>
+              </div>
+              <div
+                className="card p-5 w-full"
+                onClick={() => handleClick("myOffers")}
+              >
+                <p>My Offers</p>
               </div>
             </div>
           </div>

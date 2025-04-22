@@ -4,8 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axiosInstance from "../axiosInterceptor";
 
-const PackagePreview = (props) => {
-  const { services, setPreview, packageName, price, duration, roomId } = props;
+const OfferPreview = (props) => {
+  const {
+    services,
+    services1,
+    setPreview,
+    packageName,
+    price,
+    duration,
+    roomId,
+  } = props;
   const [disabled, setIsDisabled] = useState(false);
 
   const [height, setHeight] = useState(false);
@@ -32,43 +40,49 @@ const PackagePreview = (props) => {
   const createHandler = async () => {
     setIsDisabled(true);
     let serviceNames = services.map((service) => {
-      return { service: service.service };
+      return { service: service.service, free: false };
+    });
+
+    let serviceNames1 = services1.map((service) => {
+      return { service: service.service, free: true };
     });
 
     let finalArr = {
-      category: "packages",
+      category: "offers",
       subCategory: services[0]?.subCategory,
       superCategory: services[0]?.superCategory,
 
       services: {
         service: packageName,
-        price: price,
-        duration,
-        category: "packages",
+        price: services.reduce((acc, option) => acc + option.price, 0),
+        duration:
+          services.reduce((acc, option) => acc + option.duration, 0) +
+          services1.reduce((acc, option) => acc + option.duration, 0),
+        category: "offers",
         subCategory: services[0]?.subCategory,
         superCategory: services[0]?.superCategory,
-        inclusions: serviceNames,
+        inclusions: serviceNames.concat(serviceNames1),
       },
     };
 
-    // try {
-    //   const { status } = await axiosInstance.post(
-    //     `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
-    //     { services: finalArr },
-    //     { withCredentials: true }
-    //   );
-    //   if (status === 201) {
-    //     toast("package added succesfully!");
+    try {
+      const { status } = await axiosInstance.post(
+        `${baseUrl}/api/rooms/addRoomOffersServices/${roomId}`,
+        { services: finalArr },
+        { withCredentials: true }
+      );
+      if (status === 201) {
+        toast("package added succesfully!");
 
-    //     setTimeout(() => navigate("/admin/my-services"), 2000);
-    //   } else {
-    //     toast("something went wrong!");
-    //     setIsDisabled(false);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   toast(err.response.data.message);
-    // }
+        setTimeout(() => navigate("/admin/my-services"), 2000);
+      } else {
+        toast("something went wrong!");
+        setIsDisabled(false);
+      }
+    } catch (err) {
+      console.log(err);
+      toast(err.response.data.message);
+    }
   };
 
   return (
@@ -79,6 +93,8 @@ const PackagePreview = (props) => {
         </p>
         <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5   md:w-[90vw] w-[95.5vw] mx-auto">
           <div className="overflow-x-auto   md:col-span-3">
+            <h1>Main Services</h1>
+
             <table className="min-w-full ">
               <thead className="border-b bg-gray-300 ">
                 <tr className="border-b-2 border-gray-200">
@@ -121,7 +137,54 @@ const PackagePreview = (props) => {
                 })}
               </tbody>
             </table>
+
+            <div className="overflow-x-auto   md:col-span-3 mt-5">
+              <h1>Free Services</h1>
+              <table className="min-w-full ">
+                <thead className="border-b bg-gray-300 ">
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="text-left md:text-md text-sm md:p-5 p-4">
+                      Service Name
+                    </th>
+                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                      Price
+                    </th>
+                    {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                    Category
+                                  </th> */}
+
+                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                      Duration
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {services1?.map((option, j) => {
+                    return (
+                      <tr key={j} className="border-b-2 border-white">
+                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                          <label className="text-gray-900">
+                            {option.service}
+                          </label>
+                        </td>
+                        <td className="p-5 text-right md:text-md text-sm">
+                          &#8377; {option.price}
+                        </td>
+
+                        {/* <td className="p-5 text-right md:text-md text-sm">
+                                          {option.category}
+                                        </td> */}
+                        <td className="p-5 text-right md:text-md text-sm">
+                          {option.duration} min
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
+
           <div className="lg:col-span-1 md:col-span-2">
             <div
               className={`card  p-5 ${
@@ -134,14 +197,14 @@ const PackagePreview = (props) => {
               <ul>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Package</div>
+                    <div>Offer</div>
                     <div>{packageName}</div>
                   </div>
                 </li>
                 <li>
-                  <div className="mb-2 flex justify-between">
-                    <div>Count</div>
-                    <div>{services.length} services</div>
+                  <div className="mb-2 flex flex-col justify-between">
+                    <div>Main Services : {services.length} services</div>
+                    <div>Free Services : {services1.length} services</div>
                   </div>
                 </li>
                 <li>
@@ -149,20 +212,39 @@ const PackagePreview = (props) => {
                     <div>Actual Amount</div>
                     <div>
                       &#8377;{" "}
+                      {services.reduce((acc, option) => acc + option.price, 0) +
+                        services1.reduce(
+                          (acc, option) => acc + option.price,
+                          0
+                        )}
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div className="mb-2 flex justify-between">
+                    <div>Offer Amount</div>
+                    <div>
+                      {" "}
+                      &#8377;{" "}
                       {services.reduce((acc, option) => acc + option.price, 0)}
                     </div>
                   </div>
                 </li>
                 <li>
                   <div className="mb-2 flex justify-between">
-                    <div>Package Amount</div>
-                    <div> &#8377; {price}</div>
-                  </div>
-                </li>
-                <li>
-                  <div className="mb-2 flex justify-between">
                     <div>Duration</div>
-                    <div> {duration} min</div>
+                    <div>
+                      {" "}
+                      {services.reduce(
+                        (acc, option) => acc + option.duration,
+                        0
+                      ) +
+                        services1.reduce(
+                          (acc, option) => acc + option.duration,
+                          0
+                        )}{" "}
+                      min
+                    </div>
                   </div>
                 </li>
 
@@ -199,4 +281,4 @@ const PackagePreview = (props) => {
   );
 };
 
-export default PackagePreview;
+export default OfferPreview;

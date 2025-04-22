@@ -15,9 +15,15 @@ import axiosInstance from "../../components/axiosInterceptor";
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
-  const { state, setPreview, mergedServices } = props;
+  const { state, setPreview, mergedServices, offer } = props;
+
   // console.log(state, "state");
-  const ConvenienceFee = state?.totalAmount * (15 / 100);
+  const ConvenienceFee = Number(
+    ((state?.totalAmount * (state?.totalAmount > 200 ? 10 : 15)) / 100).toFixed(
+      1
+    )
+  );
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -122,6 +128,7 @@ const Preview = (props) => {
 
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
       if (seat.options.length > 0) {
+        // console.log(seat, "seat");
         const mappedOptions = seat.options.map((option) =>
           mergedServices.find((service) => service.service === option)
         );
@@ -140,7 +147,7 @@ const Preview = (props) => {
         {
           selectedSeats: manipulatedSelectedSeats,
 
-          totalAmount,
+          totalAmount: (state?.totalAmount * (1 - offer / 100)).toFixed(1),
           roomId,
           shopOwner,
           shopId,
@@ -170,6 +177,7 @@ const Preview = (props) => {
             {
               // amount: totalAmount,
               amount: ConvenienceFee,
+              // amount: 1,
             },
             { withCredentials: true }
           );
@@ -256,6 +264,7 @@ const Preview = (props) => {
         <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:w-[90vw] w-[95.5vw] mx-auto">
           <div className="overflow-x-auto lg:col-span-3 md:col-span-3">
             {showPreviewServices?.map((seat, i) => {
+              // console.log(seat.show, "seat.show");
               return (
                 seat.show.length > 0 && (
                   <div className="card overflow-x-auto p-5" key={i}>
@@ -294,7 +303,17 @@ const Preview = (props) => {
                               {t("service", { name: item.service })}
                             </td>
                             <td className="p-5 text-right md:text-md text-sm">
-                              &#8377; {t("price1", { price: item.price })}
+                              &#8377;{" "}
+                              {t("price1", {
+                                price: Number(
+                                  item.offer > 0
+                                    ? (
+                                        item.price *
+                                        (1 - item.offer / 100)
+                                      ).toFixed(1)
+                                    : item.price
+                                ),
+                              })}
                             </td>
 
                             <td className="p-5 text-right md:text-md text-sm">
@@ -344,7 +363,14 @@ const Preview = (props) => {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("totalAmount")}</div>
-                    <div>&#8377; {state?.totalAmount}</div>
+                    <div className="text-white">
+                      <span className="line-through text-red-400 mr-2">
+                        ₹ {state?.totalAmount}
+                      </span>
+                      <span className="text-green-400 font-semibold">
+                        ₹ {(state?.totalAmount * (1 - offer / 100)).toFixed(1)}
+                      </span>
+                    </div>
                   </div>
                 </li>
                 <li>
@@ -357,16 +383,27 @@ const Preview = (props) => {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("total")}</div>
-                    <div>&#8377; {state?.totalAmount + ConvenienceFee}</div>
+                    <div>
+                      &#8377;{" "}
+                      {(
+                        Number(state?.totalAmount) * (1 - Number(offer) / 100) +
+                        Number(ConvenienceFee)
+                      ).toFixed(1)}
+                    </div>
                   </div>
                 </li>
 
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div className="text-red-500">
-                      Note* - We charge only convenience fee, Kindly pay the
-                      amount of remaining amount of &#8377;
-                      {state?.totalAmount} at the shop.
+                      Note* - We charge only convenience fee and it is
+                      calculated on total amount excluded on overall shop
+                      discount offer, Kindly pay the amount of remaining amount
+                      of &#8377;
+                      {(state?.totalAmount * (1 - Number(offer) / 100)).toFixed(
+                        1
+                      )}{" "}
+                      at the shop.
                     </div>
                   </div>
                 </li>

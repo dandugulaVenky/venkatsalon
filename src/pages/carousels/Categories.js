@@ -56,14 +56,14 @@ const Categories = ({ type }) => {
     queryFn: shopsCount,
   });
 
-  console.log(query?.data?.data?.list);
+  // console.log(query?.data?.data?.list);
   const navigate = useNavigate();
 
   const handleSearch = (destination) => {
     const destinationCity = allCitiesArray.find(
       (city) => city.cityName === destination
     );
-    console.log(destinationCity, "destination");
+    // console.log(destinationCity, "destination");
     const { lat, lng } = destinationCity?.latLng;
     dispatch({
       type: "NEW_SEARCH",
@@ -288,7 +288,7 @@ const Categories = ({ type }) => {
           <div className="">
             <Carousel cols={4} rows={1} gap={7}>
               {query?.data?.data?.favourites?.map((item) => {
-                console.log(item);
+                // console.log(item);
                 return (
                   <Carousel.Item>
                     <div

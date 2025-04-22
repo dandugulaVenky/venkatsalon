@@ -16,14 +16,13 @@ import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../components/axiosInterceptor";
 
-const BestSaloons = ({ smallBanners }) => {
+const OffersForYou = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
   const { type: type1, city, pincode, lat, lng } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
-  console.log(pincode, "pincode");
 
   const getBestSalons = async () => {
     return await axiosInstance.get(
@@ -40,17 +39,23 @@ const BestSaloons = ({ smallBanners }) => {
     queryFn: getBestSalons,
   });
 
+  const offeredShops = query?.data?.data.filter(
+    (item) => item?.individualOffer?.length > 0 || item?.overallShopOffer > 0
+  );
+
+  console.log({ offeredShops, data: query?.data?.data }, "offered");
+
   const navigate = useNavigate();
   const gotoHotel = (hotel) => {
     navigate(`/shops/${hotel}`);
   };
 
   const handleAllShops = () => {
-    navigate(`/shops`);
+    navigate(`/shops/with-offers`);
   };
   // mt-8 used to  be there
   return (
-    <div className="  text-black w-full  ">
+    <div className=" mt-8 text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
           {type1 ? (
@@ -78,7 +83,7 @@ const BestSaloons = ({ smallBanners }) => {
             //   })
             // )
 
-            type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s Near You"
+            "Offers For You"
           ) : (
             <Skeleton cards={1} />
           )}
@@ -96,7 +101,7 @@ const BestSaloons = ({ smallBanners }) => {
         <div>
           <Carousel cols={columns} rows={1} gap={7}>
             {query?.data?.data &&
-              query?.data?.data?.slice(0, 6)?.map((item, i) => {
+              offeredShops?.slice(0, 6)?.map((item, i) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
@@ -127,6 +132,13 @@ const BestSaloons = ({ smallBanners }) => {
                           {/* {item.name} */}
                           {t("salonName", { name: item.name })}
                         </p>
+                        <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
+                          {item?.overallShopOffer > 0 && (
+                            <span className="bg-green-500 p-3  rounded-full text-sm text-white">
+                              {item?.overallShopOffer}% off/-
+                            </span>
+                          )}
+                        </p>
                         <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
                           <span className="font-semibold">
                             {Math.ceil(item.rating)}{" "}
@@ -135,8 +147,19 @@ const BestSaloons = ({ smallBanners }) => {
                         </p>
                       </div>
                       <p className="pl-1 font-semibold text-gray-700 ">
-                        {cityName}
+                        {cityName}{" "}
                       </p>
+                      {item?.individualOffer.length > 0 &&
+                        item?.individualOffer?.slice(0, 2).map((item1) => {
+                          return (
+                            <p className="text-xs text-gray-600">
+                              {item1?.service} - {item1?.offer}%
+                            </p>
+                          );
+                        })}
+                      <span className="text-xs text-gray-600">
+                        Click on shop and explore more offers
+                      </span>
                     </>
                   </Carousel.Item>
                 );
@@ -177,4 +200,4 @@ const BestSaloons = ({ smallBanners }) => {
   );
 };
 
-export default memo(BestSaloons);
+export default memo(OffersForYou);
