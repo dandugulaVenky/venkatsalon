@@ -174,7 +174,11 @@ const AdminAddBanner = () => {
             </div>
             <img className="img-fluid" alt="" />
             <button type="submit" className="primary-button" disabled={loading}>
-              {loading ? "Uploading..." : "Add Images"}
+              {loading ? (
+                <span className="buttonloader ml-2"></span>
+              ) : (
+                "Add Images"
+              )}
             </button>
           </form>
         </>

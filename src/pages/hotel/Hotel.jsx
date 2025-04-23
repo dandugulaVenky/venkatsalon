@@ -45,6 +45,7 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
 import secureLocalStorage from "react-secure-storage";
 import axiosInstance from "../../components/axiosInterceptor";
+import ShareButton from "./ShareButton";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -1090,23 +1091,36 @@ const Hotel = ({ smallBanners }) => {
                 {/* </span> */}
               </div>
               {fav ? (
-                <FontAwesomeIcon
-                  icon={faHeart1}
-                  size="lg"
-                  className="cursor-pointer"
-                  color="red"
-                  onClick={handleFavourites}
-                />
+                <div className="flex  items-center md:space-y-2 space-y-0  space-x-2">
+                  <div>
+                    <span className="text-xs ">Remove from Favourites</span>
+                    <FontAwesomeIcon
+                      icon={faHeart1}
+                      size="lg"
+                      className="cursor-pointer"
+                      color="red"
+                      onClick={handleFavourites}
+                    />
+                    <ShareButton />
+                  </div>
+                </div>
               ) : (
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  size="lg"
-                  className="cursor-pointer"
-                  onClick={handleFavourites}
-                />
+                <div className="flex  items-center md:space-y-2 space-y-0 space-x-2">
+                  {" "}
+                  <div className="flex flex-col items-center space-y-2">
+                    <span className="text-xs ">Add to Favourites</span>
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      size="lg"
+                      className="cursor-pointer"
+                      onClick={handleFavourites}
+                    />
+                  </div>
+                  <ShareButton />
+                </div>
               )}
             </div>
-            <div className="hotelImages">
+            <div className="hotelImages mt-8">
               {data.images?.map((photo, i) => (
                 <div className="hotelImgWrapper" key={i}>
                   <img

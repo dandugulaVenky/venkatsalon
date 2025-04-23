@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import SearchItem from "../../components/searchItem/SearchItem";
 import useFetch from "../../hooks/useFetch";
@@ -7,96 +7,180 @@ import { SearchContext } from "../../context/SearchContext";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { t } from "i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
-function filterShops(array, userInput, city) {
+function filterArray(array, userInput, city) {
+  if (!userInput) {
+    return array;
+    // ?.filter(
+    //   (item) => item.city.split(",")[0] === city.split(",")[0]
+    // );
+  }
   return array?.filter((shop) => {
-    return (
-      shop.name.toLowerCase().includes(userInput.toLowerCase()) &&
-      shop.city.split(",")[0] === city.split(",")[0]
-    );
+    return shop.name.toLowerCase().includes(userInput.toLowerCase());
+    //  &&
+    // shop.city.split(",")[0] === city.split(",")[0]
   });
 }
+const ShopsWithOffer = () => {
+  const [data1, setData1] = useState();
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
+  const [subType, setSubType] = useState();
+  const [gender, setGender] = useState();
 
-const ShopsWithOffers = () => {
-  const navigate = useNavigate();
   const { type, city, lat, lng } = useContext(SearchContext);
 
-  const [userInput, setUserInput] = useState("");
-  const [subType, setSubType] = useState("null");
-  const [gender, setGender] = useState("null");
-  const [areaFilter, setAreaFilter] = useState(city?.split(",")[0] || "null");
+  // const { data, loading } = useFetch(
+  //   `${baseUrl}/api/hotels?type=${type ? type : "salon"}&lat=${
+  //     lat ? lat : 0.0
+  //   }&lng=${lng ? lng : 0.0}`
+  // );
 
-  const res = useFetch(
-    `${baseUrl}/api/hotels?type=${type || "salon"}&lat=${lat || 0.0}&lng=${
-      lng || 0.0
-    }`
-  );
+  const navigate = useNavigate();
 
-  const loading = res.loading;
+  const scroll = () => {
+    window.scrollTo(0, 0);
+  };
 
   useEffect(() => {
     if (!city || !type) {
       toast("Something went wrong!");
-      navigate("/get-started");
+      return navigate("/get-started");
     }
-    window.scrollTo(0, 0);
-  }, [city, type, navigate]);
 
-  const data = useMemo(() => {
-    return (
-      res.data?.filter(
+    const getData = async () => {
+      const { data, loading } = await axiosInstance.get(
+        `${baseUrl}/api/hotels?type=${type}&lat=${lat}&lng=${lng}`
+      );
+      setLoading(loading);
+      const offeredShops = data.filter(
         (item) =>
           item?.individualOffer?.length > 0 || item?.overallShopOffer > 0
-      ) || []
-    );
-  }, [res.data]);
-
-  const filteredData = useMemo(() => {
-    let result = data;
-
-    if (areaFilter !== "null") {
-      result = result.filter((item) => item.city.split(",")[0] === areaFilter);
-    }
-
-    if (subType !== "null") {
-      result = result.filter((item) => {
-        if (subType === type) return item.spaIncluded === false;
-        return item.spaIncluded === true;
-      });
-    }
-
-    if (gender !== "null") {
-      result = result.filter((item) => item.subType === gender);
-    }
-
-    if (userInput) {
-      result = result.filter((item) =>
-        item.name.toLowerCase().includes(userInput.toLowerCase())
       );
+      setData(offeredShops);
+    };
+    scroll();
+    getData();
+  }, [city, lat, lng, navigate, type]);
+
+  const [userInput, setUserInput] = useState("");
+
+  const [filteredArray, setFilteredArray] = useState();
+  const [areas, setAreas] = useState(null);
+  const [areaFilter, setAreaFilter] = useState(city?.split(",")[0] || null);
+
+  useEffect(() => {
+    setData1(data);
+    setSubType("null");
+    setGender("null");
+    let filteredArray = filterArray(data, userInput, city);
+    setFilteredArray(filteredArray);
+
+    const areass = filteredArray?.map((item, i) => item.city.split(",")[0]);
+
+    setAreas(areass);
+  }, [city, data, userInput]);
+
+  // useEffect(() => {
+  //   if (gender === "null" && subType === "null") {
+  //     let filteredArray = filterArray(data, userInput);
+
+  //     setFilteredArray(filteredArray);
+  //   } else if (gender === "null" && subType !== "null") {
+  //     let filteredArray = filterArray(data1, userInput);
+  //     setFilteredArray(filteredArray);
+  //   } else if (gender !== "null" && subType === "null") {
+  //     let dat = data.filter((item) => item.subType === gender);
+  //     let filteredArray = filterArray(dat, userInput);
+  //     setFilteredArray(filteredArray);
+  //   } else {
+  //     if (gender !== "null" && gender !== undefined) {
+  //       let dat = data1?.filter((item) => item.subType === gender);
+  //       let filteredArray = filterArray(dat, userInput);
+  //       setFilteredArray(filteredArray);
+  //     } else {
+  //       return;
+  //     }
+  //     return;
+  //   }
+  // }, [data, data1, gender, subType, userInput]);
+
+  const filteredType = (e) => {
+    setGender(e.target.value);
+
+    if (e.target.value === "null") {
+      setFilteredArray(data);
+      return;
     }
 
-    return result;
-  }, [data, userInput, gender, subType, areaFilter, type]);
+    const matter = data1?.filter((item) => {
+      // console.log({ item: item.city.split(",")[0], city: city.split(",")[0] });
+      return item.subType === e.target.value;
+    });
+    setFilteredArray(matter);
 
-  const areas = useMemo(() => {
-    return [...new Set(data.map((item) => item.city.split(",")[0]))];
-  }, [data]);
+    return;
+  };
+
+  const filteredTypeofShopType = (e) => {
+    setGender("null");
+    setSubType(e.target.value);
+
+    if (e.target.value === "null") {
+      setFilteredArray(data);
+      return;
+    }
+
+    const matter = data.filter((item) => {
+      if (e.target.value === type) {
+        return item.spaIncluded === false;
+      } else {
+        return (
+          item.spaIncluded === true &&
+          item.city.split(",")[0] === city.split(",")[0]
+        );
+      }
+    });
+
+    setData1(matter);
+    setFilteredArray(matter);
+
+    return;
+  };
+
+  const filteredArea = (e) => {
+    setSubType("null");
+    setGender("null");
+
+    const areaData = data1.filter(
+      (item) => item.city.split(",")[0] === e.target.value
+    );
+
+    setFilteredArray(areaData);
+    setAreaFilter(e.target.value);
+
+    if (e.target.value === "null") {
+      setFilteredArray(data);
+      return;
+    }
+  };
 
   return (
     <div className="pt-6 pb-20">
-      <div className="min-h-[85.5vh]">
+      <div className="min-h-[85.5vh] ">
         {loading ? (
-          <div className="flex items-center justify-center h-[70vh]">
-            <span className="loader"></span>
+          <div className=" flex items-center justify-center h-[70vh]">
+            <span className="loader "></span>
           </div>
         ) : (
-          <div className="w-full mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
-            <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 pb-6">
+          <div className="w-full  mx-auto md:max-w-3xl lg:max-w-5xl xl:max-w-6xl ">
+            <div className="grid grid-cols-10 mx-4 gap-3 md:gap-10 pb-6 ">
               <input
                 type="text"
-                className="md:col-span-6 col-span-12 rounded-full p-2 text-center"
+                className=" md:col-span-6 col-span-12 rounded-full p-2 text-center"
                 style={{
-                  filter: "drop-shadow(0px 0px 0.35px gray)",
+                  filter: " drop-shadow(0px 0px 0.35px gray)",
                   border: "2.4px solid gray",
                   caretColor: "#00ccbb",
                 }}
@@ -107,51 +191,73 @@ const ShopsWithOffers = () => {
 
               <div className="md:col-span-2 col-span-6">
                 <select
-                  className="w-full rounded-full p-2 text-center"
-                  onChange={(e) => setSubType(e.target.value)}
-                  value={subType}
+                  className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                  onChange={filteredTypeofShopType}
                   style={{
-                    filter: "drop-shadow(0px 0px 0.35px gray)",
+                    filter: " drop-shadow(0px 0px 0.35px gray)",
                     border: "2.4px solid gray",
                     caretColor: "#00ccbb",
                   }}
+                  value={subType}
                 >
                   <option value="null">{t("sortByType")}</option>
-                  <option value={type}>only {type}</option>
-                  <option value="spaIncluded">{type} & spa</option>
+                  <option value={type}>
+                    {/* {locale === "en"
+                      ? t("onlyType", { type: type })
+                      : locale === "te"
+                      ? t("onlyType", {
+                          type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                        })
+                      : t("onlyType", {
+                          type: type === "saloon" ? "सैलून" : "पार्लर",
+                        })} */}
+                    only {type}
+                  </option>
+                  <option value="spaIncluded">
+                    {/* {locale === "en"
+                      ? t("typeSpa", { type: type })
+                      : locale === "te"
+                      ? t("typeSpa", {
+                          type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                        })
+                      : t("typeSpa", {
+                          type: type === "saloon" ? "सैलून" : "पार्लर",
+                        })} */}
+                    {type} & spa
+                  </option>
                 </select>
               </div>
-
               <div className="md:col-span-2 col-span-6">
                 <select
-                  className="w-full rounded-full p-2 text-center"
-                  onChange={(e) => setAreaFilter(e.target.value)}
+                  className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                  onChange={filteredArea}
+                  style={{
+                    filter: " drop-shadow(0px 0px 0.35px gray)",
+                    border: "2.4px solid gray",
+                    caretColor: "#00ccbb",
+                  }}
                   value={areaFilter}
-                  style={{
-                    filter: "drop-shadow(0px 0px 0.35px gray)",
-                    border: "2.4px solid gray",
-                    caretColor: "#00ccbb",
-                  }}
+                  disabled
                 >
-                  <option value="null">Sort By Area</option>
-                  {areas.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
-                  ))}
+                  <option value="null" selected>
+                    Sort By Area
+                  </option>
+                  {areas?.map((item, i) => {
+                    return <option value={item}>{item}</option>;
+                  })}
                 </select>
               </div>
 
               <div className="md:col-span-2 col-span-6">
                 <select
-                  className="w-full rounded-full p-2 text-center"
-                  onChange={(e) => setGender(e.target.value)}
-                  value={gender}
+                  className=" max-w-2xl mx-auto w-full rounded-full p-2 text-center"
+                  onChange={filteredType}
                   style={{
                     filter: "drop-shadow(0px 0px 0.35px gray)",
                     border: "2.4px solid gray",
                     caretColor: "#00ccbb",
                   }}
+                  value={gender}
                 >
                   <option value="null">{t("sortByGender")}</option>
                   <option value="women">{t("women")}</option>
@@ -160,23 +266,33 @@ const ShopsWithOffers = () => {
                 </select>
               </div>
             </div>
-
-            <div className="w-full">
-              <div className="min-h-screen w-full md:pt-0">
-                {filteredData.length > 0 ? (
-                  <div className="grid grid-cols-12 mx-auto">
-                    {filteredData.map((item) => (
-                      <div
-                        className="lg:col-span-4 md:col-span-6 col-span-12 mx-4"
-                        key={item._id}
-                      >
-                        <SearchItem item={item} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
+            <div className="w-full ">
+              <div className=" min-h-screen w-full  md:pt-0 ">
+                {!loading && (
+                  <>
+                    <div className="grid grid-cols-12   mx-auto">
+                      {filteredArray?.map((item) => (
+                        <div className="lg:col-span-4 md:col-span-6 col-span-12  mx-4 ">
+                          <SearchItem item={item} key={item._id} />
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {!loading && data?.length <= 0 && (
                   <div className="min-h-[55vh] grid place-items-center">
-                    <p className="text-2xl font-semibold">No {type}s found!</p>
+                    <p className="text-2xl font-semibold">
+                      {/* {locale === "en"
+                        ? t("noTypeFound1", { type: type })
+                        : locale === "te"
+                        ? t("noTypeFound1", {
+                            type: type === "saloon" ? "సెలూన్లు" : "పార్లర్లు",
+                          })
+                        : t("noTypeFound1", {
+                            type: type === "saloon" ? "सैलून" : "पार्लर",
+                          })} */}{" "}
+                      No {type}s found!
+                    </p>
                   </div>
                 )}
               </div>
@@ -188,4 +304,4 @@ const ShopsWithOffers = () => {
   );
 };
 
-export default ShopsWithOffers;
+export default ShopsWithOffer;

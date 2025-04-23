@@ -629,11 +629,17 @@ const MyBarbers = () => {
           disabled={loading1}
           className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
         >
-          {editingBarber
-            ? loading
-              ? "loading..."
-              : "Update Barber"
-            : "Add Barber"}
+          {editingBarber ? (
+            loading ? (
+              "loading..."
+            ) : (
+              "Update Barber"
+            )
+          ) : loading1 ? (
+            <span className="buttonloader ml-2"></span>
+          ) : (
+            "Add Barber"
+          )}
         </button>
       </form>
 

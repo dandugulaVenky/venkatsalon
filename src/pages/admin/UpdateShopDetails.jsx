@@ -16,6 +16,7 @@ const UpdateShopDetails = () => {
   const [shopAddress, setShopAddress] = useState();
   const [formErrors, setFormErrors] = useState({});
   const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
 
   const { user } = useContext(AuthContext);
 
@@ -92,7 +93,7 @@ const UpdateShopDetails = () => {
     if (Object.keys(formErrors).length > 0) {
       return;
     }
-
+    setLoading(true);
     console.log("not");
     const data1 = {
       name: shopName,
@@ -121,6 +122,8 @@ const UpdateShopDetails = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -253,7 +256,7 @@ const UpdateShopDetails = () => {
           className="primary-button p-5 "
           onClick={handleUpdateBasicDetails}
         >
-          Submit
+          {loading ? <span className="buttonloader ml-2"></span> : "Update"}
         </button>
       </div>
     </>

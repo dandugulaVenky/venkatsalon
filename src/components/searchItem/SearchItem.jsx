@@ -20,7 +20,7 @@ const SearchItem = ({ item }) => {
           }}
         >
           <div className=" rounded-md bg-slate-100 shadow-custom border-2 border-gray-100">
-            <div className="w-full">
+            <div className="w-full relative">
               <img
                 src={
                   item?.images[0]?.url ||
@@ -32,6 +32,13 @@ const SearchItem = ({ item }) => {
                   objectPosition: "top",
                 }}
               />
+              <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
+                {item?.overallShopOffer > 0 && (
+                  <span className="bg-green-500 p-3  rounded-full text-sm text-white">
+                    {item?.overallShopOffer}% off/-
+                  </span>
+                )}
+              </p>
             </div>
             <div className=" grid grid-cols-12 p-4 text-gray-800 ">
               <div className="space-y-2.5 col-span-8">
@@ -50,6 +57,20 @@ const SearchItem = ({ item }) => {
                 <h1 className="text-sm siTaxiOp">
                   Reviews : {item.numReviews}
                 </h1>
+                <p>
+                  {" "}
+                  {item?.individualOffer.length > 0 &&
+                    item?.individualOffer?.slice(0, 2).map((item1) => {
+                      return (
+                        <p className="text-xs text-gray-600">
+                          {item1?.service} - {item1?.offer}%
+                        </p>
+                      );
+                    })}
+                  <span className="text-xs text-gray-600">
+                    Click on shop and explore more offers
+                  </span>
+                </p>
               </div>
               <div className="flex items-center justify-start space-x-2">
                 <FontAwesomeIcon
@@ -60,6 +81,7 @@ const SearchItem = ({ item }) => {
                 />
                 <p>{item.city.split(",")[0]}</p>
               </div>
+
               {/* <div className="siDetail col-span-4">
                 <div className="siDetailTexts">
                   <span className="md:text-lg text-sm">

@@ -268,7 +268,7 @@ const MyOffers = () => {
                 <input
                   type="text"
                   className="h-8 w-full"
-                  placeholder={t("package")}
+                  placeholder={"Enter Offer Name"}
                   value={packageName}
                   onChange={(e) => setPackageName(e.target.value)}
                 ></input>
