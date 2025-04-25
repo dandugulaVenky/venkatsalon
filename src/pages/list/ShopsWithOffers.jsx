@@ -51,14 +51,11 @@ const ShopsWithOffer = () => {
 
     const getData = async () => {
       const { data, loading } = await axiosInstance.get(
-        `${baseUrl}/api/hotels?type=${type}&lat=${lat}&lng=${lng}`
+        `${baseUrl}/api/hotels/offerShops?type=${type}&lat=${lat}&lng=${lng}`
       );
       setLoading(loading);
-      const offeredShops = data.filter(
-        (item) =>
-          item?.individualOffer?.length > 0 || item?.overallShopOffer > 0
-      );
-      setData(offeredShops);
+
+      setData(data);
     };
     scroll();
     getData();

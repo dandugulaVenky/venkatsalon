@@ -26,7 +26,7 @@ const OffersForYou = ({ smallBanners }) => {
 
   const getBestSalons = async () => {
     return await axiosInstance.get(
-      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&lat=${
+      `${baseUrl}/api/hotels/offerShops?type=${type1 ? type1 : "salon"}&lat=${
         lat ? lat : 0.0
       }&lng=${lng ? lng : 0.0}&limit=4`
     );
@@ -35,15 +35,9 @@ const OffersForYou = ({ smallBanners }) => {
 
   // Queries
   const query = useQuery({
-    queryKey: ["bestsalons", { type: type1, city }],
+    queryKey: ["bestsalons1", { type: type1, city }],
     queryFn: getBestSalons,
   });
-
-  const offeredShops = query?.data?.data.filter(
-    (item) => item?.individualOffer?.length > 0 || item?.overallShopOffer > 0
-  );
-
-  console.log({ offeredShops, data: query?.data?.data }, "offered");
 
   const navigate = useNavigate();
   const gotoHotel = (hotel) => {
@@ -101,7 +95,7 @@ const OffersForYou = ({ smallBanners }) => {
         <div>
           <Carousel cols={columns} rows={1} gap={7}>
             {query?.data?.data &&
-              offeredShops?.slice(0, 6)?.map((item, i) => {
+              query?.data?.data?.map((item, i) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
@@ -149,7 +143,7 @@ const OffersForYou = ({ smallBanners }) => {
                       <p className="pl-1 font-semibold text-gray-700 ">
                         {cityName}{" "}
                       </p>
-                      {item?.individualOffer.length > 0 &&
+                      {item?.individualOffer?.length > 0 &&
                         item?.individualOffer?.slice(0, 2).map((item1) => {
                           return (
                             <p className="text-xs text-gray-600">

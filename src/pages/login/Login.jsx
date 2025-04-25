@@ -232,7 +232,7 @@ export default function Login() {
                   {loading1 ? (
                     <div className="loaderGoogle ml-5"></div>
                   ) : (
-                    "Continue with Google"
+                    "Login/Register with Google"
                   )}
                 </div>
               </div>

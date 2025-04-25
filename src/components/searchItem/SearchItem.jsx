@@ -59,7 +59,7 @@ const SearchItem = ({ item }) => {
                 </h1>
                 <p>
                   {" "}
-                  {item?.individualOffer.length > 0 &&
+                  {item?.individualOffer?.length > 0 &&
                     item?.individualOffer?.slice(0, 2).map((item1) => {
                       return (
                         <p className="text-xs text-gray-600">
