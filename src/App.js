@@ -20,6 +20,7 @@ import LanguageContext from "./context/LanguageContext";
 import i18next from "./i18n";
 
 import "./index.css";
+import ShopsWithOffer from "./pages/list/ShopsWithOffers";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/home/Home"));
@@ -57,7 +58,7 @@ const ForgotPassword = lazy(() => import("./pages/login/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/login/ResetPassword"));
 const MyBarbers = lazy(() => import("./pages/admin/MyBarbers"));
 const Rewards = lazy(() => import("./pages/admin/Rewards"));
-const MyOffers = lazy(() => import("./pages/admin/MyOffers"));
+
 const SubscriptionPaymentSuccess = lazy(() =>
   import("./pages/shopRegistration/SubscriptionPaymentSuccess")
 );
@@ -166,7 +167,7 @@ function App() {
               path="/admin/my-offers"
               element={
                 <ProtectedRoute>
-                  <MyOffers />
+                  <ShopsWithOffer />
                 </ProtectedRoute>
               }
             />

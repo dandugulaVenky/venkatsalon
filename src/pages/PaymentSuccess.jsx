@@ -119,7 +119,7 @@ export const PaymentSuccess = () => {
           type: finalBookingDetails?.type,
           subCategory: finalBookingDetails?.subCategory,
           superCategory: finalBookingDetails?.superCategory,
-
+          email: finalBookingDetails?.user.email,
           totalAmount: finalBookingDetails?.totalAmount,
           isPaid: true,
           isDone: "false",
