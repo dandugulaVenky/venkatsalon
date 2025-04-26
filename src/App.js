@@ -21,6 +21,7 @@ import i18next from "./i18n";
 
 import "./index.css";
 import ShopsWithOffer from "./pages/list/ShopsWithOffers";
+import RenewalPaymentSuccess from "./pages/admin/RenewalPaymentSuccess";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/home/Home"));
@@ -153,6 +154,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/renewal-payment-success"
+              element={
+                <ProtectedRoute>
+                  <RenewalPaymentSuccess />
                 </ProtectedRoute>
               }
             />

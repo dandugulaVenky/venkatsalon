@@ -8,6 +8,7 @@ import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
+import PlanExpiryPopup from "./PlanExpiryPopup";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -144,6 +145,8 @@ const Admin = () => {
           </div>
         ) : isAdmin ? (
           <div className="flex   md:flex-row flex-column items-center justify-center gap-8  md:w-[80vw] w-[85%] mx-auto">
+            <PlanExpiryPopup hotel={shopData} />
+
             <div className="flex flex-1 items-center justify-center ">
               <p className="text-gray-500 font-bold text-4xl scroll-pb-3">
                 {" "}
