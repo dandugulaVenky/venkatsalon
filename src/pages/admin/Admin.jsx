@@ -19,6 +19,7 @@ const Admin = () => {
   const { t } = useTranslation();
   const [allShops, setAllShops] = useState([]);
   const [fetchNow, setFetchNow] = useState(false);
+  const [shopName, setShopName] = useState("null");
 
   useEffect(() => {
     if (!user?._id || !user?.shopId) return;
@@ -62,7 +63,7 @@ const Admin = () => {
     };
 
     getAllShops();
-  }, []);
+  }, [user._id]);
 
   const handleClick = (value) => {
     const input = value;
@@ -103,10 +104,18 @@ const Admin = () => {
         break;
     }
   };
+  useEffect(() => {
+    if (user.shopId) {
+      setFetchNow(true);
+      setShopName(user.shopId);
+    }
+  }, [user.shopId]);
 
   const handleShop = (value) => {
+    console.log(value, "value");
+    if (!value) return;
+    setShopName(value);
     dispatch({ type: "UPDATE_SHOP_ID", payload: value });
-    setFetchNow(true);
   };
 
   return (
@@ -114,10 +123,11 @@ const Admin = () => {
       <div>
         {allShops?.length > 1 && (
           <div className="p-5">
-            <select onChange={(e) => handleShop(e.target.value)}>
-              <option value="" disabled selected>
-                Select a shop
-              </option>
+            <select
+              onChange={(e) => handleShop(e.target.value)}
+              value={shopName}
+            >
+              <option value="null">Select a shop</option>
               {allShops.map((shop) => (
                 <option key={shop._id} value={shop._id}>
                   {shop.name}

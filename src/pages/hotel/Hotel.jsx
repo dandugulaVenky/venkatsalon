@@ -256,14 +256,14 @@ const Hotel = ({ smallBanners }) => {
             return {
               id: id._id,
 
-              dates: id.unavailableDates?.map((item) => {
+              dates: id?.unavailableDates?.map((item) => {
                 return { date: item.date, values: item.values };
               }),
             };
           });
 
         let filter = [];
-        res.forEach((date) => {
+        res?.forEach((date) => {
           const answer = date.dates.filter((item) => today === item.date);
           filter.push(answer);
         });

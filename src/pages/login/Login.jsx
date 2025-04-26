@@ -129,7 +129,7 @@ export default function Login() {
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       token !== "" && saveToken(res.data.details._id, token);
       setLoading(false);
-      navigate("/");
+      navigate(redirect || "/");
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
       if (err.response.status === 404) {

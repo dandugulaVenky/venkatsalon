@@ -105,10 +105,10 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
     console.log(result2);
-    // if (result2 !== 10) {
-    //   setLoading(false);
-    //   return toast("Cannot cancel now!");
-    // }
+    if (result2 !== 10) {
+      setLoading(false);
+      return toast("Cannot cancel now!");
+    }
 
     try {
       await Promise.all(
@@ -249,6 +249,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
             referenceNumber: item.referenceNumber,
             //shopName we are using already in backend
             shopName: shopData.name,
+            type: "markDone",
             dates: {
               date: item.date,
               time: item.time,

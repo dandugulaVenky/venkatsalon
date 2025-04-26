@@ -280,7 +280,7 @@ const Reserve = () => {
             }
           );
 
-          if (roomUnavailableDates.length > 0) {
+          if (roomUnavailableDates?.length > 0) {
             unavailableDates.push({
               room: array.number,
               unavailableDates: roomUnavailableDates,
@@ -1491,7 +1491,7 @@ const Reserve = () => {
                                           alt={barber.name}
                                           className="w-16 h-16 rounded-full"
                                         />
-                                        <h4 className="mt-2 font-semibold">
+                                        <h4 className="mt-2 font-semibold overflow-auto">
                                           {barber.name}
                                         </h4>
 
