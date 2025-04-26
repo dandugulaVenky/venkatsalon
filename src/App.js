@@ -22,6 +22,8 @@ import i18next from "./i18n";
 import "./index.css";
 import ShopsWithOffer from "./pages/list/ShopsWithOffers";
 import RenewalPaymentSuccess from "./pages/admin/RenewalPaymentSuccess";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/home/Home"));
@@ -29,7 +31,7 @@ const Hotel = lazy(() => import("./pages/hotel/Hotel"));
 const List = lazy(() => import("./pages/list/List"));
 const Profile = lazy(() => import("./pages/Profile"));
 const BookingHistory = lazy(() => import("./pages/BookingHistory"));
-const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
+// const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
 const PrivacyPolicy = lazy(() => import("./pages/staticpages/PrivacyPolicy"));
 const TermsAndConditions = lazy(() =>
   import("./pages/staticpages/TermsAndConditions")
@@ -60,9 +62,9 @@ const ResetPassword = lazy(() => import("./pages/login/ResetPassword"));
 const MyBarbers = lazy(() => import("./pages/admin/MyBarbers"));
 const Rewards = lazy(() => import("./pages/admin/Rewards"));
 const MyOffers = lazy(() => import("./pages/admin/MyOffers"));
-const SubscriptionPaymentSuccess = lazy(() =>
-  import("./pages/shopRegistration/SubscriptionPaymentSuccess")
-);
+// const SubscriptionPaymentSuccess = lazy(() =>
+//   import("./pages/shopRegistration/SubscriptionPaymentSuccess")
+// );
 
 function App() {
   const { user } = useContext(AuthContext);

@@ -44,7 +44,7 @@ const useEffectOnce = (effect) => {
   }, []);
 };
 
-export const PaymentSuccess = () => {
+const PaymentSuccess = () => {
   const seachQuery = useSearchParams()[0];
   const { user: mainUser } = useContext(AuthContext);
   const referenceNum = seachQuery.get("reference");
@@ -220,3 +220,5 @@ export const PaymentSuccess = () => {
     </div>
   );
 };
+
+export default PaymentSuccess;
