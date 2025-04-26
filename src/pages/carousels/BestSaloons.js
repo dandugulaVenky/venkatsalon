@@ -50,7 +50,7 @@ const BestSaloons = ({ smallBanners }) => {
   };
   // mt-8 used to  be there
   return (
-    <div className="  text-black w-full  ">
+    <div className="mt-8  text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
           {type1 ? (

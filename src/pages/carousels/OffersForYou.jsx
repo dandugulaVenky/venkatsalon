@@ -89,7 +89,7 @@ const OffersForYou = ({ smallBanners }) => {
           <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
         </button>
       </div>
-      {query.isLoading ? (
+      {query?.isLoading ? (
         <Skeleton cards={size} />
       ) : query?.data?.data?.length > 0 ? (
         <div>

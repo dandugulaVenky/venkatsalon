@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faLocationDot,
-  faMapLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
 const SearchItem = ({ item }) => {
@@ -27,9 +26,14 @@ const SearchItem = ({ item }) => {
                   "https://picsum.photos/800/600?random=5"
                 }
                 alt=""
-                className="siImg  w-[100%] h-52"
+                className="siImg h-52"
                 style={{
                   objectPosition: "top",
+                  objectFit: "cover",
+                  width: "100%",
+                  height: 200,
+                  borderRadius: 8,
+                  boxShadow: "1px 1.5px 2px black",
                 }}
               />
               <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
