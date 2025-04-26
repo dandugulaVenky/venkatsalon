@@ -146,12 +146,12 @@ const OffersForYou = ({ smallBanners }) => {
                       {item?.individualOffer?.length > 0 &&
                         item?.individualOffer?.slice(0, 2).map((item1) => {
                           return (
-                            <p className="text-xs text-gray-600">
+                            <p className="text-xs text-gray-600 pl-1">
                               {item1?.service} - {item1?.offer}%
                             </p>
                           );
                         })}
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-gray-600 pl-1">
                         Click on shop and explore more offers
                       </span>
                     </>
