@@ -1547,16 +1547,19 @@ const Reserve = () => {
                       <div className="mb-2 flex justify-between">
                         <div> {t("total")}</div>
                         <div className="text-white">
-                          <span
-                            className={`${
-                              data &&
-                              data[0]?.offer &&
-                              "line-through text-red-400"
-                            } text-green-400 mr-2`}
-                          >
-                            ₹ {totalAmount}
-                          </span>
                           {data && data[0]?.offer && (
+                            <span
+                              className={`${
+                                data &&
+                                data[0]?.offer > 0 &&
+                                totalAmount > 0 &&
+                                "line-through text-red-400"
+                              } text-green-400 mr-2`}
+                            >
+                              ₹ {totalAmount}
+                            </span>
+                          )}
+                          {data && data[0]?.offer > 0 && totalAmount > 0 && (
                             <span className="text-green-400 font-semibold">
                               ₹{" "}
                               {(

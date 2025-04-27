@@ -364,12 +364,22 @@ const Preview = (props) => {
                   <div className="mb-2 flex justify-between">
                     <div>{t("totalAmount")}</div>
                     <div className="text-white">
-                      <span className="line-through text-red-400 mr-2">
+                      <span
+                        className={`${
+                          offer > 0 ? "line-through text-red-400" : ""
+                        } text-green-400 mr-2`}
+                      >
                         ₹ {state?.totalAmount}
                       </span>
-                      <span className="text-green-400 font-semibold">
-                        ₹ {(state?.totalAmount * (1 - offer / 100)).toFixed(1)}
-                      </span>
+                      {offer > 0 && (
+                        <span className="text-green-500">
+                          &#8377;{" "}
+                          {(
+                            Number(state?.totalAmount) *
+                            (1 - Number(offer) / 100)
+                          ).toFixed(1)}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </li>
