@@ -15,10 +15,10 @@ const GlobalErrorPopup = () => {
         <h2 className="text-xl font-bold mb-4">
           Sorry for inconvenience! We are looking into it.
         </h2>
-        {/* <p className="text-red-600">{globalError.message}</p> */}
-        {/* <pre className="text-gray-500 text-sm mt-2 overflow-x-auto">
+        <p className="text-red-600">{globalError.message}</p>
+        <pre className="text-gray-500 text-sm mt-2 overflow-x-auto">
           {globalError.stack}
-        </pre> */}
+        </pre>
         <button
           onClick={() => {
             clearGlobalError(); // Clear the error when closing the popup
