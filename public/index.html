@@ -3,34 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Test Minimal</title>
+    <title>Saalons</title>
     <style>
-      body {
-        margin: 0;
-      }
-      #message {
+      #webview-blocker {
         display: flex;
         height: 100vh;
         align-items: center;
         justify-content: center;
         text-align: center;
         padding: 20px;
-        background-color: #f0f0f0;
+      }
+      #main-content {
+        display: none; /* Hidden by default */
       }
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Please open in browser</h2>
-      <button onclick="window.location.href = 'https://saalons.com';">
-        Open
+    <div id="webview-blocker">
+      <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
+      <button
+        onclick="window.open('https://saalons.com', '_blank')"
+        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
+      >
+        Open in Browser
       </button>
     </div>
 
-    <div id="root" style="display: none"></div>
+    <div id="main-content">
+      <div id="root"></div>
+    </div>
 
     <script>
-      console.log("Minimal script executed.");
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var isWebView =
+        /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+          userAgent
+        );
+      console.log("Is WebView:", isWebView);
+
+      var mainContent = document.getElementById("main-content");
+      var webviewBlocker = document.getElementById("webview-blocker");
+
+      if (isWebView) {
+        // Show the webview blocker message and button
+        mainContent.style.display = "none";
+        webviewBlocker.style.display = "flex";
+      } else {
+        // If not a WebView, show the main content
+        mainContent.style.display = "block";
+        webviewBlocker.style.display = "none";
+      }
     </script>
   </body>
 </html>
