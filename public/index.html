@@ -2,11 +2,16 @@
 <html lang="en">
   <head>
     <style>
-      #main-content {
-        display: block; /* Default to visible */
-      }
       #webview-blocker {
-        display: none; /* Default to hidden */
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+      #main-content {
+        display: none; /* Hidden by default, will be made visible by JS */
       }
     </style>
   </head>
@@ -36,13 +41,12 @@
       var mainContent = document.getElementById("main-content");
       var webviewBlocker = document.getElementById("webview-blocker");
 
-      if (isWebView) {
-        mainContent.style.display = "none";
-        webviewBlocker.style.display = "flex";
-      } else {
+      if (!isWebView) {
+        // If not a WebView, show the main content
         mainContent.style.display = "block";
         webviewBlocker.style.display = "none";
       }
+      // If it IS a WebView, webviewBlocker remains visible (due to initial CSS), and mainContent remains hidden.
     </script>
   </body>
 </html>
