@@ -3,57 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta
-      http-equiv="content-security-policy"
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <link rel="icon" type="image/png" href="./images/mainLogo.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/mainLogo.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./images/mainLogo.png"
+    />
+    <link rel="apple-touch-icon" href="./images/mainLogo.png" />
     <link rel="manifest" href="./manifest.json" />
     <title>Saalons</title>
   </head>
   <body>
     <div id="root"></div>
 
-    <!-- Detect WebView after page load -->
     <script>
-      window.addEventListener("load", function () {
+      (function () {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
         var isWebView =
-          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+          /(Instagram|FBAV|Messenger|Twitter|Line|LinkedIn|Snapchat|WeChat|TikTok|Google)/i.test(
             userAgent
           );
+        var isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
 
-        if (isWebView) {
-          document.body.innerHTML = `
-            <div style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
-              <h2 style="padding: 0 20px;">Please open Saalons.com in Chrome or Safari for the best experience.</h2>
-              <button onclick="window.open('https://saalons.com', '_blank')" style="padding: 12px 24px; margin-top: 20px; font-size: 18px;">Open in Browser</button>
-            </div>
-          `;
+        if (isWebView || (!isSafari && isMobile && /Google/i.test(userAgent))) {
+          // Redirect to blocking page
+          window.location.replace("/webview-block.html");
         }
-      });
+      })();
     </script>
 
-    <!-- Other scripts -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./serviceworker.js")
+            .then((reg) => console.log("ServiceWorker registered: ", reg.scope))
+            .catch((err) =>
+              console.log("ServiceWorker registration failed: ", err)
+            );
+        });
+      }
+    </script>
+
     <script
       src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
       async
       defer
     ></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker
-            .register("./serviceworker.js")
-            .then((reg) => console.log("Service Worker registered:", reg.scope))
-            .catch((err) =>
-              console.error("Service Worker registration failed:", err)
-            );
-        });
-      }
-    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </body>
 </html>
