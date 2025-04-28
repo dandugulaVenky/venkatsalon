@@ -43,15 +43,15 @@
           );
         console.log("Is WebView:", isWebView); // Keep this for potential logging
 
-        if (isWebView) {
-          // Now try the DOM manipulation
-          document.getElementById("main-content").style.display = "none";
-          document.getElementById("webview-blocker").style.display = "flex";
-        } else {
-          // Ensure main content is visible if not a WebView
-          document.getElementById("main-content").style.display = "block";
-          document.getElementById("webview-blocker").style.display = "none";
-        }
+        // if (isWebView) {
+        //   // Now try the DOM manipulation
+        //   document.getElementById("main-content").style.display = "none";
+        //   document.getElementById("webview-blocker").style.display = "flex";
+        // } else {
+        //   // Ensure main content is visible if not a WebView
+        //   document.getElementById("main-content").style.display = "block";
+        //   document.getElementById("webview-blocker").style.display = "none";
+        // }
       });
     </script>
   </body>
