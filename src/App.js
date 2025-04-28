@@ -26,6 +26,7 @@ import ShopsWithOffer from "./pages/list/ShopsWithOffers";
 import RenewalPaymentSuccess from "./pages/admin/RenewalPaymentSuccess";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
+import WebView from "./utils/WebView";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/home/Home"));
@@ -69,42 +70,6 @@ const MyOffers = lazy(() => import("./pages/admin/MyOffers"));
 // );
 
 function App() {
-  const detectWebViewAndRedirect = () => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Check if the user is in a WebView (Instagram, Facebook, Twitter, etc.)
-    const isWebView =
-      /instagram/i.test(userAgent) ||
-      /FBAV/i.test(userAgent) ||
-      /Twitter/i.test(userAgent) ||
-      /YouTube/i.test(userAgent) ||
-      /Google/i.test(userAgent);
-
-    // For iOS WebViews, try detecting if it's an iPhone/iPad
-    const isIos = /iPhone|iPad|iPod/i.test(userAgent);
-
-    if (isWebView) {
-      const openInBrowser = window.confirm(
-        "You are viewing this page in a WebView. Would you like to open it in your browser for a better experience?"
-      );
-
-      // If confirmed, open the link in the default browser
-      if (openInBrowser) {
-        if (isIos) {
-          // Use window.open for iOS to open in a new browser tab
-          window.open("https://saalons.com", "_blank");
-        } else {
-          // Use window.location.href for other platforms
-          window.location.href = "https://saalons.com";
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    detectWebViewAndRedirect(); // Run WebView detection early
-  }, []);
-
   const { user } = useContext(AuthContext);
   const { open } = useContext(SearchContext);
 
@@ -112,7 +77,6 @@ function App() {
   const [smallBanners, setSmallBanners] = useState(window.innerWidth < 431);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const endRef = useRef(null);
-  // Empty dependency array to run it only once when the component mounts
 
   const handleResize = () => {
     setSmallScreen(window.innerWidth < 1064);
@@ -134,6 +98,7 @@ function App() {
       <LanguageContext.Provider value={{ locale, setLocale }}>
         <ErrorBoundary>
           <BrowserRouter>
+            <WebView />
             <GlobalErrorPopup />
             {smallScreen ? (
               <Greeting bestRef={endRef} />
