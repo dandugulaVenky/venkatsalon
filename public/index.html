@@ -1,45 +1,48 @@
-<head>
-  <style>
-    #main-content {
-      display: block; /* Default to visible */
-    }
-    #webview-blocker {
-      display: none; /* Default to hidden */
-    }
-  </style>
-</head>
-<body>
-  <div id="webview-blocker">
-    <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
-    <button
-      onclick="window.open('https://saalons.com', '_blank')"
-      style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
-    >
-      Open in Browser
-    </button>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      #main-content {
+        display: block; /* Default to visible */
+      }
+      #webview-blocker {
+        display: none; /* Default to hidden */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="webview-blocker">
+      <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
+      <button
+        onclick="window.open('https://saalons.com', '_blank')"
+        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
+      >
+        Open in Browser
+      </button>
+    </div>
 
-  <div id="main-content">
-    <div id="root"></div>
-  </div>
+    <div id="main-content">
+      <div id="root"></div>
+    </div>
 
-  <script>
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    var isWebView =
-      /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-        userAgent
-      );
-    console.log("Is WebView:", isWebView);
+    <script>
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var isWebView =
+        /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+          userAgent
+        );
+      console.log("Is WebView:", isWebView);
 
-    var mainContent = document.getElementById("main-content");
-    var webviewBlocker = document.getElementById("webview-blocker");
+      var mainContent = document.getElementById("main-content");
+      var webviewBlocker = document.getElementById("webview-blocker");
 
-    if (isWebView) {
-      mainContent.style.display = "none";
-      webviewBlocker.style.display = "flex";
-    } else {
-      mainContent.style.display = "block";
-      webviewBlocker.style.display = "none";
-    }
-  </script>
-</body>
+      if (isWebView) {
+        mainContent.style.display = "none";
+        webviewBlocker.style.display = "flex";
+      } else {
+        mainContent.style.display = "block";
+        webviewBlocker.style.display = "none";
+      }
+    </script>
+  </body>
+</html>
