@@ -46,7 +46,8 @@ const useEffectOnce = (effect) => {
 
 const PaymentSuccess = () => {
   const seachQuery = useSearchParams()[0];
-  const { user: mainUser } = useContext(AuthContext);
+  // const { user: mainUser } = useContext(AuthContext);
+  const userId = seachQuery.get("userId");
   const referenceNum = seachQuery.get("reference");
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -54,7 +55,7 @@ const PaymentSuccess = () => {
   const getFinalBookingDetails = async () => {
     try {
       const { data, status } = await axiosInstance.get(
-        `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
+        `${baseUrl}/api/users/getFinalBookingDetails/${userId}`,
         { withCredentials: true }
       );
       if (status === 201) {
@@ -129,7 +130,7 @@ const PaymentSuccess = () => {
       );
 
       await axiosInstance.post(
-        `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser._id}`,
+        `${baseUrl}/api/users/clearfinalBookingDetails/${userId}`,
         null,
         {
           withCredentials: true,

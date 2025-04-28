@@ -190,7 +190,7 @@ const Preview = (props) => {
             description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
-            callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}`,
+            callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
 
             notes: {
               address: "EasyTym Corporate Office",
