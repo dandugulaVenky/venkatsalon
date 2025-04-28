@@ -69,6 +69,42 @@ const MyOffers = lazy(() => import("./pages/admin/MyOffers"));
 // );
 
 function App() {
+  const detectWebViewAndRedirect = () => {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    // Check if the user is in a WebView (Instagram, Facebook, Twitter, etc.)
+    const isWebView =
+      /instagram/i.test(userAgent) ||
+      /FBAV/i.test(userAgent) ||
+      /Twitter/i.test(userAgent) ||
+      /YouTube/i.test(userAgent) ||
+      /Google/i.test(userAgent);
+
+    // For iOS WebViews, try detecting if it's an iPhone/iPad
+    const isIos = /iPhone|iPad|iPod/i.test(userAgent);
+
+    if (isWebView) {
+      const openInBrowser = window.confirm(
+        "You are viewing this page in a WebView. Would you like to open it in your browser for a better experience?"
+      );
+
+      // If confirmed, open the link in the default browser
+      if (openInBrowser) {
+        if (isIos) {
+          // Use window.open for iOS to open in a new browser tab
+          window.open("https://saalons.com", "_blank");
+        } else {
+          // Use window.location.href for other platforms
+          window.location.href = "https://saalons.com";
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    detectWebViewAndRedirect(); // Run WebView detection early
+  }, []);
+
   const { user } = useContext(AuthContext);
   const { open } = useContext(SearchContext);
 
@@ -76,30 +112,7 @@ function App() {
   const [smallBanners, setSmallBanners] = useState(window.innerWidth < 431);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const endRef = useRef(null);
-
-  // WebView detection function
-  const detectWebViewAndRedirect = () => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const isWebView =
-      /instagram/i.test(userAgent) ||
-      /FBAV/i.test(userAgent) ||
-      /Twitter/i.test(userAgent) ||
-      /Youtube/i.test(userAgent) ||
-      /Google/i.test(userAgent);
-
-    if (isWebView) {
-      const openInBrowser = window.confirm(
-        "You are viewing this page in a WebView. Would you like to open it in your browser for a better experience?"
-      );
-      if (openInBrowser) {
-        window.location.href = "https://saalons.com"; // Redirect to your website
-      }
-    }
-  };
-
-  useEffect(() => {
-    detectWebViewAndRedirect(); // Run WebView detection early
-  }, []); // Empty dependency array to run it only once when the component mounts
+  // Empty dependency array to run it only once when the component mounts
 
   const handleResize = () => {
     setSmallScreen(window.innerWidth < 1064);
