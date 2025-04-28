@@ -34,7 +34,8 @@
     </div>
 
     <script>
-      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var userAgent =
+        navigator?.userAgent || navigator?.vendor || window?.opera;
       var isWebView =
         /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
           userAgent
