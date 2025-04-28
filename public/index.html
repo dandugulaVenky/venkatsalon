@@ -6,25 +6,28 @@
     <title>Saalons</title>
     <style>
       #webview-blocker {
-        display: flex;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
+        display: block;
+        background-color: #f0f0f0;
         padding: 20px;
+        text-align: center;
+      }
+      #webview-blocker h2 {
+        margin-top: 0;
+      }
+      #webview-blocker button {
+        padding: 12px 24px;
+        margin-top: 20px;
+        font-size: 18px;
       }
       #main-content {
-        display: none; /* Hidden by default */
+        display: none;
       }
     </style>
   </head>
   <body>
     <div id="webview-blocker">
       <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
-      <button
-        onclick="window.open('https://saalons.com', '_blank')"
-        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
-      >
+      <button onclick="window.open('https://saalons.com', '_blank')">
         Open in Browser
       </button>
     </div>
@@ -34,23 +37,19 @@
     </div>
 
     <script>
-      var userAgent =
-        navigator?.userAgent || navigator?.vendor || window?.opera;
-      var isWebView =
-        /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-          userAgent
-        );
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      // More aggressive "Google" check and looking for "iOS"
+      var isWebView = /(google).*(ios)/i.test(userAgent);
+      console.log("User Agent:", userAgent);
       console.log("Is WebView:", isWebView);
 
       var mainContent = document.getElementById("main-content");
       var webviewBlocker = document.getElementById("webview-blocker");
 
       if (isWebView) {
-        // Show the webview blocker message and button
         mainContent.style.display = "none";
-        webviewBlocker.style.display = "flex";
+        webviewBlocker.style.display = "block";
       } else {
-        // If not a WebView, show the main content
         mainContent.style.display = "block";
         webviewBlocker.style.display = "none";
       }
