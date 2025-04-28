@@ -3,81 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="upgrade-insecure-requests"
-    />
-    <link rel="icon" type="image/png" href="./images/mainLogo.png" />
-    <link rel="manifest" href="./manifest.json" />
-    <title>Saalons</title>
-    <style>
-      /* Default styles */
-      #webview-blocker {
-        display: none;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 20px;
-      }
-      #main-content {
-        display: block;
-      }
-    </style>
+    <title>Test Simple</title>
   </head>
-
   <body>
-    <!-- Default visible content -->
-    <div id="webview-blocker">
-      <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
-      <button
-        onclick="window.open('https://saalons.com', '_blank')"
-        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
-      >
-        Open in Browser
-      </button>
-    </div>
-
-    <div id="main-content">
-      <div id="root"></div>
-    </div>
-
-    <script>
-      window.addEventListener("load", function () {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        var isWebView =
-          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-            userAgent
-          );
-
-        if (isWebView) {
-          // Hide normal website
-          document.getElementById("main-content").style.display = "none";
-          // Show webview warning
-          document.getElementById("webview-blocker").style.display = "flex";
-        }
-      });
-    </script>
-
-    <!-- Other scripts -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
-      async
-      defer
-    ></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker
-            .register("./serviceworker.js")
-            .then((reg) => console.log("Service Worker registered:", reg.scope))
-            .catch((err) =>
-              console.error("Service Worker registration failed:", err)
-            );
-        });
-      }
-    </script> -->
+    <h1>Hello World</h1>
   </body>
 </html>
