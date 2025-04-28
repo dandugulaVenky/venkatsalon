@@ -1,18 +1,7 @@
 <head>
   <style>
-    .hidden {
-      display: none !important; /* Use !important for higher specificity */
-    }
-    .visible {
-      display: flex !important;
-      height: 100vh;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
     #main-content {
-      display: block; /* Default to block */
+      display: block; /* Default to visible */
     }
     #webview-blocker {
       display: none; /* Default to hidden */
@@ -20,7 +9,7 @@
   </style>
 </head>
 <body>
-  <div id="webview-blocker" class="hidden">
+  <div id="webview-blocker">
     <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
     <button
       onclick="window.open('https://saalons.com', '_blank')"
@@ -35,26 +24,22 @@
   </div>
 
   <script>
-    window.addEventListener("load", function () {
-      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      var isWebView =
-        /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-          userAgent
-        );
-      console.log("Is WebView:", isWebView);
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    var isWebView =
+      /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+        userAgent
+      );
+    console.log("Is WebView:", isWebView);
 
-      var mainContent = document.getElementById("main-content");
-      var webviewBlocker = document.getElementById("webview-blocker");
+    var mainContent = document.getElementById("main-content");
+    var webviewBlocker = document.getElementById("webview-blocker");
 
-      if (isWebView) {
-        mainContent.classList.add("hidden");
-        webviewBlocker.classList.add("visible");
-        webviewBlocker.classList.remove("hidden"); // Ensure it's visible
-      } else {
-        mainContent.classList.remove("hidden");
-        webviewBlocker.classList.remove("visible");
-        webviewBlocker.classList.add("hidden"); // Ensure it's hidden
-      }
-    });
+    if (isWebView) {
+      mainContent.style.display = "none";
+      webviewBlocker.style.display = "flex";
+    } else {
+      mainContent.style.display = "block";
+      webviewBlocker.style.display = "none";
+    }
   </script>
 </body>
