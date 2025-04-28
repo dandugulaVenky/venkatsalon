@@ -77,6 +77,30 @@ function App() {
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
   const endRef = useRef(null);
 
+  // WebView detection function
+  const detectWebViewAndRedirect = () => {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const isWebView =
+      /instagram/i.test(userAgent) ||
+      /FBAV/i.test(userAgent) ||
+      /Twitter/i.test(userAgent) ||
+      /Youtube/i.test(userAgent) ||
+      /Google/i.test(userAgent);
+
+    if (isWebView) {
+      const openInBrowser = window.confirm(
+        "You are viewing this page in a WebView. Would you like to open it in your browser for a better experience?"
+      );
+      if (openInBrowser) {
+        window.location.href = "https://saalons.com"; // Redirect to your website
+      }
+    }
+  };
+
+  useEffect(() => {
+    detectWebViewAndRedirect(); // Run WebView detection early
+  }, []); // Empty dependency array to run it only once when the component mounts
+
   const handleResize = () => {
     setSmallScreen(window.innerWidth < 1064);
     setSmallBanners(window.innerWidth < 431);
