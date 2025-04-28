@@ -7,7 +7,7 @@
     <style>
       /* Default styles */
       #webview-blocker {
-        display: flex; /* Changed to flex to be visible by default */
+        display: flex;
         height: 100vh;
         align-items: center;
         justify-content: center;
@@ -15,7 +15,7 @@
         padding: 20px;
       }
       #main-content {
-        display: none; /* Hidden by default */
+        display: none;
       }
     </style>
   </head>
@@ -33,5 +33,26 @@
     <div id="main-content">
       <div id="root"></div>
     </div>
+
+    <script>
+      window.addEventListener("load", function () {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isWebView =
+          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+            userAgent
+          );
+        console.log("Is WebView:", isWebView); // Keep this for potential logging
+
+        if (isWebView) {
+          // Now try the DOM manipulation
+          document.getElementById("main-content").style.display = "none";
+          document.getElementById("webview-blocker").style.display = "flex";
+        } else {
+          // Ensure main content is visible if not a WebView
+          document.getElementById("main-content").style.display = "block";
+          document.getElementById("webview-blocker").style.display = "none";
+        }
+      });
+    </script>
   </body>
 </html>
