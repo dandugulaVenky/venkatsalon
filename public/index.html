@@ -31,23 +31,27 @@
     <div id="root"></div>
 
     <script>
-      window.addEventListener("load", function () {
-        setTimeout(function () {
-          var userAgent =
-            navigator.userAgent || navigator.vendor || window.opera;
-          var isWebView =
-            /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-              userAgent
-            );
+      (function () {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isWebView =
+          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+            userAgent
+          );
 
-          if (isWebView) {
-            alert(
-              "You are using an in-app browser. Please open this website in Chrome or Safari for the best experience."
-            );
-            window.location.href = "/webview-block.html";
-          }
-        }, 300); // slight delay to ensure full page rendering
-      });
+        if (isWebView) {
+          document.body.innerHTML = `
+            <div style="text-align: center; margin-top: 100px; padding: 20px;">
+              <h2>Please open this website in Chrome or Safari for the best experience 🚀</h2>
+              <p>In-app browsers like Google App, Instagram, Facebook are not supported.</p>
+              <a href="https://saalons.com" target="_blank"
+                 style="display:inline-block; margin-top:20px; padding:10px 20px; background-color:#007bff; color:white; border-radius:5px; text-decoration:none; font-size:18px;">
+                Open in Browser
+              </a>
+            </div>
+          `;
+          document.title = "Open in Chrome or Safari";
+        }
+      })();
     </script>
 
     <script>
