@@ -3,35 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, user-scalable=no"
-    />
-    <meta
-      http-equiv="Content-Security-Policy"
+      http-equiv="content-security-policy"
       content="upgrade-insecure-requests"
     />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./images/mainLogo.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./images/mainLogo.png"
-    />
-    <link rel="apple-touch-icon" href="./images/mainLogo.png" />
-    <link rel="manifest" href="./manifest.json" />
-    <title>saalons.com</title>
-  </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <link rel="icon" type="image/png" href="./images/mainLogo.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>Saalons</title>
+  </head>
   <body>
     <div id="root"></div>
 
+    <!-- Detect WebView after page load -->
     <script>
-      (function () {
+      window.addEventListener("load", function () {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
         var isWebView =
           /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
@@ -40,43 +26,34 @@
 
         if (isWebView) {
           document.body.innerHTML = `
-            <div style="text-align: center; margin-top: 100px; padding: 20px;">
-              <h2>Please open this website in Chrome or Safari for the best experience 🚀</h2>
-              <p>In-app browsers like Google App, Instagram, Facebook are not supported.</p>
-              <a href="https://saalons.com" target="_blank"
-                 style="display:inline-block; margin-top:20px; padding:10px 20px; background-color:#007bff; color:white; border-radius:5px; text-decoration:none; font-size:18px;">
-                Open in Browser
-              </a>
+            <div style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
+              <h2 style="padding: 0 20px;">Please open Saalons.com in Chrome or Safari for the best experience.</h2>
+              <button onclick="window.open('https://saalons.com', '_blank')" style="padding: 12px 24px; margin-top: 20px; font-size: 18px;">Open in Browser</button>
             </div>
           `;
-          document.title = "Open in Chrome or Safari";
         }
-      })();
+      });
     </script>
 
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./serviceworker.js")
-            .then((reg) =>
-              console.log("Service Worker registered: ", reg.scope)
-            )
-            .catch((err) =>
-              console.log("Service Worker registration failed: ", err)
-            );
-        });
-      }
-    </script>
-
-    <!-- Google Maps Places API -->
+    <!-- Other scripts -->
     <script
       src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
       async
       defer
     ></script>
-
-    <!-- Razorpay Checkout -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("./serviceworker.js")
+            .then((reg) => console.log("Service Worker registered:", reg.scope))
+            .catch((err) =>
+              console.error("Service Worker registration failed:", err)
+            );
+        });
+      }
+    </script> -->
   </body>
 </html>
