@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-
-    <meta httpEquiv="content-type" content="text/html; charset=UTF-8" />
     <meta
-      httpEquiv="Content-Security-Policy"
+      http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <link
       rel="icon"
       type="image/png"
@@ -26,9 +25,31 @@
     />
     <link rel="apple-touch-icon" href="./images/mainLogo.png" />
     <link rel="manifest" href="./manifest.json" />
+
+    <title>Saalons</title>
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- Early WebView Detection -->
+    <script>
+      (function () {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isWebView =
+          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok)/i.test(
+            userAgent
+          );
+
+        if (isWebView) {
+          setTimeout(function () {
+            window.location.replace("/webview-block.html");
+          }, 10);
+        }
+      })();
+    </script>
+
+    <!-- Service Worker -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
@@ -39,13 +60,15 @@
         });
       }
     </script>
-  </body>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_API_KEY%&libraries=places"></script> -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
-    async
-    defer
-  ></script>
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Google Maps -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
+      async
+      defer
+    ></script>
+
+    <!-- Razorpay -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </body>
 </html>
