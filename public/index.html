@@ -1,58 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Saalons</title>
-    <style>
-      /* Default styles */
-      #webview-blocker {
-        display: flex;
-        height: 100vh;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 20px;
+<head>
+  <style>
+    .hidden {
+      display: none !important; /* Use !important for higher specificity */
+    }
+    .visible {
+      display: flex !important;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    #main-content {
+      display: block; /* Default to block */
+    }
+    #webview-blocker {
+      display: none; /* Default to hidden */
+    }
+  </style>
+</head>
+<body>
+  <div id="webview-blocker" class="hidden">
+    <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
+    <button
+      onclick="window.open('https://saalons.com', '_blank')"
+      style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
+    >
+      Open in Browser
+    </button>
+  </div>
+
+  <div id="main-content">
+    <div id="root"></div>
+  </div>
+
+  <script>
+    window.addEventListener("load", function () {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var isWebView =
+        /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+          userAgent
+        );
+      console.log("Is WebView:", isWebView);
+
+      var mainContent = document.getElementById("main-content");
+      var webviewBlocker = document.getElementById("webview-blocker");
+
+      if (isWebView) {
+        mainContent.classList.add("hidden");
+        webviewBlocker.classList.add("visible");
+        webviewBlocker.classList.remove("hidden"); // Ensure it's visible
+      } else {
+        mainContent.classList.remove("hidden");
+        webviewBlocker.classList.remove("visible");
+        webviewBlocker.classList.add("hidden"); // Ensure it's hidden
       }
-      #main-content {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="webview-blocker">
-      <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
-      <button
-        onclick="window.open('https://saalons.com', '_blank')"
-        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
-      >
-        Open in Browser
-      </button>
-    </div>
-
-    <div id="main-content">
-      <div id="root"></div>
-    </div>
-
-    <script>
-      window.addEventListener("load", function () {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        var isWebView =
-          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-            userAgent
-          );
-        console.log("Is WebView:", isWebView); // Keep this for potential logging
-
-        // if (isWebView) {
-        //   // Now try the DOM manipulation
-        //   document.getElementById("main-content").style.display = "none";
-        //   document.getElementById("webview-blocker").style.display = "flex";
-        // } else {
-        //   // Ensure main content is visible if not a WebView
-        //   document.getElementById("main-content").style.display = "block";
-        //   document.getElementById("webview-blocker").style.display = "none";
-        // }
-      });
-    </script>
-  </body>
-</html>
+    });
+  </script>
+</body>
