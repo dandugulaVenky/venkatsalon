@@ -18,11 +18,8 @@ const WebView = () => {
 
   const handleOpenInBrowser = () => {
     const isIos = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isIos) {
-      window.open("https://saalons.com", "_blank");
-    } else {
-      window.location.href = "https://saalons.com";
-    }
+    //
+    window.open("https://saalons.com", "_blank");
   };
 
   useEffect(() => {
