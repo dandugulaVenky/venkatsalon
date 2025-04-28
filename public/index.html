@@ -10,7 +10,6 @@
       http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-
     <link
       rel="icon"
       type="image/png"
@@ -25,50 +24,55 @@
     />
     <link rel="apple-touch-icon" href="./images/mainLogo.png" />
     <link rel="manifest" href="./manifest.json" />
-
-    <title>Saalons</title>
+    <title>saalons.com</title>
   </head>
 
   <body>
     <div id="root"></div>
 
     <script>
-      window.addEventListener("DOMContentLoaded", function () {
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        var isWebView =
-          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
-            userAgent
-          );
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          var userAgent =
+            navigator.userAgent || navigator.vendor || window.opera;
+          var isWebView =
+            /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
+              userAgent
+            );
 
-        if (isWebView) {
-          alert(
-            "Please open this website in Chrome browser for better experience."
-          );
-          window.location.href = "/webview-block.html";
-        }
+          if (isWebView) {
+            alert(
+              "You are using an in-app browser. Please open this website in Chrome or Safari for the best experience."
+            );
+            window.location.href = "/webview-block.html";
+          }
+        }, 300); // slight delay to ensure full page rendering
       });
     </script>
 
-    <!-- Service Worker -->
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("./serviceworker.js")
-            .then((reg) => console.log("Success: ", reg.scope))
-            .catch((err) => console.log("Failure: ", err));
+            .then((reg) =>
+              console.log("Service Worker registered: ", reg.scope)
+            )
+            .catch((err) =>
+              console.log("Service Worker registration failed: ", err)
+            );
         });
       }
     </script>
 
-    <!-- Google Maps -->
+    <!-- Google Maps Places API -->
     <script
       src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
       async
       defer
     ></script>
 
-    <!-- Razorpay -->
+    <!-- Razorpay Checkout -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </body>
 </html>
