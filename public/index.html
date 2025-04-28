@@ -32,21 +32,21 @@
   <body>
     <div id="root"></div>
 
-    <!-- Early WebView Detection -->
     <script>
-      (function () {
+      window.addEventListener("DOMContentLoaded", function () {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
         var isWebView =
-          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok)/i.test(
+          /(FBAV|Instagram|Twitter|Line|LinkedIn|Snapchat|WhatsApp|WeChat|TikTok|Google)/i.test(
             userAgent
           );
 
         if (isWebView) {
-          setTimeout(function () {
-            window.location.replace("/webview-block.html");
-          }, 10);
+          alert(
+            "Please open this website in Chrome browser for better experience."
+          );
+          window.location.href = "/webview-block.html";
         }
-      })();
+      });
     </script>
 
     <!-- Service Worker -->
