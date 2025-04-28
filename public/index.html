@@ -2,20 +2,46 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
-      http-equiv="content-security-policy"
+      http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <link rel="icon" type="image/png" href="./images/mainLogo.png" />
     <link rel="manifest" href="./manifest.json" />
     <title>Saalons</title>
+    <style>
+      /* Default styles */
+      #webview-blocker {
+        display: none;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+      }
+      #main-content {
+        display: block;
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
 
-    <!-- Detect WebView after page load -->
+  <body>
+    <!-- Default visible content -->
+    <div id="webview-blocker">
+      <h2>Please open Saalons.com in Chrome or Safari for best experience.</h2>
+      <button
+        onclick="window.open('https://saalons.com', '_blank')"
+        style="padding: 12px 24px; margin-top: 20px; font-size: 18px"
+      >
+        Open in Browser
+      </button>
+    </div>
+
+    <div id="main-content">
+      <div id="root"></div>
+    </div>
+
     <script>
       window.addEventListener("load", function () {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -25,12 +51,10 @@
           );
 
         if (isWebView) {
-          document.body.innerHTML = `
-            <div style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column; text-align: center;">
-              <h2 style="padding: 0 20px;">Please open Saalons.com in Chrome or Safari for the best experience.</h2>
-              <button onclick="window.open('https://saalons.com', '_blank')" style="padding: 12px 24px; margin-top: 20px; font-size: 18px;">Open in Browser</button>
-            </div>
-          `;
+          // Hide normal website
+          document.getElementById("main-content").style.display = "none";
+          // Show webview warning
+          document.getElementById("webview-blocker").style.display = "flex";
         }
       });
     </script>
