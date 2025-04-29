@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 import baseUrl from "../../utils/client";
 
@@ -190,6 +190,7 @@ const Preview = (props) => {
             description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
+            redirect: true,
             callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
 
             notes: {
