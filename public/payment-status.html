@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Processing Payment...</title>
+  </head>
+  <body>
+    <h2>Please wait, confirming your payment...</h2>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const reference = params.get("reference");
+      const userId = params.get("userId");
+      const token = params.get("token");
+
+      if (reference && userId && token) {
+        // Pass to React route after initial hydration
+        window.location.href = `/payment-success?reference=${reference}&userId=${userId}&token=${token}`;
+      } else {
+        document.body.innerHTML =
+          "<h3>Something went wrong. Please try again or contact support.</h3>";
+      }
+    </script>
+  </body>
+</html>
