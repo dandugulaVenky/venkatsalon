@@ -12,6 +12,16 @@ import { useTranslation } from "react-i18next";
 import time from "../../utils/time";
 import axiosInstance from "../../components/axiosInterceptor";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
@@ -106,6 +116,11 @@ const Preview = (props) => {
 
   const placeOrderHandler = async () => {
     setLoading(true);
+
+    // console.log(selectedSeats, "selectedSeats");
+
+    // console.log(manipulatedSelectedSeats, "manipulatedSelectedSeats");
+
     const {
       selectedSeats,
       totalAmount,
@@ -123,9 +138,6 @@ const Preview = (props) => {
       subCategory,
       superCategory,
     } = state;
-
-    // console.log(selectedSeats, "selectedSeats");
-
     const manipulatedSelectedSeats = selectedSeats.map((seat) => {
       if (seat.options.length > 0) {
         // console.log(seat, "seat");
@@ -137,9 +149,6 @@ const Preview = (props) => {
         return seat;
       }
     });
-
-    // console.log(manipulatedSelectedSeats, "manipulatedSelectedSeats");
-
     try {
       const { status } = await axiosInstance.post(
         `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
@@ -165,6 +174,12 @@ const Preview = (props) => {
         { withCredentials: true }
       );
       if (status === 201) {
+        const res = await loadRazorpayScript();
+        if (!res) {
+          alert("Razorpay SDK failed to load. Are you online?");
+          return;
+        }
+
         const {
           data: { key },
         } = await axiosInstance.get(`${baseUrl}/api/getkey`);
@@ -190,9 +205,31 @@ const Preview = (props) => {
             description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
-            redirect: true,
-            callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
-
+            redirect: false,
+            // callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+            handler: async function (response) {
+              // Step 3: Call backend to verify payment
+              try {
+                const verifyRes = await axiosInstance.post(
+                  `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+                  {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    userId: user._id,
+                  }
+                );
+                console.log(verifyRes, "verifyRes");
+                if (verifyRes.data.success) {
+                  window.location.href = `/payment-success?ref=${response.razorpay_payment_id}`;
+                } else {
+                  window.location.href = `/payment-failure`;
+                }
+              } catch (err) {
+                console.error("Verification failed", err);
+                window.location.href = `/payment-failure`;
+              }
+            },
             notes: {
               address: "EasyTym Corporate Office",
             },
