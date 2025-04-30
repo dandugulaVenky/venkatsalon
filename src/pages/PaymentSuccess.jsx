@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRef } from "react";
 import { useContext } from "react";
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { AuthContext } from "../context/AuthContext";
@@ -46,16 +46,19 @@ const useEffectOnce = (effect) => {
 
 const PaymentSuccess = () => {
   const seachQuery = useSearchParams()[0];
+  const location = useLocation();
+  console.log(location, "location from payment success page");
   const { user: mainUser } = useContext(AuthContext);
+  console.log(mainUser, "user from context");
   // const userId = seachQuery.get("userId");
-  const referenceNum = seachQuery.get("reference");
+  const referenceNum = location.state?.reference;
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const getFinalBookingDetails = async () => {
     try {
       const { data, status } = await axiosInstance.get(
-        `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?.userId}`,
+        `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
         { withCredentials: true }
       );
       if (status === 201) {
@@ -130,7 +133,7 @@ const PaymentSuccess = () => {
       );
 
       await axiosInstance.post(
-        `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser?.userId}`,
+        `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser?._id}`,
         null,
         {
           withCredentials: true,
