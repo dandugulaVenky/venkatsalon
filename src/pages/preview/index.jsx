@@ -209,30 +209,31 @@ const Preview = (props) => {
             // callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
             handler: async function (response) {
               // Step 3: Call backend to verify payment
-              try {
-                const verifyRes = await axiosInstance.post(
-                  `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
-                  {
-                    razorpay_order_id: response.razorpay_order_id,
-                    razorpay_payment_id: response.razorpay_payment_id,
-                    razorpay_signature: response.razorpay_signature,
-                    userId: user._id,
-                  }
-                );
-                console.log(verifyRes, "verifyRes");
-                if (verifyRes.data.success) {
-                  // navigate("/payment-success", {
-                  //   state: { reference: response.razorpay_payment_id },
-                  // });
+              alert("Payment Successfull", response.razorpay_payment_id);
+              // try {
+              //   const verifyRes = await axiosInstance.post(
+              //     `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+              //     {
+              //       razorpay_order_id: response.razorpay_order_id,
+              //       razorpay_payment_id: response.razorpay_payment_id,
+              //       razorpay_signature: response.razorpay_signature,
+              //       userId: user._id,
+              //     }
+              //   );
+              //   console.log(verifyRes, "verifyRes");
+              //   if (verifyRes.data.success) {
+              //     // navigate("/payment-success", {
+              //     //   state: { reference: response.razorpay_payment_id },
+              //     // });
 
-                  navigate("/");
-                } else {
-                  window.location.href = `/payment-failure`;
-                }
-              } catch (err) {
-                console.error("Verification failed", err);
-                window.location.href = `/payment-failure`;
-              }
+              //     navigate("/");
+              //   } else {
+              //     window.location.href = `/payment-failure`;
+              //   }
+              // } catch (err) {
+              //   console.error("Verification failed", err);
+              //   window.location.href = `/payment-failure`;
+              // }
             },
             notes: {
               address: "EasyTym Corporate Office",
