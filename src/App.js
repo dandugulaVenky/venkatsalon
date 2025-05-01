@@ -10,7 +10,7 @@ import BookingHistory from "./pages/BookingHistory";
 import Admin from "./pages/admin/Admin";
 import Register from "./pages/registration/Register";
 
-import { PaymentSuccess } from "./pages/PaymentSuccess";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
 import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
 import About from "./pages/staticpages/About";
