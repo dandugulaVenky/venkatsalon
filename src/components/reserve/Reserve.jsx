@@ -48,6 +48,7 @@ function convertToMilliseconds(timeReserve) {
 }
 
 const Reserve = () => {
+  alert("hello");
   const location = useLocation();
   const state = location?.state;
   const {

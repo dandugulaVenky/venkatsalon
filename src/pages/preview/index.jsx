@@ -201,7 +201,9 @@ const Preview = (props) => {
             },
 
             modal: {
-              ondismiss: function () {},
+              ondismiss: function () {
+                alert("Payment failed! Please try again or contact support.");
+              },
             },
           };
 

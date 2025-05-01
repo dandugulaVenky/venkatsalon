@@ -64,8 +64,6 @@ import MyOffers from "./pages/admin/MyOffers";
 import ShopsWithOffers from "./pages/list/ShopsWithOffers";
 
 function App() {
-  alert("Hi I am runnig");
-
   const ProtectedRoute = ({ children }) => {
     const { user } = useContext(AuthContext);
 
