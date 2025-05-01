@@ -27,10 +27,6 @@ export default function Login() {
   const [token, setToken] = useState("");
   const { t } = useTranslation();
 
-  useEffect(() => {
-    alert("Kaka namaste");
-  }, []);
-
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [storedUser, setStoredUser] = useState(null);
@@ -52,7 +48,9 @@ export default function Login() {
     }
   }
   let w = window.innerWidth;
+
   useEffect(() => {
+    toast("Currently in the logging ");
     // Req user for notification permission
     // secureLocalStorage.clear();
     w <= 768
