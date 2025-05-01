@@ -12,6 +12,16 @@ import { useTranslation } from "react-i18next";
 import time from "../../utils/time";
 import axiosInstance from "../../components/axiosInterceptor";
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const Preview = (props) => {
   // const { state,setPreview } = useLocation();
 
@@ -105,6 +115,12 @@ const Preview = (props) => {
   // console.log(userSelectedCategories);
 
   const placeOrderHandler = async () => {
+    const res = await loadRazorpayScript();
+    if (!res) {
+      alert("Razorpay SDK failed to load. Are you online?");
+      return;
+    }
+
     setLoading(true);
     const {
       selectedSeats,
@@ -204,10 +220,11 @@ const Preview = (props) => {
                     userId: user._id,
                   }
                 );
-                console.log(verifyRes, "verifyRes");
+                // console.log(verifyRes, "verifyRes");
                 if (verifyRes.data.success) {
-                  navigate("/payment-success", {
-                    state: { reference: response.razorpay_payment_id },
+                  setLoading(false);
+                  navigate("/", {
+                    state: { referenceNum: response.razorpay_payment_id },
                   });
                 } else {
                   window.location.href = `/payment-failure`;
@@ -227,13 +244,15 @@ const Preview = (props) => {
             },
 
             modal: {
-              ondismiss: function () {},
+              ondismiss: function () {
+                // setLoading(false);
+              },
             },
           };
 
           const razor = new window.Razorpay(options);
           razor.open();
-          setLoading(false);
+          // setLoading(false);
         } catch (err) {
           toast("Token expired! Please login");
           setLoading(false);
@@ -454,7 +473,10 @@ const Preview = (props) => {
                       <>{t("placeOrder")}</>
                     </button>
                   ) : (
-                    <button className="primary-button flex items-center justify-center  w-full">
+                    <button
+                      className="primary-button flex items-center justify-center  w-full"
+                      disabled={loading}
+                    >
                       {" "}
                       {t("placeOrder")}{" "}
                       {loading && <span className="buttonloader ml-2"></span>}

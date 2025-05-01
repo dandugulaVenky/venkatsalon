@@ -10,7 +10,7 @@ import BookingHistory from "./pages/BookingHistory";
 import Admin from "./pages/admin/Admin";
 import Register from "./pages/registration/Register";
 
-import PaymentSuccess from "./pages/PaymentSuccess";
+// import PaymentSuccess from "./pages/PaymentSuccess";
 import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
 import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
 import About from "./pages/staticpages/About";
@@ -53,7 +53,7 @@ import Footer from "./components/footer/Footer";
 import { SearchContext } from "./context/SearchContext";
 import SIdebar from "./components/navbar/SIdebar";
 import UpdateShopDetails from "./pages/admin/UpdateShopDetails";
-import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
+// import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
 import AdminAppointments from "./pages/admin/AdminAppointments";
 import ForgotPassword from "./pages/login/ForgotPassword";
 import ResetPassword from "./pages/login/ResetPassword";
@@ -263,16 +263,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
+            {/* <Route path="/payment-success" element={<PaymentSuccess />} /> */}
             {/* appointment payment success */}
-            <Route
+            {/* <Route
               path="/appointment/appointment-payment-success"
               element={
                 <ProtectedRoute>
                   <AppointmentPaymentSuccess />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route
