@@ -27,6 +27,10 @@ export default function Login() {
   const [token, setToken] = useState("");
   const { t } = useTranslation();
 
+  useEffect(() => {
+    alert("Kaka namaste");
+  }, []);
+
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [storedUser, setStoredUser] = useState(null);

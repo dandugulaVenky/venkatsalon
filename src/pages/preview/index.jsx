@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 import baseUrl from "../../utils/client";
 
@@ -190,7 +190,33 @@ const Preview = (props) => {
             description: "SAALONS",
             image: "https://avatars.githubusercontent.com/u/25058652?v=4",
             order_id: order.id,
-            callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+            // callback_url: `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+            redirect: false,
+            handler: async function (response) {
+              // Step 3: Call backend to verify payment
+              try {
+                const verifyRes = await axiosInstance.post(
+                  `${baseUrl}/api/payments/paymentverification?token=${token}&userId=${user._id}`,
+                  {
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    userId: user._id,
+                  }
+                );
+                console.log(verifyRes, "verifyRes");
+                if (verifyRes.data.success) {
+                  navigate("/payment-success", {
+                    state: { reference: response.razorpay_payment_id },
+                  });
+                } else {
+                  window.location.href = `/payment-failure`;
+                }
+              } catch (err) {
+                console.error("Verification failed", err);
+                window.location.href = `/payment-failure`;
+              }
+            },
 
             notes: {
               address: "EasyTym Corporate Office",
@@ -201,9 +227,7 @@ const Preview = (props) => {
             },
 
             modal: {
-              ondismiss: function () {
-                alert("Payment failed! Please try again or contact support.");
-              },
+              ondismiss: function () {},
             },
           };
 
