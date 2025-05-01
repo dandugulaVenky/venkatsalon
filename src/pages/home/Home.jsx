@@ -57,9 +57,16 @@ const Home = ({ endRef, smallBanners }) => {
   // };
 
   useEffectOnce(() => {
-    toast("Currently in the testing phase...Live coming soon..");
-
     const getCurrentPosition = () => {
+      dispatch({
+        type: "NEW_SEARCH",
+        payload: {
+          type: "salon",
+          destination: "Enter your location",
+          lat: 0,
+          lng: 0,
+        },
+      });
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -89,16 +96,19 @@ const Home = ({ endRef, smallBanners }) => {
                 //   ", " +
                 //   results[1]?.address_components[4]?.long_name;
 
-                dispatch({
-                  type: "NEW_SEARCH",
-                  payload: {
-                    type: "salon",
-                    destination: city1,
-                    pincode: postalCodeComponent.types[0],
-                    lat: latitude,
-                    lng: longitude,
-                  },
-                });
+                let tm = setTimeout(() => {
+                  dispatch({
+                    type: "NEW_SEARCH",
+                    payload: {
+                      type: "salon",
+                      destination: city1,
+                      lat: latitude,
+                      lng: longitude,
+                    },
+                  });
+                }, 2000);
+
+                return () => clearTimeout(tm);
               } else {
                 console.log("No results found");
               }
@@ -168,15 +178,11 @@ const Home = ({ endRef, smallBanners }) => {
       return null;
     };
 
-    // let timeout = setTimeout(() => {
-    //   window.scrollTo(0, 0);
-    // }, 1000);
     promptEnableLocation();
 
     reference !== undefined && reference !== null && handleToast();
     localStorage.removeItem("bookingDetails");
     return () => {
-      // clearTimeout(timeout);
       console.log("effect");
     };
   }, [city, dispatch, navigate, reference]);

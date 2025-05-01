@@ -50,7 +50,6 @@ export default function Login() {
   let w = window.innerWidth;
 
   useEffect(() => {
-    toast("Currently in the logging ");
     // Req user for notification permission
     // secureLocalStorage.clear();
     w <= 768
@@ -129,7 +128,7 @@ export default function Login() {
       );
       sessionStorage.setItem("access_token", res.data.token);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-      token !== "" && saveToken(res.data.details._id, token);
+      // token !== "" && saveToken(res.data.details._id, token);
       setLoading(false);
       navigate(redirect || "/");
     } catch (err) {

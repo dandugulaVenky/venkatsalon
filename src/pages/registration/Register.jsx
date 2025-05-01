@@ -50,7 +50,7 @@ const Register = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   let { dispatch: dispatch1, type } = useContext(SearchContext);
 
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("No Location");
   const [header, setHeader] = useState(null);
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
@@ -281,6 +281,7 @@ const Register = () => {
               <input
                 type="text"
                 className="w-full"
+                disabled
                 id="city"
                 placeholder={"enter city name."}
                 readOnly
