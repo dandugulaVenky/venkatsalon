@@ -221,9 +221,11 @@ const Preview = (props) => {
                 );
                 console.log(verifyRes, "verifyRes");
                 if (verifyRes.data.success) {
-                  navigate("/payment-success", {
-                    state: { reference: response.razorpay_payment_id },
-                  });
+                  // navigate("/payment-success", {
+                  //   state: { reference: response.razorpay_payment_id },
+                  // });
+
+                  navigate("/");
                 } else {
                   window.location.href = `/payment-failure`;
                 }
