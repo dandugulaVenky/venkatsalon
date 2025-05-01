@@ -143,7 +143,7 @@ const Home = ({ endRef, smallBanners }) => {
                       type: "NEW_SEARCH",
                       payload: {
                         type: "salon",
-                        destination: "No Location!",
+                        destination: "Enter Location!",
                       },
                     });
                     alert(t("enableLocationServices"));
