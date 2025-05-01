@@ -602,8 +602,7 @@ const Reserve = () => {
   );
 
   if (error) {
-    // return navigate("/login", { state: { destination: `/shops/${shopId}` } });
-    return alert("Please login to book a salon!", JSON.stringify(error));
+    return navigate("/login", { state: { destination: `/shops/${shopId}` } });
   }
 
   const previewHandler = async (amount, e) => {
