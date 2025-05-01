@@ -1,302 +1,304 @@
-// App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import { useContext, useEffect, useRef, useState, Suspense, lazy } from "react";
-
+import Home from "./pages/home/Home";
+import Hotel from "./pages/hotel/Hotel";
+import List from "./pages/list/List";
 import Login from "./pages/login/Login";
-import Register from "./pages/registration/Register";
+import "./index.css";
+import Profile from "./pages/Profile";
+import BookingHistory from "./pages/BookingHistory";
 import Admin from "./pages/admin/Admin";
+import Register from "./pages/registration/Register";
 
+import { PaymentSuccess } from "./pages/PaymentSuccess";
+import PrivacyPolicy from "./pages/staticpages/PrivacyPolicy";
+import TermsAndConditions from "./pages/staticpages/TermsAndConditions";
+import About from "./pages/staticpages/About";
+import Contact from "./pages/staticpages/Contact";
+import { useContext, useEffect, useRef } from "react";
+import { AuthContext } from "./context/AuthContext";
+
+import BookingFailure from "./components/BookingFailure";
+
+// import Ironing from "./pages/ironing/Ironing";
+// import Slug from "./pages/ironing/iron-pages/Slug";
+// import Cart from "./pages/ironing/iron-pages/Cart";
+// import Shipping from "./pages/ironing/iron-pages/Shipping";
+// import PlaceOrder from "./pages/ironing/iron-pages/Placeorder";
+// import Orders from "./pages/ironing/iron-pages/Orders";
+// import OrderDetails from "./pages/ironing/iron-pages/OrderDetails";
+// import { IronPaymentSuccess } from "./pages/ironing/iron-pages/IronPaymentSuccess";
+
+import Reserve from "./components/reserve/Reserve";
+// import ParlorReserve from "./components/reserve/ParlorReserve";
+
+import AdminOrders from "./pages/admin/AdminOrders";
+import Packages from "./pages/admin/Packages";
+import MyServices from "./pages/admin/MyServices";
+import AddServices from "./pages/admin/AddServices";
+import Compare from "./pages/admin/Compare";
+import AllCities from "./pages/AllCities/AllCities";
+// import RegistrationForm from "./pages/shopRegistration/RegistrationForm";
+import FinalRegistration from "./pages/shopRegistration/FinalRegistration";
+import ShopDetails from "./pages/shopRegistration/ShopDetails";
+import Break from "./pages/admin/Break";
+import Telugu from "./pages/translation/Telugu";
+import i18next from "./i18n";
+import LanguageContext from "./context/LanguageContext";
+import { useState } from "react";
 import Layout from "./components/navbar/Layout";
 import Greeting from "./components/navbar/Greeting";
-import Footer from "./components/footer/Footer";
 import MobileFooter from "./components/footer/MobileFooter";
-import SIdebar from "./components/navbar/SIdebar";
-
-import { AuthContext } from "./context/AuthContext";
+import Footer from "./components/footer/Footer";
 import { SearchContext } from "./context/SearchContext";
-import LanguageContext from "./context/LanguageContext";
-
-import i18next from "./i18n";
-import { ErrorProvider } from "./context/ErrorContext";
-import ErrorBoundary from "./utils/ErrorBoundary";
-import GlobalErrorPopup from "./utils/GlobalErrorPopup";
-import "./index.css";
-import ShopsWithOffer from "./pages/list/ShopsWithOffers";
-import RenewalPaymentSuccess from "./pages/admin/RenewalPaymentSuccess";
-import PaymentSuccess from "./pages/PaymentSuccess";
+import SIdebar from "./components/navbar/SIdebar";
+import UpdateShopDetails from "./pages/admin/UpdateShopDetails";
+import AppointmentPaymentSuccess from "./pages/hotel/AppointmentPaymentSuccess";
+import AdminAppointments from "./pages/admin/AdminAppointments";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import ResetPassword from "./pages/login/ResetPassword";
+import MyBarbers from "./pages/admin/MyBarbers";
+import Rewards from "./pages/admin/Rewards";
 import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
-import WebView from "./utils/WebView";
-
-// Lazy-loaded pages
-const Home = lazy(() => import("./pages/home/Home"));
-const Hotel = lazy(() => import("./pages/hotel/Hotel"));
-const List = lazy(() => import("./pages/list/List"));
-const Profile = lazy(() => import("./pages/Profile"));
-const BookingHistory = lazy(() => import("./pages/BookingHistory"));
-// const PaymentSuccess = lazy(() => import("./pages/PaymentSuccess"));
-const PrivacyPolicy = lazy(() => import("./pages/staticpages/PrivacyPolicy"));
-const TermsAndConditions = lazy(() =>
-  import("./pages/staticpages/TermsAndConditions")
-);
-const About = lazy(() => import("./pages/staticpages/About"));
-const Contact = lazy(() => import("./pages/staticpages/Contact"));
-const BookingFailure = lazy(() => import("./components/BookingFailure"));
-const Reserve = lazy(() => import("./components/reserve/Reserve"));
-const AdminOrders = lazy(() => import("./pages/admin/AdminOrders"));
-const Packages = lazy(() => import("./pages/admin/Packages"));
-const MyServices = lazy(() => import("./pages/admin/MyServices"));
-const AddServices = lazy(() => import("./pages/admin/AddServices"));
-const Compare = lazy(() => import("./pages/admin/Compare"));
-const AllCities = lazy(() => import("./pages/AllCities/AllCities"));
-const FinalRegistration = lazy(() =>
-  import("./pages/shopRegistration/FinalRegistration")
-);
-const ShopDetails = lazy(() => import("./pages/shopRegistration/ShopDetails"));
-const Break = lazy(() => import("./pages/admin/Break"));
-const Telugu = lazy(() => import("./pages/translation/Telugu"));
-const UpdateShopDetails = lazy(() => import("./pages/admin/UpdateShopDetails"));
-const AppointmentPaymentSuccess = lazy(() =>
-  import("./pages/hotel/AppointmentPaymentSuccess")
-);
-const AdminAppointments = lazy(() => import("./pages/admin/AdminAppointments"));
-const ForgotPassword = lazy(() => import("./pages/login/ForgotPassword"));
-const ResetPassword = lazy(() => import("./pages/login/ResetPassword"));
-const MyBarbers = lazy(() => import("./pages/admin/MyBarbers"));
-const Rewards = lazy(() => import("./pages/admin/Rewards"));
-const MyOffers = lazy(() => import("./pages/admin/MyOffers"));
-// const SubscriptionPaymentSuccess = lazy(() =>
-//   import("./pages/shopRegistration/SubscriptionPaymentSuccess")
-// );
+import MyOffers from "./pages/admin/MyOffers";
+import ShopsWithOffers from "./pages/list/ShopsWithOffers";
 
 function App() {
-  const { user } = useContext(AuthContext);
-  const { open } = useContext(SearchContext);
+  const ProtectedRoute = ({ children }) => {
+    const { user } = useContext(AuthContext);
 
+    if (!user) {
+      // return <Navigate to="/login" />;
+      return <Login />;
+    }
+
+    return children;
+  };
   const [locale, setLocale] = useState(i18next.language);
+  const { open } = useContext(SearchContext);
   const [smallBanners, setSmallBanners] = useState(window.innerWidth < 431);
   const [smallScreen, setSmallScreen] = useState(window.innerWidth < 1064);
-  const endRef = useRef(null);
-
-  const handleResize = () => {
+  const handleResize = (e) => {
     setSmallScreen(window.innerWidth < 1064);
     setSmallBanners(window.innerWidth < 431);
   };
 
   useEffect(() => {
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  const ProtectedRoute = ({ children }) => {
-    if (!user) return <Login />;
-    return children;
-  };
+  const endRef = useRef(null);
 
   return (
-    <ErrorProvider>
+    <>
       <LanguageContext.Provider value={{ locale, setLocale }}>
-        <ErrorBoundary>
-          <BrowserRouter>
-            <WebView />
-            <GlobalErrorPopup />
-            {smallScreen ? (
-              <Greeting bestRef={endRef} />
-            ) : (
-              <Layout bestRef={endRef} />
-            )}
+        <BrowserRouter>
+          {smallScreen ? (
+            <Greeting bestRef={endRef} />
+          ) : (
+            <Layout bestRef={endRef} />
+          )}
 
-            {open && <SIdebar />}
+          {open && <SIdebar />}
+          <Routes>
+            <Route
+              path="/"
+              element={<Home endRef={endRef} smallBanners={smallBanners} />}
+            />
 
-            <Suspense
-              fallback={<div className="text-center py-8">Loading...</div>}
-            >
-              <Routes>
-                <Route
-                  path="/"
-                  element={<Home endRef={endRef} smallBanners={smallBanners} />}
-                />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route
-                  path="/reset_password/:phone/:token"
-                  element={<ResetPassword />}
-                />
-                <Route path="/shop-details" element={<ShopDetails />} />
-                <Route
-                  path="/shop-final-registration"
-                  element={<FinalRegistration />}
-                />
-                <Route
-                  path="/subscription-payment-success"
-                  element={
-                    <ProtectedRoute>
-                      <SubscriptionPaymentSuccess />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/shops" element={<List />} />
-                <Route path="/shops/with-offers" element={<ShopsWithOffer />} />
-                <Route path="/cities" element={<AllCities />} />
-                <Route
-                  path="/shops/:id"
-                  element={<Hotel smallBanners={smallBanners} />}
-                />
-                <Route path="/shops/:id/:id1" element={<Reserve />} />
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/history"
-                  element={
-                    <ProtectedRoute>
-                      <BookingHistory />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <Admin />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/renewal-payment-success"
-                  element={
-                    <ProtectedRoute>
-                      <RenewalPaymentSuccess />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/rewards"
-                  element={
-                    <ProtectedRoute>
-                      <Rewards />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/my-offers"
-                  element={
-                    <ProtectedRoute>
-                      <MyOffers />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/orders"
-                  element={
-                    <ProtectedRoute>
-                      <AdminOrders />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/appointments"
-                  element={
-                    <ProtectedRoute>
-                      <AdminAppointments />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/packages"
-                  element={
-                    <ProtectedRoute>
-                      <Packages />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/my-services"
-                  element={
-                    <ProtectedRoute>
-                      <MyServices />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/my-barbers"
-                  element={
-                    <ProtectedRoute>
-                      <MyBarbers />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/add-services"
-                  element={
-                    <ProtectedRoute>
-                      <AddServices />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/compare"
-                  element={
-                    <ProtectedRoute>
-                      <Compare />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/break"
-                  element={
-                    <ProtectedRoute>
-                      <Break />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/update-shop-details"
-                  element={
-                    <ProtectedRoute>
-                      <UpdateShopDetails />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/payment-success"
-                  element={
-                    // <ProtectedRoute>
-                    <PaymentSuccess />
-                    // </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/appointment/appointment-payment-success"
-                  element={
-                    <ProtectedRoute>
-                      <AppointmentPaymentSuccess />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route
-                  path="/terms-and-conditions"
-                  element={<TermsAndConditions />}
-                />
-                <Route path="/about-us" element={<About />} />
-                <Route path="/contact-us" element={<Contact />} />
-                <Route path="/failure" element={<BookingFailure />} />
-                <Route path="/telugu" element={<Telugu />} />
-              </Routes>
-            </Suspense>
+            {/* <Route path="/get-started" element={<Home />} /> */}
+            <Route path="/login" element={<Login />} />
 
-            {smallScreen ? <MobileFooter /> : <Footer />}
-          </BrowserRouter>
-        </ErrorBoundary>
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/reset_password/:phone/:token"
+              element={<ResetPassword />}
+            />
+
+            {/* <Route path="/shop-registration" element={<RegistrationForm />} /> */}
+            <Route path="/shop-details" element={<ShopDetails />} />
+            <Route
+              path="/shop-final-registration"
+              element={<FinalRegistration />}
+            />
+            <Route
+              path="/subscription-payment-success"
+              element={
+                <ProtectedRoute>
+                  <SubscriptionPaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/shops" element={<List />} />
+            <Route path="/shops/with-offers" element={<ShopsWithOffers />} />
+
+            <Route path="/cities" element={<AllCities />} />
+
+            <Route
+              path="/shops/:id"
+              element={<Hotel smallBanners={smallBanners} />}
+            />
+            <Route path="/shops/:id/:id1" element={<Reserve />} />
+
+            {/* <Route
+              path="/shops/:id/parlour-reserve"
+              element={<ParlorReserve />}
+            /> */}
+
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <ProtectedRoute>
+                  <BookingHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Admin />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/rewards"
+              element={
+                <ProtectedRoute>
+                  <Rewards />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute>
+                  <AdminOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/appointments"
+              element={
+                <ProtectedRoute>
+                  <AdminAppointments />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/packages"
+              element={
+                <ProtectedRoute>
+                  <Packages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-services"
+              element={
+                <ProtectedRoute>
+                  <MyServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-barbers"
+              element={
+                <ProtectedRoute>
+                  <MyBarbers />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/add-services"
+              element={
+                <ProtectedRoute>
+                  <AddServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/compare"
+              element={
+                <ProtectedRoute>
+                  <Compare />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/break"
+              element={
+                <ProtectedRoute>
+                  <Break />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/update-shop-details"
+              element={
+                <ProtectedRoute>
+                  <UpdateShopDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/my-offers"
+              element={
+                <ProtectedRoute>
+                  <MyOffers />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            {/* appointment payment success */}
+            <Route
+              path="/appointment/appointment-payment-success"
+              element={
+                <ProtectedRoute>
+                  <AppointmentPaymentSuccess />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route
+              path="/terms-and-conditions"
+              element={<TermsAndConditions />}
+            />
+            <Route path="/about-us" element={<About />} />
+            <Route path="/contact-us" element={<Contact />} />
+            <Route path="/failure" element={<BookingFailure />} />
+            {/* <Route path="/iron" element={<Ironing />} />
+            <Route path="/iron/product/:slug" element={<Slug />} />
+            <Route path="/iron/cart" element={<Cart />} />
+            <Route path="/iron/shipping" element={<Shipping />} />
+            <Route path="/iron/place-order" element={<PlaceOrder />} />
+            <Route path="/iron-orders" element={<Orders />} />
+            <Route path="/iron/order/:orderid" element={<OrderDetails />} />
+            <Route
+              path="/iron/iron-payment-success"
+              element={<IronPaymentSuccess />}
+            /> */}
+            <Route path="/telugu" element={<Telugu />} />
+          </Routes>
+          {smallScreen ? <MobileFooter /> : <Footer />}
+        </BrowserRouter>
       </LanguageContext.Provider>
-    </ErrorProvider>
+    </>
   );
 }
 
