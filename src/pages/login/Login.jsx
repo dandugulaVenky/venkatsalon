@@ -115,7 +115,7 @@ export default function Login() {
 
     const { user } = response;
     let user1 = { name: user.displayName, email: user.email, city: "" };
-    alert(JSON.stringify(user1));
+    // alert(JSON.stringify(user1));
     dispatch({ type: "LOGIN_START" });
     try {
       const res = await axiosInstance.post(
@@ -127,7 +127,7 @@ export default function Login() {
         { withCredentials: true }
       );
 
-      alert(JSON.stringify(res.data));
+      // alert(JSON.stringify(res.data));
       sessionStorage.setItem("access_token", res.data.token);
       dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
       // token !== "" && saveToken(res.data.details._id, token);
