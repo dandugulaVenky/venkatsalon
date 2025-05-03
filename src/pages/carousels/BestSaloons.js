@@ -87,7 +87,11 @@ const BestSaloons = ({ smallBanners }) => {
           className="px-5 text-2xl font-semibold pb-2.5"
           onClick={handleAllShops}
         >
-          <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
+          <FontAwesomeIcon
+            icon={faArrowRight}
+            color="#00ccbb"
+            className=" fa-bounce"
+          />
         </button>
       </div>
       {query.isLoading ? (

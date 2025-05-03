@@ -67,7 +67,10 @@ const SearchItem = ({ item }) => {
                     item?.individualOffer?.slice(0, 2).map((item1) => {
                       return (
                         <p className="text-xs text-gray-600">
-                          {item1?.service} - {item1?.offer}%
+                          {item1?.service} -{" "}
+                          <span className="bg-green-500 p-1 rounded-md text-white font-bold">
+                            {item1?.offer}% off/-
+                          </span>{" "}
                         </p>
                       );
                     })}

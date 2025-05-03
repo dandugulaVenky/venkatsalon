@@ -13,7 +13,7 @@ import {
   faClose,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
@@ -513,7 +513,7 @@ const BookingHistory = () => {
                       {t("amount")}
                     </th>
                     <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                      {t("shop")}
+                      Go To Shop
                     </th>
                     {
                       <th className="md:p-5  px-10 md:text-md text-sm text-right">
@@ -557,7 +557,11 @@ const BookingHistory = () => {
                           </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm">
-                          <label>{item.shop}</label>
+                          <label>
+                            <Link to={`/shops/${item.shopId}`}>
+                              {item.shop}
+                            </Link>
+                          </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm underline cursor-pointer">
                           <label
