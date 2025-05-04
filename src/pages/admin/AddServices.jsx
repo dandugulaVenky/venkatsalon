@@ -22,8 +22,8 @@ const AddServices = () => {
   const { user } = useContext(AuthContext);
   const [allServices, setAllServices] = useState({
     service: "",
-    price: 0,
-    duration: 0,
+    price: "",
+    duration: "",
   });
   const [shopServices, setShopServices] = useState([]);
   const [disabled, setIsDisabled] = useState(false);
@@ -111,11 +111,15 @@ const AddServices = () => {
     setCategories(result);
   };
 
+  // const allHandleChange = (e, option) => {
+  //   let value = e.target.value;
+  //   if (option === "price" || option === "duration") {
+  //     value = Number(value);
+  //   }
+  //   setAllServices((prev) => ({ ...prev, [option]: value }));
+  // };
   const allHandleChange = (e, option) => {
     let value = e.target.value;
-    if (option === "price" || option === "duration") {
-      value = Number(value);
-    }
     setAllServices((prev) => ({ ...prev, [option]: value }));
   };
 
@@ -131,11 +135,15 @@ const AddServices = () => {
 
       return;
     }
-
+    const payload = {
+      ...allServices,
+      price: Number(allServices.price),
+      duration: Number(allServices.duration),
+    };
     let result = {
       category: category,
       subCategory: typeOfPerson,
-      services: allServices,
+      services: payload,
       superCategory,
     };
 
@@ -168,8 +176,8 @@ const AddServices = () => {
 
     setAllServices({
       service: "",
-      price: 0,
-      duration: 0,
+      price: "",
+      duration: "",
     });
   };
 
@@ -340,7 +348,7 @@ const AddServices = () => {
             </select>
             <select
               onChange={handleCategoryChange}
-              className="border-2 border-[#00ccbb]  md:w-auto w-full"
+              className="border-2 border-[#00ccbb]  md:w-auto w-full md:mt-0 mt-3"
               value={category}
             >
               <option selected value="">
@@ -382,7 +390,7 @@ const AddServices = () => {
             <input
               onChange={(e) => allHandleChange(e, "price")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
-              value={Number(allServices?.price)}
+              // value={Number(allServices?.price)}
               type="number"
             />
           </div>
