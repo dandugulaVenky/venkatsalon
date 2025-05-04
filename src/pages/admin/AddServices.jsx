@@ -388,10 +388,16 @@ const AddServices = () => {
               </span>
             </div>
             <input
-              onChange={(e) => allHandleChange(e, "price")}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  allHandleChange(e, "price");
+                }
+              }}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
-              // value={Number(allServices?.price)}
-              type="number"
+              value={allServices?.price || ""}
+              inputMode="numeric" // Suggests numeric keyboard on mobile
+              pattern="[0-9]*" // Helps with validation
             />
           </div>
 
