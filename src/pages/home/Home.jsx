@@ -142,6 +142,7 @@ const Home = ({ endRef, smallBanners }) => {
         getCurrentPosition();
       }
     };
+    window.scrollTo(0, 0);
 
     // 1. Try cached location first for fast load
     const cachedLocation = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));

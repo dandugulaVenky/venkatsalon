@@ -27,9 +27,9 @@ const MobileFooter = () => {
             <Link to="/">
               <FontAwesomeIcon icon={faHome} size="xl" />
             </Link>
-            <Link onClick={goBack}>
+            {/* <Link onClick={goBack}>
               <FontAwesomeIcon icon={faArrowCircleLeft} size="xl" />
-            </Link>
+            </Link> */}
             <Link to="/history">
               <FontAwesomeIcon icon={faHistory} size="xl" />
             </Link>
