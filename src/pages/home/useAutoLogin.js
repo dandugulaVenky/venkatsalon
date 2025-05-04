@@ -9,16 +9,16 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 const useAutoLogin = () => {
   const navigate = useNavigate();
   const { dispatch } = useContext(AuthContext);
-  const isTokenExpired = (token) => {
-    const { exp } = JSON.parse(atob(token.split(".")[1]));
-    return Date.now() >= exp * 1000;
-  };
+  // const isTokenExpired = (token) => {
+  //   const { exp } = JSON.parse(atob(token?.split(".")[1]));
+  //   return Date.now() >= exp * 1000;
+  // };
 
   useEffectOnce(() => {
     const tryAutoLogin = async () => {
       const token = localStorage.getItem("access_token");
-      console.log(isTokenExpired(token), "isTokenExpired");
-      if (!token || isTokenExpired(token)) {
+      // console.log(isTokenExpired(token), "isTokenExpired");
+      if (!token) {
         localStorage.removeItem("access_token");
         navigate("/login");
         return;
