@@ -28,7 +28,7 @@ const List = () => {
   const [gender, setGender] = useState();
 
   const { type, city, lat, lng } = useContext(SearchContext);
-  console.log(lat, lng);
+  // console.log(lat, lng);
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels?type=${type ? type : "salon"}&lat=${
       lat ? lat : 0.0
@@ -155,7 +155,7 @@ const List = () => {
     }
   };
 
-  console.log({ data, mata: data.length });
+  // console.log({ data, mata: data.length });
 
   return (
     <div className="pt-6 pb-20">

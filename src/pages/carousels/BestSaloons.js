@@ -23,7 +23,7 @@ const BestSaloons = ({ smallBanners }) => {
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
-  console.log(pincode, "pincode");
+  // console.log(pincode, "pincode");
 
   const getBestSalons = async () => {
     return await axiosInstance.get(

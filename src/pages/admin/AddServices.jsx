@@ -382,7 +382,8 @@ const AddServices = () => {
             <input
               onChange={(e) => allHandleChange(e, "price")}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
-              value={allServices?.price}
+              value={Number(allServices?.price)}
+              type="number"
             />
           </div>
 

@@ -57,16 +57,21 @@ const Home = ({ endRef, smallBanners }) => {
   // };
 
   useEffectOnce(() => {
-    const getCurrentPosition = () => {
+    const LOCAL_STORAGE_KEY = "userLocation";
+
+    const dispatchLocation = (location) => {
       dispatch({
         type: "NEW_SEARCH",
         payload: {
           type: "salon",
-          destination: "Enter your location",
-          lat: 0,
-          lng: 0,
+          destination: location.destination || "Enter your location",
+          lat: location.lat || 0,
+          lng: location.lng || 0,
         },
       });
+    };
+
+    const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
@@ -74,116 +79,85 @@ const Home = ({ endRef, smallBanners }) => {
           const latlng = { lat: latitude, lng: longitude };
 
           geocoder.geocode({ location: latlng }, (results, status) => {
-            // console.log(results);
-            // Find the first address component with types including "postal_code"
-            const postalCodeComponent = results.find(
-              (component) =>
-                component.types.includes("sublocality") ||
-                component.types.includes("postal_code")
-            );
+            if (status === "OK" && results[0]) {
+              const postalOrLocality = results.find(
+                (r) =>
+                  r.types.includes("sublocality") ||
+                  r.types.includes("postal_code")
+              );
+              const destination =
+                postalOrLocality?.formatted_address?.toLowerCase() ||
+                results[0].formatted_address.toLowerCase();
 
-            const city1 = postalCodeComponent.formatted_address?.toLowerCase();
+              const userLocation = {
+                destination,
+                lat: latitude,
+                lng: longitude,
+              };
 
-            // Find the colony or locality name
-            // Dispatch the necessary information
-
-            if (status === "OK") {
-              if (results[0]) {
-                // let string =
-                //   results[1]?.address_components[1]?.long_name +
-                //   ", " +
-                //   results[1]?.address_components[3]?.long_name +
-                //   ", " +
-                //   results[1]?.address_components[4]?.long_name;
-
-                let tm = setTimeout(() => {
-                  dispatch({
-                    type: "NEW_SEARCH",
-                    payload: {
-                      type: "salon",
-                      destination: city1,
-                      lat: latitude,
-                      lng: longitude,
-                    },
-                  });
-                }, 2000);
-
-                return () => clearTimeout(tm);
-              } else {
-                console.log("No results found");
-              }
+              // Store and dispatch location
+              localStorage.setItem(
+                LOCAL_STORAGE_KEY,
+                JSON.stringify(userLocation)
+              );
+              dispatchLocation(userLocation);
             } else {
-              console.log("Geocoder failed due to: " + status);
+              console.log("Geocoder failed or no results found:", status);
             }
           });
         },
         (error) => {
-          // Handle any error occurred during geolocation
-          console.log("Error occurred during geolocation:", error);
+          console.log("Geolocation error:", error);
+          alert(t("enableLocationServices"));
+          dispatchLocation({ destination: "Enter Location!", lat: 0, lng: 0 });
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 60000,
+        }
       );
     };
 
-    const promptEnableLocation = () => {
-      if ("geolocation" in navigator) {
-        if (navigator.permissions && navigator.permissions.query) {
-          navigator.permissions
-            .query({ name: "geolocation" })
-            .then((result) => {
-              if (result.state === "prompt") {
-                // Prompt user to allow or block geolocation permission
-                navigator.geolocation.getCurrentPosition(
-                  () => {
-                    console.log("Geolocation permission granted.");
-                    getCurrentPosition();
-                  },
-                  () => {
-                    dispatch({
-                      type: "NEW_SEARCH",
-                      payload: {
-                        type: "salon",
-                        destination: "Enter Location!",
-                      },
-                    });
-                    alert(t("enableLocationServices"));
-                  },
-                  {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 10000,
-                  }
-                );
-              } else if (result.state === "granted") {
-                console.log("Geolocation permission already granted.");
-                !city && getCurrentPosition();
-              } else if (result.state === "denied") {
-                if (city === "No Location!") {
-                  alert(t("enableLocationServices"));
-                }
-              }
-            });
-        } else {
-          console.log("Permission API is not supported by your browser.");
-        }
-      } else {
+    const promptLocation = () => {
+      if (!("geolocation" in navigator)) {
         console.log("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      if (navigator.permissions?.query) {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "granted" || result.state === "prompt") {
+            getCurrentPosition();
+          } else if (result.state === "denied" && city === "No Location!") {
+            alert(t("enableLocationServices"));
+          }
+        });
+      } else {
+        // Fallback if Permissions API not supported
+        getCurrentPosition();
       }
     };
 
-    const handleToast = () => {
+    // 1. Try cached location first for fast load
+    const cachedLocation = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (cachedLocation) {
+      dispatchLocation(cachedLocation);
+    } else {
+      // 2. Then prompt for location (first-time or after clear)
+      promptLocation();
+    }
+
+    // 3. Handle post-booking toast and cleanup
+    if (reference !== undefined && reference !== null) {
       toast.success("Reserved successfully 🎉");
-
       navigate("/", { state: null });
-      return null;
-    };
+    }
 
-    promptEnableLocation();
-
-    reference !== undefined && reference !== null && handleToast();
     localStorage.removeItem("bookingDetails");
+
     return () => {
-      console.log("effect");
+      console.log("Cleanup effect");
     };
   }, [city, dispatch, navigate, reference]);
 
