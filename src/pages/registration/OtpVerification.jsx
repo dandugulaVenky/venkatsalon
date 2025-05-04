@@ -317,7 +317,6 @@ const OtpVerification = (props) => {
             className="w-full border p-2 rounded"
             type="password"
             id="password"
-            value={password || storedUser.password}
             onChange={handlePasswordChange}
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
