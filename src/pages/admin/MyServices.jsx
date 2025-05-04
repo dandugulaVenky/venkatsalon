@@ -955,7 +955,8 @@ const MyServices = () => {
                               <td className="p-5 text-right md:text-md text-sm">
                                 {edit === j ? (
                                   <input
-                                    type="text"
+                                    inputMode="numeric" // Suggests numeric keyboard on mobile
+                                    pattern="[0-9]*" // Helps with validation
                                     value={editedService.price}
                                     readOnly={option.category === "offers"}
                                     onChange={(e) => handleInput(e, "price")}
