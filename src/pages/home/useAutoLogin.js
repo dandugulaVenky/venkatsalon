@@ -33,7 +33,7 @@ const useAutoLogin = () => {
           payload: { user: res.data.details, token: res.data.accessToken },
         });
       } catch (error) {
-        console.log("Auto-login failed:", error);
+        alert(JSON.stringify(error.response.data));
         localStorage.removeItem("access_token");
         navigate("/login");
       }
