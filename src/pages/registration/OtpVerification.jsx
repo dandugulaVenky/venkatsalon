@@ -330,6 +330,7 @@ const OtpVerification = (props) => {
               id="city"
               placeholder={"enter city name."}
               readOnly
+              disabled
               value={address || city}
             />
           </div>

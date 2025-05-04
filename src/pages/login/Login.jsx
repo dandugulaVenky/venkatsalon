@@ -154,7 +154,7 @@ export default function Login() {
     return (
       <div className="md:px-10 px-5 pt-10 card text-sm ">
         <OtpVerification
-          token=""
+          token={token}
           emailVerified={false}
           setEmailVerified={setEmailVerified}
           phoneVerified={phoneVerified}
