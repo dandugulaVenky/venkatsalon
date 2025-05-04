@@ -44,7 +44,6 @@ const Layout = ({ bestRef }) => {
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
 
-  console.log(city, "city");
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);

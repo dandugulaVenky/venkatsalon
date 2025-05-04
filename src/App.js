@@ -27,6 +27,7 @@ import RenewalPaymentSuccess from "./pages/admin/RenewalPaymentSuccess";
 // import PaymentSuccess from "./pages/PaymentSuccess";
 import SubscriptionPaymentSuccess from "./pages/shopRegistration/SubscriptionPaymentSuccess";
 import WebView from "./utils/WebView";
+import UseAutoLogin from "./pages/home/UseAutoLogin";
 
 // Lazy-loaded pages
 const Home = lazy(() => import("./pages/home/Home"));
@@ -115,6 +116,7 @@ function App() {
                 </div>
               }
             >
+              <UseAutoLogin />
               <Routes>
                 <Route
                   path="/"
@@ -295,7 +297,6 @@ function App() {
                 <Route path="/telugu" element={<Telugu />} />
               </Routes>
             </Suspense>
-
             {smallScreen ? <MobileFooter /> : <Footer />}
           </BrowserRouter>
         </ErrorBoundary>

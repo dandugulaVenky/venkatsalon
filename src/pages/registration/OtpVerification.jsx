@@ -182,6 +182,7 @@ const OtpVerification = (props) => {
             payload: {
               user: res.data.details, // Assuming user details are in 'details'
               token: res.data.accessToken, // Assuming token is in 'token'
+              refreshToken: res.data.refreshToken, // Assuming token is in 'token'
             },
           });
           token !== "" && saveToken(res.data.details._id, token);

@@ -96,8 +96,15 @@ export default function Login() {
           },
           { withCredentials: true }
         );
-        sessionStorage.setItem("access_token", res.data.token);
-        dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+        localStorage.setItem("access_token", res.data.token);
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: {
+            user: res.data.details, // Assuming user details are in 'details'
+            token: res.data.accessToken,
+            refreshToken: res.data.refreshToken, // Assuming token is in 'token'
+          },
+        });
 
         token !== "" && saveToken(res.data.details._id, token);
         navigate(redirect || "/");
@@ -127,20 +134,24 @@ export default function Login() {
         { withCredentials: true }
       );
 
+      toast.success("Login Successfull");
+
       dispatch({
         type: "LOGIN_SUCCESS",
         payload: {
           user: res.data.details, // Assuming user details are in 'details'
-          token: res.data.accessToken, // Assuming token is in 'token'
+          token: res.data.accessToken,
+          refreshToken: res.data.refreshToken, // Assuming token is in 'token'
         },
       });
       // token !== "" && saveToken(res.data.details._id, token);
       setLoading(false);
       navigate(redirect || "/");
     } catch (err) {
+      toast.success("User not found...redirect...");
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
       if (err.response.status === 404) {
-        toast.success(`${err.response.data.message} creating a account!`);
+        alert("User not found with this email, creating a account!");
 
         setStoredUser(user1);
         setCanShowNumber(true);

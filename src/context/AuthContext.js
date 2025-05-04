@@ -22,6 +22,7 @@ const AuthReducer = (state, action) => {
     case "LOGIN_SUCCESS":
       // Store the token in localStorage (or secureLocalStorage)
       localStorage.setItem("access_token", action.payload.token); // assuming token is in response
+      localStorage.setItem("refresh_token", action.payload.refreshToken); // assuming token is in response
 
       return {
         user: action.payload.user, // store user data
@@ -39,6 +40,8 @@ const AuthReducer = (state, action) => {
     case "LOGOUT":
       localStorage.removeItem("easytym-user");
       localStorage.removeItem("access_token");
+
+      localStorage.removeItem("refresh_token");
 
       return {
         user: null,

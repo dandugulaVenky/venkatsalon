@@ -16,10 +16,9 @@ import { useTranslation } from "react-i18next";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 import OffersForYou from "../carousels/OffersForYou";
-import axiosInstance from "../../components/axiosInterceptor";
-import baseUrl from "../../utils/client";
+
 import { AuthContext } from "../../context/AuthContext";
-import useAutoLogin from "./useAutoLogin";
+
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
@@ -165,8 +164,6 @@ const Home = ({ endRef, smallBanners }) => {
       console.log("Cleanup effect");
     };
   }, [city, dispatch, navigate, reference]);
-
-  useAutoLogin();
 
   let images = [];
 
