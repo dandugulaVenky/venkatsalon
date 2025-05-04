@@ -197,7 +197,7 @@ const Preview = (props) => {
             },
             { withCredentials: true }
           );
-          const token = sessionStorage.getItem("access_token");
+          const token = localStorage.getItem("access_token");
           const options = {
             key,
             amount: order.amount,
