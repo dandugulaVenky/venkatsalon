@@ -32,7 +32,7 @@ const axiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    let token = sessionStorage?.getItem("access_token");
+    let token = localStorage?.getItem("access_token"); // Instead of sessionStorage
 
     if (!token) {
       // If no token in sessionStorage, try reading from URL
@@ -40,7 +40,7 @@ axiosInstance.interceptors.request.use(
       token = urlParams.get("token");
 
       if (token) {
-        sessionStorage.setItem("access_token", token); // Save it for future use
+        localStorage.setItem("access_token", token); // Save it for future use
       }
     }
 

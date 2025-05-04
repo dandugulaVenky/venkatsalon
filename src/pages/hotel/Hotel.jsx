@@ -101,6 +101,7 @@ const Hotel = ({ smallBanners }) => {
   const [higlightBookingBox, setHighlightBookingBox] = useState(false);
 
   const { user } = useContext(AuthContext);
+
   const { city, timeDifferenceInDays, time, dispatch, lat, lng } =
     useContext(SearchContext);
   const [value, setValue] = useState(

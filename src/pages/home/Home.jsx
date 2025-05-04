@@ -3,7 +3,7 @@ import "./home.css";
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
@@ -16,6 +16,10 @@ import { useTranslation } from "react-i18next";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 import OffersForYou from "../carousels/OffersForYou";
+import axiosInstance from "../../components/axiosInterceptor";
+import baseUrl from "../../utils/client";
+import { AuthContext } from "../../context/AuthContext";
+import useAutoLogin from "./useAutoLogin";
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
@@ -29,6 +33,7 @@ const siteMetadata = {
 
 const Home = ({ endRef, smallBanners }) => {
   const { city, dispatch } = useContext(SearchContext);
+  const { dispatch: dispatch1 } = useContext(AuthContext);
 
   const location = useLocation();
   // const videoUrl =
@@ -160,6 +165,8 @@ const Home = ({ endRef, smallBanners }) => {
       console.log("Cleanup effect");
     };
   }, [city, dispatch, navigate, reference]);
+
+  useAutoLogin();
 
   let images = [];
 
