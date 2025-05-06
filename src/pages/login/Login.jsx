@@ -39,7 +39,7 @@ export default function Login() {
         vapidKey:
           "BBxeTBZDBt6mAaEKjhzYA6GC1vJ7nuGhXfb5eqpArsgnfP4iWlgIAZmoHP6jJn9_HDODQKSPiLrGzQd6rKNhuCo",
       });
-      // console.log("Token Gen", token);
+      console.log("Token Gen", token);
       setToken(token);
       // Send this token  to server ( db)
     } else if (permission === "denied") {

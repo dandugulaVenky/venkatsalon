@@ -267,6 +267,7 @@ const Preview = (props) => {
       }
     } catch (err) {
       toast("Token expired! Please login");
+      alert(JSON.stringify(err));
       setLoading(false);
       console.log(err);
       setTimeout(() => {

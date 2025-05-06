@@ -18,6 +18,8 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 import OffersForYou from "../carousels/OffersForYou";
 
 import { AuthContext } from "../../context/AuthContext";
+import axiosInstance from "../../components/axiosInterceptor";
+import baseUrl from "../../utils/client";
 
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
@@ -42,23 +44,23 @@ const Home = ({ endRef, smallBanners }) => {
   const [reference, setReference] = useState(location?.state?.referenceNum);
   const { t } = useTranslation();
 
-  // const handleButton = async () => {
-  //   try {
-  //     const res = await axiosInstance.post(
-  //       `${baseUrl}/api/firebase/send-mobile-notifications`,
-  //       {
-  //         title: "Hi Easytymers",
-  //         body: "How are you all?",
-  //         imageUrl:
-  //           "https://chat.openai.com/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAGNmyxbquFAyuzcXRZWjLWbOTVvv0xXp89vl4wRbKuDGOlU%3Ds96-c&w=32&q=75",
-  //       },
-  //       { withCredentials: true }
-  //     );
-  //     console.log(res);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const handleButton = async () => {
+    try {
+      const res = await axiosInstance.post(
+        `${baseUrl}/api/firebase/send-notifications`,
+        {
+          title: "Hi Easytymers",
+          body: "How are you all?",
+          imageUrl:
+            "https://chat.openai.com/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAGNmyxbquFAyuzcXRZWjLWbOTVvv0xXp89vl4wRbKuDGOlU%3Ds96-c&w=32&q=75",
+        },
+        { withCredentials: true }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffectOnce(() => {
     const LOCAL_STORAGE_KEY = "userLocation";
@@ -200,6 +202,7 @@ const Home = ({ endRef, smallBanners }) => {
             <h1 className=" text-5xl  text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
               {t("welcome")}
             </h1>
+            <button onClick={handleButton}>Send</button>
 
             <div className="col-span-12 md:col-span-6 block md:hidden">
               {/* {!smallBanners ? ( */}
