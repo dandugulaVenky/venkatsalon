@@ -216,6 +216,8 @@ const Hotel = ({ smallBanners }) => {
       (item) => item.shopId === shopIdLocation
     );
 
+    console.log(favTrueOrNot);
+
     // if (favTrueOrNot) {
     //   setFav((favTrueOrNot) => (favTrueOrNot?.includes(true) ? true : false));
     // }
@@ -803,7 +805,10 @@ const Hotel = ({ smallBanners }) => {
           shopName: data.name,
           shopLocation: data.city,
           userId: user._id,
-          image: data?.images[0] || "null",
+          image: data?.images[0] || {
+            public_id: "default_id",
+            url: "https://th.bing.com/th/id/OIP.vJPMDs4fhLFH1an0goJdcwHaE8?w=225&h=180&c=7&r=0&o=7&cb=iwp1&dpr=1.3&pid=1.7&rm=3",
+          },
           addingOrRemoving: fav ? "remove" : "add",
         },
         {
@@ -1076,10 +1081,7 @@ const Hotel = ({ smallBanners }) => {
                     {t("getDirectionsToShop")}
                   </a>
                 </div>
-                <span className="hotelDistance">
-                  {/* Excellent location – {data.distance}m from center */}
-                  {t("shopDistance", { distance: data.distance })}
-                </span>
+                <span className="hotelDistance">Excellent location</span>
 
                 {data?.fullAddress && (
                   <span className="hotelDistance">

@@ -75,7 +75,7 @@ const Categories = ({ type }) => {
   const handleAllCities = () => {
     navigate("/cities");
   };
-
+  console.log(query?.data?.data?.favourites, "favourites");
   return (
     <>
       <div className=" mt-8 text-black min-w-full ">
@@ -274,15 +274,15 @@ const Categories = ({ type }) => {
       {query?.data?.data?.favourites?.length > 0 ? (
         <div className=" mt-8 text-black min-w-full ">
           <div className="flex flex-row justify-between">
-            <h1 className="px-2.5 md:px-5  md:text-xl font-semibold ">
+            <h1 className="px-2.5 md:px-5  md:text-xl font-semibold pb-3.5">
               Your Favourites
             </h1>
-            <button
+            {/* <button
               className="px-5 text-2xl font-semibold pb-2.5"
               onClick={handleAllCities}
             >
               <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
-            </button>
+            </button> */}
           </div>
 
           <div className="">

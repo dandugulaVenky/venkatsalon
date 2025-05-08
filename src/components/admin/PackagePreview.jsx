@@ -50,25 +50,25 @@ const PackagePreview = (props) => {
         inclusions: serviceNames,
       },
     };
+    console.log(finalArr, "finalArr");
+    try {
+      const { status } = await axiosInstance.post(
+        `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
+        { services: finalArr },
+        { withCredentials: true }
+      );
+      if (status === 201) {
+        toast("package added succesfully!");
 
-    // try {
-    //   const { status } = await axiosInstance.post(
-    //     `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
-    //     { services: finalArr },
-    //     { withCredentials: true }
-    //   );
-    //   if (status === 201) {
-    //     toast("package added succesfully!");
-
-    //     setTimeout(() => navigate("/admin/my-services"), 2000);
-    //   } else {
-    //     toast("something went wrong!");
-    //     setIsDisabled(false);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    //   toast(err.response.data.message);
-    // }
+        setTimeout(() => navigate("/admin/my-services"), 2000);
+      } else {
+        toast("something went wrong!");
+        setIsDisabled(false);
+      }
+    } catch (err) {
+      console.log(err);
+      toast(err.response.data.message);
+    }
   };
 
   return (

@@ -270,10 +270,11 @@ const List = () => {
                     </div>
                   </>
                 )}
-                {!loading && data?.length <= 0 && (
-                  <div className="min-h-[55vh] grid place-items-center">
-                    <p className="text-2xl font-semibold">
-                      {/* {locale === "en"
+                {!loading &&
+                  (data?.length <= 0 || filteredArray?.length <= 0) && (
+                    <div className="min-h-[55vh] grid place-items-center">
+                      <p className="text-2xl font-semibold">
+                        {/* {locale === "en"
                         ? t("noTypeFound1", { type: type })
                         : locale === "te"
                         ? t("noTypeFound1", {
@@ -282,10 +283,10 @@ const List = () => {
                         : t("noTypeFound1", {
                             type: type === "saloon" ? "सैलून" : "पार्लर",
                           })} */}{" "}
-                      No {type}s found!
-                    </p>
-                  </div>
-                )}
+                        No {type}s found!
+                      </p>
+                    </div>
+                  )}
               </div>
             </div>
           </div>

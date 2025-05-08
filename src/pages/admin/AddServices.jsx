@@ -32,18 +32,23 @@ const AddServices = () => {
   const [typeOfPerson, setTypeOfPerson] = useState(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
-  console.log(shopType?.type, "shopType?.type");
 
-  useEffect(() => {
-    const categories =
-      shopType?.type === "parlour"
-        ? parlourCategories[typeOfPerson]
-        : shopType?.type === "salon"
-        ? salonCategories[typeOfPerson]
-        : spaCategories[typeOfPerson];
+  // useEffect(() => {
+  //   const categories =
+  //     shopType?.type === "parlour"
+  //       ? parlourCategories[typeOfPerson]
+  //       : shopType?.type === "salon"
+  //       ? salonCategories[typeOfPerson]
+  //       : spaCategories[typeOfPerson];
 
-    setSuperCategories(categories);
-  }, [shopType, typeOfPerson]);
+  //   setSuperCategories(categories);
+
+  //   setSuperCategory("regular");
+  //   const result = categories?.filter((superCategory, i) =>
+  //     superCategory.superCategory === "regular" ? superCategory.services : null
+  //   );
+  //   setCategories(result);
+  // }, [shopType, typeOfPerson]);
 
   const { t } = useTranslation();
 
@@ -59,13 +64,29 @@ const AddServices = () => {
         });
 
         setTypeOfPerson(data?.subType);
+        const categories =
+          shopType?.type === "parlour"
+            ? parlourCategories[typeOfPerson]
+            : shopType?.type === "salon"
+            ? salonCategories[typeOfPerson]
+            : spaCategories[typeOfPerson];
+
+        setSuperCategories(categories);
+
+        setSuperCategory("regular");
+        const result = categories?.filter((superCategory, i) =>
+          superCategory.superCategory === "regular"
+            ? superCategory.services
+            : null
+        );
+        setCategories(result);
       } catch (err) {
         toast("Something wrong!");
         console.log(err);
       }
     };
     fetchData();
-  }, [user?.shopId]);
+  }, [shopType?.type, typeOfPerson, user?.shopId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,8 +149,8 @@ const AddServices = () => {
       !superCategory ||
       category === "" ||
       allServices.service === "" ||
-      allServices.price === 0 ||
-      allServices.duration === 0
+      Number(allServices.price) === 0 ||
+      Number(allServices.duration) === 0
     ) {
       toast("Please check all fields!");
 
@@ -167,7 +188,7 @@ const AddServices = () => {
           return 1;
         }
       });
-      console.log(res);
+
       if (res.includes(0)) {
         return null;
       }
@@ -510,9 +531,9 @@ const AddServices = () => {
         <button
           className="primary-button my-4"
           onClick={handleClick}
-          // disabled={disabled}
+          disabled={disabled}
         >
-          {t("confirm")}
+          {disabled ? <span className="buttonloader"></span> : t("confirm")}
         </button>
       </div>
     </div>

@@ -237,10 +237,12 @@ const Packages = () => {
                 </span>
               </div>
               <input
-                type="text"
                 className="h-8 w-full"
                 placeholder="price"
-                value={price}
+                type="number"
+                value={price || ""}
+                inputMode="numeric" // Suggests numeric keyboard on mobile
+                pattern="[0-9]*" // Helps with validation
                 onChange={(e) => setPrice(Number(e.target.value))}
               ></input>
             </div>

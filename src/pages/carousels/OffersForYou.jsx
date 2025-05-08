@@ -128,7 +128,7 @@ const OffersForYou = ({ smallBanners }) => {
                         </p>
                         <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
                           {item?.overallShopOffer > 0 && (
-                            <span className="bg-green-500 p-3  rounded-full text-sm text-white">
+                            <span className="bg-orange-500 p-3  rounded-full text-sm text-white">
                               {item?.overallShopOffer}% off/-
                             </span>
                           )}
@@ -148,7 +148,7 @@ const OffersForYou = ({ smallBanners }) => {
                           return (
                             <p className="text-xs text-gray-600 pl-1">
                               {item1?.service} -{" "}
-                              <span className="bg-green-500 p-1 rounded-md text-white font-bold">
+                              <span className="bg-orange-500 p-1 rounded-md text-white font-bold">
                                 {item1?.offer}%
                               </span>{" "}
                               off/-

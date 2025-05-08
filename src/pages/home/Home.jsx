@@ -18,8 +18,6 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 import OffersForYou from "../carousels/OffersForYou";
 
 import { AuthContext } from "../../context/AuthContext";
-import axiosInstance from "../../components/axiosInterceptor";
-import baseUrl from "../../utils/client";
 
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";

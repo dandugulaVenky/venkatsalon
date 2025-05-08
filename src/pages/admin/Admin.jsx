@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import PlanExpiryPopup from "./PlanExpiryPopup";
+import moment from "moment";
 
 const Admin = () => {
   const { user } = useContext(AuthContext);
@@ -147,11 +148,20 @@ const Admin = () => {
           <div className="flex   md:flex-row flex-column items-center justify-center gap-8  md:w-[80vw] w-[85%] mx-auto">
             <PlanExpiryPopup hotel={shopData} />
 
-            <div className="flex flex-1 items-center justify-center ">
+            <div className="flex flex-col flex-1 items-center justify-center ">
               <p className="text-gray-500 font-bold text-4xl scroll-pb-3">
                 {" "}
                 Hi, welcome to {shopData?.name}
               </p>
+
+              <div className="card mt-5 p-5 w-full flex flex-col items-center justify-center">
+                <p className="font-bold text-xl">{shopData.plan.duration}</p>
+                <p>{shopData.plan.description}</p>
+                {/* <p>{moment(shopData.plan.startDate).format("MMMM Do YYYY")}</p> */}
+                <p>
+                  Expiry: {moment(shopData.plan.endDate).format("MMMM Do YYYY")}
+                </p>
+              </div>
             </div>
             <div className="min-h-[85vh] flex flex-col justify-center w-[50%] cursor-pointer">
               <div
