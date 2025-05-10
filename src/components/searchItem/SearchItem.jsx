@@ -54,10 +54,10 @@ const SearchItem = ({ item }) => {
                 </h1>
                 <h1 className="text-sm">Category: {item.subType}</h1>
                 <span className="text-sm">Type: {item.type}</span>
-
+                {/* 
                 <h3 className=" md:flex md:items-center">
                   <span className="text-sm">Desc: {item.desc}</span>
-                </h3>
+                </h3> */}
                 <h1 className="text-sm siTaxiOp">
                   Reviews : {item.numReviews}
                 </h1>
@@ -66,16 +66,16 @@ const SearchItem = ({ item }) => {
                   {item?.individualOffer?.length > 0 &&
                     item?.individualOffer?.slice(0, 2).map((item1) => {
                       return (
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-gray-600 mt-2.5">
                           {item1?.service} -{" "}
-                          <span className="bg-green-500 p-1 rounded-md text-white font-bold">
+                          <span className="bg-orange-500 p-1 rounded-md text-white font-bold">
                             {item1?.offer}% off/-
                           </span>{" "}
                         </p>
                       );
                     })}
                   <span className="text-xs text-gray-600">
-                    Click on shop and explore more offers
+                    Click to explore more offers
                   </span>
                 </p>
               </div>

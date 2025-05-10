@@ -19,7 +19,7 @@ import axiosInstance from "../../components/axiosInterceptor";
 const OffersForYou = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
-  const { type: type1, city, pincode, lat, lng } = useContext(SearchContext);
+  const { type: type1, city, range, lat, lng } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
@@ -28,14 +28,14 @@ const OffersForYou = ({ smallBanners }) => {
     return await axiosInstance.get(
       `${baseUrl}/api/hotels/offerShops?type=${type1 ? type1 : "salon"}&lat=${
         lat ? lat : 0.0
-      }&lng=${lng ? lng : 0.0}&limit=4`
+      }&lng=${lng ? lng : 0.0}&limit=4&range=${range ? range : 2}`
     );
   };
   const size = GetSize();
 
   // Queries
   const query = useQuery({
-    queryKey: ["bestsalons1", { type: type1, city }],
+    queryKey: ["bestsalons1", { type: type1, city, range, lat, lng }],
     queryFn: getBestSalons,
   });
 
@@ -103,6 +103,7 @@ const OffersForYou = ({ smallBanners }) => {
                       <div
                         className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
                         id="section-id"
+                        key={i}
                         onClick={() => gotoHotel(item._id)}
                       >
                         <img
@@ -146,7 +147,7 @@ const OffersForYou = ({ smallBanners }) => {
                       {item?.individualOffer?.length > 0 &&
                         item?.individualOffer?.slice(0, 2).map((item1) => {
                           return (
-                            <p className="text-xs text-gray-600 pl-1">
+                            <p className="text-xs text-gray-600 pl-1 pt-2">
                               {item1?.service} -{" "}
                               <span className="bg-orange-500 p-1 rounded-md text-white font-bold">
                                 {item1?.offer}%

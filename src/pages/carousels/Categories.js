@@ -75,7 +75,7 @@ const Categories = ({ type }) => {
   const handleAllCities = () => {
     navigate("/cities");
   };
-  console.log(query?.data?.data?.favourites, "favourites");
+  // console.log(query?.data?.data?.favourites, "favourites");
   return (
     <>
       <div className=" mt-8 text-black min-w-full ">

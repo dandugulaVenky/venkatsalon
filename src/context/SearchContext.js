@@ -26,6 +26,9 @@ const INITIAL_STATE = {
   timeDifferenceInDays: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).timeDifferenceInDays
     : 0,
+  range: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).range
+    : 2,
 };
 
 export const SearchContext = createContext(INITIAL_STATE);
@@ -41,6 +44,7 @@ const SearchReducer = (state, action) => {
       const timeDifferenceInDays = action.payload.timeDifferenceInDays;
       const lat = action.payload.lat;
       const lng = action.payload.lng;
+      const range = action.payload.range;
 
       // console.log("payload", action.payload);
       localStorage.setItem(
@@ -54,6 +58,7 @@ const SearchReducer = (state, action) => {
           pincode,
           lat,
           lng,
+          range,
         })
       );
       return {
@@ -66,11 +71,14 @@ const SearchReducer = (state, action) => {
         pincode,
         lat,
         lng,
+        range,
       };
     case "RESET_SEARCH":
       return INITIAL_STATE;
     case "SIDEBAR_OPEN":
       return { ...state, open: action.payload };
+    case "UPDATE_RANGE":
+      return { ...state, range: action.payload };
     default:
       return state;
   }
@@ -91,6 +99,7 @@ export const SearchContextProvider = ({ children }) => {
         pincode: state.pincode,
         lat: state.lat,
         lng: state.lng,
+        range: state.range,
         dispatch,
       }}
     >

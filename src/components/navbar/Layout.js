@@ -164,7 +164,7 @@ const Layout = ({ bestRef }) => {
               <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
                 <FontAwesomeIcon icon={faLocation} size="lg" />
                 <p className="text-sm">
-                  {city ? shortenString(city).toUpperCase() : "loading"}
+                  {city ? shortenString(city).toUpperCase() : "Enter Your City"}
                 </p>
                 {pathname === "/" && (
                   <FontAwesomeIcon

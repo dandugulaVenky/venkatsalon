@@ -450,12 +450,11 @@ const Preview = (props) => {
                 </li>
 
                 <li>
-                  <div className="mb-2 flex justify-between">
+                  <div className="mb-2 flex justify-between heartbeat">
                     <div className="text-red-500">
                       Note* - We charge only convenience fee and it is
                       calculated on total amount excluded on overall shop
-                      discount offer, Kindly pay the amount of remaining amount
-                      of &#8377;
+                      discount offer, Kindly pay the remaining amount &#8377;
                       {(state?.totalAmount * (1 - Number(offer) / 100)).toFixed(
                         1
                       )}{" "}

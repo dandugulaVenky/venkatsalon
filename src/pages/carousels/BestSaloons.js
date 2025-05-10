@@ -16,10 +16,12 @@ import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../components/axiosInterceptor";
 
+import DistanceSlider from "../../utils/DistanceSlider";
+
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
-  const { type: type1, city, pincode, lat, lng } = useContext(SearchContext);
+  const { type: type1, city, range, lat, lng } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
@@ -29,14 +31,14 @@ const BestSaloons = ({ smallBanners }) => {
     return await axiosInstance.get(
       `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&lat=${
         lat ? lat : 0.0
-      }&lng=${lng ? lng : 0.0}&limit=4`
+      }&lng=${lng ? lng : 0.0}&limit=4&range=${range ? range : 2}`
     );
   };
   const size = GetSize();
 
   // Queries
   const query = useQuery({
-    queryKey: ["bestsalons", { type: type1, city }],
+    queryKey: ["bestsalons", { type: type1, city, range, lat, lng }],
     queryFn: getBestSalons,
   });
 
@@ -83,16 +85,19 @@ const BestSaloons = ({ smallBanners }) => {
             <Skeleton cards={1} />
           )}
         </h1>
-        <button
-          className="px-5 text-2xl font-semibold pb-2.5"
-          onClick={handleAllShops}
-        >
-          <FontAwesomeIcon
-            icon={faArrowRight}
-            color="#00ccbb"
-            className=" fa-bounce"
-          />
-        </button>
+        <div className="flex items-center justify-center space-x-2 pr-2.5 md:pr-5">
+          <DistanceSlider />
+          <button
+            className="px-5 text-2xl font-semibold pb-2.5"
+            onClick={handleAllShops}
+          >
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              color="#00ccbb"
+              className=" fa-bounce"
+            />
+          </button>
+        </div>
       </div>
       {query.isLoading ? (
         <Skeleton cards={size} />

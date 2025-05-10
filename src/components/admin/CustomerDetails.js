@@ -384,7 +384,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                 {/* <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
                   {t("email", { email: item.email })}
                 </span> */}
-                <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
+                <span className="text-[23px] md:text-[15px] siTaxiOp px-2 ml-1">
                   {t("phone", { phone: item.phone })}
                 </span>
               </div>

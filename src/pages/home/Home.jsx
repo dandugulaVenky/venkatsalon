@@ -31,7 +31,7 @@ const siteMetadata = {
 };
 
 const Home = ({ endRef, smallBanners }) => {
-  const { city, dispatch } = useContext(SearchContext);
+  const { city, dispatch, range } = useContext(SearchContext);
   const { dispatch: dispatch1 } = useContext(AuthContext);
 
   const location = useLocation();
@@ -71,6 +71,7 @@ const Home = ({ endRef, smallBanners }) => {
           destination: location.destination || "Enter your location",
           lat: location.lat || 0,
           lng: location.lng || 0,
+          range: range || 2,
         },
       });
     };
@@ -83,9 +84,12 @@ const Home = ({ endRef, smallBanners }) => {
           const latlng = { lat: latitude, lng: longitude };
 
           geocoder.geocode({ location: latlng }, (results, status) => {
+            console.log("Geocoder results:", results, status);
             if (status === "OK" && results[0]) {
               const postalOrLocality = results.find(
                 (r) =>
+                  r.types.includes("premise") ||
+                  r.types.includes("street_address") ||
                   r.types.includes("sublocality") ||
                   r.types.includes("postal_code")
               );
@@ -97,6 +101,7 @@ const Home = ({ endRef, smallBanners }) => {
                 destination,
                 lat: latitude,
                 lng: longitude,
+                range: range || 2,
               };
 
               // Store and dispatch location

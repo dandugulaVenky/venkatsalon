@@ -27,12 +27,12 @@ const List = () => {
   const [subType, setSubType] = useState();
   const [gender, setGender] = useState();
 
-  const { type, city, lat, lng } = useContext(SearchContext);
+  const { type, city, lat, lng, range } = useContext(SearchContext);
   // console.log(lat, lng);
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels?type=${type ? type : "salon"}&lat=${
       lat ? lat : 0.0
-    }&lng=${lng ? lng : 0.0}`
+    }&lng=${lng ? lng : 0.0}&limit=100&range=${range ? range : 2}`
   );
 
   const navigate = useNavigate();
