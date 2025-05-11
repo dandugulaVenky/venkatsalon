@@ -1085,30 +1085,53 @@ const Hotel = ({ smallBanners }) => {
                 </div>
                 <span className="hotelDistance">Excellent location</span>
                 {data?.individualOffer?.length > 0 && (
-                  <div className="text-xl font-bold text-gray-900 space-y-4">
-                    <FontAwesomeIcon icon={faTags} color="orange" /> Offers on
-                    Individual Services
-                    {data?.individualOffer?.length > 0 &&
-                      data?.individualOffer?.slice(0, 2).map((item1) => {
-                        return (
-                          <p className="text-sm text-gray-600 mt-2.5 wobble-hor-bottom">
-                            {item1?.service} -{" "}
-                            <span className="bg-orange-500 p-1 rounded-md text-white font-bold ">
-                              {item1?.offer}% off/-
-                            </span>{" "}
-                          </p>
-                        );
-                      })}
-                    {data?.overallShopOffer > 0 && (
-                      <p>
-                        {data?.overallShopOffer}% off on Final Booking Price
-                      </p>
-                    )}
-                    <marquee className="text-sm text-gray-600 pt-1">
-                      Click on check services to view and book now...
-                    </marquee>
+                  <div className="grid gap-4 sm:grid-cols-2 mt-2">
+                    <span className="text-xl font-semibold text-center ">
+                      {" "}
+                      <FontAwesomeIcon icon={faTags} className="text-white" />
+                      Offers on Individual Services
+                    </span>
+                    {data.individualOffer?.map((item1, index) => (
+                      <div
+                        key={index}
+                        className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]"
+                      >
+                        <div className="flex justify-between items-center ">
+                          <h3 className="text-md font-bold">
+                            {item1?.service}
+                          </h3>
+                          <span className="bg-white text-[#00ccbb] text-xs font-bold px-2 py-1 rounded-full">
+                            {item1?.offer}% OFF
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
+
+                <>
+                  {data?.overallShopOffer > 0 && (
+                    <div className="my-3 space-y-6">
+                      {" "}
+                      <span className="text-xl font-semibold text-center ">
+                        Hurrayyyy! 🎉🎉🎉 Shop Provides :
+                      </span>
+                      <div className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]">
+                        <div className="flex justify-between items-center ">
+                          <h3 className="text-md font-bold">
+                            Overall Shop Offer
+                          </h3>
+                          <span className="bg-white text-[#00ccbb] text-xs font-bold px-2 py-1 rounded-full">
+                            {data?.overallShopOffer}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <marquee className="text-sm text-gray-600 pt-1">
+                    Click on check services to view and book now...
+                  </marquee>
+                </>
                 {data?.fullAddress && (
                   <span className="hotelDistance">
                     Full Address: {data?.fullAddress}

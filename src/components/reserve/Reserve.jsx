@@ -95,6 +95,7 @@ const Reserve = () => {
   const [reserveState, setReserveState] = useState(null);
   const [allServices, setAllServices] = useState();
   const [offerFound, setOfferFound] = useState(false);
+  const [categorizedOffers, setCategorizedOffers] = useState();
   const [showInclusions, setShowInclusions] = useState();
   const [superCategory, setSuperCategory] = useState("regular");
   const [category, setCategory] = useState();
@@ -236,6 +237,32 @@ const Reserve = () => {
         return arr;
       }, []);
 
+      const offerss = data[0]?.services
+        ?.map((item) => item)
+        .map((item) => item.services)
+        .flat()
+        .filter((item) => item.offer > 0);
+      console.log(offerss, "offerss");
+
+      const groupedByCategory = offerss
+        .filter((item) => item.offer > 0)
+        .reduce((acc, curr) => {
+          const { category } = curr;
+
+          if (!acc[category]) {
+            acc[category] = {
+              category,
+              services: [],
+            };
+          }
+
+          acc[category].services.push(curr);
+          return acc;
+        }, {});
+
+      // Convert grouped object to array
+      const categorizedOffers = Object.values(groupedByCategory);
+      setCategorizedOffers(categorizedOffers);
       setSalonServices(services);
 
       // console.log({ d: data[0]?.services, k: services }, "data[0]?.services");
@@ -1137,6 +1164,41 @@ const Reserve = () => {
     }
   };
 
+  const OffersSection = ({ categorizedOffers }) => {
+    return (
+      <div className="space-y-6">
+        {categorizedOffers?.map((categoryGroup) => (
+          <div
+            key={categoryGroup.category}
+            className="p-4 bg-white shadow-lg rounded-2xl border border-gray-100"
+          >
+            <h2 className="text-xl font-semibold text-[#00ccbb] mb-3 border-b pb-1">
+              {categoryGroup.category} Offers
+            </h2>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {categoryGroup.services.map((service) => (
+                <div
+                  key={service.service}
+                  className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white rounded-xl p-4 shadow-md hover:scale-[1.02] transition-transform"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-lg font-bold">{service.service}</h3>
+                    <span className="bg-white text-[#00ccbb] px-2 py-1 text-xs rounded-full font-semibold">
+                      {service.offer}% OFF
+                    </span>
+                  </div>
+                  {/* <p className="text-sm mb-1">Price: ₹{service.price}</p>
+                  <p className="text-sm">Duration: {service.duration} min</p> */}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const handleBarberSelection = (selectedBarber, seatId) => {
     const updatedSeats = seats.map((seat) => {
       if (seat.id === seatId) {
@@ -1185,6 +1247,9 @@ const Reserve = () => {
             </p>
           ) : (
             ""
+          )}
+          {categorizedOffers?.length > 0 && (
+            <OffersSection categorizedOffers={categorizedOffers} />
           )}
           <div className="flex items-center md:justify-start justify-center flex-wrap space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
             {/* {!categoriesOptions?.length > 0 && sortBy === null && (
@@ -1391,6 +1456,15 @@ const Reserve = () => {
                                                 className="text-gray-900 cursor-pointer"
                                               >
                                                 {option.service}
+                                                {option.offer !== 0 && (
+                                                  <>
+                                                    {" "}
+                                                    <br />
+                                                    <span className="text-green-400">
+                                                      {option.offer} off/-
+                                                    </span>
+                                                  </>
+                                                )}
                                               </label>
                                             </td>
 
