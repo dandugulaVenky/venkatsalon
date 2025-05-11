@@ -1180,6 +1180,9 @@ const Reserve = () => {
               {categoryGroup.services.map((service) => (
                 <div
                   key={service.service}
+                  onClick={() =>
+                    window.scrollTo(0, window.innerWidth > 500 ? 200 : 400)
+                  }
                   className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white rounded-xl p-4 shadow-md hover:scale-[1.02] transition-transform"
                 >
                   <div className="flex justify-between items-center mb-2">
@@ -1302,7 +1305,10 @@ const Reserve = () => {
               <option>women</option>
             </select>
 
-            <select className="md:w-52 w-auto" onChange={handleChange}>
+            <select
+              className="md:w-52 w-auto jello-horizontal"
+              onChange={handleChange}
+            >
               <option>Select Sub Category</option>
 
               {salonServices?.map((service, i) => {
