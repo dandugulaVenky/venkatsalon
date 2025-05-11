@@ -35,6 +35,8 @@ const List = () => {
     }&lng=${lng ? lng : 0.0}&limit=100&range=${range ? range : 2}`
   );
 
+  // console.log(data, "mata");
+
   const navigate = useNavigate();
 
   const scroll = () => {
@@ -100,9 +102,9 @@ const List = () => {
     }
 
     const matter = data1?.filter(
-      (item) =>
-        item.subType === e.target.value &&
-        item.city.split(",")[0] === city.split(",")[0]
+      (item) => item.subType === e.target.value
+      //  &&
+      //   item.city.split(",")[0] === city.split(",")[0]
     );
     setFilteredArray(matter);
 
@@ -110,6 +112,7 @@ const List = () => {
   };
 
   const filteredTypeofShopType = (e) => {
+    // console.log(e.target.value, "e.target.value");
     setGender("null");
     setSubType(e.target.value);
 
@@ -119,18 +122,23 @@ const List = () => {
     }
 
     const matter = data.filter((item) => {
+      // console.log(item, "item");
       if (e.target.value === type) {
         return (
-          item.spaIncluded === false &&
-          item.city.split(",")[0] === city.split(",")[0]
+          item.spaIncluded === false
+          //  &&
+          // item.city.split(",")[0] === city.split(",")[0]
         );
       } else {
         return (
-          item.spaIncluded === true &&
-          item.city.split(",")[0] === city.split(",")[0]
+          item.spaIncluded === true
+          // &&
+          // item.city.split(",")[0] === city.split(",")[0]
         );
       }
     });
+
+    console.log({ matter }, "matter");
 
     setData1(matter);
     setFilteredArray(matter);
@@ -256,6 +264,11 @@ const List = () => {
                   <option value="unisex">{t("unisex")}</option>
                 </select>
               </div>
+              {!loading && (
+                <p className="md:col-span-2 col-span-6 p-2 text-center">
+                  Count: {filteredArray?.length}
+                </p>
+              )}
             </div>
             <div className="w-full ">
               <div className=" min-h-screen w-full  md:pt-0 ">

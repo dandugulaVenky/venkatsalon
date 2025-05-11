@@ -20,7 +20,7 @@ const MyOffers = () => {
 
     setIsDisabled(true);
     // Replace with actual backend request
-    console.log("Saving offer:", offerPercentage);
+    // console.log("Saving offer:", offerPercentage);
 
     try {
       const [shopRes, roomRes] = await Promise.all([
@@ -36,7 +36,7 @@ const MyOffers = () => {
         ),
       ]);
 
-      console.log(shopRes);
+      // console.log(shopRes);
 
       if (roomRes.status === 201) {
         toast("Offer added successfully!");

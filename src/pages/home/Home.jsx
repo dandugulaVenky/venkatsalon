@@ -84,7 +84,7 @@ const Home = ({ endRef, smallBanners }) => {
           const latlng = { lat: latitude, lng: longitude };
 
           geocoder.geocode({ location: latlng }, (results, status) => {
-            console.log("Geocoder results:", results, status);
+            // console.log("Geocoder results:", results, status);
             if (status === "OK" && results[0]) {
               const postalOrLocality = results.find(
                 (r) =>

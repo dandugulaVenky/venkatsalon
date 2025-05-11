@@ -27,7 +27,7 @@ const AdminAppointments = () => {
 
   function formatDateToBackendFormat(date) {
     const formattedDate = new Date(date);
-    console.log(formattedDate);
+
     const c = moment(formattedDate).format("MMM Do YY");
 
     return c;
@@ -46,7 +46,7 @@ const AdminAppointments = () => {
     const requests = async () => {
       let startDate = "";
       let endDate = "";
-      console.log("req", months);
+
       if (months === 1) {
         startDate = moment().date(1).format("MMM Do YY");
         endDate = moment().add(6, "days").format("MMM Do YY");
@@ -91,8 +91,6 @@ const AdminAppointments = () => {
 
             resultInServices[date] = (resultInServices[date] || 0) + 1;
           }
-
-          console.log(resultInServices);
 
           const arr = Object.keys(resultInServices).map((key) => {
             return {
@@ -189,8 +187,6 @@ const AdminAppointments = () => {
   };
 
   const modifiedOnChange = (selectedDate) => {
-    console.log(typeof selectedDate, "strokeLinejoin");
-
     if (selectedDate === null) {
       setAppointments(allOrders);
       setValue(null);

@@ -132,7 +132,7 @@ const MyBarbers = () => {
       alert("Please fill all the fields!");
       return;
     }
-    console.log({ existingBarberList, barberList });
+    // console.log({ existingBarberList, barberList });
 
     if (existingBarberList?.length >= roomData?.length) {
       return alert(`You can only add maximum of ${roomData?.length} barbers!`);

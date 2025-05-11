@@ -114,7 +114,6 @@ const Admin = () => {
   }, [user.shopId]);
 
   const handleShop = (value) => {
-    console.log(value, "value");
     if (!value) return;
     setShopName(value);
     dispatch({ type: "UPDATE_SHOP_ID", payload: value });

@@ -110,7 +110,7 @@ const Packages = () => {
   const previewHandler = (e) => {
     e.preventDefault();
 
-    console.log({ packageName, all, price, duration });
+    // console.log({ packageName, all, price, duration });
     if (
       packageName?.length > 5 &&
       all?.length >= 1 &&

@@ -32,12 +32,12 @@ export default class AutoComplete extends React.Component {
           const lng = location?.lng();
 
           // Use the latitude and longitude as needed
-          console.log("Latitude:", lat);
-          console.log("Longitude:", lng);
+          // console.log("Latitude:", lat);
+          // console.log("Longitude:", lng);
 
           setAddress(results[0]?.formatted_address.trim().toLowerCase());
           const city = results[0]?.formatted_address.trim().toLowerCase();
-          console.log(type, "type");
+          // console.log(type, "type");
           dispatch({
             type: "NEW_SEARCH",
             payload: {

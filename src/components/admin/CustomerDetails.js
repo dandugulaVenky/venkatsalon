@@ -104,7 +104,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
-    console.log(result2);
+    // console.log(result2);
     if (result2 !== 10) {
       setLoading(false);
       return toast("Cannot cancel now!");
@@ -182,7 +182,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
-    console.log(result2);
+    // console.log(result2);
 
     if (result2 === 1 || result2 === 10) {
       setLoading(false);

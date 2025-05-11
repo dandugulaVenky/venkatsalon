@@ -5,7 +5,7 @@ const GlobalErrorPopup = () => {
   const { globalError, clearGlobalError } = useContext(ErrorContext);
   if (!globalError) return null; // Don't show anything if no error
 
-  console.log(globalError, "globalError in GlobalErrorPopup"); // Debugging line
+  // console.log(globalError, "globalError in GlobalErrorPopup"); // Debugging line
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded shadow-md max-w-md w-full">

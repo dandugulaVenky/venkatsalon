@@ -50,7 +50,7 @@ const PackagePreview = (props) => {
         inclusions: serviceNames,
       },
     };
-    console.log(finalArr, "finalArr");
+    // console.log(finalArr, "finalArr");
     try {
       const { status } = await axiosInstance.post(
         `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,

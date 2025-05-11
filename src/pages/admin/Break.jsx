@@ -19,7 +19,6 @@ function classNames(...classes) {
 }
 function formatDateToBackendFormat(date) {
   const formattedDate = new Date(date);
-  console.log(formattedDate);
   const c = moment(formattedDate).format("MMM Do YY");
 
   return c;
@@ -112,7 +111,6 @@ function Break() {
         });
         mergedReady.push(allValues);
       });
-      console.log(mergedReady, "mergeready");
 
       function findMatchingArrays(arr) {
         const matchedArrays = [];
@@ -156,13 +154,10 @@ function Break() {
     const endDate = selectedDates[0].endDate;
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
-      console.log(currentDate, "currentDate");
-      console.log(typeof currentDate);
-
       formattedDates1.push(formatDateToBackendFormat(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    console.log(formattedDates1);
+
     if (formattedDates1 !== undefined) {
       try {
         await axiosInstance.post(
@@ -248,10 +243,10 @@ function Break() {
       count = count + 1;
     }
 
-    console.log({
-      date: moment(new Date()).format("MMM Do YY"),
-      block: blockArray,
-    });
+    // console.log({
+    //   date: moment(new Date()).format("MMM Do YY"),
+    //   block: blockArray,
+    // });
     let matchFound = false;
 
     if (matchedArrays) {
@@ -348,10 +343,10 @@ function Break() {
         console.log(err);
       }
     }
-    console.log({
-      date: moment(new Date()).format("MMM Do YY"),
-      block: blockArray,
-    });
+    // console.log({
+    //   date: moment(new Date()).format("MMM Do YY"),
+    //   block: blockArray,
+    // });
     setTimeReserve(null);
     setTimeReserve1(null);
   };

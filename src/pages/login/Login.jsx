@@ -67,7 +67,7 @@ export default function Login() {
           token,
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error(error);
     }

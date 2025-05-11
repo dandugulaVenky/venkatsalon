@@ -17,7 +17,7 @@ const UpdateShopDetails = () => {
   const [formErrors, setFormErrors] = useState({});
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-
+  const [isSubmit, setIsSubmit] = useState(false);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -81,50 +81,60 @@ const UpdateShopDetails = () => {
     setMap(!map);
   };
 
-  const handleUpdateBasicDetails = async () => {
+  useEffect(() => {
+    const handleSubmit = async () => {
+      if (Object.keys(formErrors).length === 0 && isSubmit) {
+        setLoading(true);
+
+        const data1 = {
+          name: shopName || data?.name,
+          fullAddress: shopAddress || data?.fullAddress,
+          latLong: {
+            type: "Point",
+            coordinates: [
+              latLong ? latLong?.lng : data?.latLong?.coordinates?.[0],
+              latLong ? latLong?.lat : data?.latLong?.coordinates?.[1],
+            ], // IMPORTANT: longitude comes first!
+          },
+        };
+
+        setIsSubmit(false);
+        try {
+          const res = await axiosInstance.put(
+            `${baseUrl}/api/hotels/updateBasicDetails/${user?.shopId}`,
+            data1,
+            {
+              withCredentials: true,
+            }
+          );
+
+          if (res.status === 201) {
+            alert("Updated successfully");
+            window.location.reload();
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    handleSubmit();
+  }, [formErrors]);
+
+  const handleUpdateBasicDetails = async (e) => {
+    e.preventDefault();
+
     setFormErrors(
       validate(
         shopName,
 
-        shopAddress
+        shopAddress,
+        latLong
+        // data?.latLong?.coordinates?.[0],
       )
     );
-
-    if (Object.keys(formErrors).length > 0) {
-      return;
-    }
-    setLoading(true);
-    console.log("not");
-    const data1 = {
-      name: shopName,
-      fullAddress: shopAddress,
-      latLong: {
-        type: "Point",
-        coordinates: [
-          latLong ? latLong?.lng : data?.latLong?.coordinates?.[0],
-          latLong ? latLong?.lat : data?.latLong?.coordinates?.[1],
-        ], // IMPORTANT: longitude comes first!
-      },
-    };
-
-    try {
-      const res = await axiosInstance.put(
-        `${baseUrl}/api/hotels/updateBasicDetails/${user?.shopId}`,
-        data1,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (res.status === 201) {
-        alert("Updated successfully");
-        window.location.reload();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    setIsSubmit(true);
   };
 
   const clearError = (fieldName) => {
@@ -135,14 +145,18 @@ const UpdateShopDetails = () => {
   const validate = (shopName, latLong) => {
     const errors = {};
     // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!shopName) {
-      errors.shopName = "shop name is required!";
+    if (!data?.name) {
+      if (!shopName) {
+        errors.shopName = "shop name is required!";
+      }
     }
 
-    if (!shopAddress) {
-      errors.fullAddress = "shop address is required";
+    if (!data?.fullAddress) {
+      if (!shopAddress) {
+        errors.fullAddress = "shop address is required";
+      }
     }
-    if (!latLong) {
+    if (!data?.latLong?.coordinates?.[0]) {
       errors.latLong = "latitudes, longitudes are required";
     }
 

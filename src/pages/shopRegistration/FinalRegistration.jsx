@@ -99,7 +99,7 @@ const FinalRegistration = () => {
         { withCredentials: true }
       );
 
-      console.log(res, "res");
+      // console.log(res, "res");
       if (res.data.status === 409) {
         alert(res.data.message);
         // setLoading(false);
@@ -278,7 +278,7 @@ const FinalRegistration = () => {
     // Usage example
     const shopDetails = getCookieObject("shop_info");
     setShopDetails(shopDetails);
-    console.log(typeof user, "shopDetails");
+    // console.log(typeof user, "shopDetails");
   }, [navigate, user]);
 
   return (

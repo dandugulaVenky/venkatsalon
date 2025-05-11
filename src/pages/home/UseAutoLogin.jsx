@@ -15,7 +15,7 @@ const UseAutoLogin = () => {
     const tryAutoLogin = async () => {
       const accessToken = localStorage.getItem("access_token");
       const refreshToken = localStorage.getItem("refresh_token");
-      console.log(location.pathname, "location.pathname");
+      // console.log(location.pathname, "location.pathname");
       if (!accessToken || !refreshToken) {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");

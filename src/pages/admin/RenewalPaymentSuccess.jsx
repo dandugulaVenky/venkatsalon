@@ -64,7 +64,7 @@ const RenewalPaymentSuccess = () => {
       );
 
       if (response.status === 200) {
-        console.log("Hotel data updated successfully", response.data);
+        // console.log("Hotel data updated successfully", response.data);
         navigate("/admin");
       }
     } catch (error) {

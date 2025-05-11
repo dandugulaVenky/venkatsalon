@@ -215,7 +215,7 @@ const AddServices = () => {
           item.services.service === removeService.services.service
         )
     );
-    console.log(result);
+
     setShopServices(result);
   };
 
@@ -228,8 +228,6 @@ const AddServices = () => {
 
       return alert(t("pleaseIncludeAllFields"));
     }
-
-    console.log(shopServices);
 
     let a = shopServices;
 
@@ -248,7 +246,6 @@ const AddServices = () => {
       }
     });
 
-    console.log(mergedObj, "mergedObj");
     // Convert the merged object back to an array
     const mergedArray = Object.values(mergedObj).map((item) => {
       item.services = item.services.flat(); // Flatten the services array
@@ -273,8 +270,6 @@ const AddServices = () => {
         services: ans,
       };
     });
-
-    console.log(finalMergedServices, "finalMergedServices");
 
     try {
       const res = await axiosInstance.post(

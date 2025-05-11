@@ -13,7 +13,7 @@ const ShareButton = () => {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        console.log("Content shared successfully");
+        // console.log("Content shared successfully");
       } catch (error) {
         console.error("Error sharing:", error);
       }

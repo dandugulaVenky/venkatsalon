@@ -43,7 +43,7 @@ const AdminAddBanner = () => {
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
-    console.log(images);
+    // console.log(images);
     if (images.length <= 0) {
       setLoading(false);
 
@@ -86,7 +86,7 @@ const AdminAddBanner = () => {
           }
         );
 
-        console.log(data);
+        // console.log(data);
         if (data.success === true) {
           toast.success("Images added successfully");
           setImages([]);
@@ -110,7 +110,7 @@ const AdminAddBanner = () => {
     } catch (error) {
       setLoading(false);
 
-      console.log(error);
+      // console.log(error);
       if (error.response.data.status === 413) {
         toast.warn("Images collectively should contain 10mb or less! ");
       }
@@ -126,7 +126,7 @@ const AdminAddBanner = () => {
     }
 
     setLoading(true);
-    console.log(image);
+    // console.log(image);
     if (!image || image === "" || image === undefined) {
       return;
     }

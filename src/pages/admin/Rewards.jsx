@@ -13,7 +13,7 @@ const Rewards = () => {
           `${baseUrl}/api/hotels/getRewards/${user?.shopId}`
         );
         setRewards(data);
-        console.log(data);
+        // console.log(data);
       } catch (err) {
         console.log(err);
       }
