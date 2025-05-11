@@ -52,7 +52,7 @@ const BestSaloons = ({ smallBanners }) => {
   };
   // mt-8 used to  be there
   return (
-    <div className="mt-8  text-black w-full  ">
+    <div className=" text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
           {type1 ? (
@@ -85,8 +85,8 @@ const BestSaloons = ({ smallBanners }) => {
             <Skeleton cards={1} />
           )}
         </h1>
+
         <div className="flex items-center justify-center space-x-2 pr-2.5 md:pr-5">
-          <DistanceSlider />
           <button
             className="px-5 text-2xl font-semibold pb-2.5"
             onClick={handleAllShops}

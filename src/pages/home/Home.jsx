@@ -18,6 +18,7 @@ import useEffectOnce from "../../utils/UseEffectOnce";
 import OffersForYou from "../carousels/OffersForYou";
 
 import { AuthContext } from "../../context/AuthContext";
+import DistanceSlider from "../../utils/DistanceSlider";
 
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
@@ -265,8 +266,9 @@ const Home = ({ endRef, smallBanners }) => {
         </CarouselBanner>
       </div>
       <div className=" md:my-10 xl:my-4">
-        <div className="md:max-w-[1240px] w-full mx-auto">
+        <div className="md:max-w-[1240px] w-full flex items-center justify-center mx-auto mt-8 mb-5">
           {/* <Services /> */}
+          <DistanceSlider />
         </div>
 
         <div
