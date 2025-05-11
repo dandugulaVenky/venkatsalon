@@ -1129,7 +1129,18 @@ const Hotel = ({ smallBanners }) => {
                     </div>
                   )}
                   <marquee className="text-sm text-gray-600 pt-1">
-                    Click on check services to view and book now...
+                    <p
+                      onClick={() => {
+                        window.scrollTo({
+                          top: 0,
+                          left: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                      className="cursor-pointer text-xl font-semibold text-[#00ccbb]"
+                    >
+                      Click me to check services and book now...
+                    </p>
                   </marquee>
                 </>
                 {data?.fullAddress && (
