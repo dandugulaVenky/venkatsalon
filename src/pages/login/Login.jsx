@@ -198,9 +198,27 @@ export default function Login() {
           <HandleRegistrationNew />
         ) : (
           <div className="px-10 py-5 card h-auto">
-            <form onSubmit={handleSubmit1}>
-              <h1 className="mb-4 text-2xl font-semibold">{t("loginTitle")}</h1>
+            <h1 className="mb-4 text-2xl font-semibold">{t("loginTitle")}</h1>
+            <button
+              onClick={googleLogin}
+              className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-md bg-gradient-to-r from-[#00ccbb] to-[#0099aa] text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccbb]"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 488 512"
+                className="w-5 h-5"
+                fill="white"
+              >
+                <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+              </svg>
 
+              {loading1 ? (
+                <div className="loaderGoogle" />
+              ) : (
+                <span className="text-sm">Login / Register with Google</span>
+              )}
+            </button>
+            <form onSubmit={handleSubmit1}>
               {/* <button onClick={googleLogin} className=" my-5">
                 <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
                   <svg
@@ -220,26 +238,6 @@ export default function Login() {
                   </div>
                 </div>
               </button> */}
-
-              <button
-                onClick={googleLogin}
-                className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-md bg-gradient-to-r from-[#00ccbb] to-[#0099aa] text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccbb]"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 488 512"
-                  className="w-5 h-5"
-                  fill="white"
-                >
-                  <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                </svg>
-
-                {loading1 ? (
-                  <div className="loaderGoogle" />
-                ) : (
-                  <span className="text-sm">Login / Register with Google</span>
-                )}
-              </button>
 
               <h1 className="text-[#00ccbb] pb-2 pt-3 font-semibold text-center">
                 Or
