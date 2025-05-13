@@ -581,12 +581,11 @@ const Reserve = () => {
         },
       ]);
     }
-
+    console.log(seats, "seats");
     if (!event.target.checked) {
       let clearUpdatedSeats = seats.map((seat) => {
         if (seat.id === seatId) {
-          // Assign the selected barber to the current seat
-          return { ...seat, barber: null };
+          if (seat.options.length === 0) return { ...seat, barber: null };
         }
         return seat;
       });
