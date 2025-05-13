@@ -223,7 +223,7 @@ export default function Login() {
 
               <button
                 onClick={googleLogin}
-                className="w-auto flex items-center justify-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-[#00ccbb] to-[#0099aa] text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccbb]"
+                className="w-full flex items-center justify-center gap-3 px-4 py-2 rounded-md bg-gradient-to-r from-[#00ccbb] to-[#0099aa] text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200 ease-in-out active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ccbb]"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +237,7 @@ export default function Login() {
                 {loading1 ? (
                   <div className="loaderGoogle" />
                 ) : (
-                  <span>Login / Register with Google</span>
+                  <span className="text-sm">Login / Register with Google</span>
                 )}
               </button>
 
