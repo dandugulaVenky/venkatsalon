@@ -581,7 +581,7 @@ const Reserve = () => {
         },
       ]);
     }
-    console.log(seats, "seats");
+    // console.log(seats, "seats");
     if (!event.target.checked) {
       let clearUpdatedSeats = seats.map((seat) => {
         if (seat.id === seatId) {
