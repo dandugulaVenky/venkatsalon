@@ -29,7 +29,7 @@ const ShopsWithOffer = () => {
   const [subType, setSubType] = useState();
   const [gender, setGender] = useState();
 
-  const { type, city, lat, lng } = useContext(SearchContext);
+  const { type, city, lat, lng, range } = useContext(SearchContext);
 
   // const { data, loading } = useFetch(
   //   `${baseUrl}/api/hotels?type=${type ? type : "salon"}&lat=${
@@ -51,7 +51,9 @@ const ShopsWithOffer = () => {
 
     const getData = async () => {
       const { data, loading } = await axiosInstance.get(
-        `${baseUrl}/api/hotels/offerShops?type=${type}&lat=${lat}&lng=${lng}`
+        `${baseUrl}/api/hotels/offerShops?type=${type}&lat=${lat}&lng=${lng}&limit=100&range=${
+          range ? range : 2
+        }`
       );
       setLoading(loading);
 
