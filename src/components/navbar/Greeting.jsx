@@ -55,12 +55,12 @@ const Greeting = ({ bestRef }) => {
   }, []);
 
   // const [greet, setGreet] = useState("");
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
 
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  // const [cartItemsCount, setCartItemsCount] = useState(0);
 
   const { state } = useContext(Store);
-  const { cart } = state;
+  // const { cart } = state;
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
@@ -77,9 +77,9 @@ const Greeting = ({ bestRef }) => {
     setHeader(!header);
   };
 
-  useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+  // useEffect(() => {
+  //   setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  // }, [cart.cartItems]);
 
   return (
     <>

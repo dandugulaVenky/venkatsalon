@@ -3,7 +3,11 @@ import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
 import PhoneInput from "react-phone-number-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import "./otp.css";
 import baseUrl from "../../utils/client";
@@ -218,8 +222,12 @@ const OtpVerification = (props) => {
     }
     setLoading(false);
   };
-  const handleLocation = () => {
-    setHeader(true);
+  // const handleLocation = () => {
+  //   setHeader(true);
+  // };
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
   return (
     <>
@@ -310,18 +318,23 @@ const OtpVerification = (props) => {
       </div>
 
       {google && storedUser.phoneVerified ? (
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <label htmlFor="password">Set a Password</label>
 
           <input
-            className="w-full border p-2 rounded"
-            type="password"
+            className="w-full border p-2 rounded relative"
+            type={showPassword ? "text" : "password"}
             id="password"
             onChange={handlePasswordChange}
           />
+          <FontAwesomeIcon
+            icon={showPassword ? faEyeSlash : faEye}
+            onClick={toggleVisibility}
+            className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
+          />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
-          <div className="mb-4" onClick={handleLocation}>
+          {/* <div className="mb-4" onClick={handleLocation}>
             <label htmlFor="city">{t("address")}</label>
 
             <input
@@ -333,7 +346,7 @@ const OtpVerification = (props) => {
               disabled
               value={address || city}
             />
-          </div>
+          </div> */}
         </div>
       ) : (
         ""
