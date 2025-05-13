@@ -582,6 +582,33 @@ const Reserve = () => {
       ]);
     }
 
+    if (!event.target.checked) {
+      let clearUpdatedSeats = seats.map((seat) => {
+        if (seat.id === seatId) {
+          // Assign the selected barber to the current seat
+          return { ...seat, barber: null };
+        }
+        return seat;
+      });
+
+      setSeats(clearUpdatedSeats);
+    } else {
+      setSeats(updatedSeats);
+    }
+  };
+
+  const handleBarberSelection = (selectedBarber, seatId) => {
+    const updatedSeats = seats.map((seat) => {
+      if (seat.id === seatId) {
+        // Assign the selected barber to the current seat
+        return { ...seat, barber: selectedBarber };
+      } else if (seat.barber?._id === selectedBarber._id) {
+        // Remove the barber from other seats if already assigned
+        return { ...seat, barber: null };
+      }
+      return seat;
+    });
+
     setSeats(updatedSeats);
   };
 
@@ -1200,21 +1227,6 @@ const Reserve = () => {
         ))}
       </div>
     );
-  };
-
-  const handleBarberSelection = (selectedBarber, seatId) => {
-    const updatedSeats = seats.map((seat) => {
-      if (seat.id === seatId) {
-        // Assign the selected barber to the current seat
-        return { ...seat, barber: selectedBarber };
-      } else if (seat.barber?._id === selectedBarber._id) {
-        // Remove the barber from other seats if already assigned
-        return { ...seat, barber: null };
-      }
-      return seat;
-    });
-
-    setSeats(updatedSeats);
   };
 
   if (seats?.length > barbers?.length) {
