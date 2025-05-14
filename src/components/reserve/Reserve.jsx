@@ -242,7 +242,6 @@ const Reserve = () => {
         .map((item) => item.services)
         .flat()
         .filter((item) => item.offer > 0);
-      console.log(offerss, "offerss");
 
       const groupedByCategory = offerss
         .filter((item) => item.offer > 0)
@@ -510,7 +509,10 @@ const Reserve = () => {
 
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
-      if (seat.id === seatId) {
+      if (
+        seat.id === seatId &&
+        event.target.id === event.target.name + seatIndex
+      ) {
         if (event.target.checked) {
           seat.options.push(event.target.name);
         } else {
@@ -536,7 +538,7 @@ const Reserve = () => {
           : service.price
       );
 
-      console.log({ newPrice }, "newPrice");
+      // console.log({ newPrice }, "newPrice");
 
       if (event.target.checked) {
         newAmount += newPrice;
@@ -1370,6 +1372,7 @@ const Reserve = () => {
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
                     const selectedOptions = new Set(seat.options);
+
                     const isDisabled = isAvailable(i);
 
                     return (
@@ -1458,7 +1461,7 @@ const Reserve = () => {
                                                   option.service
                                                 )}
                                                 className="h-6 w-6"
-                                                id={option.service}
+                                                id={option.service + i}
                                                 onChange={(event) =>
                                                   handleOptionChange(
                                                     event,
@@ -1545,6 +1548,9 @@ const Reserve = () => {
                                 <h3 className="text-lg font-bold mt-5">
                                   {t("Select a Barber")}
                                 </h3>
+                                <p className="py-2">
+                                  Note*: Selected barber is subject to change
+                                </p>
                                 <div className="grid grid-cols-3 gap-4 mt-3">
                                   {barbers?.map((barber) => {
                                     const isBarberAssigned = seats?.some(
@@ -1563,7 +1569,7 @@ const Reserve = () => {
                                     return (
                                       <div
                                         key={barber._id}
-                                        className={`p-3 border rounded-md cursor-pointer  ${
+                                        className={`p-3 border rounded-md cursor-pointer relative  ${
                                           isBarberAssigned
                                             ? "bg-gray-300 cursor-not-allowed"
                                             : "bg-white"
@@ -1590,6 +1596,12 @@ const Reserve = () => {
                                           {t("Experience")}: {barber.experience}{" "}
                                           years
                                         </p>
+                                        {isBarberAssigned &&
+                                          seat.barber?._id === barber._id && (
+                                            <span className="absolute top-1 right-1 p-1 rounded-full bg-[#00ccbb] text-white">
+                                              seat {seat.index + 1}
+                                            </span>
+                                          )}
                                       </div>
                                     );
                                   })}

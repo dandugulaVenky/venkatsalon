@@ -3,7 +3,7 @@ import { createContext, useReducer } from "react";
 const INITIAL_STATE = {
   city: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).city
-    : "",
+    : "Enter Your Location",
   date: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).date
     : "",

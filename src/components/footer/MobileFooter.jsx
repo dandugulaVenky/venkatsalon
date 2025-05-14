@@ -1,15 +1,10 @@
-import {
-  faArrowCircleLeft,
-  faCog,
-  faHistory,
-  faHome,
-  faShirt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCog, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SearchContext } from "../../context/SearchContext";
 import { t } from "i18next";
+import { faCalendarAlt } from "@fortawesome/free-regular-svg-icons";
 
 const MobileFooter = () => {
   const { open, dispatch } = useContext(SearchContext);
@@ -31,7 +26,7 @@ const MobileFooter = () => {
               <FontAwesomeIcon icon={faArrowCircleLeft} size="xl" />
             </Link> */}
             <Link to="/history">
-              <FontAwesomeIcon icon={faHistory} size="xl" />
+              <FontAwesomeIcon icon={faCalendarAlt} size="xl" />
             </Link>
 
             {/* <Link to="/iron-orders">
