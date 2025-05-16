@@ -203,8 +203,9 @@ const Home = ({ endRef, smallBanners }) => {
           style={{ minHeight: "430px" }}
         >
           <div className="">
-            <h1 className=" text-5xl  text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
-              {t("welcome")}
+            <h1 className="   text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
+              <span className="text-xl">Book Salon Services in Seconds</span>
+              <p className="text-3xl">"Anytime, Anywhere"</p>
             </h1>
             {/* <button onClick={handleButton}>Send</button> */}
 

@@ -1007,7 +1007,7 @@ const Hotel = ({ smallBanners }) => {
                 className="headerBtn w-full p-[0.71rem] jello-horizontal"
                 onClick={handleClick}
               >
-                {t("checkServices")}
+                Select Services
               </button>
             </div>
           </div>
@@ -1139,7 +1139,7 @@ const Hotel = ({ smallBanners }) => {
                       }}
                       className="cursor-pointer text-xl font-semibold text-[#00ccbb]"
                     >
-                      Click me to check services and book now...
+                      Click me to select services and book now...
                     </p>
                   </marquee>
                 </>

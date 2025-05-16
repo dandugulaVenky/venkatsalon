@@ -496,8 +496,8 @@ const BookingHistory = () => {
 
         {showTypeOfOrders === "directOrders" && filteredArray?.length > 0 ? (
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[98vw] mx-auto pt-5 pb-10 ">
-            <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
-              <table className="min-w-full  ">
+            <div className="overflow-x-auto  col-span-5 ">
+              {/* <table className="min-w-full  ">
                 <thead className="border-b bg-gray-400 ">
                   <tr className="border-b-2 border-gray-200 ">
                     <th className="text-center md:text-md text-sm md:p-5 py-3">
@@ -611,7 +611,97 @@ const BookingHistory = () => {
                     );
                   })}
                 </tbody>
-              </table>
+              </table> */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-3 gap-2">
+                {filteredArray?.slice(0, visible)?.map((item, j) => (
+                  <div
+                    key={j}
+                    className="bg-white  rounded-2xl shadow-lg border border-gray-400 p-3 flex flex-col justify-between hover:shadow-xl transition"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        #{item.referenceNumber}
+                      </h3>
+                      <p className=" text-[#00ccbb] text-xs font-semibold px-3 py-1 rounded-full shadow">
+                        ₹{item.totalAmount}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 text-sm text-gray-700 mb-4">
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          📅 Date:
+                        </span>
+                        <span>{item.date}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          ⏰ Time:
+                        </span>
+                        <span>{item.time}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          🏪 Shop:
+                        </span>
+                        <Link
+                          to={`/shops/${item.shopId}`}
+                          className="text-[#00ccbb] font-semibold underline"
+                        >
+                          {item.shop}
+                        </Link>
+                      </div>
+                      <div
+                        className="text-[#00ccbb] font-medium cursor-pointer underline text-right"
+                        onClick={() => {
+                          setShowServices(item);
+                          setShopId(item.shopId);
+                        }}
+                      >
+                        {t("showServices")}
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          💳 Payment:
+                        </span>
+                        <span
+                          className={
+                            item.isPaid
+                              ? "text-green-600 font-semibold"
+                              : "text-red-500 font-semibold"
+                          }
+                        >
+                          {item.isPaid ? "Paid" : "Not Paid"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          📌 Status:
+                        </span>
+                        {item.isDone === "false" ? (
+                          <span className="text-red-500 font-semibold">
+                            {t("notYetDone")}
+                          </span>
+                        ) : item.isDone === "cancelled" ? (
+                          <span className="text-red-500 font-semibold">
+                            {t("cancelled")}
+                          </span>
+                        ) : (
+                          <span className="text-green-500 font-semibold">
+                            {t("done")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-right text-gray-400 mt-2">
+                      Created at:{" "}
+                      {moment(item.createdAt).format("MMM Do YY hh:mm:ss A")}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             {filteredArray?.length >= 10 && (
               <div className="min-w-[90vw] py-4  grid place-items-center pb-10">

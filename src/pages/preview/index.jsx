@@ -74,19 +74,25 @@ const Preview = (props) => {
       }
     });
 
-    let totalTime = 0;
+    // let totalTime = 0;
+    let totalTime1 = [];
+
+    // showPreviewServicess?.forEach((seat, i) => {
+    //   seat.show.length > 0 &&
+    //     (totalTime += seat.show.reduce((acc, show) => acc + show.duration, 0));
+    // });
     showPreviewServicess?.forEach((seat, i) => {
       seat.show.length > 0 &&
-        (totalTime += seat.show.reduce((acc, show) => acc + show.duration, 0));
+        totalTime1.push(seat.show.map((item) => item.duration)[0]);
     });
-
+    // console.log(totalTime1, "tyotalTime1");
     const findIdOfTime = time.find(
       (item, i) => item.value === state?.dates[0]?.time
     );
 
-    const timeRanges = time.find(
-      (item, i) => item.id === findIdOfTime.id + totalTime / 10
-    );
+    const timeRanges = totalTime1?.map((item1) => {
+      return time.find((item, i) => item.id === findIdOfTime.id + item1 / 10);
+    });
 
     setTimeRange(timeRanges);
 
@@ -401,8 +407,23 @@ const Preview = (props) => {
                 <li>
                   <div className="mb-2 flex justify-between">
                     <div>{t("time")}</div>
-                    <div>
-                      {state?.dates[0]?.time} - {timeRange?.value}
+                    <div className="flex flex-col justify-between">
+                      {timeRange &&
+                        showPreviewServices?.map((seat, i) => {
+                          console.log(timeRange[i], "timeRange[i]");
+                          if (seat.show.length > 0) {
+                            return (
+                              <div>
+                                Seat{seat.index + 1} : {state?.dates[0]?.time} -{" "}
+                                {
+                                  timeRange[
+                                    seat.index > 1 ? seat.index - 1 : seat.index
+                                  ]?.value
+                                }
+                              </div>
+                            );
+                          }
+                        })}
                     </div>
                   </div>
                 </li>
@@ -430,14 +451,14 @@ const Preview = (props) => {
                   </div>
                 </li>
                 <li>
-                  <div className="mb-2 flex justify-between">
+                  <div className="mb-2 mr-2 flex justify-between">
                     <div>Convenience Fee</div>
                     <div>&#8377; {ConvenienceFee} </div>
                   </div>
                 </li>
 
                 <li>
-                  <div className="mb-2 flex justify-between">
+                  <div className="mb-2 mr-2 flex justify-between text-green-600">
                     <div>{t("total")}</div>
                     <div>
                       &#8377;{" "}
@@ -470,7 +491,7 @@ const Preview = (props) => {
                       onClick={placeOrderHandler}
                       className="primary-button flex items-center justify-center  w-full"
                     >
-                      <>{t("placeOrder")}</>
+                      <>Book Now</>
                     </button>
                   ) : (
                     <button
@@ -478,7 +499,7 @@ const Preview = (props) => {
                       disabled={loading}
                     >
                       {" "}
-                      {t("placeOrder")}{" "}
+                      Book Now
                       {loading && <span className="buttonloader ml-2"></span>}
                     </button>
                   )}
