@@ -4,6 +4,12 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap");
 
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin 1s linear infinite;
+  }
+}
+
 html,
 body {
   padding: 0;

@@ -124,7 +124,7 @@ const BestSaloons = ({ smallBanners }) => {
                           style={{
                             width: "98%",
                             height: 170,
-                            boxShadow: "1px 1.5px 2px black",
+                            boxShadow: "1px 1.5px 7px black",
                             filter: "brightness(70%)",
 
                             objectFit: "cover",

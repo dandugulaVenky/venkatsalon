@@ -1319,7 +1319,8 @@ const Reserve = () => {
             </select>
 
             <select
-              className="md:w-52 w-auto jello-horizontal"
+              // className="md:w-52 w-auto jello-horizontal "
+              className="md:w-52 w-auto animate-pulse border-2 border-[#00ccbb] rounded px-2 py-1 bg-white text-gray-700 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00ccbb] transition-all"
               onChange={handleChange}
             >
               <option>Select Sub Category</option>

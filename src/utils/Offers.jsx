@@ -12,7 +12,7 @@ const Offers = () => {
   return (
     <div className=" mt-8  text-black md:mb-10 mb-20">
       <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
-        {t("offers")}
+        Saalons Upcoming Offers
       </h1>
       <Carousel cols={3} rows={1} gap={7}>
         <Carousel.Item>
