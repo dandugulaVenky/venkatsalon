@@ -205,7 +205,27 @@ const Home = ({ endRef, smallBanners }) => {
           <div className="">
             <h1 className="   text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
               <span className="text-xl">Book Salon Services in Seconds</span>
-              <p className="text-3xl">"Anytime, Anywhere"</p>
+              <div className="flex space-x-2 items-center justify-center">
+                <div className="waviy">
+                  <span>A</span>
+                  <span>N</span>
+                  <span>Y</span>
+                  <span>T</span>
+                  <span>I</span>
+                  <span>M</span>
+                  <span>E</span>
+                </div>
+                <div className="waviy">
+                  <span>A</span>
+                  <span>N</span>
+                  <span>Y</span>
+                  <span>W</span>
+                  <span>H</span>
+                  <span>E</span>
+                  <span>R</span>
+                  <span>e</span>
+                </div>
+              </div>
             </h1>
             {/* <button onClick={handleButton}>Send</button> */}
 
