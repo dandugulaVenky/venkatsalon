@@ -1121,7 +1121,10 @@ const Hotel = ({ smallBanners }) => {
                       <span className="text-xl font-semibold text-center ">
                         Hurrayyyy! 🎉🎉🎉 Shop Provides :
                       </span>
-                      <div className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]">
+                      <div
+                        onClick={handleClick}
+                        className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]"
+                      >
                         <div className="flex justify-between items-center ">
                           <h3 className="text-md font-bold">
                             Overall Shop Offer

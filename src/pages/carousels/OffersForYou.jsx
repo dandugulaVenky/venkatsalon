@@ -99,7 +99,7 @@ const OffersForYou = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <div className="border border-1 border-gray-200 rounded-md p-1 drop-shadow-md shadow-custom">
+                    <div className="border border-1 border-gray-200 rounded-md p-1 drop-shadow-md h-[20rem]">
                       <div
                         className="relative h-44 w-full cursor-pointer rounded-md slide-in-left "
                         id="section-id"
@@ -144,7 +144,7 @@ const OffersForYou = ({ smallBanners }) => {
                       <p className="pl-1 font-semibold text-gray-700 ">
                         {cityName}{" "}
                       </p>
-                      {item?.individualOffer?.length > 0 && (
+                      {item?.individualOffer?.length > 0 ? (
                         <div className="mt-2">
                           <div className="space-y-2">
                             {item.individualOffer
@@ -164,11 +164,25 @@ const OffersForYou = ({ smallBanners }) => {
                               ))}
                           </div>
                         </div>
+                      ) : (
+                        <div className="mb-2 my-3">
+                          {" "}
+                          <p className=" text-sm text-gray-400 px-2">
+                            Shop has Offer on final booking price
+                          </p>
+                          <p className="mt-1 px-2">
+                            {item?.overallShopOffer > 0 && (
+                              <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1.5 rounded-md">
+                                {item.overallShopOffer}% OFF
+                              </span>
+                            )}
+                          </p>
+                        </div>
                       )}
 
-                      <span className="text-xs text-gray-600 pl-1">
+                      <p className="text-xs text-gray-600 pl-1 pt-2 absolute bottom-2">
                         Click on shop and explore more offers
-                      </span>
+                      </p>
                     </div>
                   </Carousel.Item>
                 );
