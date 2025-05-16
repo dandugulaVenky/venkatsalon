@@ -143,7 +143,7 @@ const BestSaloons = ({ smallBanners }) => {
                           <FontAwesomeIcon icon={faStar} size="lg" />
                         </p>
                       </div>
-                      <p className="pl-1 font-semibold text-gray-700 ">
+                      <p className="pl-1 font-semibold text-gray-500 ">
                         {cityName}
                       </p>
                     </>
