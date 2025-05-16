@@ -99,9 +99,9 @@ const OffersForYou = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <>
+                    <div className="border border-1 border-gray-200 rounded-md p-1">
                       <div
-                        className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
+                        className="relative h-44 w-full cursor-pointer rounded-md slide-in-left "
                         id="section-id"
                         key={i}
                         onClick={() => gotoHotel(item._id)}
@@ -144,22 +144,32 @@ const OffersForYou = ({ smallBanners }) => {
                       <p className="pl-1 font-semibold text-gray-700 ">
                         {cityName}{" "}
                       </p>
-                      {item?.individualOffer?.length > 0 &&
-                        item?.individualOffer?.slice(0, 2).map((item1) => {
-                          return (
-                            <p className="text-xs text-gray-600 pl-1 pt-2">
-                              {item1?.service} -{" "}
-                              <span className="bg-orange-500 p-1 rounded-md text-white font-bold">
-                                {item1?.offer}%
-                              </span>{" "}
-                              off/-
-                            </p>
-                          );
-                        })}
+                      {item?.individualOffer?.length > 0 && (
+                        <div className="mt-2">
+                          <div className="space-y-2">
+                            {item.individualOffer
+                              .slice(0, 2)
+                              .map((item1, idx) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between bg-orange-50 rounded-lg px-3 py-1 shadow-sm"
+                                >
+                                  <span className="text-xs text-gray-800 font-medium">
+                                    {item1.service}
+                                  </span>
+                                  <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                                    {item1.offer}% OFF
+                                  </span>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+
                       <span className="text-xs text-gray-600 pl-1">
                         Click on shop and explore more offers
                       </span>
-                    </>
+                    </div>
                   </Carousel.Item>
                 );
               })}
