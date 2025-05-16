@@ -361,6 +361,10 @@ const Hotel = ({ smallBanners }) => {
   }
 
   const handleClick = () => {
+    if (!selectValue) {
+      window.scrollTo(0, 0);
+      return toast("Please select time");
+    }
     let day1 = moment(value).format("MMM Do YY");
     let day2 = moment(new Date()).format("MMM Do YY");
 
@@ -394,7 +398,7 @@ const Hotel = ({ smallBanners }) => {
     let result2 = compareTimeDiff(result);
 
     if (day1 === day2 && result2 >= 0) {
-      return toast("Please select a valid time!");
+      return toast("Please select tomorrow's date");
     }
     const timeDifferenceInMilliseconds = value - new Date();
 
@@ -1094,6 +1098,7 @@ const Hotel = ({ smallBanners }) => {
                     {data.individualOffer?.map((item1, index) => (
                       <div
                         key={index}
+                        onClick={handleClick}
                         className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]"
                       >
                         <div className="flex justify-between items-center ">

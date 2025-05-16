@@ -63,7 +63,7 @@ const SearchItem = ({ item }) => {
                 </h1>
                 <p>
                   {" "}
-                  {item?.individualOffer?.length > 0 &&
+                  {/* {item?.individualOffer?.length > 0 &&
                     item?.individualOffer?.slice(0, 2).map((item1) => {
                       return (
                         <p className="text-xs text-gray-600 mt-2.5">
@@ -73,10 +73,29 @@ const SearchItem = ({ item }) => {
                           </span>{" "}
                         </p>
                       );
-                    })}
-                  <span className="text-xs text-gray-600">
-                    Click to explore more offers
-                  </span>
+                    })} */}
+                  {item?.individualOffer?.length > 0 && (
+                    <div className="mt-2">
+                      <h4 className="py-1 text-[#00ccbb] font-semibold">
+                        Offers{" "}
+                      </h4>
+                      <div className="space-y-2">
+                        {item.individualOffer.map((item1, idx) => (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between bg-orange-50 rounded-lg px-3 py-1 shadow-sm"
+                          >
+                            <span className="text-xs text-gray-800 font-medium">
+                              {item1.service}
+                            </span>
+                            <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+                              {item1.offer}% OFF
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </p>
               </div>
               <div className="flex items-center justify-start space-x-2">
