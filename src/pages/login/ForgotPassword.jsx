@@ -91,7 +91,7 @@ function ForgotPassword() {
 
       setDisable(false);
       alert("Phone Verified");
-      navigate("/reset-password", {
+      navigate("/reset_password", {
         state: {
           phone: number,
         },
