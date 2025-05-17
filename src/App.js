@@ -125,10 +125,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route
-                  path="/reset_password/:phone/:token"
-                  element={<ResetPassword />}
-                />
+                <Route path="/reset_password" element={<ResetPassword />} />
                 <Route path="/shop-details" element={<ShopDetails />} />
                 <Route
                   path="/shop-final-registration"

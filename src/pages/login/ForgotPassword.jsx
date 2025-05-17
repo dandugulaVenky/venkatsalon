@@ -17,29 +17,29 @@ function ForgotPassword() {
   const [disable, setDisable] = useState(false);
   const [number, setNumber] = useState("");
   const [disableNow, setDisableNow] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  axios.defaults.withCredentials = true;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    axios
-      .post(`${baseUrl}/api/auth/forgot-password`, { email, phone })
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          setLoading(false);
-          alert("Check your email for the link to reset your password!");
+  // axios.defaults.withCredentials = true;
+  // const handleSubmit = () => {
 
-          navigate("/login");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
+  //   setLoading(true);
+  //   axios
+  //     .post(`${baseUrl}/api/auth/forgot-password`, { email, phone })
+  //     .then((res) => {
+  //       if (res.data.Status === "Success") {
+  //         setLoading(false);
+  //         alert("Check your email for the link to reset your password!");
 
-        console.log(err);
-      });
-  };
+  //         navigate("/login");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setLoading(false);
+
+  //       console.log(err);
+  //     });
+  // };
 
   function setUpRecaptcha(number) {
     const recaptchaVerifier = new RecaptchaVerifier(
@@ -91,6 +91,11 @@ function ForgotPassword() {
 
       setDisable(false);
       alert("Phone Verified");
+      navigate("/reset-password", {
+        state: {
+          phone: number,
+        },
+      });
     } catch (err) {
       toast.error(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
@@ -102,7 +107,12 @@ function ForgotPassword() {
       <div className="bg-slate-300 p-3 rounded min-w-[30vw]">
         <h4 className="pt-2 pb-5 text-2xl font-bold ">Forgot Password</h4>
         <div>
-          <div className="mb-4">
+          <div
+            className="mb-4"
+            style={{
+              display: !flag ? "block" : "none",
+            }}
+          >
             <label htmlFor="phone">Phone</label>
             <PhoneInput
               defaultCountry="IN"

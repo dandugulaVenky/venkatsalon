@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
@@ -8,13 +8,16 @@ import { toast } from "react-toastify";
 function ResetPassword() {
   const [password, setPassword] = useState();
   const navigate = useNavigate();
-  const { phone, token } = useParams();
+
   const [loading, setLoading] = useState(false);
   axios.defaults.withCredentials = true;
+  const location = useLocation();
+
+  const phone = location?.state?.phone;
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${baseUrl}/api/auth/reset-password/${phone}/${token}`, {
+      .post(`${baseUrl}/api/auth/reset-password/${phone}`, {
         password,
       })
       .then((res) => {
@@ -25,7 +28,7 @@ function ResetPassword() {
       })
       .catch((err) => {
         setLoading(false);
-        toast.error(err.response.data.Status);
+        toast.error(err.response.data.message);
         console.log(err);
       });
   };
