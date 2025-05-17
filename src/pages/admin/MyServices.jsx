@@ -132,6 +132,9 @@ const MyServices = () => {
           toast("deleted successfully!");
           setDeleted(!deleted);
           setIsDisabled(false);
+          setCurrentCategory(null);
+          setCategoriesOfServices(null);
+          setShopAllServices(null);
         } else {
           toast(res.data.message);
           setIsDisabled(false);

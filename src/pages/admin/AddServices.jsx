@@ -63,7 +63,7 @@ const AddServices = () => {
           subType: data?.subType,
         });
 
-        setTypeOfPerson(data?.subType);
+        setTypeOfPerson(data?.subType === "unisex" ? "men" : data?.subType);
         const categories =
           shopType?.type === "parlour"
             ? parlourCategories[typeOfPerson]
@@ -86,7 +86,25 @@ const AddServices = () => {
       }
     };
     fetchData();
-  }, [shopType?.type, typeOfPerson, user?.shopId]);
+  }, [shopType?.type, user?.shopId]);
+
+  useEffect(() => {
+    console.log("hii");
+    const categories =
+      shopType?.type === "parlour"
+        ? parlourCategories[typeOfPerson]
+        : shopType?.type === "salon"
+        ? salonCategories[typeOfPerson]
+        : spaCategories[typeOfPerson];
+
+    setSuperCategories(categories);
+
+    setSuperCategory("regular");
+    const result = categories?.filter((superCategory, i) =>
+      superCategory.superCategory === "regular" ? superCategory.services : null
+    );
+    setCategories(result);
+  }, [shopType?.type, typeOfPerson]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -351,7 +369,7 @@ const AddServices = () => {
 
             <select
               onChange={handleSuperCategoryChange}
-              className="border-2 border-[#00ccbb]  md:w-auto w-full mx-1"
+              className="border-2 border-[#00ccbb] hidden md:w-auto w-full mx-1"
               value={superCategory}
             >
               <option selected value="">

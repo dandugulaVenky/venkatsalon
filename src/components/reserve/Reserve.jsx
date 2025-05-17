@@ -274,6 +274,7 @@ const Reserve = () => {
           ? category.services
           : null
       );
+
       setCategoriesOptions(result[0].services);
       setSuperCategory(() => {
         const result = categories.filter((category, i) =>
@@ -1267,7 +1268,7 @@ const Reserve = () => {
           {categorizedOffers?.length > 0 && (
             <OffersSection categorizedOffers={categorizedOffers} />
           )}
-          <div className="flex items-center md:justify-start justify-center flex-wrap space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
+          <div className="flex items-center md:justify-start justify-center flex-wrap space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2 space-y-2">
             {/* {!categoriesOptions?.length > 0 && sortBy === null && (
               <select
                 className="md:w-52 w-auto"
@@ -1692,19 +1693,13 @@ const Reserve = () => {
             </div>
           ) : (
             <div className="md:min-h-[75vh] min-h-[65vh] flex items-center flex-col justify-center">
-              {salonServices?.length <= 0 && categoriesOptions?.length <= 0 ? (
-                // !loading && !ownerDetailsLoading ? (
-                //   "loading"
-                // ) : (
+              {salonServices?.length <= 0 &&
+              (categoriesOptions?.length <= 0 || categoriesOptions === null) ? (
                 "Oops no services found !"
               ) : (
-                // )
-                <>
-                  {/* <img src={Select} alt="select category" className="h-72" /> */}
-                  <p className="font-semibold">
-                    <span className="loader"></span>
-                  </p>
-                </>
+                <p className="font-semibold">
+                  <span className="loader"></span>
+                </p>
               )}
             </div>
           )}
