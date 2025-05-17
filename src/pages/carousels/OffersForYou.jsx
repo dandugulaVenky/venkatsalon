@@ -99,7 +99,7 @@ const OffersForYou = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <div className="border border-1 border-gray-200 rounded-md p-1 drop-shadow-md h-[21.5rem]">
+                    <div className="border border-1 border-gray-200 rounded-md p-1 drop-shadow-md h-[20rem]">
                       <div
                         className="relative h-44 w-full cursor-pointer rounded-md slide-in-left "
                         id="section-id"

@@ -144,6 +144,7 @@ const OtpVerification = (props) => {
       setPhoneVerified(true);
       storedUser.phoneVerified = true;
       storedUser.number = number;
+      RegisterNow();
       setCookieObject("normalUser_info", storedUser, 7);
       setDisable(false);
     } catch (err) {
@@ -162,7 +163,7 @@ const OtpVerification = (props) => {
         `${baseUrl}/api/auth/register`,
         {
           username: name?.trim().toLowerCase(),
-          password: google ? password?.trim() : storedUser?.password.trim(),
+          // password: google ? password?.trim() : storedUser?.password.trim(),
           city: city?.toLowerCase() || city1?.toLowerCase(),
           phone: number || storedUser?.number,
           email: storedUser?.email?.trim()?.toLowerCase() || null,
@@ -334,26 +335,12 @@ const OtpVerification = (props) => {
             className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-
-          {/* <div className="mb-4" onClick={handleLocation}>
-            <label htmlFor="city">{t("address")}</label>
-
-            <input
-              type="text"
-              className="w-full"
-              id="city"
-              placeholder={"enter city name."}
-              readOnly
-              disabled
-              value={address || city}
-            />
-          </div> */}
         </div>
       ) : (
         ""
       )}
 
-      {password && storedUser.phoneVerified ? (
+      {/* {storedUser.phoneVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
           <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
             <svg
@@ -387,7 +374,7 @@ const OtpVerification = (props) => {
         </button>
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 };
