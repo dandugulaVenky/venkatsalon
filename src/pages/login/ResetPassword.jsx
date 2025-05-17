@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 function ResetPassword() {
   const [password, setPassword] = useState();
@@ -33,6 +35,11 @@ function ResetPassword() {
       });
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[80vh]">
       <div className="bg-slate-100 p-3 rounded min-w-[30vw]">
@@ -43,12 +50,17 @@ function ResetPassword() {
               <strong>New Password</strong>
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter Password"
               autoComplete="off"
               name="password"
               className="form-control rounded-0"
               onChange={(e) => setPassword(e.target.value)}
+            />
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye}
+              onClick={toggleVisibility}
+              className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
             />
           </div>
           <button type="submit" className="primary-button rounded-0">
