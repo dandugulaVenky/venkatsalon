@@ -119,7 +119,10 @@ const Greeting = ({ bestRef }) => {
                 />
               </Link>
             </div>
-            <div className="pl-12 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-10">
+            <div
+              className="pl-12 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-10"
+              onClick={handleLocation}
+            >
               <FontAwesomeIcon
                 icon={faLocationPinLock}
                 size="lg"
@@ -131,7 +134,6 @@ const Greeting = ({ bestRef }) => {
                   icon={faChevronCircleDown}
                   size="sm"
                   color="#00ccbb"
-                  onClick={handleLocation}
                 />
               )}
             </div>
