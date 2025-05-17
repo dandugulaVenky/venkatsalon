@@ -213,7 +213,7 @@ export default function Login() {
               </svg>
 
               {loading1 ? (
-                <div className="loaderGoogle" />
+                <div className="loaderGoogle w-full" />
               ) : (
                 <span className="text-sm">Login / Register with Google</span>
               )}
