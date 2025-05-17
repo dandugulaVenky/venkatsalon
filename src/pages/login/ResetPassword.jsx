@@ -45,7 +45,7 @@ function ResetPassword() {
       <div className="bg-slate-100 p-3 rounded min-w-[30vw]">
         <h4 className="pt-2 pb-5 text-2xl font-bold ">Reset Password</h4>
         <form onSubmit={handleSubmit}>
-          <div className="mb-3 flex flex-col space-y-2">
+          <div className="mb-3 flex flex-col space-y-2 relative">
             <label htmlFor="email">
               <strong>New Password</strong>
             </label>
