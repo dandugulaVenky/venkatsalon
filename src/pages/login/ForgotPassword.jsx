@@ -106,13 +106,12 @@ function ForgotPassword() {
     <div className="flex items-center justify-center min-h-[80vh]">
       <div className="bg-slate-300 p-3 rounded min-w-[30vw]">
         <h4 className="pt-2 pb-5 text-2xl font-bold ">Forgot Password</h4>
-        <div>
-          <div
-            className="mb-4"
-            style={{
-              display: !flag ? "block" : "none",
-            }}
-          >
+        <div
+          style={{
+            display: !flag ? "block" : "none",
+          }}
+        >
+          <div className="mb-4">
             <label htmlFor="phone">Phone</label>
             <PhoneInput
               defaultCountry="IN"
