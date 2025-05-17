@@ -144,8 +144,8 @@ const OtpVerification = (props) => {
       setPhoneVerified(true);
       storedUser.phoneVerified = true;
       storedUser.number = number;
-      RegisterNow();
-      setCookieObject("normalUser_info", storedUser, 7);
+      registerNow();
+      // setCookieObject("normalUser_info", storedUser, 7);
       setDisable(false);
     } catch (err) {
       toast.error(`${err.message} please recheck the otp and try again!`);
@@ -154,7 +154,7 @@ const OtpVerification = (props) => {
     }
   };
 
-  const RegisterNow = async () => {
+  const registerNow = async () => {
     setLoading(true);
     const { name, city: city1, password: passwordd } = storedUser;
 
@@ -227,10 +227,10 @@ const OtpVerification = (props) => {
   // const handleLocation = () => {
   //   setHeader(true);
   // };
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  // const [showPassword, setShowPassword] = useState(false);
+  // const toggleVisibility = () => {
+  //   setShowPassword((prev) => !prev);
+  // };
   return (
     <>
       {header ? (
@@ -319,7 +319,7 @@ const OtpVerification = (props) => {
         </div>
       </div>
 
-      {google && storedUser.phoneVerified ? (
+      {/* {google && storedUser.phoneVerified ? (
         <div className="mb-4 relative">
           <label htmlFor="password">Set a Password</label>
 
@@ -338,7 +338,7 @@ const OtpVerification = (props) => {
         </div>
       ) : (
         ""
-      )}
+      )} */}
 
       {/* {storedUser.phoneVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
