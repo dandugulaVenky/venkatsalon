@@ -82,41 +82,41 @@ export default function Login() {
 
   // const { open } = useContext(SearchContext);
 
-  const handleSubmit1 = async (e) => {
-    e.preventDefault();
+  // const handleSubmit1 = async (e) => {
+  //   e.preventDefault();
 
-    try {
-      dispatch({ type: "LOGIN_START" });
+  //   try {
+  //     dispatch({ type: "LOGIN_START" });
 
-      try {
-        const res = await axiosInstance.post(
-          `${baseUrl}/api/auth/login`,
-          {
-            phone: number,
-            password,
-            type: "normal",
-          },
-          { withCredentials: true }
-        );
-        localStorage.setItem("access_token", res.data.token);
-        dispatch({
-          type: "LOGIN_SUCCESS",
-          payload: {
-            user: res.data.details, // Assuming user details are in 'details'
-            token: res.data.accessToken,
-            refreshToken: res.data.refreshToken, // Assuming token is in 'token'
-          },
-        });
+  //     try {
+  //       const res = await axiosInstance.post(
+  //         `${baseUrl}/api/auth/login`,
+  //         {
+  //           phone: number,
+  //           password,
+  //           type: "normal",
+  //         },
+  //         { withCredentials: true }
+  //       );
+  //       localStorage.setItem("access_token", res.data.token);
+  //       dispatch({
+  //         type: "LOGIN_SUCCESS",
+  //         payload: {
+  //           user: res.data.details, // Assuming user details are in 'details'
+  //           token: res.data.accessToken,
+  //           refreshToken: res.data.refreshToken, // Assuming token is in 'token'
+  //         },
+  //       });
 
-        token !== "" && saveToken(res.data.details._id, token);
-        navigate(redirect || "/");
-      } catch (err) {
-        dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-      }
-    } catch (err) {
-      toast.error(err);
-    }
-  };
+  //       token !== "" && saveToken(res.data.details._id, token);
+  //       navigate(redirect || "/");
+  //     } catch (err) {
+  //       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+  //     }
+  //   } catch (err) {
+  //     toast.error(err);
+  //   }
+  // };
 
   const googleLogin = async () => {
     setLoading(true);
@@ -162,10 +162,10 @@ export default function Login() {
       }
     }
   };
-  const [showPassword, setShowPassword] = useState(false);
-  const toggleVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  // const [showPassword, setShowPassword] = useState(false);
+  // const toggleVisibility = () => {
+  //   setShowPassword((prev) => !prev);
+  // };
   const HandleRegistrationNew = () => {
     return (
       <div className="md:px-10 px-5 pt-10 card text-sm ">
@@ -218,8 +218,8 @@ export default function Login() {
                 <span className="text-sm">Login / Register with Google</span>
               )}
             </button>
-            <form onSubmit={handleSubmit1}>
-              {/* <button onClick={googleLogin} className=" my-5">
+            {/* <form onSubmit={handleSubmit1}> */}
+            {/* <button onClick={googleLogin} className=" my-5">
                 <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -239,11 +239,11 @@ export default function Login() {
                 </div>
               </button> */}
 
-              <h1 className="text-[#00ccbb] pb-2 pt-3 font-semibold text-center">
+            {/* <h1 className="text-[#00ccbb] pb-2 pt-3 font-semibold text-center">
                 Or
-              </h1>
+              </h1> */}
 
-              <div className="mb-4">
+            {/* <div className="mb-4">
                 <label htmlFor="name">{t("phoneTitle")}</label>
                 <PhoneInput
                   defaultCountry="IN"
@@ -268,25 +268,25 @@ export default function Login() {
                   onClick={toggleVisibility}
                   className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
                 />
-              </div>
+              </div> */}
 
-              <div className="mb-1">
+            {/* <div className="mb-1">
                 <button className="primary-button" disabled={loading}>
                   {t("loginTitle")}
                 </button>
-              </div>
-              <p className="text-md underline text-blue-600 mt-3">
+              </div> */}
+            {/* <p className="text-md underline text-blue-600 mt-3">
                 <Link to="/forgot-password">Forgot Password</Link>
                 <br></br>
-                {/* <Link to="/register">{t("dontHaveAccountClickHere")}</Link> */}
-              </p>
+              </p> */}
+            {/* <Link to="/register">{t("dontHaveAccountClickHere")}</Link> */}
 
-              {errorContext && (
+            {/* {errorContext && (
                 <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
                   {errorContext.message}
                 </p>
-              )}
-            </form>
+              )} */}
+            {/* </form> */}
           </div>
         )}
       </div>

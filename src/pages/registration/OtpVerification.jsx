@@ -63,25 +63,25 @@ const OtpVerification = (props) => {
   //paswword match
   const [error, setError] = useState("");
 
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
+  // const handlePasswordChange = (e) => {
+  //   const newPassword = e.target.value;
 
-    // Validate before updating
-    const isValid =
-      /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
-        newPassword
-      );
+  //   // Validate before updating
+  //   const isValid =
+  //     /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+  //       newPassword
+  //     );
 
-    if (isValid) {
-      setPassword(newPassword);
-      storedUser.password = newPassword;
-      setError("");
-    } else {
-      setError(
-        "Password must be at least 8 characters and include a special character"
-      );
-    }
-  };
+  //   if (isValid) {
+  //     setPassword(newPassword);
+  //     storedUser.password = newPassword;
+  //     setError("");
+  //   } else {
+  //     setError(
+  //       "Password must be at least 8 characters and include a special character"
+  //     );
+  //   }
+  // };
 
   const saveToken = async (id, token) => {
     try {
@@ -126,9 +126,10 @@ const OtpVerification = (props) => {
       setFlag(true);
       setDisable(false);
     } catch (err) {
-      toast(err.message);
+      toast("Something wrong! Please Retry!");
       setFlag(false);
       setDisable(false);
+      window.location.reload();
     }
   };
 
@@ -316,6 +317,7 @@ const OtpVerification = (props) => {
             readOnly
           />
           <FontAwesomeIcon icon={faCheckCircle} size="lg" className="ml-3" />
+          {<div className="loaderGoogle ml-5"></div>}
         </div>
       </div>
 
