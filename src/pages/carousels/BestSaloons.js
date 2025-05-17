@@ -16,8 +16,6 @@ import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../components/axiosInterceptor";
 
-import DistanceSlider from "../../utils/DistanceSlider";
-
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
