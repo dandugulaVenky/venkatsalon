@@ -161,17 +161,16 @@ const Layout = ({ bestRef }) => {
                   className={`${isScrolled ? "imgs1" : "imgs2"}`}
                 />
               </Link>
-              <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
+              <div
+                className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4 cursor-pointer"
+                onClick={handleLocation}
+              >
                 <FontAwesomeIcon icon={faLocation} size="lg" />
                 <p className="text-sm">
                   {city ? shortenString(city).toUpperCase() : "Enter Your City"}
                 </p>
                 {pathname === "/" && (
-                  <FontAwesomeIcon
-                    icon={faChevronCircleDown}
-                    size="lg"
-                    onClick={handleLocation}
-                  />
+                  <FontAwesomeIcon icon={faChevronCircleDown} size="lg" />
                 )}
               </div>
             </div>

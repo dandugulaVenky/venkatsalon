@@ -17,14 +17,14 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import { signInWithPopup } from "firebase/auth";
 import OtpVerification from "../registration/OtpVerification";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [number, setNumber] = useState("");
-  const [password, setPassword] = useState("");
+  // const [number, setNumber] = useState("");
+  // const [password, setPassword] = useState("");
   const [loading1, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const { t } = useTranslation();
