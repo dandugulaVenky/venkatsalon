@@ -149,6 +149,7 @@ const OtpVerification = (props) => {
     } catch (err) {
       toast.error(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
+      setOtp("");
     }
   };
 
@@ -295,7 +296,7 @@ const OtpVerification = (props) => {
           <button
             className={`${disable ? "default-button" : "primary-button"}`}
             onClick={verifyOtp}
-            disabled={disable}
+            // disabled={disable}
           >
             {disable ? "Verifying..." : "Verify"}
           </button>
