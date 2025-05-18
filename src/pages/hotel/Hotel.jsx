@@ -884,14 +884,17 @@ const Hotel = ({ smallBanners }) => {
       {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
-        className={`md:px-4 px-2 my-6 ${higlightBookingBox ? "heartbeat" : ""}`}
+        className={`md:px-4 px-2 my-6  ${
+          higlightBookingBox ? "heartbeat" : ""
+        }`}
       >
-        <div className=" md:p-6 p-4 flex flex-col items-center justify-center w-full bg-[#00ccbb] rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-10 border border-gray-100">
+        <div className="w-full  md:p-6 p-4 flex flex-col items-center justify-center shadow-custom shadow-slate-300  bg-[#00ccbb] rounded-md bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100">
           {/* Header options */}
           <div className="flex items-center justify-center space-x-6 text-gray-800 font-semibold text-base md:text-lg mb-6">
             {appointment !== "null" ? (
               <div className="flex items-center gap-2 text-[#00ccbb] font-bold">
-                {/* {appointment} */} Select Date and Time
+                {/* {appointment} */}
+                <span className="text-xl pt-1.5"> Select Date and Time</span>
                 <FontAwesomeIcon
                   icon={faCircleXmark}
                   className="ml-2 cursor-pointer text-gray-400 hover:text-red-500 hidden"
@@ -1003,7 +1006,7 @@ const Hotel = ({ smallBanners }) => {
             {/* Select Services */}
             <div className="md:col-span-4 col-span-12">
               <button
-                className="w-full bg-[#00ccbb] text-white p-3 rounded-lg font-semibold hover:bg-[#00b3a4] transition jello-horizontal"
+                className="w-full pb-2 bg-[#00ccbb] text-white p-3 rounded-lg font-semibold hover:bg-[#00b3a4] transition jello-horizontal"
                 onClick={handleClick}
               >
                 Select Services
