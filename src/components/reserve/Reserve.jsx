@@ -1600,8 +1600,8 @@ const Reserve = () => {
                                         </p>
                                         {isBarberAssigned &&
                                           seat.barber?._id === barber._id && (
-                                            <span className="absolute top-1 right-1 p-1 rounded-full bg-[#00ccbb] text-white">
-                                              seat {seat.index + 1}
+                                            <span className="absolute top-1 text-xs right-1 p-2 rounded-full bg-[#00ccbb] text-white">
+                                              Seat {seat.index + 1}
                                             </span>
                                           )}
                                       </div>
