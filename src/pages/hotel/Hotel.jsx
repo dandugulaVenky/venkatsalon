@@ -950,7 +950,7 @@ const Hotel = ({ smallBanners }) => {
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="w-full drop-shadow-md bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm hover:bg-gray-200 transition"
+                  className="w-full  bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-custom hover:bg-gray-200 transition"
                 >
                   {timeReserve ? (
                     <span
