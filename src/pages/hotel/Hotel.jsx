@@ -688,13 +688,13 @@ const Hotel = ({ smallBanners }) => {
             setShowTimings(false);
             document.body.style.overflow = "unset";
           }}
-          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+          className="absolute md:top-10 top-2.5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
-        <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+        <div className="-top-8 flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
           <p
             className={classNames(
-              `text-white text-center block z-10  md:text-lg text-[1rem] font-bold cursor-pointer bg-[#6262c7e5] slide-in-left  py-2 sticky top-0 w-[100%]`
+              `text-white text-center block z-10  md:text-lg text-[1rem] font-bold cursor-pointer bg-[#00ccbb] slide-in-left  py-2 sticky top-0 w-[100%]`
             )}
           >
             <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
@@ -886,7 +886,7 @@ const Hotel = ({ smallBanners }) => {
       <div
         className={`md:px-4 px-2 my-6 ${higlightBookingBox ? "heartbeat" : ""}`}
       >
-        <div className="w-full bg-white rounded-xl md:p-6 p-4 flex flex-col items-center justify-center shadow-custom shadow-slate-300 border border-gray-300">
+        <div className=" md:p-6 p-4 flex flex-col items-center justify-center w-full bg-[#00ccbb] rounded-md bg-clip-padding backdrop-filter backdrop-blur-2xl bg-opacity-10 border border-gray-100">
           {/* Header options */}
           <div className="flex items-center justify-center space-x-6 text-gray-800 font-semibold text-base md:text-lg mb-6">
             {appointment !== "null" ? (
@@ -926,7 +926,7 @@ const Hotel = ({ smallBanners }) => {
           </div>
 
           {/* Content Grid */}
-          <div className="grid grid-cols-12 gap-6 w-full">
+          <div className="grid grid-cols-12 gap-4 w-[80%] mx-auto">
             {/* Calendar */}
             <div className="md:col-span-4 col-span-12 relative z-40">
               <div ref={pickerRef}>
