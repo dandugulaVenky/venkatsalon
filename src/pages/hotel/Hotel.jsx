@@ -884,7 +884,7 @@ const Hotel = ({ smallBanners }) => {
       {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
-        className={`md:px-4 px-2 my-6 ${higlightBookingBox ? "heartbeat" : ""}`}
+        className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
       >
         <div className="w-full bg-white rounded-xl md:p-6 p-4 flex flex-col items-center justify-center shadow-custom shadow-slate-300 border border-gray-300">
           {/* Header options */}
@@ -926,7 +926,7 @@ const Hotel = ({ smallBanners }) => {
           </div>
 
           {/* Content Grid */}
-          <div className="grid grid-cols-12 gap-4 w-[80%] mx-auto">
+          <div className="grid grid-cols-12 gap-4 w-[80%] mx-auto -mt-2">
             {/* Calendar */}
             <div className="md:col-span-4 col-span-12 relative z-40">
               <div ref={pickerRef}>
@@ -950,7 +950,7 @@ const Hotel = ({ smallBanners }) => {
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="w-full drop-shadow-md bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm hover:bg-gray-200 transition"
+                  className="w-full drop-shadow-md bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm hover:bg-gray-200 transition"
                 >
                   {timeReserve ? (
                     <span
