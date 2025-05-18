@@ -928,7 +928,7 @@ const Hotel = ({ smallBanners }) => {
           {/* Content Grid */}
           <div className="grid grid-cols-12 gap-4 w-[80%] mx-auto -mt-2">
             {/* Calendar */}
-            <div className="md:col-span-4 col-span-12 relative z-40">
+            <div className="md:col-span-4 col-span-12 relative z-10">
               <div ref={pickerRef}>
                 <DatePicker
                   onChange={handleChange}
