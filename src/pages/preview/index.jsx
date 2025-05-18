@@ -29,7 +29,7 @@ const Preview = (props) => {
 
   // console.log(state, "state");
   const ConvenienceFee = Number(
-    ((state?.totalAmount * (state?.totalAmount > 200 ? 10 : 15)) / 100).toFixed(
+    ((state?.totalAmount * (state?.totalAmount > 200 ? 9 : 10)) / 100).toFixed(
       1
     )
   );
