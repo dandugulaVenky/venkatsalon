@@ -123,7 +123,7 @@ const OffersForYou = ({ smallBanners }) => {
                             borderRadius: 8,
                           }}
                         />
-                        <p className="absolute md:bottom-[2.55rem] bottom-11 left-4 text-white font-bold  text-xl content break-words">
+                        <p className="absolute md:bottom-[2.55rem] bottom-11 left-4 text-white font-bold  text-xl content break-words pr-2">
                           {/* {item.name} */}
                           {t("salonName", { name: item.name })}
                         </p>
@@ -138,11 +138,15 @@ const OffersForYou = ({ smallBanners }) => {
                           <span className="font-semibold">
                             {Math.ceil(item.rating)}{" "}
                           </span>
-                          <FontAwesomeIcon icon={faStar} size="lg" />
+                          <FontAwesomeIcon
+                            icon={faStar}
+                            color="yellow"
+                            size="lg"
+                          />
                         </p>
                       </div>
                       <p className="pl-1 font-semibold text-gray-700 ">
-                        {cityName}{" "}
+                        {cityName?.charAt(0).toUpperCase() + cityName?.slice(1)}
                       </p>
                       {item?.individualOffer?.length > 0 ? (
                         <div className="mt-2">
