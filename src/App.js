@@ -1,6 +1,6 @@
 // App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ReactGA from "react-ga4";
 import { useContext, useEffect, useRef, useState, Suspense, lazy } from "react";
 
 import Login from "./pages/login/Login";
@@ -87,6 +87,15 @@ function App() {
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    ReactGA.initialize("G-PMX7K8JBTN");
+    ReactGA.send({
+      hitType: "pageview",
+      page: window.location.pathname,
+      title: "Saalons Page",
+    });
   }, []);
 
   const ProtectedRoute = ({ children }) => {

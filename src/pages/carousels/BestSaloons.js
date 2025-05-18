@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../components/axiosInterceptor";
+import { Rating } from "@material-ui/lab";
 
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
@@ -135,14 +136,15 @@ const BestSaloons = ({ smallBanners }) => {
                           {t("salonName", { name: item.name })}
                         </p>
                         <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                          <span className="font-semibold">
+                          {/* <span className="font-semibold">
                             {Math.ceil(item.rating)}{" "}
-                          </span>
-                          <FontAwesomeIcon
-                            icon={faStar}
-                            color="yellow"
-                            size="lg"
-                          />
+                          </span> */}
+                          <Rating
+                            value={t("reviewRating", {
+                              rating: Math.ceil(item.rating),
+                            })}
+                            readOnly
+                          ></Rating>
                         </p>
                       </div>
                       <p className="pl-1 font-semibold text-gray-500 ">

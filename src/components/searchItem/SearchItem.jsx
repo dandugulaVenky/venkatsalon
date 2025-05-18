@@ -7,18 +7,20 @@ import {
   faCheckCircle,
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
+import { Rating } from "@material-ui/lab";
+import { t } from "i18next";
 
 const SearchItem = ({ item }) => {
   return (
     <>
       <Link to={`/shops/${item._id}`}>
         <div
-          className=" hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer mx-4 my-4"
+          className=" hover:shadow-xl hover:scale-105 transition duration-300 cursor-pointer  my-4"
           style={{
             filter: " drop-shadow(0px 0px 0.3px gray)",
           }}
         >
-          <div className=" rounded-md bg-slate-100 shadow-custom border-2 border-gray-100">
+          <div className=" rounded-md  shadow-custom border-2 border-gray-100">
             <div className="w-full relative">
               <img
                 src={
@@ -44,7 +46,7 @@ const SearchItem = ({ item }) => {
                 )}
               </p>
             </div>
-            <div className=" grid grid-cols-12 p-4 text-gray-800 ">
+            <div className=" grid grid-cols-12 p-4 gap-2 text-gray-800 ">
               <div className="space-y-2.5 col-span-8">
                 <h1 className=" md:text-md text-sm">
                   {item.name}{" "}
@@ -58,9 +60,9 @@ const SearchItem = ({ item }) => {
                 <h3 className=" md:flex md:items-center">
                   <span className="text-sm">Desc: {item.desc}</span>
                 </h3> */}
-                <h1 className="text-sm siTaxiOp">
+                {/* <h1 className="text-sm siTaxiOp">
                   Reviews : {item.numReviews}
-                </h1>
+                </h1> */}
                 <p>
                   {" "}
                   {/* {item?.individualOffer?.length > 0 &&
@@ -98,14 +100,21 @@ const SearchItem = ({ item }) => {
                   )}
                 </p>
               </div>
-              <div className="flex items-center justify-start space-x-2">
-                <FontAwesomeIcon
-                  icon={faLocationDot}
-                  color="#00ccbb"
-                  size="xs"
-                  className="flex-1"
-                />
-                <p>{item.city.split(",")[0]}</p>
+              <div className="flex flex-col items-start  space-y-2 justify-start mr-1">
+                <div className="flex  items-center  space-x-1 justify-center">
+                  <FontAwesomeIcon
+                    icon={faLocationDot}
+                    color="#00ccbb"
+                    size="xs"
+                  />
+                  <p>{item.city.split(",")[0]}</p>
+                </div>
+                <Rating
+                  value={t("reviewRating", {
+                    rating: Math.ceil(item.rating),
+                  })}
+                  readOnly
+                ></Rating>
               </div>
 
               {/* <div className="siDetail col-span-4">
