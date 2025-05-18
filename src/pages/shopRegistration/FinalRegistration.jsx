@@ -39,6 +39,8 @@ const FinalRegistration = () => {
   const [paymentOptionTrue, setPaymentOptionTrue] = useState(false);
   const { t } = useTranslation();
 
+  const [password, setPassword] = useState();
+
   function getCookieObject(name) {
     const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
 
@@ -53,6 +55,11 @@ const FinalRegistration = () => {
   }
 
   const handleRegister = async () => {
+    if (!password || password.length < 8) {
+      return alert(
+        "Password must contain 8 characters, including a special character!"
+      );
+    }
     if (seats > 10) {
       return alert(t("max10SeatsAllowed"));
     }
@@ -156,6 +163,7 @@ const FinalRegistration = () => {
       city: shopDetails.city.toLowerCase(),
       roomNumbers: arrayOfObjects.length,
       ownerDetails,
+      password,
       plan,
     };
 
@@ -306,6 +314,16 @@ const FinalRegistration = () => {
                   max={15}
                   value={seats}
                   onChange={(e) => setSeats(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="password">Password: </label>
+                <input
+                  className="ml-4 w-44"
+                  type="text"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="mb-4 flex justify-between m">

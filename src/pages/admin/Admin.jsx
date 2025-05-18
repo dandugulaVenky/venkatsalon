@@ -128,7 +128,9 @@ const Admin = () => {
               onChange={(e) => handleShop(e.target.value)}
               value={shopName}
             >
-              <option value="null">Select a shop</option>
+              <option value="null" disabled>
+                Select a shop
+              </option>
               {allShops.map((shop) => (
                 <option key={shop._id} value={shop._id}>
                   {shop.name}
@@ -154,11 +156,12 @@ const Admin = () => {
               </p>
 
               <div className="card mt-5 p-5 w-full flex flex-col items-center justify-center">
-                <p className="font-bold text-xl">{shopData.plan.duration}</p>
-                <p>{shopData.plan.description}</p>
+                <p className="font-bold text-xl">{shopData?.plan?.duration}</p>
+                <p>{shopData?.plan?.description}</p>
                 {/* <p>{moment(shopData.plan.startDate).format("MMMM Do YYYY")}</p> */}
                 <p>
-                  Expiry: {moment(shopData.plan.endDate).format("MMMM Do YYYY")}
+                  Expiry:{" "}
+                  {moment(shopData?.plan?.endDate).format("MMMM Do YYYY")}
                 </p>
               </div>
             </div>

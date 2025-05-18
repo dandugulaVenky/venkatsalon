@@ -17,18 +17,18 @@ import { useTranslation } from "react-i18next";
 import axiosInstance from "../../components/axiosInterceptor";
 import { signInWithPopup } from "firebase/auth";
 import OtpVerification from "../registration/OtpVerification";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   const location = useLocation();
   const navigate = useNavigate();
-  // const [number, setNumber] = useState("");
-  // const [password, setPassword] = useState("");
+  const [number, setNumber] = useState("");
+  const [password, setPassword] = useState("");
   const [loading1, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const { t } = useTranslation();
-
+  const [needAccess, setNeedAccess] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const [storedUser, setStoredUser] = useState(null);
@@ -82,41 +82,41 @@ export default function Login() {
 
   // const { open } = useContext(SearchContext);
 
-  // const handleSubmit1 = async (e) => {
-  //   e.preventDefault();
+  const handleSubmit1 = async (e) => {
+    e.preventDefault();
 
-  //   try {
-  //     dispatch({ type: "LOGIN_START" });
+    try {
+      dispatch({ type: "LOGIN_START" });
 
-  //     try {
-  //       const res = await axiosInstance.post(
-  //         `${baseUrl}/api/auth/login`,
-  //         {
-  //           phone: number,
-  //           password,
-  //           type: "normal",
-  //         },
-  //         { withCredentials: true }
-  //       );
-  //       localStorage.setItem("access_token", res.data.token);
-  //       dispatch({
-  //         type: "LOGIN_SUCCESS",
-  //         payload: {
-  //           user: res.data.details, // Assuming user details are in 'details'
-  //           token: res.data.accessToken,
-  //           refreshToken: res.data.refreshToken, // Assuming token is in 'token'
-  //         },
-  //       });
+      try {
+        const res = await axiosInstance.post(
+          `${baseUrl}/api/auth/login`,
+          {
+            phone: number,
+            password,
+            type: "normal",
+          },
+          { withCredentials: true }
+        );
+        localStorage.setItem("access_token", res.data.token);
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: {
+            user: res.data.details, // Assuming user details are in 'details'
+            token: res.data.accessToken,
+            refreshToken: res.data.refreshToken, // Assuming token is in 'token'
+          },
+        });
 
-  //       token !== "" && saveToken(res.data.details._id, token);
-  //       navigate(redirect || "/");
-  //     } catch (err) {
-  //       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
-  //     }
-  //   } catch (err) {
-  //     toast.error(err);
-  //   }
-  // };
+        token !== "" && saveToken(res.data.details._id, token);
+        navigate(redirect || "/");
+      } catch (err) {
+        dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+      }
+    } catch (err) {
+      toast.error(err);
+    }
+  };
 
   const googleLogin = async () => {
     setLoading(true);
@@ -162,10 +162,10 @@ export default function Login() {
       }
     }
   };
-  // const [showPassword, setShowPassword] = useState(false);
-  // const toggleVisibility = () => {
-  //   setShowPassword((prev) => !prev);
-  // };
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
   const HandleRegistrationNew = () => {
     return (
       <div className="md:px-10 px-5 pt-10 card text-sm ">
@@ -218,75 +218,62 @@ export default function Login() {
                 <span className="text-sm">Login / Register with Google</span>
               )}
             </button>
-            {/* <form onSubmit={handleSubmit1}> */}
-            {/* <button onClick={googleLogin} className=" my-5">
-                <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 488 512"
-                    className="w-5 h-5"
-                    fill="#00ccbb"
-                  >
-                    <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-                  </svg>
-                  <div className="grid items-center">
-                    {loading1 ? (
-                      <div className="loaderGoogle ml-5"></div>
-                    ) : (
-                      "Login/Register with Google"
-                    )}
-                  </div>
+
+            <p
+              className="text-[#00ccbb] font-medium underline  cursor-pointer my-4"
+              onClick={(e) => setNeedAccess(!needAccess)}
+            >
+              {needAccess ? "Not a barber?" : "Are u a barber? Click here"}
+            </p>
+            {needAccess && (
+              <form onSubmit={handleSubmit1}>
+                <div className="mb-4">
+                  <label htmlFor="name">{t("phoneTitle")}</label>
+                  <PhoneInput
+                    defaultCountry="IN"
+                    id="number"
+                    value={number}
+                    onChange={setNumber}
+                    placeholder="Enter Phone Number"
+                  />
                 </div>
-              </button> */}
 
-            {/* <h1 className="text-[#00ccbb] pb-2 pt-3 font-semibold text-center">
-                Or
-              </h1> */}
+                <div className="mb-4 relative">
+                  <label htmlFor="password">{t("password")}</label>
+                  <input
+                    className="w-full "
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <FontAwesomeIcon
+                    icon={showPassword ? faEyeSlash : faEye}
+                    onClick={toggleVisibility}
+                    className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
+                  />
+                </div>
 
-            {/* <div className="mb-4">
-                <label htmlFor="name">{t("phoneTitle")}</label>
-                <PhoneInput
-                  defaultCountry="IN"
-                  id="number"
-                  value={number}
-                  onChange={setNumber}
-                  placeholder="Enter Phone Number"
-                />
-              </div>
+                <div className="mb-1">
+                  <button className="primary-button" disabled={loading}>
+                    {t("loginTitle")}
+                  </button>
+                </div>
+                {
+                  <p className="text-md underline text-blue-600 mt-3">
+                    <Link to="/forgot-password">Forgot Password</Link>
+                    <br></br>
+                  </p>
+                }
+                {/* <Link to="/register">{t("dontHaveAccountClickHere")}</Link> */}
 
-              <div className="mb-4 relative">
-                <label htmlFor="password">{t("password")}</label>
-                <input
-                  className="w-full "
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <FontAwesomeIcon
-                  icon={showPassword ? faEyeSlash : faEye}
-                  onClick={toggleVisibility}
-                  className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
-                />
-              </div> */}
-
-            {/* <div className="mb-1">
-                <button className="primary-button" disabled={loading}>
-                  {t("loginTitle")}
-                </button>
-              </div> */}
-            {/* <p className="text-md underline text-blue-600 mt-3">
-                <Link to="/forgot-password">Forgot Password</Link>
-                <br></br>
-              </p> */}
-            {/* <Link to="/register">{t("dontHaveAccountClickHere")}</Link> */}
-
-            {/* {errorContext && (
-                <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
-                  {errorContext.message}
-                </p>
-              )} */}
-            {/* </form> */}
+                {errorContext && (
+                  <p className="mt-8 rounded py-2 bg-red-500 px-5 text-white">
+                    {errorContext.message}
+                  </p>
+                )}
+              </form>
+            )}
           </div>
         )}
       </div>
