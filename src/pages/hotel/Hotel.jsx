@@ -884,131 +884,126 @@ const Hotel = ({ smallBanners }) => {
       {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
-        className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
+        className={`md:px-4 px-2 my-6 ${higlightBookingBox ? "heartbeat" : ""}`}
       >
-        <div
-          className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
-          style={{
-            boxShadow: "1px 0.76px 1.5px black",
-          }}
-        >
-          <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
+        <div className="w-full bg-white rounded-xl md:p-6 p-4 flex flex-col items-center justify-center shadow-custom shadow-slate-300 border border-gray-300">
+          {/* Header options */}
+          <div className="flex items-center justify-center space-x-6 text-gray-800 font-semibold text-base md:text-lg mb-6">
             {appointment !== "null" ? (
-              <div className={`active scale-in-center space-x-2`}>
-                <span className="text-xs md:text-lg font-bold space-x-2 ">
-                  {appointment}
-                  <FontAwesomeIcon
-                    icon={faCircleXmark}
-                    className=" ml-4 cursor-pointer hidden"
-                    size="lg"
-                    onClick={() => setAppointment("null")}
-                  />
-                </span>
+              <div className="flex items-center gap-2 text-[#00ccbb] font-bold">
+                {/* {appointment} */} Select Date and Time
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className="ml-2 cursor-pointer text-gray-400 hover:text-red-500 hidden"
+                  size="lg"
+                  onClick={() => setAppointment("null")}
+                />
               </div>
             ) : (
               <>
                 <div
-                  className={
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full ${
                     data.type === "salon"
-                      ? `active scale-in-center space-x-2`
-                      : `space-x-2`
-                  }
+                      ? "bg-[#00ccbb]/20 text-[#00ccbb] font-bold"
+                      : "text-gray-600"
+                  }`}
                 >
                   <FontAwesomeIcon icon={faScissors} />
-                  <span className="text-xs md:text-lg font-bold ">
-                    {t("saloonShops")}
-                  </span>
+                  <span>{t("saloonShops")}</span>
                 </div>
                 <div
-                  className={
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full ${
                     data.type === "parlour"
-                      ? `active scale-in-center space-x-2`
-                      : `space-x-2`
-                  }
+                      ? "bg-[#00ccbb]/20 text-[#00ccbb] font-bold"
+                      : "text-gray-600"
+                  }`}
                 >
                   <FontAwesomeIcon icon={faSpa} />
-                  <span className="text-xs md:text-lg font-bold">
-                    {t("beautyParlours")}
-                  </span>
+                  <span>{t("beautyParlours")}</span>
                 </div>
               </>
             )}
           </div>
 
-          <div className="grid grid-cols-12 gap-5 pb-5">
-            <div className="md:col-span-4 col-span-12">
-              <div className="" ref={pickerRef}>
+          {/* Content Grid */}
+          <div className="grid grid-cols-12 gap-6 w-full">
+            {/* Calendar */}
+            <div className="md:col-span-4 col-span-12 relative z-40">
+              <div ref={pickerRef}>
                 <DatePicker
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded w-full    "
+                  className="bg-white text-[#00ccbb] p-3 rounded-lg w-full shadow-sm border border-gray-300 drop-shadow-md focus:outline-none focus:ring-2 focus:ring-[#00ccbb] transition-all duration-200"
                 />
               </div>
             </div>
+
+            {/* Time Selection */}
             <div className="md:col-span-4 col-span-12">
               {loading || loadingg ? (
-                <p className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none ">
+                <div className="p-3 w-full bg-gray-100 text-gray-500 text-center rounded-lg shadow-sm">
                   {t("loading")}
-                </p>
+                </div>
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="inline-flex heartbeat justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100  rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+                  className="w-full drop-shadow-md bg-gray-100 text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm hover:bg-gray-200 transition"
                 >
-                  <div className="w-full flex items-center justify-between">
-                    <span className="md:text-md">
-                      {timeReserve ? (
-                        <p
-                          className={
-                            lunch.includes(options[selectValue].id) &&
-                            ` text-red-500 `
-                          }
-                        >
-                          {timeReserve}
-                        </p>
-                      ) : (
-                        t("selectTime")
-                      )}
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5 ml-2 -mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                  {timeReserve ? (
+                    <span
+                      className={
+                        lunch.includes(options[selectValue].id)
+                          ? "text-red-500"
+                          : ""
+                      }
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
+                      {timeReserve}
+                    </span>
+                  ) : (
+                    <span>{t("selectTime")}</span>
+                  )}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
                 </button>
               ) : appointment === "appointment" ? (
-                "Book an appointment!"
+                <div className="text-center text-[#00ccbb] font-semibold">
+                  Book an appointment!
+                </div>
               ) : (
-                // inline-flex
                 <select
-                  className="hidden  justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                  className="hidden w-full p-3 text-base bg-gray-100 border border-gray-300 rounded-lg shadow-sm"
                   onChange={(e) => setAppointment(e.target.value)}
                 >
                   <option value={"null"} disabled selected>
                     Select Booking Type
                   </option>
                   <option value={"booking"}>Book an appointment</option>
-                  {/* <option value={"appointment"}>Book an appointment</option> */}
                 </select>
               )}
             </div>
+
+            {/* Timings */}
             {showTimings && <ShowTheTimings />}
+
+            {/* Select Services */}
             <div className="md:col-span-4 col-span-12">
               <button
-                className="headerBtn w-full p-[0.71rem] jello-horizontal"
+                className="w-full bg-[#00ccbb] text-white p-3 rounded-lg font-semibold hover:bg-[#00b3a4] transition jello-horizontal"
                 onClick={handleClick}
               >
                 Select Services
