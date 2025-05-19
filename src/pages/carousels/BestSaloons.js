@@ -136,9 +136,13 @@ const BestSaloons = ({ smallBanners }) => {
                         />
                       </div>
                       <div className="space-y-0.5 pb-2 pl-2 pr-2 ">
-                        <p className=" text-gray-700 font-semibold  text-[15px] content break-words pt-2 pr-2">
+                        <p
+                          className="text-gray-700 font-semibold text-[15px] pt-2 pr-2 truncate cursor-pointer"
+                          title={item.name}
+                        >
                           {t("salonName", { name: item.name })}
                         </p>
+
                         <p className="flex items-center justify-start">
                           <span className=" text-gray-700 font-medium pr-1 pt-0.5">
                             {Math.ceil(item.rating)}.0{" "}
