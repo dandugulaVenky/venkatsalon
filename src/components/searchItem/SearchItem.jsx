@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faLocationDot,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { Rating } from "@material-ui/lab";
 import { t } from "i18next";
@@ -40,8 +41,15 @@ const SearchItem = ({ item }) => {
               />
               <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
                 {item?.overallShopOffer > 0 && (
-                  <span className="bg-green-500 p-3  rounded-full text-sm text-white">
+                  <span className="bg-green-500 p-3  rounded-md text-sm text-white">
                     {item?.overallShopOffer}% off/-
+                  </span>
+                )}
+              </p>
+              <p className="absolute right-4 top-3 text-white font-bold  text-xl content break-words">
+                {item?.individualOffer?.length > 0 && (
+                  <span className="bg-green-500 p-3  rounded-md text-sm text-white">
+                    Offers on Individual Services Available
                   </span>
                 )}
               </p>
@@ -56,26 +64,8 @@ const SearchItem = ({ item }) => {
                 </h1>
                 <h1 className="text-sm">Category: {item.subType}</h1>
                 <span className="text-sm">Type: {item.type}</span>
-                {/* 
-                <h3 className=" md:flex md:items-center">
-                  <span className="text-sm">Desc: {item.desc}</span>
-                </h3> */}
-                {/* <h1 className="text-sm siTaxiOp">
-                  Reviews : {item.numReviews}
-                </h1> */}
-                <p>
-                  {" "}
-                  {/* {item?.individualOffer?.length > 0 &&
-                    item?.individualOffer?.slice(0, 2).map((item1) => {
-                      return (
-                        <p className="text-xs text-gray-600 mt-2.5">
-                          {item1?.service} -{" "}
-                          <span className="bg-orange-500 p-1 rounded-md text-white font-bold">
-                            {item1?.offer}% off/-
-                          </span>{" "}
-                        </p>
-                      );
-                    })} */}
+
+                {/* <p>
                   {item?.individualOffer?.length > 0 && (
                     <div className="mt-2">
                       <h4 className="py-1 text-[#00ccbb] font-semibold">
@@ -98,7 +88,7 @@ const SearchItem = ({ item }) => {
                       </div>
                     </div>
                   )}
-                </p>
+                </p> */}
               </div>
               <div className="flex flex-col items-start  space-y-2 justify-start mr-1">
                 <div className="flex  items-center  space-x-1 justify-center">
@@ -109,12 +99,18 @@ const SearchItem = ({ item }) => {
                   />
                   <p>{item.city.split(",")[0]}</p>
                 </div>
-                <Rating
-                  value={t("reviewRating", {
-                    rating: Math.ceil(item.rating),
-                  })}
-                  readOnly
-                ></Rating>
+
+                <p className="flex items-center justify-start space-x-2">
+                  {" "}
+                  <span className=" text-gray-700 font-medium pr-1 pt-0.5">
+                    {Math.ceil(item.rating)}.0{" "}
+                  </span>
+                  <FontAwesomeIcon
+                    icon={faStar}
+                    size="medium"
+                    color="#00ccbb"
+                  />
+                </p>
               </div>
 
               {/* <div className="siDetail col-span-4">

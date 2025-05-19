@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap");
+/* 
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap"); */
 
 @layer utilities {
   .animate-spin-slow {
@@ -14,10 +14,10 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "Barlow", sans-serif;
-  font-family: "Comfortaa", cursive;
-  font-family: "Signika", sans-serif;
-  font-family: "Signika Negative", sans-serif;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   scroll-behavior: smooth;
   color: #000000;
   background: #ffffffdf;

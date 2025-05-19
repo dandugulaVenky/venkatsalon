@@ -186,7 +186,7 @@ const OffersForYou = ({ smallBanners }) => {
                         </div>
                       )}
 
-                      <p className="text-xs text-gray-600 pl-1 pt-2 absolute bottom-2 min-w-full">
+                      <p className="text-xs text-gray-600 pl-1 py-3 min-w-full">
                         Click on shop and explore more offers
                       </p>
                     </div>
