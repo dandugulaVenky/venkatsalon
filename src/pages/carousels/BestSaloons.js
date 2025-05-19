@@ -30,7 +30,7 @@ const BestSaloons = ({ smallBanners }) => {
     return await axiosInstance.get(
       `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&lat=${
         lat ? lat : 0.0
-      }&lng=${lng ? lng : 0.0}&limit=4&range=${range ? range : 2}`
+      }&lng=${lng ? lng : 0.0}&limit=8&range=${range ? range : 2}`
     );
   };
   const size = GetSize();
@@ -108,9 +108,12 @@ const BestSaloons = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <>
+                    <div
+                      className="shadow-custom h-auto mb-8"
+                      style={{ borderRadius: 8 }}
+                    >
                       <div
-                        className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
+                        className="relative min-h-44 w-full cursor-pointer rounded-md slide-in-left"
                         id="section-id"
                         onClick={() => gotoHotel(item._id)}
                       >
@@ -121,36 +124,39 @@ const BestSaloons = ({ smallBanners }) => {
                           }
                           alt="images"
                           style={{
-                            width: "98%",
-                            height: 170,
-                            boxShadow: "1px 1.5px 7px black",
-                            filter: "brightness(70%)",
+                            width: "100%",
+                            height: 190,
+
+                            // filter: "brightness(70%)",
 
                             objectFit: "cover",
                             objectPosition: "right top",
                             borderRadius: 8,
                           }}
                         />
-                        <p className="absolute md:bottom-[2.55rem] bottom-11 left-4 text-white font-bold  text-xl content break-words pr-2">
-                          {/* {item.name} */}
+                      </div>
+                      <div className="space-y-0.5 pb-2 pl-2 pr-2 ">
+                        <p className=" text-gray-700 font-semibold  text-[15px] content break-words pt-2 pr-2">
                           {t("salonName", { name: item.name })}
                         </p>
-                        <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                          {/* <span className="font-semibold">
-                            {Math.ceil(item.rating)}{" "}
-                          </span> */}
-                          <Rating
+                        <p className="flex items-center justify-start">
+                          <span className=" text-gray-700 font-medium pr-1 pt-0.5">
+                            {Math.ceil(item.rating)}.0{" "}
+                          </span>
+                          {/* <Rating
                             value={t("reviewRating", {
                               rating: Math.ceil(item.rating),
                             })}
                             readOnly
-                          ></Rating>
+                          ></Rating> */}
+                          <FontAwesomeIcon icon={faStar} color="#00ccbb" />
+                        </p>
+                        <p className=" font-extralight text-gray-700 ">
+                          {cityName?.charAt(0).toUpperCase() +
+                            cityName?.slice(1)}
                         </p>
                       </div>
-                      <p className="pl-1 font-semibold text-gray-500 ">
-                        {cityName?.charAt(0).toUpperCase() + cityName?.slice(1)}
-                      </p>
-                    </>
+                    </div>
                   </Carousel.Item>
                 );
               })}

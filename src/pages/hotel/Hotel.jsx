@@ -884,9 +884,14 @@ const Hotel = ({ smallBanners }) => {
       {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
-        className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
+        className={`md:px-4   px-3 my-4 ${
+          higlightBookingBox ? "heartbeat" : ""
+        }`}
       >
-        <div className="w-full bg-white rounded-xl md:p-6 p-4 flex flex-col items-center justify-center shadow-custom shadow-slate-300 border border-gray-300">
+        <div
+          className="w-full bg-white rounded-xl md:p-6 p-4 border border-gray-300  flex flex-col items-center justify-center"
+          style={{ borderRadius: 8 }}
+        >
           {/* Header options */}
           <div className="flex items-center justify-center space-x-6 text-gray-800 font-semibold text-base md:text-lg mb-6">
             {appointment !== "null" ? (
@@ -950,7 +955,7 @@ const Hotel = ({ smallBanners }) => {
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="w-full  bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-custom hover:bg-gray-200 transition"
+                  className="w-full  bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm border border-gray-300 drop-shadow-md"
                 >
                   {timeReserve ? (
                     <span
@@ -1077,7 +1082,11 @@ const Hotel = ({ smallBanners }) => {
                     className="text-[#00ccbb]"
                     target="_blank"
                     rel="noreferrer"
-                    href={`https://www.google.com/maps/dir/?api=1&origin=My+Location&destination=${data?.latLong?.coordinates[1]},${data?.latLong?.coordinates[0]}`}
+                    href={`https://www.google.com/maps/dir/?api=1&origin=${
+                      lat && lng ? `${lat},${lng}` : "My+Location"
+                    }&destination=${data?.latLong?.coordinates[1]},${
+                      data?.latLong?.coordinates[0]
+                    }`}
                   >
                     {t("getDirectionsToShop")}
                   </a>

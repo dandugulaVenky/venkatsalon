@@ -20,7 +20,7 @@ const DistanceSlider = () => {
       {/* Tooltip */}
       <div
         className="absolute -top-7 transform -translate-x-1/2 bg-[#00ccbb] text-white text-xs px-2 py-1 rounded-full shadow-md transition-all"
-        style={{ left: `${getPosition(range)}%` }}
+        style={{ left: `${getPosition(range) + 7}%` }}
       >
         shops within {range} km
       </div>

@@ -1650,28 +1650,23 @@ const Reserve = () => {
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div> {t("total")}</div>
-                        <div className="text-white">
-                          {data && data[0]?.offer && (
-                            <span
-                              className={`${
-                                data &&
-                                data[0]?.offer > 0 &&
-                                totalAmount > 0 &&
-                                "line-through text-red-400"
-                              } text-green-400 mr-2`}
-                            >
-                              ₹ {totalAmount}
-                            </span>
-                          )}
-                          {data && data[0]?.offer > 0 && totalAmount > 0 && (
-                            <span className="text-green-400 font-semibold">
-                              ₹{" "}
-                              {(
-                                totalAmount *
-                                (1 - (data && data[0]?.offer / 100))
-                              ).toFixed(1)}
-                            </span>
+                        <div>{t("total")}</div>
+                        <div className="text-green-400 flex gap-2">
+                          {data?.[0]?.offer > 0 && totalAmount > 0 ? (
+                            <>
+                              <span className="line-through text-red-400">
+                                ₹ {totalAmount}
+                              </span>
+                              <span className="font-semibold">
+                                ₹{" "}
+                                {(
+                                  totalAmount *
+                                  (1 - data[0].offer / 100)
+                                ).toFixed(1)}
+                              </span>
+                            </>
+                          ) : (
+                            <span>₹ {totalAmount}</span>
                           )}
                         </div>
                       </div>

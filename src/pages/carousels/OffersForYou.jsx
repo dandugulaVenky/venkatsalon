@@ -50,7 +50,7 @@ const OffersForYou = ({ smallBanners }) => {
   };
   // mt-8 used to  be there
   return (
-    <div className=" mt-8 text-black w-full  ">
+    <div className="  text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
           {type1 ? (
@@ -100,7 +100,7 @@ const OffersForYou = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <div className="border border-1 border-gray-200 rounded-md p-1 drop-shadow-md h-[20rem]">
+                    <div className="shadow-custom mb-8 border-gray-200 rounded-md p-1 drop-shadow-md h-[20rem]">
                       <div
                         className="relative h-44 w-full cursor-pointer rounded-md slide-in-left "
                         id="section-id"
@@ -114,9 +114,9 @@ const OffersForYou = ({ smallBanners }) => {
                           }
                           alt="images"
                           style={{
-                            width: "98%",
+                            width: "100%",
                             height: 170,
-                            boxShadow: "1px 1.5px 7px black",
+                            boxShadow: "1px 1.5px 2px black",
                             filter: "brightness(70%)",
 
                             objectFit: "cover",

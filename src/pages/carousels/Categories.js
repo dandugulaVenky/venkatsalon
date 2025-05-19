@@ -78,7 +78,7 @@ const Categories = ({ type }) => {
   // console.log(query?.data?.data?.favourites, "favourites");
   return (
     <>
-      <div className=" mt-8 text-black min-w-full ">
+      <div className=" text-black min-w-full ">
         <div className="flex flex-row justify-between">
           <h1 className="px-2.5 md:px-5  md:text-xl font-semibold ">
             {/* {t("browseAreaWise")}{" "} */}
@@ -127,7 +127,7 @@ const Categories = ({ type }) => {
                     style={{
                       width: "98%",
                       height: 170,
-                      // filter: "brightness(70%) drop-shadow(0px 0px 2px black)",
+                      filter: "brightness(50%) drop-shadow(0px 0px 2px black)",
                       boxShadow: "1px 1.5px 2px black",
 
                       objectFit: "cover",
@@ -168,6 +168,7 @@ const Categories = ({ type }) => {
                       width: "98%",
                       height: 170,
                       boxShadow: "1px 1.5px 2px black",
+                      filter: "brightness(50%) drop-shadow(0px 0px 2px black)",
 
                       objectFit: "cover",
                       objectPosition: "right bottom",
@@ -204,6 +205,7 @@ const Categories = ({ type }) => {
                       width: "98%",
                       height: 170,
                       boxShadow: "1px 1.5px 2px black",
+                      filter: "brightness(50%) drop-shadow(0px 0px 2px black)",
 
                       objectFit: "cover",
                       objectPosition: "right bottom",
@@ -240,6 +242,7 @@ const Categories = ({ type }) => {
                       width: "98%",
                       height: 170,
                       boxShadow: "1px 1.5px 2px black",
+                      filter: "brightness(50%) drop-shadow(0px 0px 2px black)",
 
                       objectFit: "cover",
                       objectPosition: "right bottom",

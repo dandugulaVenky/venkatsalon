@@ -29,9 +29,7 @@ const Preview = (props) => {
 
   // console.log(state, "state");
   const ConvenienceFee = Number(
-    ((state?.totalAmount * (state?.totalAmount > 200 ? 9 : 10)) / 100).toFixed(
-      1
-    )
+    ((state?.totalAmount * (state?.totalAmount > 200 ? 8 : 9)) / 100).toFixed(1)
   );
 
   const navigate = useNavigate();
@@ -83,9 +81,11 @@ const Preview = (props) => {
     // });
     showPreviewServicess?.forEach((seat, i) => {
       seat.show.length > 0 &&
-        totalTime1.push(seat.show.map((item) => item.duration)[0]);
+        totalTime1.push(
+          seat.show.reduce((acc, item) => acc + item.duration, 0)
+        );
     });
-    // console.log(totalTime1, "tyotalTime1");
+    console.log(totalTime1, "tyotalTime1");
     const findIdOfTime = time.find(
       (item, i) => item.value === state?.dates[0]?.time
     );
