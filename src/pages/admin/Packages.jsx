@@ -3,12 +3,12 @@ import { useContext } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
-import axios from "axios";
 
 import { toast } from "react-toastify";
 import PackagePreview from "../../components/admin/PackagePreview";
 
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const Packages = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -53,11 +53,11 @@ const Packages = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
-        const { data: data1 } = await axios.get(
+        const { data: data1 } = await axiosInstance.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
 
@@ -110,10 +110,10 @@ const Packages = () => {
   const previewHandler = (e) => {
     e.preventDefault();
 
-    console.log({ packageName, all, price, duration });
+    // console.log({ packageName, all, price, duration });
     if (
       packageName?.length > 5 &&
-      all?.length >= 2 &&
+      all?.length >= 1 &&
       price > 10 &&
       duration === 0
     ) {
@@ -237,10 +237,12 @@ const Packages = () => {
                 </span>
               </div>
               <input
-                type="text"
                 className="h-8 w-full"
                 placeholder="price"
-                value={price}
+                type="number"
+                value={price || ""}
+                inputMode="numeric" // Suggests numeric keyboard on mobile
+                pattern="[0-9]*" // Helps with validation
                 onChange={(e) => setPrice(Number(e.target.value))}
               ></input>
             </div>

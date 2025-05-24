@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useRef, useEffect, useState } from "react";
 import baseUrl from "../../utils/client";
 import { toast } from "react-toastify";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
@@ -59,7 +59,7 @@ const OtpInput = ({
     const otp = values.reduce((acc, i) => acc + i, "");
     console.log(typeof Number(otp));
     try {
-      await axios.post(`${baseUrl}/verify-email-verification-otp`, {
+      await axiosInstance.post(`${baseUrl}/verify-email-verification-otp`, {
         email: storedUser.email,
         otp: Number(otp),
       });

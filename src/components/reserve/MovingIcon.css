@@ -1,0 +1,38 @@
+@keyframes move-up {
+  0% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes move-down {
+  0% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes move-right {
+  0% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(5px);
+  }
+}
+
+.move-up {
+  animation: move-up 2s linear infinite alternate;
+}
+
+.move-down {
+  animation: move-down 2s linear infinite alternate;
+}
+
+.move-right {
+  animation: move-right 2s linear infinite alternate;
+}

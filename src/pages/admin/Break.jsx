@@ -7,18 +7,18 @@ import "react-date-range/dist/theme/default.css"; // Import the default theme st
 import options from "../../utils/time";
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 function formatDateToBackendFormat(date) {
   const formattedDate = new Date(date);
-  console.log(formattedDate);
   const c = moment(formattedDate).format("MMM Do YY");
 
   return c;
@@ -54,8 +54,6 @@ function Break() {
 
   const [value, setValue] = useState(new Date());
 
-  const lunch = [24, 25, 26, 27, 28, 29];
-
   const navigate = useNavigate();
 
   const initialSelectedDates = [
@@ -81,7 +79,7 @@ function Break() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `${baseUrl}/api/hotels/room/${user?.shopId}`
       );
 
@@ -113,7 +111,6 @@ function Break() {
         });
         mergedReady.push(allValues);
       });
-      // console.log(mergedReady, "mergeready");
 
       function findMatchingArrays(arr) {
         const matchedArrays = [];
@@ -126,6 +123,7 @@ function Break() {
       }
 
       const matchedArrays = findMatchingArrays(mergedReady);
+
       setMatchedArrays(matchedArrays);
       setTimeBlockArray(
         data[0]?.blockTimings.find((item) => item.date === today)
@@ -156,16 +154,13 @@ function Break() {
     const endDate = selectedDates[0].endDate;
     const currentDate = new Date(startDate);
     while (currentDate <= endDate) {
-      console.log(currentDate, "currentDate");
-      console.log(typeof currentDate);
-
       formattedDates1.push(formatDateToBackendFormat(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    console.log(formattedDates1);
+
     if (formattedDates1 !== undefined) {
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/rooms/updateBlockDays/${shopData.rooms[0]}`,
           {
             formattedDates1,
@@ -215,8 +210,8 @@ function Break() {
     );
 
     if (
-      lunch.includes(selectedOption1.id) ||
-      lunch.includes(selectedOption.id)
+      shopData.lunchTimeArray.includes(selectedOption1.id) ||
+      shopData.lunchTimeArray.includes(selectedOption.id)
     ) {
       return alert(
         t("messingUpYourLunchTime!", {
@@ -248,10 +243,10 @@ function Break() {
       count = count + 1;
     }
 
-    console.log({
-      date: moment(new Date()).format("MMM Do YY"),
-      block: blockArray,
-    });
+    // console.log({
+    //   date: moment(new Date()).format("MMM Do YY"),
+    //   block: blockArray,
+    // });
     let matchFound = false;
 
     if (matchedArrays) {
@@ -290,7 +285,7 @@ function Break() {
             //   `You cannot select ${selectedOption1.value} - ${selectedOption.value} because you have an appointment in between!`
             // );
             break; // Exit from the innermost loop
-          } else if (lunch.includes(item1)) {
+          } else if (shopData.lunchTimeArray.includes(item1)) {
             matchFound = true;
             alert(
               t("cannotSelectBczOfAppointmentBetween!", {
@@ -331,7 +326,7 @@ function Break() {
 
     if (blockArray.length > 0) {
       try {
-        await axios.post(
+        await axiosInstance.post(
           `${baseUrl}/api/rooms/updateBlockTimings/${shopData.rooms[0]}`,
           {
             date: moment(new Date()).format("MMM Do YY"),
@@ -348,10 +343,10 @@ function Break() {
         console.log(err);
       }
     }
-    console.log({
-      date: moment(new Date()).format("MMM Do YY"),
-      block: blockArray,
-    });
+    // console.log({
+    //   date: moment(new Date()).format("MMM Do YY"),
+    //   block: blockArray,
+    // });
     setTimeReserve(null);
     setTimeReserve1(null);
   };
@@ -452,7 +447,9 @@ function Break() {
                                               (timeBlockArray?.block.includes(
                                                 option.id
                                               ) ||
-                                                lunch.includes(option.id) ||
+                                                shopData.lunchTimeArray.includes(
+                                                  option.id
+                                                ) ||
                                                 !finalBooked) &&
                                               ` text-red-500 `
                                             }`}
@@ -568,7 +565,9 @@ function Break() {
                                               (timeBlockArray?.block.includes(
                                                 option.id
                                               ) ||
-                                                lunch.includes(option.id) ||
+                                                shopData.lunchTimeArray.includes(
+                                                  option.id
+                                                ) ||
                                                 !finalBooked) &&
                                               ` text-red-500 `
                                             }`}

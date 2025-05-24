@@ -1,62 +1,91 @@
-import React, { useContext } from "react";
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../firebase";
 import PhoneInput from "react-phone-number-input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import "./otp.css";
-import axios from "axios";
 import baseUrl from "../../utils/client";
-
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useTranslation } from "react-i18next";
-import OtpInput from "./OtpInput";
+import axiosInstance from "../../components/axiosInterceptor";
+import { SearchContext } from "../../context/SearchContext";
+import Header from "../../components/header/Header";
+import { tr } from "date-fns/locale";
 
 function setCookieObject(name1, value, daysToExpire) {
   const expires = new Date();
   expires.setDate(expires.getDate() + daysToExpire);
-
-  // Serialize the object to JSON and encode it
   const cookieValue =
     encodeURIComponent(JSON.stringify(value)) +
     (daysToExpire ? `; expires=${expires.toUTCString()}` : "");
-
   document.cookie = `${name1}=${cookieValue}; path=/`;
 }
 
 function removeCookie(name) {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 }
+
 const OtpVerification = (props) => {
   const {
     token,
-    emailVerified,
     setEmailVerified,
     phoneVerified,
     setPhoneVerified,
-
     storedUser,
     setCanShowNumber,
+    google,
   } = props;
 
   const [flag, setFlag] = useState(false);
   const [otp, setOtp] = useState("");
   const [result, setResult] = useState("");
   const [disable, setDisable] = useState(false);
-  let { dispatch } = useContext(AuthContext);
   const [number, setNumber] = useState("");
-  let [disablenow, setDisableNow] = useState();
+  const [disableNow, setDisableNow] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [password, setPassword] = useState("");
+  const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  let { dispatch: dispatch1, type, city } = useContext(SearchContext);
+
+  const [address, setAddress] = useState("");
+  const [header, setHeader] = useState(false);
+
+  //paswword match
+  const [error, setError] = useState("");
+
+  // const handlePasswordChange = (e) => {
+  //   const newPassword = e.target.value;
+
+  //   // Validate before updating
+  //   const isValid =
+  //     /^(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+  //       newPassword
+  //     );
+
+  //   if (isValid) {
+  //     setPassword(newPassword);
+  //     storedUser.password = newPassword;
+  //     setError("");
+  //   } else {
+  //     setError(
+  //       "Password must be at least 8 characters and include a special character"
+  //     );
+  //   }
+  // };
+
   const saveToken = async (id, token) => {
     try {
-      await axios.post(`${baseUrl}/tokens`, {
+      await axiosInstance.post(`${baseUrl}/tokens`, {
         userId: id,
         token,
       });
@@ -64,14 +93,24 @@ const OtpVerification = (props) => {
       console.error(error);
     }
   };
-  function setUpRecaptha(number) {
+
+  function setUpRecaptcha(number) {
     const recaptchaVerifier = new RecaptchaVerifier(
       "recaptcha-container",
-      {},
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved - allow signInWithPhoneNumber.
+        },
+        "expired-callback": () => {
+          // Response expired. Ask user to re-enter.
+        },
+      },
       auth
     );
-    recaptchaVerifier.render();
-    return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+    return recaptchaVerifier.verify().then(() => {
+      return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+    });
   }
 
   const getOtp = async (e) => {
@@ -82,18 +121,15 @@ const OtpVerification = (props) => {
     if (number.toString().length !== 13 || number === undefined) return;
     try {
       setDisable(true);
-      const response = await setUpRecaptha(number);
+      const response = await setUpRecaptcha(number);
       setResult(response);
       setFlag(true);
       setDisable(false);
     } catch (err) {
-      toast(err.message);
+      toast("Something wrong! Please Retry!");
       setFlag(false);
-
       setDisable(false);
-      setTimeout(() => {
-        window.location.replace("/register");
-      }, 3000);
+      window.location.reload();
     }
   };
 
@@ -107,48 +143,57 @@ const OtpVerification = (props) => {
     try {
       await result.confirm(otp);
       setPhoneVerified(true);
-
       storedUser.phoneVerified = true;
-
       storedUser.number = number;
-
-      setCookieObject("normalUser_info", storedUser, 7);
+      registerNow();
+      // setCookieObject("normalUser_info", storedUser, 7);
       setDisable(false);
     } catch (err) {
-      alert(`${err.message} please recheck the otp and try again!`);
+      toast.error(`${err.message} please recheck the otp and try again!`);
       setDisable(false);
+      setOtp("");
     }
   };
 
-  const RegisterNow = async () => {
+  const registerNow = async () => {
     setLoading(true);
-    const { name, email, password, city } = storedUser;
+    const { name, city: city1, password: passwordd } = storedUser;
 
     try {
-      const res = await axios.post(`${baseUrl}/api/auth/register`, {
-        username: name.trim().toLowerCase(),
-        email: email.trim().toLowerCase(),
-        password: password.trim(),
-
-        city: city.toLowerCase(),
-        phone: number || storedUser.number,
-      });
+      const res = await axiosInstance.post(
+        `${baseUrl}/api/auth/register`,
+        {
+          username: name?.trim().toLowerCase(),
+          // password: google ? password?.trim() : storedUser?.password.trim(),
+          city: city?.toLowerCase() || city1?.toLowerCase(),
+          phone: number || storedUser?.number,
+          email: storedUser?.email?.trim()?.toLowerCase() || null,
+        },
+        { withCredentials: true }
+      );
 
       if (res.status === 200) {
         dispatch({ type: "LOGIN_START" });
         try {
-          const res = await axios.post(
+          const res = await axiosInstance.post(
             `${baseUrl}/api/auth/login`,
             {
-              phone: number,
-              password,
+              phone: storedUser.number || number,
+              type: "normal",
+              password: passwordd?.trim() || password?.trim(),
             },
             { withCredentials: true }
           );
-          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {
+              user: res.data.details, // Assuming user details are in 'details'
+              token: res.data.accessToken, // Assuming token is in 'token'
+              refreshToken: res.data.refreshToken, // Assuming token is in 'token'
+            },
+          });
           token !== "" && saveToken(res.data.details._id, token);
           setLoading(false);
-
           removeCookie("normalUser_info");
           navigate("/");
         } catch (err) {
@@ -157,9 +202,11 @@ const OtpVerification = (props) => {
         }
       }
     } catch (err) {
+      console.log(err);
       if (err.response.status === 409) {
-        alert(`${err.response.data.message} please try with another email!`);
-
+        toast.error(
+          `${err.response.data.message} please try with another email!`
+        );
         setEmailVerified(false);
         storedUser.emailVerified = false;
         setCanShowNumber(false);
@@ -167,42 +214,45 @@ const OtpVerification = (props) => {
       } else if (err.response.status === 400) {
         setPhoneVerified(false);
         storedUser.phoneVerified = false;
-
-        alert(`${err.response.data.message} please try with another number!`);
+        toast.error(
+          `${err.response.data.message} please try with another number!`
+        );
         setFlag(false);
         setCookieObject("normalUser_info", storedUser, 7);
       } else {
-        console.log("Everything is fine!");
+        console.log("Unexpected error:", err);
       }
     }
     setLoading(false);
   };
-
+  // const handleLocation = () => {
+  //   setHeader(true);
+  // };
+  // const [showPassword, setShowPassword] = useState(false);
+  // const toggleVisibility = () => {
+  //   setShowPassword((prev) => !prev);
+  // };
   return (
     <>
+      {header ? (
+        <Header
+          city={address}
+          setHeader={setHeader}
+          setAddress={setAddress}
+          dispatch={dispatch1}
+          type={type}
+          register={true}
+          header={header}
+        />
+      ) : (
+        ""
+      )}
       <div className="w-full transition-all delay-1000 ease-linear py-5">
-        {!storedUser.emailVerified && !emailVerified && (
-          <>
-            <p className="bg-green-300 p-2 my-5 rounded-md">
-              Check your email for otp!
-            </p>
-            <OtpInput
-              length={4}
-              email={storedUser?.email}
-              setIsVerifiedEmail={setEmailVerified}
-              emailVerified={emailVerified}
-              storedUser={storedUser}
-            />
-          </>
-        )}
+        <div>
+          <p className="bg-green-300 p-2 mt-5 rounded-md">Successful!</p>
+        </div>
 
-        {storedUser.emailVerified && emailVerified && (
-          <div>
-            <p className="bg-green-300 p-2 mt-5 rounded-md">Successfull!</p>
-          </div>
-        )}
-
-        {!phoneVerified && emailVerified && (
+        {!phoneVerified && (
           <div
             style={{ display: !flag ? "block" : "none" }}
             className="space-y-2 mt-7"
@@ -213,20 +263,20 @@ const OtpVerification = (props) => {
               value={number}
               onChange={setNumber}
               placeholder="Enter Phone Number"
-              readOnly={disablenow}
+              readOnly={disableNow}
               className="w-full"
             />
             <div id="recaptcha-container"></div>
             <button
               className={` ${
-                number?.toString()?.length !== 13
+                number?.toString()?.length !== 13 || disable
                   ? "default-button"
                   : "primary-button"
               } `}
               onClick={getOtp}
               disabled={disable || number?.toString()?.length !== 13}
             >
-              {t("getOtp")}
+              {disable ? "Sending..." : t("getOtp")}
             </button>
           </div>
         )}
@@ -244,37 +294,89 @@ const OtpVerification = (props) => {
             placeholder="Enter otp"
             className="w-full"
           />
-
           <div id="recaptcha-container"></div>
           <button
-            className="primary-button "
+            className={`${disable ? "default-button" : "primary-button"}`}
             onClick={verifyOtp}
-            disabled={disable}
+            // disabled={disable}
           >
-            {t("verifyOtp")}
+            {disable ? "Verifying..." : "Verify"}
           </button>
         </div>
 
-        <div style={{ display: storedUser.phoneVerified ? "block" : "none" }}>
+        <div
+          style={{
+            display: storedUser.phoneVerified ? "block" : "none",
+            marginTop: 10,
+          }}
+        >
           <input
             type="text"
             value={"Verified"}
-            onChange={(e) => setOtp(e.target.value)}
             placeholder="Verified"
             readOnly
           />
-
           <FontAwesomeIcon icon={faCheckCircle} size="lg" className="ml-3" />
+          {<div className="loaderGoogle ml-5"></div>}
         </div>
       </div>
 
-      {storedUser.phoneVerified && storedUser.emailVerified ? (
+      {/* {google && storedUser.phoneVerified ? (
+        <div className="mb-4 relative">
+          <label htmlFor="password">Set a Password</label>
+
+          <input
+            className="w-full border p-2 rounded relative"
+            type={showPassword ? "text" : "password"}
+            id="password"
+            onChange={handlePasswordChange}
+          />
+          <FontAwesomeIcon
+            icon={showPassword ? faEyeSlash : faEye}
+            onClick={toggleVisibility}
+            className="absolute right-3 top-10 transform -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#00ccbb]"
+          />
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+        </div>
+      ) : (
+        ""
+      )} */}
+
+      {/* {storedUser.phoneVerified ? (
         <button className="primary-button" onClick={RegisterNow}>
-          {loading ? "loading" : "Proceed"}
+          <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 488 512"
+              className="w-5 h-5"
+              fill="#00ccbb"
+            >
+              <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+            </svg>
+            <div className="grid items-center">
+              {loading ? <div className="loaderGoogle ml-5"></div> : "Proceed"}
+            </div>
+          </div>
+        </button>
+      ) : storedUser.password && storedUser.phoneVerified ? (
+        <button className="primary-button" onClick={RegisterNow}>
+          <div className="flex items-center space-x-2 px-4 py-2 border rounded-md border-gray-700 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-[250px]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 488 512"
+              className="w-5 h-5"
+              fill="#00ccbb"
+            >
+              <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+            </svg>
+            <div className="grid items-center">
+              {loading ? <div className="loaderGoogle ml-5"></div> : "Proceed"}
+            </div>
+          </div>
         </button>
       ) : (
         ""
-      )}
+      )} */}
     </>
   );
 };

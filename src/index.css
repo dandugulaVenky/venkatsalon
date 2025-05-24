@@ -1,17 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* 
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap"); */
 
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@300&family=Comfortaa:wght@300&family=Signika&family=Signika+Negative&display=swap");
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin 1s linear infinite;
+  }
+}
 
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: "Barlow", sans-serif;
-  font-family: "Comfortaa", cursive;
-  font-family: "Signika", sans-serif;
-  font-family: "Signika Negative", sans-serif;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
   scroll-behavior: smooth;
   color: #000000;
   background: #ffffffdf;
@@ -73,6 +79,58 @@ input::placeholder {
   background: #1e3a8a;
   color: white;
 }
+
+
+
+
+.venkat {
+  background-image: url('../src/pages/images/banner8.jpg');
+  background-size: cover;     
+  background-repeat: no-repeat; 
+  background-position: center;  
+ 
+  
+}
+
+/* 720p (HD) and above */
+@media (min-height: 720px) {
+  .venkat {
+     height: 90vh;
+    
+  }
+}
+
+.kiran {
+   background-image: url('../src/pages/images/banner8.jpg');
+  background-size: cover;     
+  background-repeat: no-repeat; 
+  background-position: center;  
+  position: relative;
+
+}
+@media (min-width: 720px){
+  .kiran{
+    width: 60%;
+    display: flex;
+    flex-direction:column;
+   align-items:start;
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+  }
+}
+
+@media (min-height: 320px){
+    .kiran{
+      display: flex;
+      flex-direction: column;
+      align-items:start;
+      margin-top: 50px;
+    }
+}
+
+
 .done {
   font-size: 10px;
   color: white;
@@ -99,16 +157,19 @@ input::placeholder {
 .primary-button {
   border: none;
   padding: 10px 20px;
-  background-color: #5151c0;
+  background: transparent;
 
   color: white;
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
+   border: 1px solid #ccc;
+  padding: 8px 16px;
+  border-radius: 4px;
 }
 
 .primary-button:hover {
-  background-color: #4545a5;
+ background: transparent;
 }
 .booked {
   color: #ef3515 !important;
@@ -169,6 +230,20 @@ input::placeholder {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+.loaderGoogle {
+  width: 20px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #000 #0000;
+  animation: l1 1s infinite;
+}
+@keyframes l1 {
+  to {
+    transform: rotate(0.5turn);
   }
 }
 

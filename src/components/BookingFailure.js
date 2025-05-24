@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useRef } from "react";
 
 import { useState } from "react";
@@ -10,6 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 
 import baseUrl from "../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "./axiosInterceptor";
 const useEffectOnce = (effect) => {
   const destroyFunc = useRef();
   const effectCalled = useRef(false);
@@ -56,13 +56,13 @@ const BookingFailure = () => {
 
   const sendMail = async (finalBookingDetails) => {
     try {
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/users/clearfinalBookingDetails/${mainUser._id}`,
         null,
         { withCredentials: true }
       );
 
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/sendmail/failure`,
         {
           email: finalBookingDetails?.user.email,
@@ -88,7 +88,7 @@ const BookingFailure = () => {
 
   const getFinalBookingDetails = async () => {
     try {
-      const { data, status } = await axios.get(
+      const { data, status } = await axiosInstance.get(
         `${baseUrl}/api/users/getFinalBookingDetails/${mainUser?._id}`,
         { withCredentials: true }
       );

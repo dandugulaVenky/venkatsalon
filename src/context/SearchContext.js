@@ -3,7 +3,7 @@ import { createContext, useReducer } from "react";
 const INITIAL_STATE = {
   city: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).city
-    : "",
+    : "Enter Your Location",
   date: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).date
     : "",
@@ -17,9 +17,18 @@ const INITIAL_STATE = {
   type: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).type
     : "salon",
+  lat: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).lat
+    : null,
+  lng: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).lng
+    : null,
   timeDifferenceInDays: JSON.parse(localStorage.getItem("bookingDetails"))
     ? JSON.parse(localStorage.getItem("bookingDetails")).timeDifferenceInDays
     : 0,
+  range: JSON.parse(localStorage.getItem("bookingDetails"))
+    ? JSON.parse(localStorage.getItem("bookingDetails")).range
+    : 2,
 };
 
 export const SearchContext = createContext(INITIAL_STATE);
@@ -33,6 +42,9 @@ const SearchReducer = (state, action) => {
       const time = action.payload.time;
       const type = action.payload.type;
       const timeDifferenceInDays = action.payload.timeDifferenceInDays;
+      const lat = action.payload.lat;
+      const lng = action.payload.lng;
+      const range = action.payload.range;
 
       // console.log("payload", action.payload);
       localStorage.setItem(
@@ -44,6 +56,9 @@ const SearchReducer = (state, action) => {
           type,
           timeDifferenceInDays,
           pincode,
+          lat,
+          lng,
+          range,
         })
       );
       return {
@@ -54,11 +69,16 @@ const SearchReducer = (state, action) => {
         type,
         timeDifferenceInDays,
         pincode,
+        lat,
+        lng,
+        range,
       };
     case "RESET_SEARCH":
       return INITIAL_STATE;
     case "SIDEBAR_OPEN":
       return { ...state, open: action.payload };
+    case "UPDATE_RANGE":
+      return { ...state, range: action.payload };
     default:
       return state;
   }
@@ -77,6 +97,9 @@ export const SearchContextProvider = ({ children }) => {
         type: state.type,
         timeDifferenceInDays: state.timeDifferenceInDays,
         pincode: state.pincode,
+        lat: state.lat,
+        lng: state.lng,
+        range: state.range,
         dispatch,
       }}
     >

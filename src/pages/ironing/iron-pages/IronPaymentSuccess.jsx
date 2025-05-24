@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import React, { useCallback } from "react";
 import { useState } from "react";
 import { useRef } from "react";
@@ -17,6 +15,7 @@ import SIdebar from "../../../components/navbar/SIdebar";
 import Layout from "../../../components/navbar/Layout";
 import Greeting from "../../../components/navbar/Greeting";
 import Footer from "../../../components/footer/Footer";
+import axiosInstance from "../../../components/axiosInterceptor";
 
 const useEffectOnce = (effect) => {
   const destroyFunc = useRef();
@@ -88,7 +87,7 @@ export const IronPaymentSuccess = () => {
     const id = generateRandomString(20);
     if (id) {
       try {
-        const { data } = await axios.post(
+        const { data } = await axiosInstance.post(
           `${baseUrl}/api/users/iron/updateIronOrders/${user?._id}`,
           {
             orderItems: cartItems,

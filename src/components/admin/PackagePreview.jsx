@@ -1,17 +1,16 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import baseUrl from "../../utils/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axiosInstance from "../axiosInterceptor";
 
 const PackagePreview = (props) => {
-  console.log(props);
   const { services, setPreview, packageName, price, duration, roomId } = props;
   const [disabled, setIsDisabled] = useState(false);
 
   const [height, setHeight] = useState(false);
   const navigate = useNavigate();
-  console.log(packageName);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -39,19 +38,21 @@ const PackagePreview = (props) => {
     let finalArr = {
       category: "packages",
       subCategory: services[0]?.subCategory,
+      superCategory: services[0]?.superCategory,
+
       services: {
         service: packageName,
         price: price,
         duration,
         category: "packages",
         subCategory: services[0]?.subCategory,
-
+        superCategory: services[0]?.superCategory,
         inclusions: serviceNames,
       },
     };
-
+    // console.log(finalArr, "finalArr");
     try {
-      const { status } = await axios.post(
+      const { status } = await axiosInstance.post(
         `${baseUrl}/api/rooms/addRoomPackageServices/${roomId}`,
         { services: finalArr },
         { withCredentials: true }

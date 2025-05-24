@@ -3,19 +3,13 @@ import React, { useCallback, useContext } from "react";
 import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCaretDown,
-  faCaretUp,
-  faClock,
-  faClose,
-} from "@fortawesome/free-solid-svg-icons";
+import { faClock, faClose, faTag } from "@fortawesome/free-solid-svg-icons";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
-import axios from "axios";
+
 import { useTranslation } from "react-i18next";
 
-import Select from "../../pages/images/select.png";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
@@ -23,6 +17,35 @@ import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import { toast } from "react-toastify";
 import SalonPreview from "../../pages/preview";
+import axiosInstance from "../axiosInterceptor";
+
+import MovingIcon from "./MovingIcon";
+
+function compareTimeDiff(time) {
+  let time1 = time;
+  // do some task
+  let time2 = new Date().getTime();
+  let difference = time2 - time1;
+  let diffInHours = difference / (1000 * 60 * 60);
+  return Math.floor(diffInHours);
+}
+
+function convertToMilliseconds(timeReserve) {
+  var date = new Date();
+  var timeArray = timeReserve.split(":");
+  var hours = parseInt(timeArray[0]) % 12;
+  var minutes = parseInt(timeArray[1]);
+  var ampm = timeArray[1].split("")[3];
+  // console.log(ampm);
+
+  if (ampm === "P" && hours !== 12) {
+    hours += 12;
+  }
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+  return date.getTime();
+}
 
 const Reserve = () => {
   const location = useLocation();
@@ -37,9 +60,33 @@ const Reserve = () => {
     options,
     mergedServices,
     breakTime,
+    lunch,
     type,
     subType,
+    barbers,
+    requests,
   } = state !== null && state;
+
+  const { date: dater, time } = useContext(SearchContext);
+  const barberBlock = requests?.filter(
+    (item) =>
+      item.date === moment(value).format("MMM Do YY") &&
+      item.time === options[selectedValue]?.value &&
+      item.shopId === shopId
+  );
+  let findBarbers;
+  // console.log(barberBlock, "barberBlock");
+  if (barberBlock?.length > 0) {
+    findBarbers = barberBlock.flatMap((item) =>
+      item.selectedSeats?.map((seat) => seat.barber._id)
+    );
+  }
+
+  // const findBarbers =
+  //   barberBlock && barberBlock?.selectedSeats.map((item) => item.barber._id);
+
+  // console.log(findBarbers, "findBarbers");
+
   const [data, setData] = useState();
 
   const [salonPreview, setSalonPreview] = useState(false);
@@ -47,10 +94,12 @@ const Reserve = () => {
   const [categories, setCategories] = useState();
   const [reserveState, setReserveState] = useState(null);
   const [allServices, setAllServices] = useState();
+  const [offerFound, setOfferFound] = useState(false);
+  const [categorizedOffers, setCategorizedOffers] = useState();
   const [showInclusions, setShowInclusions] = useState();
+  const [superCategory, setSuperCategory] = useState("regular");
   const [category, setCategory] = useState();
   const [superCategories, setSuperCategories] = useState();
-  const [superCategory, setSuperCategory] = useState();
   const [gender, setGender] = useState(subType);
 
   const [loading, setLoading] = useState(false);
@@ -69,7 +118,7 @@ const Reserve = () => {
   const [salonServices, setSalonServices] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
 
-  const { date: dater, time } = useContext(SearchContext);
+  const [unisexType, setUnisexType] = useState("men");
 
   const { user } = useContext(AuthContext);
 
@@ -117,7 +166,9 @@ const Reserve = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+      const { data } = await axiosInstance.get(
+        `${baseUrl}/api/hotels/room/${shopId}`
+      );
       // console.log(data[0].roomNumbers);
       setData(data);
       const res =
@@ -142,7 +193,12 @@ const Reserve = () => {
         .reduce((arr, item) => {
           return arr.concat(item);
         }, [])
-        .filter((item) => item.subCategory === gender);
+        .filter(
+          (item) =>
+            item.subCategory === (gender === "unisex" ? unisexType : gender)
+        );
+
+      // console.log(mergedPreviewServices, "mergedPreviewServices");
 
       const totalTimeOfServices = mergedPreviewServices.reduce(
         (acc, service) => {
@@ -158,10 +214,81 @@ const Reserve = () => {
 
       // setSalonServices(services);
       setCategories(data[0]?.services);
+
+      //setting directly main category
+
+      setSuperCategory("regular");
+      const result1 = categories.filter((category, i) =>
+        category.superCategory === "regular" &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
+          ? category.services
+          : null
+      );
+
+      const services = result1.reduce((arr, item) => {
+        const foundOffer = item.services.find((item) => item.offer > 0);
+
+        setOfferFound((prevOfferFound) => prevOfferFound || foundOffer);
+
+        arr.push({
+          category: item.category,
+          offer: foundOffer ? true : false,
+        });
+        return arr;
+      }, []);
+
+      const offerss = data[0]?.services
+        ?.map((item) => item)
+        .map((item) => item.services)
+        .flat()
+        .filter((item) => item.offer > 0);
+
+      const groupedByCategory = offerss
+        .filter((item) => item.offer > 0)
+        .reduce((acc, curr) => {
+          const { category } = curr;
+
+          if (!acc[category]) {
+            acc[category] = {
+              category,
+              services: [],
+            };
+          }
+
+          acc[category].services.push(curr);
+          return acc;
+        }, {});
+
+      // Convert grouped object to array
+      const categorizedOffers = Object.values(groupedByCategory);
+      setCategorizedOffers(categorizedOffers);
+      setSalonServices(services);
+
+      // console.log({ d: data[0]?.services, k: services }, "data[0]?.services");
+
+      //setting directly subcategory
+      setCategory(services[0]);
+      const result = categories.filter((category, i) =>
+        category.category === services[0]?.category &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
+          ? category.services
+          : null
+      );
+
+      setCategoriesOptions(result[0].services);
+      setSuperCategory(() => {
+        const result = categories.filter((category, i) =>
+          category.category === services[0]?.category &&
+          category.subCategory === (gender === "unisex" ? unisexType : gender)
+            ? category.superCategory
+            : null
+        );
+        return result[0]?.superCategory || "";
+      });
       setLoading(true);
     };
     !loading && gender && fetchData();
-  }, [gender, loading, shopId]);
+  }, [categories, gender, loading, shopId, unisexType]);
 
   //Second Step----------------------------------------------------------------------------->
   //finding wether there is booking in front of this selected time here
@@ -180,7 +307,7 @@ const Reserve = () => {
             }
           );
 
-          if (roomUnavailableDates.length > 0) {
+          if (roomUnavailableDates?.length > 0) {
             unavailableDates.push({
               room: array.number,
               unavailableDates: roomUnavailableDates,
@@ -192,6 +319,8 @@ const Reserve = () => {
       };
 
       const arrays = filteredUnavailableDates();
+
+      // console.log(arrays, "newArrays");
 
       const minFound = []; // declare an array to store objects
 
@@ -217,6 +346,7 @@ const Reserve = () => {
         //here we get all the matched Items from the unaivalable Dates and pushing all the indexes found, and immediately
         //  finding smallest number because if 10min found from options[selectedValue + 1]
 
+        // console.log(matchedIndexes, "matchedIndexes");
         const smallestNumber = Math.min(...matchedIndexes);
 
         // dynamically declare and assign boolean variables
@@ -227,6 +357,8 @@ const Reserve = () => {
           minFound[i][`min${l * 10}found${i + 1}`] = smallestNumber === l;
         }
       });
+
+      // console.log(minFound, "minFound");
 
       const allKeys = [];
 
@@ -243,21 +375,28 @@ const Reserve = () => {
 
       const filteredKeys = getFilteredKeys();
 
+      // console.log({ allKeys, filteredKeys, minFound, seats }, "filteredKeys");
+
       const getDurations = () => {
         return filteredKeys
           .filter((key) => allKeys?.includes(key))
-          .map((key) => parseInt(key.match(/\d+/)[0]));
+          .map((key) => {
+            return {
+              dur: parseInt(key.match(/\d+/)[0]),
+              key,
+            };
+          });
       };
 
       const durations = getDurations();
-
+      // console.log(durations, "durations");
       setDurations(durations);
       setShow(true);
 
       console.log("Done");
     };
     data && data[0]?.roomNumbers && totalTime && findDurationsToBlock();
-  }, [data, options, selectedValue, totalTime, value]);
+  }, [data, options, selectedValue, totalTime, value]); //wantedly i guesss
 
   //starting here checking availability of options, if not disable the select boxes accordingly
 
@@ -296,17 +435,29 @@ const Reserve = () => {
   const handleChange = (e) => {
     setCategory(e.target.value);
     const result = categories.filter((category, i) =>
-      category.category === e.target.value && category.subCategory === gender
+      category.category === e.target.value &&
+      category.subCategory === (gender === "unisex" ? unisexType : gender)
         ? category.services
         : null
     );
+
+    // console.log(result);
     setCategoriesOptions(result[0].services);
+    setSuperCategory(() => {
+      const result = categories.filter((category, i) =>
+        category.category === e.target.value &&
+        category.subCategory === (gender === "unisex" ? unisexType : gender)
+          ? category.superCategory
+          : null
+      );
+      return result[0]?.superCategory || "";
+    });
   };
   const handleSuperCategoryChange = (e) => {
     setSuperCategory(e.target.value);
     const result = categories.filter((category, i) =>
       category.superCategory === e.target.value &&
-      category.subCategory === gender
+      category.subCategory === (gender === "unisex" ? unisexType : gender)
         ? category.services
         : null
     );
@@ -315,19 +466,24 @@ const Reserve = () => {
       return arr;
     }, []);
 
-    console.log(services);
     setSalonServices(services);
     // setCategoriesOptions(result[0].services);
   };
 
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-    setSalonServices(null);
+  // const handleSortChange = (e) => {
+  //   setSortBy(e.target.value);
+  //   setSalonServices(null);
 
-    setCategoriesOptions(null);
+  //   setCategoriesOptions(null);
 
-    // setAllServices()
-  };
+  //   let currentCategory = superCategories?.filter((item) =>
+  //     item.toLowerCase().includes(e.target.value)
+  //   );
+  //   setSuperCategory(currentCategory[0] || "");
+
+  //   // console.log(superCategories, e.target.value);
+  //   // setAllServices()
+  // };
 
   useEffect(() => {
     let result = [];
@@ -354,7 +510,10 @@ const Reserve = () => {
 
   const handleOptionChange = (event, seatId, service, seatIndex) => {
     const updatedSeats = seats.map((seat) => {
-      if (seat.id === seatId) {
+      if (
+        seat.id === seatId &&
+        event.target.id === event.target.name + seatIndex
+      ) {
         if (event.target.checked) {
           seat.options.push(event.target.name);
         } else {
@@ -374,14 +533,22 @@ const Reserve = () => {
     let seatAmount = existingDuration ? existingDuration.amount : 0;
 
     if (event.target.name === service.service) {
+      let newPrice = Number(
+        service.offer > 0
+          ? (service.price * (1 - service.offer / 100)).toFixed(1)
+          : service.price
+      );
+
+      // console.log({ newPrice }, "newPrice");
+
       if (event.target.checked) {
-        newAmount += service.price;
-        seatAmount += service.price;
+        newAmount += newPrice;
+        seatAmount += newPrice;
 
         newDuration += service.duration;
       } else {
-        newAmount -= service.price;
-        seatAmount -= service.price;
+        newAmount -= newPrice;
+        seatAmount -= newPrice;
 
         newDuration -= service.duration;
       }
@@ -417,6 +584,32 @@ const Reserve = () => {
         },
       ]);
     }
+    // console.log(seats, "seats");
+    if (!event.target.checked) {
+      let clearUpdatedSeats = seats.map((seat) => {
+        if (seat.id === seatId) {
+          if (seat.options.length === 0) return { ...seat, barber: null };
+        }
+        return seat;
+      });
+
+      setSeats(clearUpdatedSeats);
+    } else {
+      setSeats(updatedSeats);
+    }
+  };
+
+  const handleBarberSelection = (selectedBarber, seatId) => {
+    const updatedSeats = seats.map((seat) => {
+      if (seat.id === seatId) {
+        // Assign the selected barber to the current seat
+        return { ...seat, barber: selectedBarber };
+      } else if (seat.barber?._id === selectedBarber._id) {
+        // Remove the barber from other seats if already assigned
+        return { ...seat, barber: null };
+      }
+      return seat;
+    });
 
     setSeats(updatedSeats);
   };
@@ -470,7 +663,17 @@ const Reserve = () => {
 
   const previewHandler = async (amount, e) => {
     e.preventDefault();
-    if (amount < 10) {
+    let day1 = moment(value).format("MMM Do YY");
+    let day2 = moment(new Date()).format("MMM Do YY");
+
+    let result = convertToMilliseconds(time);
+    let result2 = compareTimeDiff(result);
+
+    if (day1 === day2 && result2 >= 0) {
+      return toast("Please select a valid time!");
+    }
+
+    if (amount < 1) {
       return alert(t("SelectOption"));
     }
 
@@ -480,12 +683,7 @@ const Reserve = () => {
       options.filter((option) => option.id === selectedValue)[0].id
     );
 
-    const lunchStart = Number(options[24].id);
-    const lunchEnd = Number(
-      options.filter((option) => option.id === selectedValue)[0].id
-    );
-
-    console.log(lunchStart - lunchEnd, "lunchStart - lunchEnd");
+    // console.log(breakTime, "breakTime");
 
     if (breakTime !== undefined) {
       const breakTimeFiltered = breakTime?.block.filter(
@@ -523,30 +721,33 @@ const Reserve = () => {
         return null; // Stop execution of the whole function
       }
     }
-
+    // console.log({ num1, num2, durationBySeat, seats }, "durationBySeat");
     const check = durationBySeat.map((duration) =>
       duration.value > (num1 - num2) * 10
         ? { seatNo: duration.seatNo, isReachedEnd: true }
         : { seatNo: duration.seatNo, isReachedEnd: false }
     );
+
+    // console.log(check, "check");
+    //this is to compare with the whole shop time
     if (check) {
       const showEnd = check.map((item) => {
         if (item.isReachedEnd) {
-          // alert(
-          // `You can only book until ${
-          //     options[options.length - 1].value
-          //   }, so please select only ${
-          //     (num1 - num2) * 10
-          //   } mins in Seat No.${item.seatNo + 1} `
-          // )
-
           alert(
-            t("lessTimeLeft", {
-              time: options[options.length - 1].value,
-              mins: (num1 - num2) * 10,
-              seatNum: item.seatNo + 1,
-            })
+            `You can only book until ${
+              options[options.length - 1].value
+            }, so please select only ${(num1 - num2) * 10} mins in Seat No.${
+              item.seatNo + 1
+            } `
           );
+
+          // alert(
+          //   t("lessTimeLeft", {
+          //     time: options[options.length - 1].value,
+          //     mins: (num1 - num2) * 10,
+          //     seatNum: item.seatNo + 1,
+          //   })
+          // );
           return true;
         } else {
           return false;
@@ -569,29 +770,45 @@ const Reserve = () => {
                   seatNum: item2 + 1,
                 })
               )
-            : //  alert(
-              //   `Others have a booking at ${
-              //     options[selectedValue + item1 / 10].value
-              //   }. Please choose only a option which is of ${item1} minutes in seat${
-              //     item2 + 1
-              //   } `
-              // );
-              alert(
-                t("reachingOthersTime1", {
-                  time: options[selectedValue + item1 / 10].value,
-                  mins: item1,
-                  seatNum: item2 + 1,
-                })
+            : alert(
+                `Others have a booking at ${
+                  options[selectedValue + item1 / 10].value
+                }. Please choose only a option which is of ${item1} minutes in seat${
+                  item2 + 1
+                } `
               );
+
+          // alert(
+          //   t("reachingOthersTime1", {
+          //     time: options[selectedValue + item1 / 10].value,
+          //     mins: item1,
+          //     seatNum: item2 + 1,
+          //   })
+          // );
 
           return 0;
         };
 
         const error = seats?.map((item) => {
+          if (item.options.length > 0 && !item?.barber) {
+            alert(`Please select a barber for seat number ${item?.index + 1}`);
+            throw new Error("Please select a barber for seat number");
+          }
           const output = durationBySeat?.map((item1) => {
-            return item?.id === item1?.id
-              ? item1?.value > durations[item?.index]
-                ? getReturn(durations[item?.index], item?.index)
+            return item?.id === item1?.id &&
+              item.index ===
+                Number(
+                  durations[durations.length > 1 ? item?.index : 0]?.key
+                    .split("")
+                    ?.reverse()[0]
+                ) -
+                  1
+              ? item1?.value >
+                durations[durations.length > 1 ? item?.index : 0]?.dur
+                ? getReturn(
+                    durations[durations.length > 1 ? item?.index : 0]?.dur,
+                    item?.index
+                  )
                 : null
               : null;
           });
@@ -602,8 +819,16 @@ const Reserve = () => {
         if (mergedArr.includes(0)) {
           return;
         }
+
+        const lunchStart = Number(options[36].id);
+        // const lunchEnd = Number(
+        //   options.filter((option) => option.id === selectedValue)[0].id
+        // );
+
         const check1 = durationBySeat.map((duration) =>
-          duration.value > (lunchStart - lunchEnd) * 10
+          lunchStart > selectedValue &&
+          lunchStart - selectedValue > 0 &&
+          duration.value > (lunchStart - selectedValue) * 10
             ? { seatNo: duration.seatNo, isReachedEnd: true }
             : { seatNo: duration.seatNo, isReachedEnd: false }
         );
@@ -611,7 +836,7 @@ const Reserve = () => {
         // lunchStart - lunchEnd > 0  because lunch timeat 1pm will be - if we select at 2pm
         if (check1) {
           const lunch = check1.map((item) => {
-            if (item.isReachedEnd && lunchStart - lunchEnd > 0) {
+            if (item.isReachedEnd && lunchStart - selectedValue > 0) {
               // alert(
               //   `You can only book2 until ${
               //     options[selectedValue + 1].value
@@ -622,7 +847,7 @@ const Reserve = () => {
               alert(
                 t("ownerLunchTime", {
                   time: options[lunchStart].value,
-                  mins: (lunchStart - lunchEnd) * 10,
+                  mins: (lunchStart - selectedValue) * 10,
                   seatNum: item.seatNo + 1,
                 })
               );
@@ -636,7 +861,7 @@ const Reserve = () => {
           }
         }
 
-        console.log("I am coming!sd");
+        // console.log("I am coming!sd");
         //Here the values are used to block the time in dropdown based on id. example : value will be like value:[71,72] which means to block 71--> 8:50 Pm 72--->9:00 Pm from options.
         //update the values option in dates array according to the duration selected by the user from the respective seats from durationBySeat array
 
@@ -660,6 +885,7 @@ const Reserve = () => {
 
         // updates dates with all the options to send to room unavilableDates with all the options to backend.
 
+        // console.log(seats, "mawaaaaa");
         const dates = updatedDurationBySeat?.map((item, i) => {
           return {
             time: time,
@@ -680,7 +906,7 @@ const Reserve = () => {
             createdAt: new Date().toISOString(),
           };
         });
-        console.log("doneRajaDan");
+        // console.log(superCategory, "doneRajaDan");
         if (dates) {
           setReserveState({
             selectedSeats: seats,
@@ -693,13 +919,14 @@ const Reserve = () => {
             ownerNumber,
             bookId: id,
             user,
-            link: "https://easytym.com/history",
+            link: "https://saalons.com/history",
             dates,
             previewServices,
             type,
             subCategory: gender,
             superCategory,
           });
+          // toast("preview");
           setSalonPreview(true);
         } else {
           toast("something wrong!");
@@ -712,95 +939,308 @@ const Reserve = () => {
   const handleInclusions = (e, option) => {
     e.preventDefault();
 
-    const inclusions = option.inclusions.map((inclusion) => {
-      return allServices.filter(
-        (service) =>
-          service.service === inclusion.service &&
-          service.subCategory === option.subCategory
-      )[0];
-    });
+    // const inclusions = option.inclusions.map((inclusion) => {
+    //   return allServices.filter(
+    //     (service) =>
+    //       service.service === inclusion.service &&
+    //       service.subCategory === option.subCategory
+    //   )[0];
+    // });
+
+    const inclusions = option.inclusions
+      .map((inclusion) => {
+        const matchedService = allServices.find(
+          (service) =>
+            service.service === inclusion.service &&
+            service.subCategory === option.subCategory
+        );
+
+        return matchedService
+          ? { ...matchedService, free: inclusion.free }
+          : null;
+      })
+      .filter(Boolean);
 
     setShowInclusions({
       inclusions: inclusions,
       package: option.service,
+      type: option.category,
     });
   };
 
   const ShowInclusions = () => {
-    return (
-      showInclusions?.inclusions?.length > 0 && (
-        <div className="reserve">
-          <div className="overflow-x-auto  ">
-            <FontAwesomeIcon
-              icon={faClose}
-              size="lg"
-              onClick={() => {
-                setShowInclusions(null);
-              }}
-              className="right-40 absolute top-40 text-white"
-            />
-            <>
-              <div className="flex items-center justify-between  ">
-                <p className="text-white">
-                  Cost of Services : &#8377;&nbsp;
-                  {showInclusions?.inclusions.reduce(
-                    (acc, service) => acc + service?.price,
-                    0
-                  )}
-                </p>
-              </div>
-              <table className="min-w-[70vw] ">
-                <thead className="border-b bg-gray-300 ">
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left md:text-md text-sm md:p-5 p-4">
-                      Service Name
-                    </th>
-                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                      Price
-                    </th>
-                    {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                Category
-                              </th> */}
-                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                      Duration
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {showInclusions?.inclusions?.map((option, j) => {
-                    return (
-                      <tr key={j} className="border-b-2 border-white">
-                        <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                          <label className="text-white">
-                            {option?.service}
-                          </label>
-                        </td>
-                        <td className="p-5 text-right md:text-md text-sm">
-                          <label className="text-white">
-                            &#8377; {option?.price}
-                          </label>
-                        </td>
+    const freeInclusions = showInclusions?.inclusions?.filter(
+      (option) => option.free === true
+    );
 
-                        {/* <td className="p-5 text-right md:text-md text-sm">
-                                      {option.category}
-                                    </td> */}
-                        <td className="p-5 text-right md:text-md text-sm">
-                          <label className="text-white">
-                            {option?.duration} min
-                          </label>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </>
+    const paidInclusions = showInclusions?.inclusions?.filter(
+      (option) => option.free !== true
+    );
+
+    if (showInclusions?.type === "offers") {
+      return (
+        showInclusions?.inclusions?.length > 0 && (
+          <div className="reserve items-center justify-center p-6">
+            <div className="overflow-auto ">
+              <FontAwesomeIcon
+                icon={faClose}
+                size="lg"
+                onClick={() => {
+                  setShowInclusions(null);
+                }}
+                className="right-20 absolute top-10 text-white"
+              />
+              <>
+                <div className="flex flex-col gap-4 items-center justify-between h-[10vh] mt-16 ">
+                  <p className="text-white">
+                    Cost of Free Services : &#8377;&nbsp;
+                    {freeInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+
+                  <p className="text-white">
+                    Cost of Paid Services : &#8377;&nbsp;
+                    {paidInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+
+                  <p className="text-white">
+                    You are saving : &#8377;&nbsp;
+                    {freeInclusions?.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+                </div>
+
+                {/* Free Services Table */}
+                {freeInclusions?.length > 0 && (
+                  <div className="mb-10 mt-16">
+                    <h2 className="text-lg font-semibold text-white mb-2">
+                      Free Services
+                    </h2>
+                    <table className="min-w-[70vw]">
+                      <thead className="border-b bg-gray-300">
+                        <tr className="border-b-2 border-gray-200">
+                          <th className="text-left md:text-md text-sm md:p-5 p-4">
+                            Service Name
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Price
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Duration
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {freeInclusions.map((option, j) => (
+                          <tr
+                            key={`free-${j}`}
+                            className="border-b-2 border-white"
+                          >
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                {/* Paid Services Table */}
+                {paidInclusions?.length > 0 && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-white mb-2">
+                      Paid Services
+                    </h2>
+                    <table className="min-w-[70vw]">
+                      <thead className="border-b bg-gray-300">
+                        <tr className="border-b-2 border-gray-200">
+                          <th className="text-left md:text-md text-sm md:p-5 p-4">
+                            Service Name
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Price
+                          </th>
+                          <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                            Duration
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {paidInclusions.map((option, j) => (
+                          <tr
+                            key={`paid-${j}`}
+                            className="border-b-2 border-white"
+                          >
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            </div>
           </div>
-        </div>
-      )
+        )
+      );
+    } else {
+      return (
+        showInclusions?.inclusions?.length > 0 && (
+          <div className="reserve items-center justify-center">
+            <div className="overflow-x-auto  ">
+              <FontAwesomeIcon
+                icon={faClose}
+                size="lg"
+                onClick={() => {
+                  setShowInclusions(null);
+                }}
+                className="right-20 absolute top-10 text-white"
+              />
+              <>
+                <div className="flex items-center justify-between h-[10vh]  ">
+                  <p className="text-white">
+                    Cost of Services : &#8377;&nbsp;
+                    {showInclusions?.inclusions.reduce(
+                      (acc, service) => acc + service?.price,
+                      0
+                    )}
+                  </p>
+                </div>
+                <table className="min-w-[70vw] ">
+                  <thead className="border-b bg-gray-300 ">
+                    <tr className="border-b-2 border-gray-200">
+                      <th className="text-left md:text-md text-sm md:p-5 p-4">
+                        Service Name
+                      </th>
+                      <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                        Price
+                      </th>
+                      {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                  Category
+                                </th> */}
+                      <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                        Duration
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {showInclusions?.inclusions?.map((option, j) => {
+                      return (
+                        <tr key={j} className="border-b-2 border-white">
+                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                            <label className="text-white">
+                              {option?.service}
+                            </label>
+                          </td>
+                          <td className="p-5 text-right md:text-md text-sm">
+                            <label className="text-white">
+                              &#8377; {option?.price}
+                            </label>
+                          </td>
+
+                          {/* <td className="p-5 text-right md:text-md text-sm">
+                                        {option.category}
+                                      </td> */}
+                          <td className="p-5 text-right md:text-md text-sm">
+                            <label className="text-white">
+                              {option?.duration} min
+                            </label>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </>
+            </div>
+          </div>
+        )
+      );
+    }
+  };
+
+  const OffersSection = ({ categorizedOffers }) => {
+    return (
+      <div className="space-y-6">
+        {categorizedOffers?.map((categoryGroup) => (
+          <div
+            key={categoryGroup.category}
+            className="p-4 bg-white shadow-lg rounded-2xl border border-gray-100"
+          >
+            <h2 className="text-xl font-semibold text-[#00ccbb] mb-3 border-b pb-1">
+              {categoryGroup.category} Offers
+            </h2>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {categoryGroup.services.map((service) => (
+                <div
+                  key={service.service}
+                  onClick={() =>
+                    window.scrollTo(0, window.innerWidth > 500 ? 200 : 400)
+                  }
+                  className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white rounded-xl p-4 shadow-md hover:scale-[1.02] transition-transform"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h3 className="text-lg font-bold">{service.service}</h3>
+                    <span className="bg-white text-[#00ccbb] px-2 py-1 text-xs rounded-full font-semibold">
+                      {service.offer}% OFF
+                    </span>
+                  </div>
+                  {/* <p className="text-sm mb-1">Price: ₹{service.price}</p>
+                  <p className="text-sm">Duration: {service.duration} min</p> */}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     );
   };
-  console.log(show, "categoriesOptions");
+
+  if (seats?.length > barbers?.length) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center">
+        <h1 className="text-center text-2xl text-gray-700">
+          Barbers are not available currently!
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${!(salonPreview && reserveState !== null) && "pt-6 pb-8"}`}
@@ -812,11 +1252,23 @@ const Reserve = () => {
             state={reserveState}
             setPreview={setSalonPreview}
             mergedServices={mergedServices}
+            offer={data && data[0]?.offer}
           />
         </div>
       ) : (
-        <div className="">
-          <div className="flex items-center md:justify-start justify-center space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2">
+        <div>
+          {data && data[0]?.offer ? (
+            <p className="text-center text-lg font-semibold text-green-500 mb-2">
+              <FontAwesomeIcon icon={faTag} className="mr-2" /> This Salon is
+              giving {data && data[0]?.offer}% discount on final booking Price.
+            </p>
+          ) : (
+            ""
+          )}
+          {categorizedOffers?.length > 0 && (
+            <OffersSection categorizedOffers={categorizedOffers} />
+          )}
+          <div className="flex items-center md:justify-start justify-center flex-wrap space-x-2 min-h-[12vh] md:w-[90vw] w-[95.5vw] mx-auto px-2 space-y-2">
             {/* {!categoriesOptions?.length > 0 && sortBy === null && (
               <select
                 className="md:w-52 w-auto"
@@ -835,27 +1287,75 @@ const Reserve = () => {
               </select>
             )} */}
             <select
-              className="md:w-52 w-auto"
+              className="md:w-52 w-auto hidden"
               onChange={handleSuperCategoryChange}
+              value={superCategory}
             >
-              <option selected>{t("selectCategory")}</option>
-              {superCategories?.map((service, i) => {
+              <option selected value="">
+                {t("selectCategory")}
+              </option>
+              {/* {superCategories?.map((service, i) => {
                 return <option key={i}>{service}</option>;
-              })}
+              })} */}
+              <option selected>regular</option>
             </select>
-            <select className="md:w-52 w-auto" onChange={handleChange}>
-              <option selected>{t("selectCategory")}</option>
+
+            <select
+              className={`md:w-52 w-auto ${gender !== "unisex" && "hidden"}`}
+              onChange={(e) => {
+                setUnisexType(e.target.value);
+                setLoading(false);
+                setCategoriesOptions(null);
+                setSalonServices(null);
+                setCategory(null);
+                setSuperCategory(null);
+                setSortBy(null);
+              }}
+              value={unisexType}
+            >
+              <option value="">Select Gender</option>
+
+              <option selected>men</option>
+              <option>women</option>
+            </select>
+
+            <select
+              // className="md:w-52 w-auto jello-horizontal "
+              className="md:w-52 w-auto animate-pulse border-2 border-[#00ccbb] rounded px-2 py-1 bg-white text-gray-700 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#00ccbb] transition-all"
+              onChange={handleChange}
+            >
+              <option>Select Sub Category</option>
+
               {salonServices?.map((service, i) => {
-                return <option key={i}>{service}</option>;
+                return (
+                  <option
+                    key={i}
+                    selected={service.category === category.category}
+                    value={service.category}
+                    className={`${
+                      service.offer ? "text-green-400" : "text-gray-700"
+                    }`}
+                  >
+                    {service?.category} {service.offer ? "(Discount in %)" : ""}
+                  </option>
+                );
               })}
             </select>
-            {(sortBy !== null || categoriesOptions?.length > 0) && (
+
+            {offerFound && (
+              <img
+                src="https://cdn4.iconfinder.com/data/icons/flat-color-sale-tag-set/512/Accounts_label_promotion_sale_tag_32-512.png"
+                alt="offer"
+                className="w-20 h-20 absolute -right-3 top-16"
+              />
+            )}
+            {/* {(sortBy !== null || categoriesOptions?.length > 0) && (
               <select className="md:w-52 w-auto" onChange={handleSortChange}>
                 <option selected>Sort By</option>
                 <option value="salon">salon services</option>
                 <option value="spa">spa services</option>
               </select>
-            )}
+            )} */}
             {(sortBy !== null || categoriesOptions?.length > 0) && (
               <p className="bg-[#00ccbb] shadow-custom border-2 border-gray-100 rounded-full px-2 py-1">
                 {gender ? gender : ""}
@@ -866,14 +1366,20 @@ const Reserve = () => {
           {categoriesOptions?.length > 0 ? (
             <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  pb-10 md:w-[90vw] w-[95.5vw] mx-auto">
               <div className=" lg:col-span-3 md:col-span-3 overflow-x-auto">
+                <h1 className="text-md font-semibold my-4">
+                  Click below here to select services.
+                </h1>
+
                 {show ? (
                   seats?.map((seat, i) => {
                     const seatValues = getTotalTime(seat);
+                    const selectedOptions = new Set(seat.options);
 
                     const isDisabled = isAvailable(i);
+
                     return (
                       !isDisabled && (
-                        <div className="card  md:p-5 p-1.5 " key={i}>
+                        <div className="card md:p-5 p-1.5 " key={i}>
                           <h2
                             onClick={() =>
                               setShowSeats((prevSeats) => ({
@@ -881,108 +1387,228 @@ const Reserve = () => {
                                 [i + 1]: !showSeats[i + 1],
                               }))
                             }
-                            className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right"
+                            className="mb-2 text-lg flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full slide-in-right"
                           >
                             <span>
                               {t("seat")} {i + 1}
                             </span>
-                            <span>&#8377; {seat ? seatValues.amount : 0} </span>
-                            <p className="flex items-center justify-between ">
+                            <span>&#8377; {seat ? seatValues.amount : 0}</span>
+                            <p className="flex items-center justify-between">
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
                               <span className="ml-1">
-                                {" "}
                                 {seat ? seatValues.time : 0}
                               </span>
                             </p>
                             <div>
                               {showSeats[i + 1] === true ? (
-                                <FontAwesomeIcon icon={faCaretUp} size="lg" />
+                                <MovingIcon direction="up" side={true} />
                               ) : (
-                                <FontAwesomeIcon icon={faCaretDown} size="lg" />
+                                <MovingIcon direction="down" side={false} />
                               )}
                             </div>
                           </h2>
 
                           {showSeats[i + 1] === true && (
-                            <div className="overflow-x-auto w-full">
-                              <table className="min-w-full ">
-                                <thead className="border-b bg-gray-300 ">
-                                  <tr className="border-b-2 border-gray-200">
-                                    <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                      {t("serviceName")}
-                                    </th>
-                                    <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                      {t("price")}
-                                    </th>
-                                    {category === "packages" && (
-                                      <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                        {t("showinclusions")}
+                            <div>
+                              <div className="overflow-x-auto w-full">
+                                <table className="min-w-full">
+                                  <thead className="border-b bg-gray-300">
+                                    <tr className="border-b-2 border-gray-200">
+                                      <th className="text-left md:text-md text-sm md:p-5 p-4">
+                                        {t("serviceName")}
                                       </th>
-                                    )}
-
-                                    <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                      {t("duration")}
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {show &&
-                                    categoriesOptions?.map((option, j) => {
-                                      const selectedOptions = new Set(
-                                        seat.options
-                                      );
-                                      return (
-                                        <tr
-                                          key={j}
-                                          className="border-b-2 border-gray-200"
-                                        >
-                                          <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
-                                            <input
-                                              type="checkbox"
-                                              name={option.service}
-                                              checked={selectedOptions.has(
-                                                option.service
+                                      <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                        {t("price")}
+                                      </th>
+                                      {(category === "packages" ||
+                                        category === "offers") && (
+                                        <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                          Inclusions
+                                        </th>
+                                      )}
+                                      <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                                        {t("duration")}
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {show &&
+                                      categoriesOptions?.map((option, j) => (
+                                        <>
+                                          {option.description !== "" && (
+                                            <>
+                                              <p className="text-green-400  text-sm pt-3 pl-3 pr-3">
+                                                *{option.description}
+                                              </p>
+                                              {option.offer !== 0 && (
+                                                <p className="text-green-400  text-sm pt-3 pl-3 pr-3">
+                                                  Offer : {option.offer}%
+                                                </p>
                                               )}
-                                              className="h-6 w-6"
-                                              id={option.service}
-                                              onChange={(event) =>
-                                                handleOptionChange(
-                                                  event,
-                                                  seat.id,
-                                                  option,
-                                                  seat.index
-                                                )
-                                              }
-                                              // disabled={isAvailable(i)}
-                                            />
-                                            <label className="text-gray-900">
-                                              {option.service}
-                                            </label>
-                                          </td>
-                                          <td className="p-5 text-right md:text-md text-sm">
-                                            &#8377; {option.price}
-                                          </td>
-
-                                          {category === "packages" && (
-                                            <td className="p-5 text-right md:text-md text-sm">
-                                              <label
-                                                className="text-gray-900 underline"
-                                                onClick={(e) =>
-                                                  handleInclusions(e, option)
+                                            </>
+                                          )}
+                                          <tr
+                                            key={j}
+                                            className="border-b-2 border-gray-200"
+                                          >
+                                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                              <MovingIcon
+                                                direction="right"
+                                                side={true}
+                                              />
+                                              <input
+                                                type="checkbox"
+                                                name={option.service}
+                                                checked={selectedOptions.has(
+                                                  option.service
+                                                )}
+                                                className="h-6 w-6"
+                                                id={option.service + i}
+                                                onChange={(event) =>
+                                                  handleOptionChange(
+                                                    event,
+                                                    seat.id,
+                                                    option,
+                                                    seat.index
+                                                  )
                                                 }
+                                              />
+                                              <label
+                                                htmlFor={option.service}
+                                                className="text-gray-900 cursor-pointer"
                                               >
-                                                {t("showinclusions")}
+                                                {option.service}
+                                                {option.offer !== 0 && (
+                                                  <>
+                                                    {" "}
+                                                    <br />
+                                                    <span className="text-green-400">
+                                                      {option.offer} off/-
+                                                    </span>
+                                                  </>
+                                                )}
                                               </label>
                                             </td>
+
+                                            <td className="p-5 text-right md:text-md text-sm">
+                                              <label
+                                                htmlFor={option.service}
+                                                className="cursor-pointer "
+                                              >
+                                                {" "}
+                                                <span
+                                                  className={` ${
+                                                    option.offer !== 0 &&
+                                                    "line-through"
+                                                  } mr-2`}
+                                                >
+                                                  {" "}
+                                                  &#8377; {option.price}
+                                                </span>
+                                                {option.offer !== 0 && (
+                                                  <span>
+                                                    {" "}
+                                                    &#8377;{" "}
+                                                    {(
+                                                      option.price *
+                                                      (1 - option.offer / 100)
+                                                    ).toFixed(1)}
+                                                  </span>
+                                                )}
+                                              </label>
+                                            </td>
+
+                                            {(category === "packages" ||
+                                              category === "offers") && (
+                                              <td className="p-5 text-right md:text-md text-sm">
+                                                <label
+                                                  className="text-gray-900 underline cursor-pointer"
+                                                  onClick={(e) =>
+                                                    handleInclusions(e, option)
+                                                  }
+                                                >
+                                                  {t("showinclusions")}
+                                                </label>
+                                              </td>
+                                            )}
+                                            <td className="p-5 text-right md:text-md text-sm">
+                                              <label
+                                                htmlFor={option.service}
+                                                className="cursor-pointer"
+                                              >
+                                                {option.duration} {t("min")}
+                                              </label>
+                                            </td>
+                                          </tr>
+                                        </>
+                                      ))}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              <div>
+                                <h3 className="text-lg font-bold mt-5">
+                                  {t("Select a Barber")}
+                                </h3>
+                                <p className="py-2">
+                                  Note*: Selected barber is subject to change
+                                </p>
+                                <div className="grid grid-cols-3 gap-4 mt-3">
+                                  {barbers?.map((barber) => {
+                                    const isBarberAssigned = seats?.some(
+                                      (seat) => seat.barber?._id === barber._id
+                                    );
+
+                                    // console.log(barbers, findBarbers, "barber");
+                                    const isBooked = findBarbers?.some(
+                                      (item) => item === barber._id
+                                    );
+
+                                    if (isBooked) {
+                                      return null;
+                                    }
+
+                                    return (
+                                      <div
+                                        key={barber._id}
+                                        className={`p-3 border rounded-md cursor-pointer relative  ${
+                                          isBarberAssigned
+                                            ? "bg-gray-300 cursor-not-allowed"
+                                            : "bg-white"
+                                        }`}
+                                        onClick={() => {
+                                          if (!isBarberAssigned) {
+                                            handleBarberSelection(
+                                              barber,
+                                              seat.id
+                                            );
+                                          }
+                                        }}
+                                      >
+                                        <img
+                                          src={barber.profileImage}
+                                          alt={barber.name}
+                                          className="w-16 h-16 rounded-full"
+                                        />
+                                        <h4 className="mt-2 font-semibold overflow-auto">
+                                          {barber.name}
+                                        </h4>
+
+                                        <p>
+                                          {t("Experience")}: {barber.experience}{" "}
+                                          years
+                                        </p>
+                                        {isBarberAssigned &&
+                                          seat.barber?._id === barber._id && (
+                                            <span className="absolute top-1 text-xs right-1 p-2 rounded-full bg-[#00ccbb] text-white">
+                                              Seat {seat.index + 1}
+                                            </span>
                                           )}
-                                          <td className="p-5 text-right md:text-md text-sm">
-                                            {option.duration} {t("min")}
-                                          </td>
-                                        </tr>
-                                      );
-                                    })}
-                                </tbody>
-                              </table>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>
@@ -1019,13 +1645,30 @@ const Reserve = () => {
                     <li>
                       <div className="mb-2 flex justify-between">
                         <div> {t("time")}</div>
-                        <div> {options[selectedValue]?.value}</div>
+                        <div> {options?.[selectedValue]?.value}</div>
                       </div>
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div> {t("total")}</div>
-                        <div> &#8377; {totalAmount}</div>
+                        <div>{t("total")}</div>
+                        <div className="text-green-400 flex gap-2">
+                          {data?.[0]?.offer > 0 && totalAmount > 0 ? (
+                            <>
+                              <span className="line-through text-red-400">
+                                ₹ {totalAmount}
+                              </span>
+                              <span className="font-semibold">
+                                ₹{" "}
+                                {(
+                                  totalAmount *
+                                  (1 - data[0].offer / 100)
+                                ).toFixed(1)}
+                              </span>
+                            </>
+                          ) : (
+                            <span>₹ {totalAmount}</span>
+                          )}
+                        </div>
                       </div>
                     </li>
 
@@ -1045,19 +1688,13 @@ const Reserve = () => {
             </div>
           ) : (
             <div className="md:min-h-[75vh] min-h-[65vh] flex items-center flex-col justify-center">
-              {gender !== undefined && salonServices?.length <= 0 ? (
-                !loading && !ownerDetailsLoading ? (
-                  "loading"
-                ) : (
-                  "Oops no services found !"
-                )
+              {salonServices?.length <= 0 &&
+              (categoriesOptions?.length <= 0 || categoriesOptions === null) ? (
+                "Oops no services found !"
               ) : (
-                <>
-                  <img src={Select} alt="select category" className="h-72" />
-                  <p className="font-semibold">
-                    {t("selectCategoryToViewServices")}
-                  </p>
-                </>
+                <p className="font-semibold">
+                  <span className="loader"></span>
+                </p>
               )}
             </div>
           )}

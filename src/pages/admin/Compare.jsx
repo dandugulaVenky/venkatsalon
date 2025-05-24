@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import axios from "axios";
 import baseUrl from "../../utils/client";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -8,6 +7,7 @@ import moment from "moment";
 import DatePicker from "react-date-picker";
 import Charts from "../../utils/Charts";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const Compare = () => {
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ const Compare = () => {
       endDate = moment(value1).format("MMM Do YY");
     }
 
-    await axios
+    await axiosInstance
       .post(
         `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
         {
@@ -104,7 +104,9 @@ const Compare = () => {
         });
 
         try {
-          const res1 = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+          const res1 = await axiosInstance.get(
+            `${baseUrl}/api/hotels/room/${shopId}`
+          );
 
           //merge all the services from utils
 

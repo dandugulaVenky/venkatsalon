@@ -20,12 +20,16 @@ const AuthReducer = (state, action) => {
         error: null,
       };
     case "LOGIN_SUCCESS":
-      return {
-        user: action.payload,
-        loading: false,
+      // Store the token in localStorage (or secureLocalStorage)
+      localStorage.setItem("access_token", action.payload.token); // assuming token is in response
+      localStorage.setItem("refresh_token", action.payload.refreshToken); // assuming token is in response
 
+      return {
+        user: action.payload.user, // store user data
+        loading: false,
         error: null,
       };
+
     case "LOGIN_FAILURE":
       return {
         user: null,
@@ -35,12 +39,24 @@ const AuthReducer = (state, action) => {
       };
     case "LOGOUT":
       localStorage.removeItem("easytym-user");
+      localStorage.removeItem("access_token");
+
+      localStorage.removeItem("refresh_token");
 
       return {
         user: null,
         loading: false,
         error: null,
       };
+    case "UPDATE_SHOP_ID":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          shopId: action.payload, // just update the shopId field
+        },
+      };
+
     default:
       return state;
   }

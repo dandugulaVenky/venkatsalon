@@ -2,35 +2,41 @@ import "./home.css";
 
 import Categories from "../carousels/Categories";
 import CarouselBanner from "../../components/CarouselBanner";
+
+
 import { useLocation, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import { SearchContext } from "../../context/SearchContext";
-import Services from "../../utils/Services";
+// import Services from "../../utils/Services";
 import Offers from "../../utils/Offers";
 import BestSaloons from "../carousels/BestSaloons";
 import Giffer from "../images/time-flies1.gif";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
-import mobileImg from "../images/home-image-mobile.png";
+
 import useEffectOnce from "../../utils/UseEffectOnce";
+import OffersForYou from "../carousels/OffersForYou";
+
+import { AuthContext } from "../../context/AuthContext";
+import DistanceSlider from "../../utils/DistanceSlider";
+
 // import VideoBackground from "../../components/VideoBackground";
 // import banner4 from "../images/banner4.jpg";
 // import banner5 from "../images/banner5.jpg";
-import img1 from "../images/1.png";
-import img2 from "../images/2.png";
-import img3 from "../images/3.png";
-import banner6 from "../images/you-have-the-power-to-protect-your-time.png";
+import Contact from './../staticpages/Contact';
+
 const siteMetadata = {
-  title: "Home | Effortless Appointments With Easytym",
+  title: "Home | Effortless Appointments With Saalons",
   description:
-    "Easytym provides reliable salon booking services, connecting customers with top-quality beauty parlours and professional ironing services.",
-  canonical: "https://easytym.com",
+    "Saalons provides reliable salon booking services, connecting customers with top-quality beauty parlours",
+  canonical: "https://saalons.com",
 };
 
 const Home = ({ endRef, smallBanners }) => {
-  const { city, dispatch } = useContext(SearchContext);
+  const { city, dispatch, range } = useContext(SearchContext);
+  const { dispatch: dispatch1 } = useContext(AuthContext);
 
   const location = useLocation();
   // const videoUrl =
@@ -42,8 +48,8 @@ const Home = ({ endRef, smallBanners }) => {
 
   // const handleButton = async () => {
   //   try {
-  //     const res = await axios.post(
-  //       `${baseUrl}/api/firebase/send-mobile-notifications`,
+  //     const res = await axiosInstance.post(
+  //       `${baseUrl}/api/firebase/send-notifications`,
   //       {
   //         title: "Hi Easytymers",
   //         body: "How are you all?",
@@ -59,9 +65,20 @@ const Home = ({ endRef, smallBanners }) => {
   // };
 
   useEffectOnce(() => {
-    //prompting user to retrive location if not enabled
+    const LOCAL_STORAGE_KEY = "userLocation";
 
-    //setting users current location
+    const dispatchLocation = (location) => {
+      dispatch({
+        type: "NEW_SEARCH",
+        payload: {
+          type: "salon",
+          destination: location.destination || "Enter your location",
+          lat: location.lat || 0,
+          lng: location.lng || 0,
+          range: range || 2,
+        },
+      });
+    };
 
     const getCurrentPosition = () => {
       navigator.geolocation.getCurrentPosition(
@@ -71,117 +88,90 @@ const Home = ({ endRef, smallBanners }) => {
           const latlng = { lat: latitude, lng: longitude };
 
           geocoder.geocode({ location: latlng }, (results, status) => {
-            console.log(results);
-            // Find the first address component with types including "postal_code"
-            const postalCodeComponent = results.find(
-              (component) =>
-                component.types.includes("sublocality") ||
-                component.types.includes("postal_code")
-            );
+            // console.log("Geocoder results:", results, status);
+            if (status === "OK" && results[0]) {
+              const postalOrLocality = results.find(
+                (r) =>
+                  r.types.includes("premise") ||
+                  r.types.includes("street_address") ||
+                  r.types.includes("sublocality") ||
+                  r.types.includes("postal_code")
+              );
+              const destination =
+                postalOrLocality?.formatted_address?.toLowerCase() ||
+                results[0].formatted_address.toLowerCase();
 
-            console.log(postalCodeComponent);
+              const userLocation = {
+                destination,
+                lat: latitude,
+                lng: longitude,
+                range: range || 2,
+              };
 
-            // Find the colony or locality name
-
-            if (status === "OK") {
-              if (results[0]) {
-                // let string =
-                //   results[1]?.address_components[1]?.long_name +
-                //   ", " +
-                //   results[1]?.address_components[3]?.long_name +
-                //   ", " +
-                //   results[1]?.address_components[4]?.long_name;
-                const city1 =
-                  postalCodeComponent.formatted_address?.toLowerCase();
-
-                // Dispatch the necessary information
-                dispatch({
-                  type: "NEW_SEARCH",
-                  payload: {
-                    type: "salon",
-                    destination: city1,
-                    pincode: postalCodeComponent.types[0],
-                  },
-                });
-              } else {
-                console.log("No results found");
-              }
+              // Store and dispatch location
+              localStorage.setItem(
+                LOCAL_STORAGE_KEY,
+                JSON.stringify(userLocation)
+              );
+              dispatchLocation(userLocation);
             } else {
-              console.log("Geocoder failed due to: " + status);
+              console.log("Geocoder failed or no results found:", status);
             }
           });
         },
         (error) => {
-          // Handle any error occurred during geolocation
-          console.log("Error occurred during geolocation:", error);
+          console.log("Geolocation error:", error);
+          alert(t("enableLocationServices"));
+          dispatchLocation({ destination: "Enter Location!", lat: 0, lng: 0 });
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+        {
+          enableHighAccuracy: false,
+          timeout: 10000,
+          maximumAge: 60000,
+        }
       );
     };
 
-    const promptEnableLocation = () => {
-      if ("geolocation" in navigator) {
-        if (navigator.permissions && navigator.permissions.query) {
-          navigator.permissions
-            .query({ name: "geolocation" })
-            .then((result) => {
-              if (result.state === "prompt") {
-                // Prompt user to allow or block geolocation permission
-                navigator.geolocation.getCurrentPosition(
-                  () => {
-                    console.log("Geolocation permission granted.");
-                    getCurrentPosition();
-                  },
-                  () => {
-                    dispatch({
-                      type: "NEW_SEARCH",
-                      payload: {
-                        type: "salon",
-                        destination: "No Location!",
-                      },
-                    });
-                    alert(t("enableLocationServices"));
-                  },
-                  {
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                    maximumAge: 10000,
-                  }
-                );
-              } else if (result.state === "granted") {
-                console.log("Geolocation permission already granted.");
-                !city && getCurrentPosition();
-              } else if (result.state === "denied") {
-                if (city === "No Location!") {
-                  alert(t("enableLocationServices"));
-                }
-              }
-            });
-        } else {
-          console.log("Permission API is not supported by your browser.");
-        }
-      } else {
+    const promptLocation = () => {
+      if (!("geolocation" in navigator)) {
         console.log("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      if (navigator.permissions?.query) {
+        navigator.permissions.query({ name: "geolocation" }).then((result) => {
+          if (result.state === "granted" || result.state === "prompt") {
+            getCurrentPosition();
+          } else if (result.state === "denied" && city === "No Location!") {
+            alert(t("enableLocationServices"));
+          }
+        });
+      } else {
+        // Fallback if Permissions API not supported
+        getCurrentPosition();
       }
     };
+    window.scrollTo(0, 0);
 
-    const handleToast = () => {
+    // 1. Try cached location first for fast load
+    const cachedLocation = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
+    if (cachedLocation) {
+      dispatchLocation(cachedLocation);
+    } else {
+      // 2. Then prompt for location (first-time or after clear)
+      promptLocation();
+    }
+
+    // 3. Handle post-booking toast and cleanup
+    if (reference !== undefined && reference !== null) {
       toast.success("Reserved successfully 🎉");
-
       navigate("/", { state: null });
-      return null;
-    };
+    }
 
-    // let timeout = setTimeout(() => {
-    //   window.scrollTo(0, 0);
-    // }, 1000);
-    promptEnableLocation();
-
-    reference !== undefined && reference !== null && handleToast();
     localStorage.removeItem("bookingDetails");
+
     return () => {
-      // clearTimeout(timeout);
-      console.log("effect");
+      console.log("Cleanup effect");
     };
   }, [city, dispatch, navigate, reference]);
 
@@ -189,56 +179,78 @@ const Home = ({ endRef, smallBanners }) => {
 
   !smallBanners
     ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+// <<<<<<< HEAD
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
         
+// =======
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979201/2_ojl5nt.svg",
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979205/3_jeyh64.svg",
+//         "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979556/com_1_h7kdal.svg",
+// >>>>>>> a73146fe2eab638721f6fff88d6a760251e68001
       ])
-    : (images = [img1, img2, img3]);
+    : (images = [
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180221/2_l4nngn.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180240/1_vn4gd1.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180222/5_i5nu2y.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180218/4_wyl4vp.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180217/3_vwo4mk.svg",
+
+        // img1,
+        // img2,
+        // img3,
+      ]);
 
   return (
     <div className="h-auto">
       {/* {w < 768 && <Greeting bestRef={endRef} />} */}
       <Seo props={siteMetadata} />
 
-      {/* <div className="">{w >= 768 && <Layout bestRef={endRef} />}</div> */}
-      {/* <div className="home-img1 mb-3">
-        <div className="md:min-h-[78vh] h-[50vh] flex  flex-col items-center justify-center ">
-          <div className="text-container">
-            <h1 className=" md:text-6xl text-4xl text-center font-bold ">
-              {t("welcome")}
-            </h1>
-          </div>
-          <h1 className="md:text-gray-700 text-white md:px-10 lg:w-[70vw]  px-4 md:text-lg text-sm font-bold md:text-center text-left md:py-5 py-3">
-            {t("welcomeMessage")}
-          </h1>
-        </div>
-      </div> */}
-      {/* <div>
-        <VideoBackground videoUrl={videoUrl} />
-      </div> */}
       <div className="grid grid-cols-12 max-w-[1240px]  mx-auto md:px-5  py-2 md:py-6   lg:py-0 lg:pb-5">
         <div
-          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-5"
+          className="col-span-12 md:col-span-6  home-imgs flex   items-center justify-start md:px-5 md:pt-0 pt-10"
           style={{ minHeight: "430px" }}
         >
           <div className="">
-            <h1 className=" text-5xl md:text-6xl text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
-              {t("welcome")}
+            <h1 className="   text-center text-[#00ccbb] font-extrabold md:leading-[4rem] ">
+              <span className="text-md">Book Salon Services on Seconds</span>
+              <div className="flex space-x-2 items-center justify-center">
+                <div className="waviy">
+                  <span>A</span>
+                  <span>N</span>
+                  <span>Y</span>
+                  <span>T</span>
+                  <span>I</span>
+                  <span>M</span>
+                  <span>E</span>
+                </div>
+                <div className="waviy">
+                  <span>A</span>
+                  <span>N</span>
+                  <span>Y</span>
+                  <span>W</span>
+                  <span>H</span>
+                  <span>E</span>
+                  <span>R</span>
+                  <span>e</span>
+                </div>
+              </div>
             </h1>
+            {/* <button onClick={handleButton}>Send</button> */}
 
             <div className="col-span-12 md:col-span-6 block md:hidden">
-              {!smallBanners ? (
-                <img
-                  src={Giffer}
-                  alt="gif"
-                  style={{
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }}
-                />
-              ) : (
-                <img
+              {/* {!smallBanners ? ( */}
+              <img
+                src={Giffer}
+                alt="gif"
+                style={{
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              />
+              {/* ) : ( */}
+              {/* <img
                   src={mobileImg}
                   alt="gif"
                   style={{
@@ -246,7 +258,7 @@ const Home = ({ endRef, smallBanners }) => {
                     backgroundPosition: "center",
                   }}
                 />
-              )}
+              )} */}
             </div>
 
             <h1 className="md:text-gray-700 font-bold py-3 hidden md:block">
@@ -272,11 +284,11 @@ const Home = ({ endRef, smallBanners }) => {
               <img
                 src={s}
                 className="md:rounded"
+                width={"100%"}
                 style={{
                   backgroundPosition: "center",
 
-                  backgroundSize: "cover",
-                  width: "100%",
+                  backgroundSize: "fit",
                 }}
                 alt="carousel-img"
               />
@@ -285,8 +297,9 @@ const Home = ({ endRef, smallBanners }) => {
         </CarouselBanner>
       </div>
       <div className=" md:my-10 xl:my-4">
-        <div className="md:max-w-[1240px] w-full mx-auto">
-          <Services />
+        <div className="md:max-w-[1240px] w-full flex items-center justify-center mx-auto mt-8 mb-5">
+          {/* <Services /> */}
+          <DistanceSlider />
         </div>
 
         <div
@@ -299,6 +312,9 @@ const Home = ({ endRef, smallBanners }) => {
                 <BestSaloons smallBanners={smallBanners} />
               </div>
               <div>
+                <OffersForYou smallBanners={smallBanners} />
+              </div>
+              <div>
                 <Categories />
               </div>
               <div>
@@ -308,10 +324,6 @@ const Home = ({ endRef, smallBanners }) => {
           </div>
         </div>
       </div>
-
-      {/* <button onClick={handleButton} className="mb-20">
-        press me
-      </button> */}
     </div>
   );
 };

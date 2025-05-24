@@ -15,9 +15,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
-  title: "Ironing | Effortless Ironing With Easytym",
-  description: "Easytym provides reliable and professional ironing services.",
-  canonical: "https://easytym.com/iron",
+  title: "Ironing | Effortless Ironing With Saalons",
+  description: "Saalons provides reliable and professional ironing services.",
+  canonical: "https://saalons.com/iron",
 };
 
 export default function Ironing() {

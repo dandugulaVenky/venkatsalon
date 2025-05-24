@@ -24,7 +24,24 @@
   /* background-attachment: fixed; */
   transition: 0.6s;
 }
-
+.waviy {
+  position: relative;
+}
+.waviy span {
+  position: relative;
+  display: inline-block;
+  font-size: 30px;
+  color: #00ccbb;
+  text-transform: uppercase;
+  animation: flip 2s infinite;
+  animation-delay: calc(0.2s * var(--i));
+}
+@keyframes flip {
+  0%,
+  80% {
+    transform: rotateY(360deg);
+  }
+}
 /* .home-img2 {
   background-image: url("https://images.pexels.com/photos/5877662/pexels-photo-5877662.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
   height: 100vh;

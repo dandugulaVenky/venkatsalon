@@ -17,7 +17,7 @@ const Test = ({
   const { type } = useContext(SearchContext);
   const [showInclusions, setShowInclusions] = useState(null);
   const [mergedServices, setMergedServices] = useState();
-  console.log(higlightBookingBox);
+  // console.log(higlightBookingBox);
 
   useEffect(() => {
     const mergedServices = services

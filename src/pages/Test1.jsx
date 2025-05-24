@@ -9,7 +9,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
-import axios from "axios";
+import axiosInstance from "axiosInstance";
 import baseUrl from "../utils/client";
 import { toast } from "react-toastify";
 import useFetch from "../hooks/useFetch";
@@ -94,7 +94,9 @@ const Test1 = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+      const { data } = await axiosInstance.get(
+        `${baseUrl}/api/hotels/room/${shopId}`
+      );
       // console.log(data[0].roomNumbers);
 
       const res =
@@ -574,7 +576,7 @@ const Test1 = (props) => {
             <>
               <div className="flex items-center justify-between">
                 <p className="text-white">
-                  {t('costOfServices')} : &#8377;&nbsp;
+                  {t("costOfServices")} : &#8377;&nbsp;
                   {showInclusions?.inclusions.reduce(
                     (acc, service) => acc + service?.price,
                     0
@@ -585,16 +587,16 @@ const Test1 = (props) => {
                 <thead className="border-b bg-gray-300 ">
                   <tr className="border-b-2 border-gray-200">
                     <th className="text-left md:text-md text-sm md:p-5 p-4">
-                    {t('serviceName')}
+                      {t("serviceName")}
                     </th>
                     <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                      {t('price')}
+                      {t("price")}
                     </th>
                     {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
                                 Category
                               </th> */}
                     <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                      {t('duration')}
+                      {t("duration")}
                     </th>
                   </tr>
                 </thead>
@@ -618,7 +620,7 @@ const Test1 = (props) => {
                                     </td> */}
                         <td className="p-5 text-right md:text-md text-sm">
                           <label className="text-white">
-                            {option?.duration} {t('min')}
+                            {option?.duration} {t("min")}
                           </label>
                         </td>
                       </tr>
@@ -648,10 +650,12 @@ const Test1 = (props) => {
       ) : (
         <div className="pb-10">
           <h2 className="mb-2 text-lg font-bold py-5 md:pl-[4.5rem] pl-4 text-left text-black">
-            <p className="py-1 text-md text-black font-semibold">{t('categories')}</p>
+            <p className="py-1 text-md text-black font-semibold">
+              {t("categories")}
+            </p>
 
             <select className="w-52" onChange={handleChange}>
-              <option selected>{t('selectCategory')}</option>
+              <option selected>{t("selectCategory")}</option>
               {parlourServices?.map((service, i) => {
                 return <option key={i}>{service}</option>;
               })}
@@ -670,7 +674,9 @@ const Test1 = (props) => {
                       !isDisabled && (
                         <div className="card  md:p-5 p-1.5" key={i}>
                           <h2 className="mb-2 text-lg  flex items-center justify-between text-white font-extrabold bg-[#00ccbb] p-5 w-full">
-                            <span>{t('seat')} {i + 1}</span>
+                            <span>
+                              {t("seat")} {i + 1}
+                            </span>
                             <span>&#8377; {seat ? seatValues.amount : 0} </span>
                             <span>
                               <FontAwesomeIcon icon={faClock} size="sm" />{" "}
@@ -682,18 +688,18 @@ const Test1 = (props) => {
                               <thead className="border-b bg-gray-300 ">
                                 <tr className="border-b-2 border-gray-200">
                                   <th className="text-left md:text-md text-sm md:p-5 p-4">
-                                  {t('serviceName')}
+                                    {t("serviceName")}
                                   </th>
                                   <th className=" md:p-5 p-4 md:text-md text-sm text-right">
-                                  {t('price')}
+                                    {t("price")}
                                   </th>
                                   {category === "packages" && (
                                     <th className="md:p-5 p-4  md:text-md text-sm text-right ">
-                                      {t('showinclusions')}
+                                      {t("showinclusions")}
                                     </th>
                                   )}
                                   <th className="md:p-5 p-4  md:text-md text-sm text-right">
-                                  {t('duration')}
+                                    {t("duration")}
                                   </th>
                                 </tr>
                               </thead>
@@ -743,12 +749,12 @@ const Test1 = (props) => {
                                                 handleInclusions(e, option)
                                               }
                                             >
-                                              {t('showinclusions')}
+                                              {t("showinclusions")}
                                             </label>
                                           </td>
                                         )}
                                         <td className="p-5 text-right md:text-md text-sm">
-                                          {option.duration} {t('min')}
+                                          {option.duration} {t("min")}
                                         </td>
                                       </tr>
                                     );
@@ -774,11 +780,13 @@ const Test1 = (props) => {
                       : ""
                   }`}
                 >
-                  <h2 className="mb-2 text-lg font-bold">{t('orderSummary')}</h2>
+                  <h2 className="mb-2 text-lg font-bold">
+                    {t("orderSummary")}
+                  </h2>
                   <ul>
                     <li>
                       <div className="mb-2 flex justify-between ">
-                        <div>{t('date')}</div>
+                        <div>{t("date")}</div>
                         <div className="">
                           {moment(value).format("MMM Do YY")}
                         </div>
@@ -786,13 +794,13 @@ const Test1 = (props) => {
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div>{t('time')}</div>
+                        <div>{t("time")}</div>
                         <div> {options[selectedValue].value}-7:00 PM</div>
                       </div>
                     </li>
                     <li>
                       <div className="mb-2 flex justify-between">
-                        <div>{t('total')}</div>
+                        <div>{t("total")}</div>
                         <div> &#8377; {totalAmount}</div>
                       </div>
                     </li>
@@ -803,7 +811,7 @@ const Test1 = (props) => {
                         onClick={(e) => previewHandler(totalAmount, e)}
                         className="primary-button flex items-center justify-center  w-full"
                       >
-                        {t('preview')}{" "}
+                        {t("preview")}{" "}
                         {/* {buttonLoad && <span className="buttonloader"></span>} */}
                       </button>
                     </li>
@@ -815,7 +823,7 @@ const Test1 = (props) => {
             <div className="min-h-[60vh] flex items-center flex-col justify-center">
               <img src={Select} alt="select category" className="h-72" />
               <p className="font-semibold">
-              {t('selectCategoryToViewServices')}
+                {t("selectCategoryToViewServices")}
               </p>
             </div>
           )}

@@ -13,14 +13,15 @@ import {
   faClose,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import baseUrl from "../utils/client";
 import useEffectOnce from "../utils/UseEffectOnce";
 import moment from "moment";
-import axios from "axios";
+
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../components/axiosInterceptor";
 
 const BookingHistory = () => {
   const { user } = useContext(AuthContext);
@@ -28,7 +29,7 @@ const BookingHistory = () => {
   const [showTypeOfOrders, setShowTypeOfOrders] = useState("directOrders");
   const [shopId, setShopId] = useState(user?.shopId);
   const [userInput, setUserInput] = useState("");
-
+  const [allServices, setAllServices] = useState([]);
   const [visible, setVisible] = useState(10);
   const [roomData, setRoomData] = useState();
   const [showServices, setShowServices] = useState(null);
@@ -36,7 +37,7 @@ const BookingHistory = () => {
     `${baseUrl}/api/users/getBookings/${user._id}`,
     { credentials: true }
   );
-  console.log(data);
+
   const { t } = useTranslation();
   useEffectOnce(() => {
     window.scrollTo(0, 0);
@@ -48,11 +49,21 @@ const BookingHistory = () => {
   useEffect(() => {
     const fetchData = async (item) => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${shopId}`
         );
 
         setRoomData(data[0].roomNumbers);
+        const mergedServices = data[0]?.services
+          ?.reduce((arr, item) => {
+            arr.push(item.services);
+            return arr;
+          }, [])
+          .reduce((arr, item) => {
+            return arr.concat(item);
+          }, []);
+
+        setAllServices(mergedServices);
       } catch (err) {
         console.log(err);
       }
@@ -101,6 +112,7 @@ const BookingHistory = () => {
   const filteredArray = filterArray(data[showTypeOfOrders], userInput);
 
   const GetPushed = () => {
+    const [showInclusions, setShowInclusions] = useState(null);
     const item = showServices;
 
     let seats = [];
@@ -108,12 +120,285 @@ const BookingHistory = () => {
     if (item && roomData) {
       item.selectedSeats.map((seat, i) => {
         const find = roomData.find((item) => item?._id === seat.id);
-        console.log(find);
+
         if (find) {
           seats.push(find.number);
         }
       });
     }
+
+    const handleInclusions = (e, option, subCategory) => {
+      e.preventDefault();
+
+      // const inclusions = option.inclusions.map((inclusion) => {
+      //   return allServices.filter(
+      //     (service) =>
+      //       service.service === inclusion.service &&
+      //       service.subCategory === option.subCategory
+      //   )[0];
+      // });
+
+      const inclusions = option.inclusions.map((inclusion) => {
+        const matchedService = allServices.find(
+          (service) =>
+            service.service === option.service &&
+            service.subCategory === subCategory
+        );
+
+        return matchedService;
+      })[0];
+
+      const inclusions1 = inclusions?.inclusions
+        .map((inclusion) => {
+          const matchedService = allServices.find(
+            (service) =>
+              service.service === inclusion.service &&
+              service.subCategory === subCategory
+          );
+
+          return inclusion
+            ? {
+                ...inclusion,
+                free: inclusion.free,
+                price: matchedService.price,
+                duration: matchedService.duration,
+              }
+            : null;
+        })
+        .filter(Boolean);
+
+      setShowInclusions({
+        inclusions: inclusions1,
+        package: option.service,
+        type: option.category,
+        // subCategory: option.subCategory,
+      });
+    };
+
+    const ShowInclusions = () => {
+      const freeInclusions = showInclusions?.inclusions?.filter(
+        (option) => option.free === true
+      );
+
+      const paidInclusions = showInclusions?.inclusions?.filter(
+        (option) => option.free !== true
+      );
+
+      if (showInclusions?.type === "offers") {
+        return (
+          showInclusions?.inclusions?.length > 0 && (
+            <div className="reserve items-center justify-center p-6">
+              <div className="overflow-auto ">
+                <FontAwesomeIcon
+                  icon={faClose}
+                  size="lg"
+                  onClick={() => {
+                    setShowInclusions(null);
+                  }}
+                  className="right-20 absolute top-10 text-white"
+                />
+                <>
+                  <div className="flex flex-col gap-4 items-center justify-between h-[10vh] mt-16 ">
+                    <p className="text-white">
+                      Cost of Free Services : &#8377;&nbsp;
+                      {freeInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+
+                    <p className="text-white">
+                      Cost of Paid Services : &#8377;&nbsp;
+                      {paidInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+
+                    <p className="text-white">
+                      Customer saving : &#8377;&nbsp;
+                      {freeInclusions?.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Free Services Table */}
+                  {freeInclusions?.length > 0 && (
+                    <div className="mb-10 mt-16">
+                      <h2 className="text-lg font-semibold text-white mb-2">
+                        Free Services
+                      </h2>
+                      <table className="min-w-[70vw]">
+                        <thead className="border-b bg-gray-300">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {freeInclusions.map((option, j) => (
+                            <tr
+                              key={`free-${j}`}
+                              className="border-b-2 border-white"
+                            >
+                              <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                <label className="text-white">
+                                  {option?.service}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  &#8377; {option?.price}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  {option?.duration} min
+                                </label>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {/* Paid Services Table */}
+                  {paidInclusions?.length > 0 && (
+                    <div>
+                      <h2 className="text-lg font-semibold text-white mb-2">
+                        Paid Services
+                      </h2>
+                      <table className="min-w-[70vw]">
+                        <thead className="border-b bg-gray-300">
+                          <tr className="border-b-2 border-gray-200">
+                            <th className="text-left md:text-md text-sm md:p-5 p-4">
+                              Service Name
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Price
+                            </th>
+                            <th className="md:p-5 p-4 md:text-md text-sm text-right">
+                              Duration
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {paidInclusions.map((option, j) => (
+                            <tr
+                              key={`paid-${j}`}
+                              className="border-b-2 border-white"
+                            >
+                              <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                                <label className="text-white">
+                                  {option?.service}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  &#8377; {option?.price}
+                                </label>
+                              </td>
+                              <td className="p-5 text-right md:text-md text-sm">
+                                <label className="text-white">
+                                  {option?.duration} min
+                                </label>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
+              </div>
+            </div>
+          )
+        );
+      } else {
+        return (
+          showInclusions?.inclusions?.length > 0 && (
+            <div className="reserve items-center justify-center">
+              <div className="overflow-x-auto  ">
+                <FontAwesomeIcon
+                  icon={faClose}
+                  size="lg"
+                  onClick={() => {
+                    setShowInclusions(null);
+                  }}
+                  className="right-20 absolute top-10 text-white"
+                />
+                <>
+                  <div className="flex items-center justify-between h-[10vh]  ">
+                    <p className="text-white">
+                      Cost of Services : &#8377;&nbsp;
+                      {showInclusions?.inclusions.reduce(
+                        (acc, service) => acc + service?.price,
+                        0
+                      )}
+                    </p>
+                  </div>
+                  <table className="min-w-[70vw] ">
+                    <thead className="border-b bg-gray-300 ">
+                      <tr className="border-b-2 border-gray-200">
+                        <th className="text-left md:text-md text-sm md:p-5 p-4">
+                          Service Name
+                        </th>
+                        <th className=" md:p-5 p-4 md:text-md text-sm text-right">
+                          Price
+                        </th>
+                        {/* <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                                      Category
+                                    </th> */}
+                        <th className="md:p-5 p-4  md:text-md text-sm text-right">
+                          Duration
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {showInclusions?.inclusions?.map((option, j) => {
+                        return (
+                          <tr key={j} className="border-b-2 border-white">
+                            <td className="md:text-md text-sm flex items-center justify-start p-5 space-x-2">
+                              <label className="text-white">
+                                {option?.service}
+                              </label>
+                            </td>
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                &#8377; {option?.price}
+                              </label>
+                            </td>
+
+                            {/* <td className="p-5 text-right md:text-md text-sm">
+                                            {option.category}
+                                          </td> */}
+                            <td className="p-5 text-right md:text-md text-sm">
+                              <label className="text-white">
+                                {option?.duration} min
+                              </label>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </>
+              </div>
+            </div>
+          )
+        );
+      }
+    };
 
     return (
       <div className="reserve pt-20">
@@ -126,6 +411,7 @@ const BookingHistory = () => {
           />
 
           <>
+            <ShowInclusions />
             <div className="card p-5 overflow-auto md:max-w-[60vw] max-w-[90vw]">
               {item.selectedSeats.map((seat, i) => {
                 return (
@@ -141,8 +427,22 @@ const BookingHistory = () => {
                           <span className="ml-1 font-bold" key={i}>
                             {option.service}{" "}
                             <span>
+                              - Barber/Beautician: {seat.barber.name || ""}
+                            </span>
+                            <span className="pr-3">
                               {i !== seat.options.length - 1 ? "," : "."}
                             </span>
+                            {(seat?.options[0]?.category === "offers" ||
+                              seat?.options[0]?.category === "packages") && (
+                              <button
+                                onClick={(e) =>
+                                  handleInclusions(e, option, item?.subCategory)
+                                }
+                                className="primary-button"
+                              >
+                                Show Inclusions
+                              </button>
+                            )}
                           </span>
                         );
                       })}
@@ -162,7 +462,7 @@ const BookingHistory = () => {
       {showServices !== null && <GetPushed />}
 
       <div className="min-h-[85.5vh] max-w-[99vw] mx-auto">
-        <div className="flex items-center justify-around ">
+        <div className="flex items-center justify-around flex-wrap px-4 gap-5">
           <p className=" md:text-xl text-xs font-semibold">
             {t("bookingHistory")}
           </p>
@@ -180,7 +480,7 @@ const BookingHistory = () => {
           <input
             onChange={(e) => setUserInput(e.target.value)}
             value={userInput}
-            className="  rounded-md md:w-[14.3rem] w-[9.3rem]"
+            className="  rounded-md md:w-[65rem] md:flex-grow-0 flex-1"
             placeholder="Filter by date,time,ref.."
           />
 
@@ -196,8 +496,8 @@ const BookingHistory = () => {
 
         {showTypeOfOrders === "directOrders" && filteredArray?.length > 0 ? (
           <div className="grid md:grid-cols-5 lg:grid-cols-4 lg:gap-5 md:gap-5  md:max-w-[90vw] max-w-[98vw] mx-auto pt-5 pb-10 ">
-            <div className="overflow-x-auto  col-span-5 border-2 border-gray-500">
-              <table className="min-w-full  ">
+            <div className="overflow-x-auto  col-span-5 ">
+              {/* <table className="min-w-full  ">
                 <thead className="border-b bg-gray-400 ">
                   <tr className="border-b-2 border-gray-200 ">
                     <th className="text-center md:text-md text-sm md:p-5 py-3">
@@ -213,7 +513,7 @@ const BookingHistory = () => {
                       {t("amount")}
                     </th>
                     <th className="md:p-5  px-10  md:text-md text-sm text-right">
-                      {t("shop")}
+                      Go To Shop
                     </th>
                     {
                       <th className="md:p-5  px-10 md:text-md text-sm text-right">
@@ -257,7 +557,11 @@ const BookingHistory = () => {
                           </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm">
-                          <label>{item.shop}</label>
+                          <label>
+                            <Link to={`/shops/${item.shopId}`}>
+                              {item.shop}
+                            </Link>
+                          </label>
                         </td>
                         <td className="p-3 text-right md:text-md text-sm underline cursor-pointer">
                           <label
@@ -307,7 +611,97 @@ const BookingHistory = () => {
                     );
                   })}
                 </tbody>
-              </table>
+              </table> */}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-3 gap-2">
+                {filteredArray?.slice(0, visible)?.map((item, j) => (
+                  <div
+                    key={j}
+                    className="bg-white  rounded-2xl shadow-lg border border-gray-400 p-3 flex flex-col justify-between hover:shadow-xl transition"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        #{item.referenceNumber}
+                      </h3>
+                      <p className=" text-[#00ccbb] text-xs font-semibold px-3 py-1 rounded-full shadow">
+                        ₹{item.totalAmount}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 text-sm text-gray-700 mb-4">
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          📅 Date:
+                        </span>
+                        <span>{item.date}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          ⏰ Time:
+                        </span>
+                        <span>{item.time}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          🏪 Shop:
+                        </span>
+                        <Link
+                          to={`/shops/${item.shopId}`}
+                          className="text-[#00ccbb] font-semibold underline"
+                        >
+                          {item.shop}
+                        </Link>
+                      </div>
+                      <div
+                        className="text-[#00ccbb] font-medium cursor-pointer underline text-right"
+                        onClick={() => {
+                          setShowServices(item);
+                          setShopId(item.shopId);
+                        }}
+                      >
+                        {t("showServices")}
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          💳 Payment:
+                        </span>
+                        <span
+                          className={
+                            item.isPaid
+                              ? "text-green-600 font-semibold"
+                              : "text-red-500 font-semibold"
+                          }
+                        >
+                          {item.isPaid ? "Paid" : "Not Paid"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-medium text-gray-600">
+                          📌 Status:
+                        </span>
+                        {item.isDone === "false" ? (
+                          <span className="text-red-500 font-semibold">
+                            {t("notYetDone")}
+                          </span>
+                        ) : item.isDone === "cancelled" ? (
+                          <span className="text-red-500 font-semibold">
+                            {t("cancelled")}
+                          </span>
+                        ) : (
+                          <span className="text-green-500 font-semibold">
+                            {t("done")}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-right text-gray-400 mt-2">
+                      Created at:{" "}
+                      {moment(item.createdAt).format("MMM Do YY hh:mm:ss A")}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             {filteredArray?.length >= 10 && (
               <div className="min-w-[90vw] py-4  grid place-items-center pb-10">

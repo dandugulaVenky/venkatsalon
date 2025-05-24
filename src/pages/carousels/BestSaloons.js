@@ -4,7 +4,6 @@ import Carousel from "react-grid-carousel";
 import { SearchContext } from "../../context/SearchContext";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faStar } from "@fortawesome/free-solid-svg-icons";
 import "./styles.scss";
@@ -15,28 +14,30 @@ import GetSize from "../../utils/GetSize";
 import { useTranslation } from "react-i18next";
 import LanguageContext from "../../context/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../../components/axiosInterceptor";
+import { Rating } from "@material-ui/lab";
 
 const BestSaloons = ({ smallBanners }) => {
   const columns = smallBanners ? 10 : 4;
 
-  const { type: type1, city, pincode } = useContext(SearchContext);
+  const { type: type1, city, range, lat, lng } = useContext(SearchContext);
 
   const { t } = useTranslation();
   const { locale, setLocale } = useContext(LanguageContext);
-  console.log(pincode, "pincode");
+  // console.log(pincode, "pincode");
 
   const getBestSalons = async () => {
-    return await axios.get(
-      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&city1=${
-        city ? city : "shadnagar, telangana 509216, india"
-      }&pincode=${pincode === "postal_code" ? true : false}`
+    return await axiosInstance.get(
+      `${baseUrl}/api/hotels?type=${type1 ? type1 : "salon"}&lat=${
+        lat ? lat : 0.0
+      }&lng=${lng ? lng : 0.0}&limit=8&range=${range ? range : 2}`
     );
   };
   const size = GetSize();
 
   // Queries
   const query = useQuery({
-    queryKey: ["bestsalons", { type: type1, city }],
+    queryKey: ["bestsalons", { type: type1, city, range, lat, lng }],
     queryFn: getBestSalons,
   });
 
@@ -48,45 +49,54 @@ const BestSaloons = ({ smallBanners }) => {
   const handleAllShops = () => {
     navigate(`/shops`);
   };
-
+  // mt-8 used to  be there
   return (
-    <div className="mt-8  text-black w-full  ">
+    <div className=" text-black w-full  ">
       <div className="flex flex-row justify-between">
         <h1 className=" px-2.5 md:px-5 md:text-xl font-semibold pb-3">
           {type1 ? (
-            locale === "en-US" || locale === "en" ? (
-              t("typeForYou", {
-                type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
-              })
-            ) : locale === "te" ? (
-              t("typeForYou", {
-                type1:
-                  type1 === "salon"
-                    ? "సెలూన్లు"
-                    : type1 === "parlour"
-                    ? "పార్లర్లు"
-                    : "స్పా",
-              })
-            ) : (
-              t("typeForYou", {
-                type1:
-                  type1 === "salon"
-                    ? "सैलून"
-                    : type1 === "parlour"
-                    ? "पार्लर"
-                    : "स्पा",
-              })
-            )
+            // locale === "en-US" || locale === "en" ? (
+            //   t("typeForYou", {
+            //     type1: type1?.charAt(0)?.toUpperCase() + type1?.slice(1),
+            //   })
+            // ) : locale === "te" ? (
+            //   t("typeForYou", {
+            //     type1:
+            //       type1 === "salon"
+            //         ? "సెలూన్లు"
+            //         : type1 === "parlour"
+            //         ? "పార్లర్లు"
+            //         : "స్పా",
+            //   })
+            // ) : (
+            //   t("typeForYou", {
+            //     type1:
+            //       type1 === "salon"
+            //         ? "सैलून"
+            //         : type1 === "parlour"
+            //         ? "पार्लर"
+            //         : "स्पा",
+            //   })
+            // )
+
+            type1?.charAt(0)?.toUpperCase() + type1?.slice(1) + "s Near You"
           ) : (
             <Skeleton cards={1} />
           )}
         </h1>
-        <button
-          className="px-5 text-2xl font-semibold pb-2.5"
-          onClick={handleAllShops}
-        >
-          <FontAwesomeIcon icon={faArrowRight} color="#00ccbb" />
-        </button>
+
+        <div className="flex items-center justify-center space-x-2 pr-2.5 md:pr-5">
+          <button
+            className="px-5 text-2xl font-semibold pb-2.5"
+            onClick={handleAllShops}
+          >
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              color="#00ccbb"
+              className=" fa-bounce"
+            />
+          </button>
+        </div>
       </div>
       {query.isLoading ? (
         <Skeleton cards={size} />
@@ -98,9 +108,12 @@ const BestSaloons = ({ smallBanners }) => {
                 const cityName = item.city.split(",")[0];
                 return (
                   <Carousel.Item key={i}>
-                    <>
+                    <div
+                      className="shadow-custom h-auto mb-8"
+                      style={{ borderRadius: 8 }}
+                    >
                       <div
-                        className="relative h-44 w-full cursor-pointer rounded-md slide-in-left"
+                        className="relative min-h-44 w-full cursor-pointer rounded-md slide-in-left"
                         id="section-id"
                         onClick={() => gotoHotel(item._id)}
                       >
@@ -111,31 +124,43 @@ const BestSaloons = ({ smallBanners }) => {
                           }
                           alt="images"
                           style={{
-                            width: "98%",
-                            height: 170,
-                            boxShadow: "1px 1.5px 2px black",
-                            filter: "brightness(70%)",
+                            width: "100%",
+                            height: 190,
+
+                            // filter: "brightness(70%)",
 
                             objectFit: "cover",
                             objectPosition: "right top",
                             borderRadius: 8,
                           }}
                         />
-                        <p className="absolute md:bottom-[2.55rem] bottom-11 left-4 text-white font-bold  text-xl content break-words">
-                          {/* {item.name} */}
+                      </div>
+                      <div className="space-y-0.5 pb-2 pl-2 pr-2 ">
+                        <p
+                          className="text-gray-700 font-semibold text-[15px] pt-2 pr-2 truncate cursor-pointer"
+                          title={item.name}
+                        >
                           {t("salonName", { name: item.name })}
                         </p>
-                        <p className="absolute  bottom-4 left-4 text-white flex items-center justify-center space-x-2  ">
-                          <span className="font-semibold">
-                            {Math.ceil(item.rating)}{" "}
+
+                        <p className="flex items-center justify-start">
+                          <span className=" text-gray-700 font-medium pr-1 pt-0.5">
+                            {Math.ceil(item.rating)}.0{" "}
                           </span>
-                          <FontAwesomeIcon icon={faStar} size="lg" />
+                          {/* <Rating
+                            value={t("reviewRating", {
+                              rating: Math.ceil(item.rating),
+                            })}
+                            readOnly
+                          ></Rating> */}
+                          <FontAwesomeIcon icon={faStar} color="#00ccbb" />
+                        </p>
+                        <p className=" font-extralight text-gray-700 ">
+                          {cityName?.charAt(0).toUpperCase() +
+                            cityName?.slice(1)}
                         </p>
                       </div>
-                      <p className="pl-1 font-semibold text-gray-700 ">
-                        {cityName}
-                      </p>
-                    </>
+                    </div>
                   </Carousel.Item>
                 );
               })}

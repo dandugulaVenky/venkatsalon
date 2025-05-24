@@ -5,7 +5,7 @@
 
 // import { useState } from "react";
 // import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+// import axiosInstance from "axiosInstance";
 // import baseUrl from "../../utils/client";
 
 // import { toast } from "react-toastify";
@@ -97,7 +97,7 @@
 //       dates,
 //     } = state;
 //     try {
-//       const { status } = await axios.post(
+//       const { status } = await axiosInstance.post(
 //         `${baseUrl}/api/users/finalBookingDetails/${user._id}`,
 
 //         {
@@ -119,12 +119,12 @@
 //       if (status === 201) {
 //         const {
 //           data: { key },
-//         } = await axios.get(`${baseUrl}/api/getkey`);
+//         } = await axiosInstance.get(`${baseUrl}/api/getkey`);
 
 //         try {
 //           const {
 //             data: { order },
-//           } = await axios.post(
+//           } = await axiosInstance.post(
 //             `${baseUrl}/api/payments/checkout`,
 //             {
 //               amount: totalAmount,

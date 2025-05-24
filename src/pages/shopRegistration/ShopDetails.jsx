@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "react-router-dom";
@@ -24,10 +22,10 @@ const ShopDetails = () => {
   const [shopName, setShopName] = useState();
   const [latLong, setLatLong] = useState(null);
   const [typeOfShop, setTypeOfShop] = useState(null);
-  const [genderType, setGenderType] = useState(null);
+  const [genderType, setGenderType] = useState("");
   const [map, setMap] = useState(false);
   const [spaIncluded, setSpaIncluded] = useState(null);
-
+  const [fullAddress, setFullAddress] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
 
@@ -153,6 +151,11 @@ const ShopDetails = () => {
     clearError("selectedShopEndTime");
   };
 
+  const handleFullAddress = (e) => {
+    setFullAddress(e.target.value);
+    clearError("fullAddress");
+  };
+
   const handleMapClick = (coords) => {
     setLatLong(coords);
     setMap(!map);
@@ -164,7 +167,6 @@ const ShopDetails = () => {
   };
 
   const handleType = (e) => {
-    console.log(e.target.value, "ufufufu");
     setTypeOfShop(e.target.value);
     clearError("typeOfShop");
   };
@@ -183,6 +185,11 @@ const ShopDetails = () => {
   }, [navigate, user]);
 
   const handleStateChange = (e) => {
+    if (e.target.value !== "Telangana") {
+      setSelectedState("");
+
+      return alert("We are currently only accepting shops from Telangana");
+    }
     setSelectedState(e.target.value);
     setSelectedDistrict(""); // Reset district when state changes
     setSelectedPincode(""); // Reset pincode when state changes
@@ -208,21 +215,20 @@ const ShopDetails = () => {
   useEffect(() => {
     if (Object.keys(formErrors)?.length === 0 && isSubmit) {
       if (
-        !selectedStartTime ||
-        !selectedEndTime ||
-        !selectedShopStartTime ||
-        !selectedShopEndTime ||
-        !selectedDistrict ||
-        !selectedPincode ||
-        !selectedState ||
-        !village ||
-        !latLong ||
-        !genderType ||
-        !typeOfShop ||
-        !shopName
+        (shopName,
+        selectedStartTime,
+        selectedEndTime,
+        selectedShopStartTime,
+        selectedShopEndTime,
+        selectedDistrict,
+        selectedPincode,
+        selectedState,
+        village,
+        latLong,
+        typeOfShop,
+        genderType,
+        spaIncluded !== null)
       ) {
-        alert("Please ensure you have entered all the fields !");
-      } else {
         if (
           selectedStartTime !== selectedEndTime &&
           selectedShopStartTime !== selectedShopEndTime
@@ -282,8 +288,8 @@ const ShopDetails = () => {
             name: shopName,
 
             alternatePhone: "phone",
-            city: ` ${village}, ${selectedState} ${selectedPincode}, india`,
-
+            city: `${village}, ${selectedState} ${selectedPincode}, india`,
+            fullAddress,
             desc: "description",
             type: typeOfShop.toLowerCase(),
 
@@ -291,7 +297,10 @@ const ShopDetails = () => {
             spaIncluded,
             lunchTimeArray,
             shopTimeArray,
-            latLong,
+            latLong: {
+              type: "Point",
+              coordinates: [latLong.lng, latLong.lat], // Note: [lng, lat]
+            },
           };
 
           function setCookieObject(name1, value, daysToExpire) {
@@ -312,6 +321,8 @@ const ShopDetails = () => {
         } else {
           alert(t("somethingWrong"));
         }
+      } else {
+        alert("Please ensure you have entered all the fields !");
       }
     }
   }, [formErrors]);
@@ -327,12 +338,10 @@ const ShopDetails = () => {
     selectedState,
     village,
     latLong,
-
     typeOfShop,
     genderType,
     spaIncluded
   ) => {
-    console.log(spaIncluded, "jj");
     const errors = {};
     // const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!shopName) {
@@ -362,20 +371,23 @@ const ShopDetails = () => {
     if (!selectedState) {
       errors.selectedState = "state  is required";
     }
+
+    if (!fullAddress) {
+      errors.fullAddress = "full address is required";
+    }
     if (!latLong) {
       errors.latLong = "latitudes, longitudes are required";
     }
-
-    if (!genderType) {
-      errors.genderType = "gender is required";
+    if (genderType === "") {
+      errors.genderType = "Gender type is required";
     }
 
     if (!typeOfShop) {
       errors.typeOfShop = "type is required";
     }
 
-    if (spaIncluded === null) {
-      errors.spaIncluded = "spa inclusion is required";
+    if (spaIncluded !== true && spaIncluded !== false) {
+      errors.spaIncluded = "Please select Yes or No";
     }
 
     if (!village) {
@@ -387,7 +399,7 @@ const ShopDetails = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(typeOfShop, "uiuiuiuiuiuiuiuiui");
+
     setFormErrors(
       validate(
         shopName,
@@ -400,7 +412,6 @@ const ShopDetails = () => {
         selectedState,
         village,
         latLong,
-
         typeOfShop,
         genderType,
         spaIncluded
@@ -598,7 +609,7 @@ const ShopDetails = () => {
                 <option value="" disabled selected>
                   Select a pincode
                 </option>
-                {Object.keys(states[selectedState][selectedDistrict])?.map(
+                {/* {Object.keys(states[selectedState][selectedDistrict])?.map(
                   (postalCode, index) =>
                     states[selectedState][selectedDistrict][postalCode]?.map(
                       (pincodeObj, pincodeIndex) => (
@@ -607,7 +618,22 @@ const ShopDetails = () => {
                         </option>
                       )
                     )
-                )}
+                )} */}
+                {Array.from(
+                  new Set(
+                    Object.keys(
+                      states[selectedState][selectedDistrict]
+                    ).flatMap((postalCode) =>
+                      states[selectedState][selectedDistrict][postalCode].map(
+                        () => postalCode
+                      )
+                    )
+                  )
+                ).map((postalCode, index) => (
+                  <option key={index} value={postalCode}>
+                    {postalCode}
+                  </option>
+                ))}
               </select>
 
               <p className="text-red-500 py-2">{formErrors?.selectedPincode}</p>
@@ -639,6 +665,19 @@ const ShopDetails = () => {
           )}
         </div>
 
+        <div className="pb-2">
+          <label htmlFor="address">Full Address</label>
+          <textarea
+            rows="3"
+            className="w-full"
+            placeholder="Enter full address"
+            id="address"
+            value={fullAddress}
+            onChange={handleFullAddress}
+          />
+          <p className="text-red-500 py-2">{formErrors?.fullAddress}</p>
+        </div>
+
         <div className="w-full flex  flex-wrap">
           {/* <div className="mb-4">
             <label htmlFor="village">Village</label>
@@ -663,7 +702,7 @@ const ShopDetails = () => {
 
           <div className="mb-4 w-full">
             <label htmlFor="genderType">Gender {t("type")}</label>
-            <select
+            {/* <select
               className="w-full p-1.5"
               onChange={handleParlourType}
               value={genderType}
@@ -674,7 +713,20 @@ const ShopDetails = () => {
               <option value="women">{t("women")}</option>
               <option value="men">{t("men")}</option>
               <option value="unisex">{t("unisex")}</option>
+            </select> */}
+            <select
+              className="w-full p-1.5"
+              onChange={handleParlourType}
+              value={genderType}
+            >
+              <option value="">
+                {t("select")} Gender {t("type")}
+              </option>
+              <option value="women">{t("women")}</option>
+              <option value="men">{t("men")}</option>
+              <option value="unisex">{t("unisex")}</option>
             </select>
+
             <p className="text-red-500 py-2">{formErrors?.genderType}</p>
           </div>
         </div>
@@ -685,8 +737,9 @@ const ShopDetails = () => {
             <input
               type="checkbox"
               name="Yes"
-              checked={spaIncluded === true}
+              checked={spaIncluded}
               className="h-6 w-6"
+              value={true}
               id="Yes"
               onChange={(event) => {
                 setSpaIncluded(true);
@@ -701,10 +754,10 @@ const ShopDetails = () => {
             <input
               type="checkbox"
               name="No"
+              value={false}
               checked={spaIncluded === false}
               className="h-6 w-6"
               id="No"
-              value={false}
               onChange={(event) => {
                 setSpaIncluded(false);
                 clearError("spaIncluded");

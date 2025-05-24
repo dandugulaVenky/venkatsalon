@@ -1,11 +1,12 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import baseUrl from "../../utils/client";
 import { AuthContext } from "../../context/AuthContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "../axiosInterceptor";
 
 const AdminAddBanner = () => {
   const [images, setImages] = useState([]);
@@ -15,7 +16,7 @@ const AdminAddBanner = () => {
   const [data, setData] = useState();
   useEffect(() => {
     const getData = async () => {
-      const { data } = await axios.get(
+      const { data } = await axiosInstance.get(
         `${baseUrl}/api/hotels/find/${user?.shopId}`
       );
 
@@ -42,7 +43,7 @@ const AdminAddBanner = () => {
   const submitForm = async (e) => {
     setLoading(true);
     e.preventDefault();
-    console.log(images);
+    // console.log(images);
     if (images.length <= 0) {
       setLoading(false);
 
@@ -56,7 +57,7 @@ const AdminAddBanner = () => {
     }
 
     try {
-      const { data: shopData } = await axios.get(
+      const { data: shopData } = await axiosInstance.get(
         `${baseUrl}/api/hotels/find/${user?.shopId}`,
         {
           withCredentials: true,
@@ -75,7 +76,7 @@ const AdminAddBanner = () => {
         );
       }
       if (!(images?.length > 6 - shopData?.images?.length)) {
-        const { data } = await axios.put(
+        const { data } = await axiosInstance.put(
           `${baseUrl}/api/hotels/hotelImagesUpdate/${user?.shopId}`,
           {
             images,
@@ -85,7 +86,7 @@ const AdminAddBanner = () => {
           }
         );
 
-        console.log(data);
+        // console.log(data);
         if (data.success === true) {
           toast.success("Images added successfully");
           setImages([]);
@@ -103,13 +104,13 @@ const AdminAddBanner = () => {
             6 - shopData?.images?.length
           } images because this shop already has ${
             shopData?.images?.length
-          } images! As Easytym supports only 6 images as per today!`
+          } images! As Saalons supports only 6 images as per today!`
         );
       }
     } catch (error) {
       setLoading(false);
 
-      console.log(error);
+      // console.log(error);
       if (error.response.data.status === 413) {
         toast.warn("Images collectively should contain 10mb or less! ");
       }
@@ -125,12 +126,12 @@ const AdminAddBanner = () => {
     }
 
     setLoading(true);
-    console.log(image);
+    // console.log(image);
     if (!image || image === "" || image === undefined) {
       return;
     }
     try {
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         `${baseUrl}/api/hotels/hotelImagesDelete/${user?.shopId}`,
         image,
         { withCredentials: true }
@@ -143,33 +144,9 @@ const AdminAddBanner = () => {
       console.log(error);
     }
   };
-  const [loading2, setLoading2] = useState(false);
 
-  const data1 = {
-    name: "Waleed",
-    amount: 1,
-    number: "7498608775",
-    MUID: "MUID" + Date.now(),
-    transactionId: "T" + Date.now(),
-  };
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    setLoading2(true);
-    await axios
-      .post(`${baseUrl}/api/phonepe/payment`, { ...data1 })
-      .then((res) => {
-        setTimeout(() => {
-          setLoading2(false);
-        }, 1500);
-      })
-      .catch((error) => {
-        setLoading2(false);
-        console.error(error);
-      });
-  };
   return (
-    <div className="pt-6 pb-20">
+    <div className="pt-6 pb-20 border  border-gray-300 p-5 shadow-md">
       <div className="min-h-[86.2vh] flex flex-col items-center justify-center mx-2 ">
         <>
           <p className="text-red-400 font-semibold px-4">
@@ -177,7 +154,7 @@ const AdminAddBanner = () => {
           </p>
           <p className="text-red-400 font-semibold px-4">
             Note2 : If you want to update any other details, please contact
-            easytym
+            Saalons
           </p>
           <form
             onSubmit={submitForm}
@@ -197,7 +174,11 @@ const AdminAddBanner = () => {
             </div>
             <img className="img-fluid" alt="" />
             <button type="submit" className="primary-button" disabled={loading}>
-              {loading ? "Uploading..." : "Add Images"}
+              {loading ? (
+                <span className="buttonloader ml-2"></span>
+              ) : (
+                "Add Images"
+              )}
             </button>
           </form>
         </>
@@ -234,41 +215,6 @@ const AdminAddBanner = () => {
               ? "No images found!"
               : "Loading...."}
           </div>
-        </div>
-      </div>
-
-      <div className="main">
-        <div className="center">
-          {/* <img width={300} src={phonepe} alt="" /> */}
-          <h2 className="fs-4 mt-2">
-            <span className="text-danger fw-bold">LIVE</span> Payment
-            Integration
-          </h2>
-        </div>
-        <div className="card px-5 py-4 mt-5">
-          <form onSubmit={handlePayment}>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Name:</strong> {data1.name}
-              </p>
-            </div>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Number:</strong> {data1.number}
-              </p>
-            </div>
-            <div className="col-12 ">
-              <p className="fs-5">
-                <strong>Amount:</strong> {data1.amount}Rs
-              </p>
-            </div>
-
-            <div className="col-12 center">
-              <button className="w-100 " type="submit">
-                Pay Now
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

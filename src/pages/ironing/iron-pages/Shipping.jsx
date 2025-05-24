@@ -14,10 +14,10 @@ import useEffectOnce from "../../../utils/UseEffectOnce";
 import { useTranslation } from "react-i18next";
 
 const siteMetadata = {
-  title: "Home | Effortless Appointments With Easytym",
+  title: "Home | Effortless Appointments With Saalons",
   description:
-    "Easytym provides reliable salon booking services, connecting customers with top-quality beauty parlours and professional ironing services.",
-  canonical: "https://easytym.com",
+    "Saalons provides reliable salon booking services, connecting customers with top-quality beauty parlours and professional ironing services.",
+  canonical: "https://saalons.com",
 };
 
 export default function Shipping() {

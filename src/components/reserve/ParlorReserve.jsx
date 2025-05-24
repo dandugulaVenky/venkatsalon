@@ -7,7 +7,7 @@
 
 // import { useLocation, useNavigate } from "react-router-dom";
 // import moment from "moment";
-// import axios from "axios";
+// import axiosInstance from "axiosInstance";
 // import { useTranslation } from "react-i18next";
 
 // import Select from "../../pages/images/select.png";
@@ -103,7 +103,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+//       const { data } = await axiosInstance.get(`${baseUrl}/api/hotels/room/${shopId}`);
 //       // console.log(data[0].roomNumbers);
 //       setData(data);
 //       const res =

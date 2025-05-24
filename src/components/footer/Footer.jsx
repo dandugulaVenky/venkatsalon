@@ -10,15 +10,15 @@ const Footer = () => {
 
   const navigate = useNavigate();
   return (
-    <div className=" w-full ">
+    <div className=" w-full footer ">
       <div className="flex items-center justify-center space-x-24 md:space-x-96  bg-[#00ccbb] text-white text-sm pt-10 ">
         <ul className="space-y-2">
-          <li className="">{t("shadnagar")}</li>
-          <li className="">{t("kothur")}</li>
-          <li className="">{t("thimmapur")}</li>
-          <li className="">{t("shamshabad")}</li>
-          <li className="">{t("attapur")}</li>
-          <li className="">{t("katedan")}</li>
+          <li className="">{t("best hair salon in shadnagar")}</li>
+          <li className="">{t("best hair salon in kothur")}</li>
+          <li className="">{t("best hair salon in thimmapur")}</li>
+          <li className="">{t("best hair salon in shamshabad")}</li>
+          <li className="">{t("best hair salon in attapur")}</li>
+          <li className="">{t("best hair salon in katedan")}</li>
         </ul>
         <ul className="space-y-2">
           <li className="">

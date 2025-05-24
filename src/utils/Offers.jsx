@@ -1,17 +1,16 @@
 import React from "react";
 import Carousel from "react-grid-carousel";
-import saloonOffer from "../pages/images/SOC.png";
-import mensOffer from "../pages/images/SAL.png";
-import womensOffer from "../pages/images/BP.png";
+import saloonOffer from "../pages/images/Offers-1.webp";
+import mensOffer from "../pages/images/Offers-2.webp";
+import womensOffer from "../pages/images/Offers-3.webp";
 import "./styles.scss";
-import { useTranslation } from "react-i18next";
 
 const Offers = () => {
-const { t } = useTranslation();
-
   return (
     <div className=" mt-8  text-black md:mb-10 mb-20">
-      <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">{t('offers')}</h1>
+      <h1 className="px-2.5 md:px-5 md:text-xl font-semibold pb-3">
+        Saalons Upcoming Offers
+      </h1>
       <Carousel cols={3} rows={1} gap={7}>
         <Carousel.Item>
           <div className="h-44 w-full">
@@ -67,23 +66,6 @@ const { t } = useTranslation();
             />
           </div>
         </Carousel.Item>
-        {/* <Carousel.Item>
-          <div className="relative h-44 w-full">
-            <img
-              src="https://picsum.photos/800/600?random=1"
-              alt="images"
-              className="rounded-md"
-            />
-            <p className="absolute bottom-4 left-4 text-white font-bold  text-2xl ">
-              Dry Cleaning
-            </p>
-            <p className="absolute bottom-1 right-2 text-white font-bold text-xl">
-              Coming Soon
-            </p>
-          </div>
-        </Carousel.Item> */}
-
-        {/* ... */}
       </Carousel>
     </div>
   );

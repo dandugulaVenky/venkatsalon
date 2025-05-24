@@ -1,6 +1,6 @@
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
+
 import moment from "moment";
 import React, { useContext, useState } from "react";
 
@@ -9,6 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 import useFetch from "../../hooks/useFetch";
 import baseUrl from "../../utils/client";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../axiosInterceptor";
 
 const CustomerDetails = ({ item, setOpenModal }) => {
   const [loading, setLoading] = useState(false);
@@ -41,9 +42,9 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     // Calculate the time difference in milliseconds between the given time and the current time
     let timeDiff = time1Date.getTime() - currentDate.getTime();
 
-    // Check if the time difference is less than or equal to 1.5 hours (90 minutes)
-    if (timeDiff >= 90 * 60 * 1000) {
-      return 10; // The current time is 1.5 hours or less before the given time
+    // Check if the time difference is less than or equal to .5 hours (30 minutes)
+    if (timeDiff >= 30 * 60 * 1000) {
+      return 10; // The current time is .5 hours or less before the given time
     } else {
       // Compare the year, month, and day components
       if (
@@ -103,7 +104,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
-    console.log(result2);
+    // console.log(result2);
     if (result2 !== 10) {
       setLoading(false);
       return toast("Cannot cancel now!");
@@ -112,7 +113,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     try {
       await Promise.all(
         uniqueArr.map((item) => {
-          axios.put(
+          axiosInstance.put(
             `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
             {
               isAccepted: "cancelled",
@@ -128,7 +129,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
 
     await Promise.all(
       uniqueArr1.map((item) => {
-        axios.put(
+        axiosInstance.put(
           `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
           {
             isDone: "cancelled",
@@ -138,7 +139,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
       })
     );
     await Promise.resolve(
-      axios.put(
+      axiosInstance.put(
         `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
         {
           isDone: "cancelled",
@@ -149,17 +150,21 @@ const CustomerDetails = ({ item, setOpenModal }) => {
 
     try {
       const { email, phone } = user;
-      await axios.post(
+      await axiosInstance.post(
         `${baseUrl}/api/sendmail`,
         {
           email: item.email,
           userNumber: item.phone,
-
+          userName: item.username,
           type: "cancel",
           shopName: shopData.name,
           ownerEmail: email,
           ownerNumber: phone,
-          link: "https://easytym.com/history",
+          dates: {
+            date: item.date,
+            time: item.time,
+          },
+          link: "https://saalons.com/history",
         },
         { withCredentials: true }
       );
@@ -177,21 +182,19 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     let datetime = moment(`${date} ${time}`, "MMM Do YYYY h:mm A");
     let result = datetime.valueOf();
     let result2 = compareTimeDiff(result);
-    console.log(result2);
-    if (result2 === -1) {
-      return toast("Cannot approve past times!");
-    }
+    // console.log(result2);
+
     if (result2 === 1 || result2 === 10) {
       setLoading(false);
       return toast("Cannot approve Future times!");
     }
 
     if (uniqueArr.length > 0 && uniqueArr1.length > 0) {
-      const { email, phone } = user;
+      // const { email, phone } = user;
       try {
         await Promise.all(
           uniqueArr.map((item) => {
-            return axios.put(
+            return axiosInstance.put(
               `${baseUrl}/api/rooms/updateAvailabilityStatus/${item.unavailableDateId}`,
               {
                 isAccepted: "true",
@@ -202,7 +205,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
         );
         await Promise.all(
           uniqueArr1.map((item) => {
-            return axios.put(
+            return axiosInstance.put(
               `${baseUrl}/api/users/updateUserApprovalStatus/${item}`,
               {
                 isDone: "true",
@@ -212,7 +215,7 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           })
         );
         await Promise.resolve(
-          axios.put(
+          axiosInstance.put(
             `${baseUrl}/api/hotels/updateOwnerApprovalStatus/${item._id}`,
             {
               isDone: "true",
@@ -221,19 +224,41 @@ const CustomerDetails = ({ item, setOpenModal }) => {
           )
         );
 
-        await axios.post(
+        await axiosInstance.post(
+          `${baseUrl}/api/hotels/postRewards/${item.shopId}`,
+          {
+            rewardAmount: item.totalAmount * (15 / 100) * (5 / 100),
+            referenceNumber: item.referenceNumber,
+            //shopName we are using already in backend
+            phone: item.phone,
+
+            fromCustomer: item.username,
+            date: item.date,
+            time: item.time,
+            settled: false,
+          },
+          { withCredentials: true }
+        );
+
+        await axiosInstance.post(
           `${baseUrl}/api/sendmail`,
           {
             email: item.email,
             userNumber: item.phone,
+            userName: item.username,
+            referenceNumber: item.referenceNumber,
             //shopName we are using already in backend
             shopName: shopData.name,
-            ownerEmail: email,
-            ownerNumber: phone,
-            link: "https://easytym.com/history",
+            type: "markDone",
+            dates: {
+              date: item.date,
+              time: item.time,
+            },
+            link: "https://saalons.com/history",
           },
           { withCredentials: true }
         );
+
         setOpenModal(false);
         toast("Done Successfully");
         setLoading(false);
@@ -278,6 +303,8 @@ const CustomerDetails = ({ item, setOpenModal }) => {
     uniqueArr1 = Array.from(new Set(userBookingIds));
   }
 
+  // console.log(moment().format("MMM Do YY") === date, "moment().format");
+
   return (
     <div className="reserve-admin px-4">
       <div className="relative border-2 border-white rounded p-3">
@@ -321,16 +348,18 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                   {item.selectedSeats.map((seat, i) => {
                     return (
                       <span
-                        className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white"
+                        className="text-[13px] md:text-[15px] px-1 bg-orange-900 text-white my-1 rounded"
                         key={i}
                       >
+                        <p className="text-white">{item.superCategory}</p>
                         {seat.options.map((option, j) => {
                           return (
                             <span className="">
                               {option.service}{" "}
-                              <span>
-                                {j !== seat.options.length - 1 ? ", " : ". "}
+                              <span className="">
+                                - Barber/Beautician: {seat.barber.name || ""}
                               </span>
+                              {j !== seat.options.length - 1 ? ", " : ". "}
                             </span>
                           );
                         })}
@@ -341,23 +370,23 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col space-y-1 ">
+            <div className="flex flex-col space-y-2 ">
               <div>
-                <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
+                {/* <span className="text-[13px] md:text-[15px] siTaxiOp mr-1">
                   {t("paidStatus")} :{" "}
                   {item.isPaid === true ? "paid" : "Not paid"}
-                </span>
+                </span> */}
                 <span className="text-[13px] md:text-[15px] bg-orange-900 px-2 py-1 rounded mr-1 text-white">
-                  {t("amount")} : {item.totalAmount}
+                  {t("amount")} : ₹{item.totalAmount}
                 </span>
               </div>
               <div>
-                <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
+                {/* <span className="text-[13px] md:text-[15px] siTaxiOp px-2">
                   {t("email", { email: item.email })}
-                </span>
-                <span className="text-[13px] md:text-[15px] siTaxiOp px-2 ml-1">
-                  {t("phone", { phone: item.phone })}
-                </span>
+                </span> */}
+                <p className="text-xl md:text-[15px] bg-white px-2 ml-1 rounded-md">
+                  phone: {t("phone", { phone: item.phone })}
+                </p>
               </div>
             </div>
             {loading ? (
@@ -365,43 +394,47 @@ const CustomerDetails = ({ item, setOpenModal }) => {
                 <span className="buttonloader ml-2"></span>
               </p>
             ) : (
-              <div className="space-x-3">
-                <button
-                  className={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? "siCheckButton bg-blue-400 px-4"
-                      : "primary-button"
-                  }
-                  onClick={() => {
-                    item.isDone === "false" &&
-                      handleClick(uniqueArr, uniqueArr1);
-                  }}
-                  disabled={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? true
-                      : false
-                  }
-                >
-                  {item.isDone === "true"
-                    ? `${t("accepted")}`
-                    : `${t("markDone")}`}
-                </button>
-                <button
-                  className={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? "siCheckButton bg-red-400 px-4"
-                      : "danger-button"
-                  }
-                  onClick={() => item.isDone === "false" && handleCancel(user)}
-                  disabled={
-                    item.isDone === "true" || item.isDone === "cancelled"
-                      ? true
-                      : false
-                  }
-                >
-                  {t("cancel")}
-                </button>
-              </div>
+              moment().format("MMM Do YY") === date && (
+                <div className="space-x-3">
+                  <button
+                    className={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? "siCheckButton bg-blue-400 px-4"
+                        : "primary-button"
+                    }
+                    onClick={() => {
+                      item.isDone === "false" &&
+                        handleClick(uniqueArr, uniqueArr1);
+                    }}
+                    disabled={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? true
+                        : false
+                    }
+                  >
+                    {item.isDone === "true"
+                      ? `${t("accepted")}`
+                      : `${t("markDone")}`}
+                  </button>
+                  <button
+                    className={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? "siCheckButton bg-red-400 px-4"
+                        : "danger-button"
+                    }
+                    onClick={() =>
+                      item.isDone === "false" && handleCancel(user)
+                    }
+                    disabled={
+                      item.isDone === "true" || item.isDone === "cancelled"
+                        ? true
+                        : false
+                    }
+                  >
+                    {t("cancel")}
+                  </button>
+                </div>
+              )
             )}
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import baseUrl from "../../utils/client";
-import axios from "axios";
+
 import { useEffect } from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import CustomerDetails from "../../components/admin/CustomerDetails";
 
 import Charts from "../../utils/Charts";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const AdminOrders = () => {
   const { user } = useContext(AuthContext);
@@ -60,7 +61,7 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/find/${user?.shopId}`
         );
         setShopType(data?.type);
@@ -74,7 +75,7 @@ const AdminOrders = () => {
   const requests = useCallback(async () => {
     setLoading(true);
 
-    await axios
+    await axiosInstance
       .post(
         `${baseUrl}/api/hotels/getShopRequests/${shopId}`,
         {
@@ -85,7 +86,9 @@ const AdminOrders = () => {
       .then(async (res) => {
         setData(res.data);
         try {
-          const res1 = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+          const res1 = await axiosInstance.get(
+            `${baseUrl}/api/hotels/room/${shopId}`
+          );
 
           //merge all the services from utils
 
@@ -167,7 +170,7 @@ const AdminOrders = () => {
 
           setResultInServicesCount(arr);
           setResultInCategoriesCount(arr1);
-          console.log(arr);
+          // console.log(arr);
           //generating revenue based on gender
           const generateRevenue = statusDoneServices1.reduce((acc, item) => {
             if (item.subCategory) {
@@ -348,10 +351,10 @@ const AdminOrders = () => {
                       <span className="text-xs md:text-[15px] siTaxiOp px-2">
                         {item.username}
                       </span>
-                      <span className="text-xs md:text-[15px] siTaxiOp mr-2 ">
+                      {/* <span className="text-xs md:text-[15px] siTaxiOp mr-2 ">
                         {t("paidStatus")} :{" "}
                         {item.isPaid === true ? "paid" : "Not paid"}
-                      </span>
+                      </span> */}
                     </div>
                     <button
                       onClick={() => {
@@ -371,7 +374,7 @@ const AdminOrders = () => {
                   </div>
                 </div>
                 <div className="flex flex-col space-y-1 ">
-                  <div className=" flex space-x-1">
+                  {/* <div className=" flex space-x-1">
                     <p className="text-xs md:text-[15px] siTaxiOp ">
                       {t("on")}:{" "}
                       {moment(item.createdAt).format("MMM Do YY hh:mm:ss A")}
@@ -381,7 +384,7 @@ const AdminOrders = () => {
                         {t("ref")}: {item.referenceNumber}
                       </p>
                     )}
-                  </div>
+                  </div> */}
                   <span
                     className={
                       item.isDone === "true"

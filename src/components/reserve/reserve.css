@@ -1,3 +1,7 @@
+.non-clickable {
+  pointer-events: none; /* Disables clicking */
+}
+
 .reserve {
   width: 100vw;
   height: 100vh;

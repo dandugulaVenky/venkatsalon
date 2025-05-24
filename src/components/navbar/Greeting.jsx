@@ -14,6 +14,7 @@ import { SearchContext } from "../../context/SearchContext";
 import Header from "../header/Header";
 import { Store } from "../../pages/ironing/ironing-utils/Store";
 import { ToastContainer } from "react-toastify";
+import SaalonsLogo from "../../pages/images/saalonsT.png";
 import "./greeting.scss";
 
 // const shortenString = (inputString) => {
@@ -54,12 +55,12 @@ const Greeting = ({ bestRef }) => {
   }, []);
 
   // const [greet, setGreet] = useState("");
-  const { user } = useContext(AuthContext);
+  // const { user } = useContext(AuthContext);
 
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  // const [cartItemsCount, setCartItemsCount] = useState(0);
 
   const { state } = useContext(Store);
-  const { cart } = state;
+  // const { cart } = state;
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(false);
@@ -76,9 +77,9 @@ const Greeting = ({ bestRef }) => {
     setHeader(!header);
   };
 
-  useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+  // useEffect(() => {
+  //   setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  // }, [cart.cartItems]);
 
   return (
     <>
@@ -109,7 +110,7 @@ const Greeting = ({ bestRef }) => {
             <div className="flex items-center justify-center col-span-2">
               <Link to="/">
                 <img
-                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  src={SaalonsLogo}
                   alt="logo"
                   className={`${
                     isScrolled ? "greeting-imgs1" : "greeting-imgs2"
@@ -118,7 +119,10 @@ const Greeting = ({ bestRef }) => {
                 />
               </Link>
             </div>
-            <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-8">
+            <div
+              className="pl-12 text-xl mt-1 font-semibold flex items-center justify-center space-x-2 col-span-10"
+              onClick={handleLocation}
+            >
               <FontAwesomeIcon
                 icon={faLocationPinLock}
                 size="lg"
@@ -130,12 +134,11 @@ const Greeting = ({ bestRef }) => {
                   icon={faChevronCircleDown}
                   size="sm"
                   color="#00ccbb"
-                  onClick={handleLocation}
                 />
               )}
             </div>
-            <div className="col-span-2 flex items-center justify-center ">
-              {pathname.includes("iron") && (
+            {/* <div className="col-span-2 flex items-center justify-center "> */}
+            {/* {pathname.includes("iron") && (
                 <Link to="/iron/cart">
                   <a className=" font-semibold md:text-lg text-xs " href="###">
                     <FontAwesomeIcon icon={faCartShopping} color="black" />
@@ -146,15 +149,15 @@ const Greeting = ({ bestRef }) => {
                     )}
                   </a>
                 </Link>
-              )}
-              {user ? (
+              )} */}
+            {/* {user ? (
                 ""
               ) : (
                 <Link to="/login" className="ml-5 text-sm font-bold">
                   Log
                 </Link>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

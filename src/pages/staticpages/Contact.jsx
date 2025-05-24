@@ -3,27 +3,26 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import axios from "axios";
-
-import Layout from "../../components/navbar/Layout";
-
 import { useState } from "react";
 import { useEffect } from "react";
+import venkat from "../images/banner8.jpg"
 
-import { useContext } from "react";
-import { SearchContext } from "../../context/SearchContext";
 import Seo from "../../utils/Seo";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../components/axiosInterceptor";
+import baseUrl from "../../utils/client";
 
 const siteMetadata = {
   title: "Contact Us for Hassle-Free Assistance",
   description:
-    "Join EasyTym today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
-  canonical: "https://easytym.com/contact-us",
+    "Join Saalons today and experience a new level of convenience and efficiency in scheduling your self-care needs.",
+  canonical: "https://saalons.com/contact-us",
 };
 
-export default function Contact() {
+export default function Contact({ company }) {
   const [loading, setLoading] = useState("");
+
+  console.log(company);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,16 +39,16 @@ export default function Contact() {
   const submitHandler = async ({ name, email, phone, message }) => {
     try {
       setLoading(true);
-      const res = await axios.post("/api/sendmail", {
-        type: "contact",
-        contactName: name,
+      const res = await axiosInstance.post(`${baseUrl}/api/contact`, {
+        name,
         email,
         phone,
         message,
+        company,
       });
 
-      if (res.status === 201) {
-        toast("Email Sent Successfully!!👍");
+      if (res.status === 200) {
+        alert(" Submitted Successfully!!👍");
         setValue("name", "");
         setValue("email", "");
         setValue("phone", "");
@@ -65,21 +64,27 @@ export default function Contact() {
 
   return (
     <>
-      <div className="pt-6 pb-20">
+    
+    
+    
+      <div className="pt-6 pb-10 venkat">
+     
+        
         <Seo props={siteMetadata} />
 
-        <div className=" px-8   flex flex-col items-center justify-center   ">
+        <div className=" px-8 sm:flex-col   flex flex-row items-center justify-center   ">
+            
           <form
-            className="px-10 py-2.5 card h-auto  "
+            className="px-10 py-2.5 card  kiran  "
             onSubmit={handleSubmit(submitHandler)}
           >
-            <h1 className="mb-4 text-2xl font-semibold">{t("contactUs")}</h1>
+            <h1 className="mb-4 wow text-white text-2xl font-semibold">{t("ContactUs")}</h1>
 
             <div className="mb-4">
-              <label htmlFor="name">{t("fullName")}</label>
+              <label className="text-white" htmlFor="name">{t("fullName")}</label>
               <input
                 type="text"
-                className="w-full"
+                className="w-full  bg-transparent border-b-white   text-white  border-t-0 border-l-0 border-r-0 outline-transparent "
                 id="name"
                 autoFocus
                 {...register("name", {
@@ -91,31 +96,36 @@ export default function Contact() {
                 })}
               />
               {errors.name && (
-                <div className="text-red-500">{errors.name.message}</div>
+                <div className="text-white">{errors.name.message}</div>
               )}
             </div>
 
+         
+
             <div className="mb-4">
-              <label htmlFor="email">{t("emailTitle")}</label>
+              <label className="text-white" htmlFor="email">{t("emailTitle")}</label>
               <input
-                className="w-full"
+                className="w-full  bg-transparent  border-b-white text-white  border-t-0 border-l-0 border-r-0 outline-transparent"
                 type="email"
                 id="password"
-                {...register("email", {})}
+                
+                {...register("email", {
+               required: "Please enter email",
+                })}
               />
               {errors.email && (
-                <div className="text-red-500 ">{errors.email.message}</div>
+                <div className="text-white ">{errors.email.message}</div>
               )}
             </div>
 
             <div className="mb-4">
-              <label htmlFor="phone">{t("phoneTitle")}</label>
+              <label className=" text-white " htmlFor="phone">{t("phoneTitle")}</label>
               <input
                 type="text"
-                className="w-full"
+                className="w-full bg-transparent border-b-white  text-white  border-t-0 border-l-0 border-r-0 outline-transparent "
                 id="phone"
                 {...register("phone", {
-                  required: "Please enter contact number",
+                  required: "Please enter number",
                   minLength: {
                     value: 10,
                     message: "Please enter 10 numbers",
@@ -123,15 +133,16 @@ export default function Contact() {
                 })}
               />
               {errors.phone && (
-                <div className="text-red-500">{errors.phone.message}</div>
+                <div className="text-white">{errors.phone.message}</div>
               )}
             </div>
 
             <div className="mb-4">
-              <label htmlFor="message">{t("messageTitle")}</label>
+              <label className="text-white bg-transparent " htmlFor="message">{t("messageTitle")}</label>
               <textarea
                 type="text"
-                className="w-full"
+               
+                className="w-full border border-gray-300 bg-transparent border-b-white  text-white  border-t-0 border-l-0 border-r-0 outline-transparent "
                 id="message"
                 {...register("message", {
                   required: "Please enter message",
@@ -142,22 +153,22 @@ export default function Contact() {
                 })}
               />
               {errors.message && (
-                <div className="text-red-500">{errors.message.message}</div>
+                <div className="text-white">{errors.message.message}</div>
               )}
             </div>
             <div className="mb-1">
-              <button className="primary-button" disabled={loading}>
-                {t("submit")}
-              </button>
+              <button className="primary-button  ">{t("submit")}</button>
+               
             </div>
           </form>
-          <div className="card h-auto  w-96 p-8 flex items-center justify-center">
+          {/* <div className="card h-auto  w-96 p-8 flex items-center justify-center">
             <p>{t("aboutAddress")} </p>
             <p>{t("callUs")}</p>
             <p>{t("aboutUsEmail")}</p>
-          </div>
+          </div> */}
         </div>
       </div>
+      
     </>
   );
 }

@@ -7,7 +7,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 import { FinalBookingContextProvider } from "./context/FinalBookingContext";
 
 import { SearchContextProvider } from "./context/SearchContext";
-import { StoreProvider } from "./pages/ironing/ironing-utils/Store";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient();
@@ -16,11 +16,9 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
         <SearchContextProvider>
-          <StoreProvider>
-            <FinalBookingContextProvider>
-              <App />
-            </FinalBookingContextProvider>
-          </StoreProvider>
+          <FinalBookingContextProvider>
+            <App />
+          </FinalBookingContextProvider>
         </SearchContextProvider>
       </AuthContextProvider>
     </QueryClientProvider>

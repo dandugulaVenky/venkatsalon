@@ -12,15 +12,20 @@ import {
   faLocationDot,
   faScissors,
   faSpa,
-  faTrash,
+  faStar,
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { faHeart as faHeart1 } from "@fortawesome/free-solid-svg-icons";
+
+import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   useContext,
   useEffect,
   useState,
   useCallback,
-  Fragment,
   memo,
+  useRef,
 } from "react";
 import useFetch from "../../hooks/useFetch";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -33,13 +38,16 @@ import DatePicker from "react-date-picker";
 import CarouselBanner from "../../components/CarouselBanner";
 import moment from "moment";
 import { toast } from "react-toastify";
-import axios from "axios";
+
 import options from "../../utils/time";
-import Test from "../../utils/Test";
+// import Test from "../../utils/Test";
 import baseUrl from "../../utils/client";
 
 import useEffectOnce from "../../utils/UseEffectOnce";
 import { FinalBookingContext } from "../../context/FinalBookingContext";
+import secureLocalStorage from "react-secure-storage";
+import axiosInstance from "../../components/axiosInterceptor";
+import ShareButton from "./ShareButton";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -66,6 +74,7 @@ function getCurrentTimeRounded() {
   }${minutes} ${amOrPm}`;
   return roundedTime;
 }
+
 const Hotel = ({ smallBanners }) => {
   const location = useLocation();
 
@@ -74,6 +83,10 @@ const Hotel = ({ smallBanners }) => {
   const { data, loading } = useFetch(
     `${baseUrl}/api/hotels/find/${shopIdLocation}`
   );
+  let requests = data?.requests || [];
+
+  // console.log(data, "daaaaaaaaaaaaaata");+
+
   const [comment, setComment] = useState();
   const [rating, setRating] = useState(0);
   const [reviews, setReviews] = useState([]);
@@ -85,19 +98,20 @@ const Hotel = ({ smallBanners }) => {
 
   //Appointment or Booking
 
-  const [appointment, setAppointment] = useState("null");
+  const [appointment, setAppointment] = useState("booking");
 
   const [higlightBookingBox, setHighlightBookingBox] = useState(false);
 
   const { user } = useContext(AuthContext);
-  const { city, timeDifferenceInDays, time } = useContext(SearchContext);
+
+  const { city, timeDifferenceInDays, time, dispatch, lat, lng } =
+    useContext(SearchContext);
   const [value, setValue] = useState(
     moment().add(timeDifferenceInDays, "days").toDate()
   );
 
   const [timeReserve, setTimeReserve] = useState(time ? time : "");
 
-  const { dispatch } = useContext(SearchContext);
   const { dispatch: appointmentDispatch } = useContext(FinalBookingContext);
 
   const [services, setServices] = useState([]);
@@ -107,25 +121,27 @@ const Hotel = ({ smallBanners }) => {
 
   w >= 539
     ? (images = [
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691922131/easytym_ehuu84.gif",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923496/2_inpdfe.png",
-        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1691923462/3_sbjb2n.png",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979201/2_ojl5nt.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979205/3_jeyh64.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734979556/com_1_h7kdal.svg",
       ])
     : (images = [
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
-        "https://res.cloudinary.com/duk9xkcp5/image/upload/v1692469472/A_New_Design_-_Made_with_PosterMyWall_6_ja8ott.jpg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180221/2_l4nngn.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180240/1_vn4gd1.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180222/5_i5nu2y.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180218/4_wyl4vp.svg",
+        "https://res.cloudinary.com/dqupmzcrb/image/upload/v1734180217/3_vwo4mk.svg",
       ]);
 
   const lunch = data?.lunchTimeArray || [];
   const [breakTime, setBreakTime] = useState();
-
+  const [fav, setFav] = useState(false);
   const [block, setBlock] = useState();
   const [minutesValues, setMinutesvalues] = useState([]);
   const today = moment(value).format("MMM Do YY");
   const [matchedArrays, setMatchedArrays] = useState();
   const { t } = useTranslation();
+  const pickerRef = useRef(null);
 
   function isSpecificDate(value, targetDate) {
     return value.toString() === targetDate.toString();
@@ -182,7 +198,7 @@ const Hotel = ({ smallBanners }) => {
   }
 
   const fetchReviews = useCallback(async () => {
-    return await axios
+    return await axiosInstance
       .get(`${baseUrl}/api/hotels/getReviews/${shopIdLocation}`)
       .then((res) => {
         // console.log("reviewsfromdb", res.data);
@@ -190,10 +206,25 @@ const Hotel = ({ smallBanners }) => {
       })
       .catch((err) => toast.error(err));
   }, [shopIdLocation]);
-
   useEffectOnce(() => {
     window.scrollTo(0, 0);
+    const inputs = pickerRef.current?.querySelectorAll("input");
+    inputs?.forEach((input) => {
+      input.setAttribute("readOnly", true); // Prevent typing
+      input.classList.add("cursor-pointer"); // Optional: show pointer cursor
+    });
     fetchReviews();
+    const favTrueOrNot = user?.favourites.find(
+      (item) => item.shopId === shopIdLocation
+    );
+
+    console.log(favTrueOrNot);
+
+    // if (favTrueOrNot) {
+    //   setFav((favTrueOrNot) => (favTrueOrNot?.includes(true) ? true : false));
+    // }
+
+    setFav(favTrueOrNot ? true : false);
   }, [fetchReviews]);
 
   useEffect(() => {
@@ -203,7 +234,7 @@ const Hotel = ({ smallBanners }) => {
     });
     try {
       const fetchData = async () => {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${shopIdLocation}`
         );
         setServices(data[0]?.services);
@@ -230,14 +261,14 @@ const Hotel = ({ smallBanners }) => {
             return {
               id: id._id,
 
-              dates: id.unavailableDates?.map((item) => {
+              dates: id?.unavailableDates?.map((item) => {
                 return { date: item.date, values: item.values };
               }),
             };
           });
 
         let filter = [];
-        res.forEach((date) => {
+        res?.forEach((date) => {
           const answer = date.dates.filter((item) => today === item.date);
           filter.push(answer);
         });
@@ -330,6 +361,10 @@ const Hotel = ({ smallBanners }) => {
   }
 
   const handleClick = () => {
+    if (!selectValue) {
+      window.scrollTo(0, 0);
+      return toast("Please select time");
+    }
     let day1 = moment(value).format("MMM Do YY");
     let day2 = moment(new Date()).format("MMM Do YY");
 
@@ -363,7 +398,7 @@ const Hotel = ({ smallBanners }) => {
     let result2 = compareTimeDiff(result);
 
     if (day1 === day2 && result2 >= 0) {
-      return toast("Please select a valid time!");
+      return toast("Please select tomorrow's date");
     }
     const timeDifferenceInMilliseconds = value - new Date();
 
@@ -378,6 +413,8 @@ const Hotel = ({ smallBanners }) => {
         type: data.type,
         destination: city,
         value,
+        lat,
+        lng,
         time: timeReserve,
         timeDifferenceInDays:
           timeDifferenceInDays > 0 ? timeDifferenceInDays : 0,
@@ -396,8 +433,11 @@ const Hotel = ({ smallBanners }) => {
           value: value,
           options: options,
           breakTime,
+          lunch,
           type: data.type,
           subType: data.subType,
+          barbers: data.barbers,
+          requests,
         },
       });
       // } else if (user && type === "parlour") {
@@ -430,7 +470,7 @@ const Hotel = ({ smallBanners }) => {
       return toast.error("Please enter all fields");
     }
     setLoadingg(true);
-    await axios
+    await axiosInstance
       .post(
         `${baseUrl}/api/hotels/createReview/${shopIdLocation}`,
         {
@@ -504,128 +544,130 @@ const Hotel = ({ smallBanners }) => {
   };
   const [showTimings, setShowTimings] = useState(false);
 
-  const ShowAppointmentModals = useCallback(() => {
-    const appointmentPayment = async () => {
-      if (!user) {
-        navigate("/login", {
-          state: { destination: `/shops/${shopIdLocation}` },
-        });
-        return;
-      }
+  // const ShowAppointmentModals = useCallback(() => {
+  //   const appointmentPayment = async () => {
+  //     if (!user) {
+  //       navigate("/login", {
+  //         state: { destination: `/shops/${shopIdLocation}` },
+  //       });
+  //       return;
+  //     }
 
-      appointmentDispatch({
-        type: "NEW_APPOINTMENT",
-        payload: {
-          totalAmount: 20,
-          date: moment(value).format("MMM Do YY"),
-          shopName: data.name,
-          city: data.city,
-          phone: data.alternatePhone,
-          id: data._id,
-          status: "pending",
-        },
-      });
+  //     appointmentDispatch({
+  //       type: "NEW_APPOINTMENT",
+  //       payload: {
+  //         totalAmount: 20,
+  //         date: moment(value).format("MMM Do YY"),
+  //         shopName: data.name,
+  //         city: data.city,
+  //         phone: data.alternatePhone,
+  //         id: data._id,
+  //         status: "pending",
+  //       },
+  //     });
 
-      try {
-        await axios.post(
-          `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
-          { date: moment(value).format("MMM Do YY") },
-          { withCredentials: true }
-        );
-      } catch (error) {
-        console.log(error);
-        return alert(error.response.data.message);
-      }
+  //     try {
+  //       await axiosInstance.post(
+  //         `${baseUrl}/api/users/checkAppointmentExists/${user?._id}`,
+  //         { date: moment(value).format("MMM Do YY") },
+  //         { withCredentials: true }
+  //       );
+  //     } catch (error) {
+  //       console.log(error);
+  //       return alert(error.response.data.message);
+  //     }
 
-      const {
-        data: { key },
-      } = await axios.get(`${baseUrl}/api/getkey`);
-      try {
-        const {
-          data: { order },
-        } = await axios.post(
-          `${baseUrl}/api/payments/appointment/checkout`,
-          {
-            amount: 20,
-          },
-          { withCredentials: true }
-        );
-        const options = {
-          key,
-          amount: order.amount,
-          currency: "INR",
-          name: "EASYTYM",
-          description: "SALONS & PARLOURS",
-          image: "https://avatars.githubusercontent.com/u/25058652?v=4",
-          order_id: order.id,
-          callback_url: `${baseUrl}/api/payments/appointment/paymentverification`,
-          prefill: {
-            name: "Test Team",
-            email: "test.test@example.com",
-            contact: "9999999999",
-          },
-          notes: {
-            address: "EasyTym Corporate Office",
-          },
-          theme: {
-            color: "#121212",
-          },
-          modal: {
-            ondismiss: function () {},
-          },
-        };
-        const razor = new window.Razorpay(options);
-        razor.open();
-      } catch (err) {
-        alert(err.response.data.message);
-      }
-    };
-    return (
-      <div className="reserve  overscroll-none">
-        <FontAwesomeIcon
-          icon={faClose}
-          size="xl"
-          color="black"
-          onClick={() => {
-            setAppointment("null");
-            document.body.style.overflow = "unset";
-          }}
-          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
-        />
+  //     const {
+  //       data: { key },
+  //     } = await axiosInstance.get(`${baseUrl}/api/getkey`);
+  //     try {
+  //       const {
+  //         data: { order },
+  //       } = await axiosInstance.post(
+  //         `${baseUrl}/api/payments/appointment/checkout`,
+  //         {
+  //           amount: 20,
+  //         },
+  //         { withCredentials: true }
+  //       );
+  //       const token = sessionStorage.getItem("access_token");
 
-        <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[45%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
-          <p className="font-bold font-verdana text-center">
-            Date Selected - {moment(value).format("MMM Do YY")}
-          </p>
-          <p>
-            Note: If confirmed, you will recieve a call from shop owner to know
-            about the services and your convenient time! We will collect a
-            amount of 20 rs/- for booking confirmation.
-          </p>
-          <p className="pb-4">
-            In case of any queries, please
-            <Link to="/contact-us" className="text-[#00ccbb]">
-              &nbsp; contact us
-            </Link>
-            .
-          </p>
-          <button className="primary-button mt-4" onClick={appointmentPayment}>
-            Confirm
-          </button>
-        </div>
-      </div>
-    );
-  }, [
-    appointmentDispatch,
-    data._id,
-    data.alternatePhone,
-    data.city,
-    data.name,
-    navigate,
-    shopIdLocation,
-    user,
-    value,
-  ]);
+  //       const options = {
+  //         key,
+  //         amount: order.amount,
+  //         currency: "INR",
+  //         name: "EASYTYM",
+  //         description: "SALONS & PARLOURS",
+  //         image: "https://avatars.githubusercontent.com/u/25058652?v=4",
+  //         order_id: order.id,
+  //         callback_url: `${baseUrl}/api/payments/appointment/paymentverification?token=${token}`,
+  //         prefill: {
+  //           name: "Test Team",
+  //           email: "test.test@example.com",
+  //           contact: "9999999999",
+  //         },
+  //         notes: {
+  //           address: "EasyTym Corporate Office",
+  //         },
+  //         theme: {
+  //           color: "#121212",
+  //         },
+  //         modal: {
+  //           ondismiss: function () {},
+  //         },
+  //       };
+  //       const razor = new window.Razorpay(options);
+  //       razor.open();
+  //     } catch (err) {
+  //       alert(err.response.data.message);
+  //     }
+  //   };
+  //   return (
+  //     <div className="reserve  overscroll-none">
+  //       <FontAwesomeIcon
+  //         icon={faClose}
+  //         size="xl"
+  //         color="black"
+  //         onClick={() => {
+  //           setAppointment("null");
+  //           document.body.style.overflow = "unset";
+  //         }}
+  //         className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+  //       />
+
+  //       <div className="flex relative slide-in-right items-center justify-center space-y-3 px-4 flex-col h-[50%] md:w-[40%] w-[75%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+  //         <p className="font-bold font-verdana text-center">
+  //           Date Selected - {moment(value).format("MMM Do YY")}
+  //         </p>
+  //         <p>
+  //           Note: If confirmed, you will recieve a call from shop owner to know
+  //           about the services and your convenient time! We will collect a
+  //           amount of 20 rs/- for booking confirmation.
+  //         </p>
+  //         <p className="pb-4">
+  //           In case of any queries, please
+  //           <Link to="/contact-us" className="text-[#00ccbb]">
+  //             &nbsp; contact us
+  //           </Link>
+  //           .
+  //         </p>
+  //         <button className="primary-button mt-4" onClick={appointmentPayment}>
+  //           Confirm
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }, [
+  //   appointmentDispatch,
+  //   data._id,
+  //   data.alternatePhone,
+  //   data.city,
+  //   data.name,
+  //   navigate,
+  //   shopIdLocation,
+  //   user,
+  //   value,
+  // ]);
 
   const ShowTheTimings = () => {
     document.body.style.overflow = "hidden";
@@ -634,6 +676,8 @@ const Hotel = ({ smallBanners }) => {
       moment(value).format("Do MM") === moment(new Date()).format("Do MM")
         ? options.find((option) => option.value === roundedTime)?.id
         : 0;
+
+    // console.log(id, "idddddddddddddd");
     return (
       <div className="reserve  overscroll-none">
         <FontAwesomeIcon
@@ -644,13 +688,13 @@ const Hotel = ({ smallBanners }) => {
             setShowTimings(false);
             document.body.style.overflow = "unset";
           }}
-          className="absolute md:top-10 top-5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
+          className="absolute md:top-10 top-2.5 lg:right-52 md:right-20 right-6 bg-white rounded-full px-2.5 py-[0.30rem] cursor-pointer"
         />
 
-        <div className="flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
+        <div className="-top-8 flex relative slide-in-right items-start flex-col h-[80%] md:w-[50%] w-[85%] my-auto  mx-auto bg-white text-black overflow-auto rounded-md">
           <p
             className={classNames(
-              `text-white text-center block z-10  md:text-lg text-[1rem] font-bold cursor-pointer bg-[#6262c7e5] slide-in-left  py-2 sticky top-0 w-[100%]`
+              `text-white text-center block z-10  md:text-lg text-[1rem] font-bold cursor-pointer bg-[#00ccbb] slide-in-left  py-2 sticky top-0 w-[100%]`
             )}
           >
             <FontAwesomeIcon icon={faCircle} color="green " size="sm" /> -{" "}
@@ -680,7 +724,7 @@ const Hotel = ({ smallBanners }) => {
                   }
                 }
                 return (
-                  i >= id && (
+                  (i >= id + 6 || id === undefined) && (
                     <div
                       onClick={() => handleTime(option)}
                       className={classNames(
@@ -754,6 +798,67 @@ const Hotel = ({ smallBanners }) => {
 
   // console.log(higlightBookingBox);
 
+  const handleFavourites = async () => {
+    if (!user) {
+      return alert("Please login to add to favourites!");
+    }
+
+    try {
+      const favs = await axiosInstance.post(
+        `${baseUrl}/api/users/favourites`,
+        {
+          shopId: shopIdLocation,
+          shopName: data.name,
+          shopLocation: data.city,
+          userId: user._id,
+          image: data?.images[0] || {
+            public_id: "default_id",
+            url: "https://th.bing.com/th/id/OIP.vJPMDs4fhLFH1an0goJdcwHaE8?w=225&h=180&c=7&r=0&o=7&cb=iwp1&dpr=1.3&pid=1.7&rm=3",
+          },
+          addingOrRemoving: fav ? "remove" : "add",
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (favs.status === 200) {
+        alert("Added to favs!");
+        setFav(true);
+        let favs = user.favourites.find(
+          (item) => item.shopId === shopIdLocation
+        );
+
+        if (!fav) {
+          if (favs) return;
+          user.favourites.push({
+            shopId: shopIdLocation,
+            shopName: data.name,
+            shopLocation: data.city,
+            userId: user._id,
+            image: data.images[0] || "null",
+          });
+          secureLocalStorage.setItem("easytym-user", user);
+        }
+
+        // dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+      } else if (favs.status === 201) {
+        alert("removed from favs!");
+        setFav(false);
+        user.favourites = user.favourites.filter(
+          (item) => item.shopId !== shopIdLocation
+        );
+
+        secureLocalStorage.setItem("easytym-user", user);
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error?.response?.data?.message || "Error occured!");
+    }
+  };
+
   return (
     <div className="pt-6 pb-8 resp">
       <div className={` w-full mx-auto  md:rounded md:px-4 `}>
@@ -776,143 +881,144 @@ const Hotel = ({ smallBanners }) => {
         </CarouselBanner>
       </div>
 
-      {appointment === "appointment" && <ShowAppointmentModals />}
+      {/* {appointment === "appointment" && <ShowAppointmentModals />} */}
 
       <div
-        className={`md:px-4 px-2 my-4 ${higlightBookingBox ? "heartbeat" : ""}`}
+        className={`md:px-4   px-3 my-4 ${
+          higlightBookingBox ? "heartbeat" : ""
+        }`}
       >
         <div
-          className="w-full bg-[#00ccbb] rounded-md  md:p-5 p-2 flex items-center justify-center flex-col  "
-          style={{
-            boxShadow: "1px 0.75px 1.5px black",
-          }}
+          className="w-full bg-white rounded-xl md:p-6 p-4 border border-gray-300  flex flex-col items-center justify-center"
+          style={{ borderRadius: 8 }}
         >
-          <div className="flex items-center justify-center space-x-5 pt-6 pb-6 md:-ml-0 -ml-2.5 text-white ">
+          {/* Header options */}
+          <div className="flex items-center justify-center space-x-6 text-gray-800 font-semibold text-base md:text-lg mb-6">
             {appointment !== "null" ? (
-              <div className={`active scale-in-center space-x-2`}>
-                <span className="text-xs md:text-lg font-bold space-x-2 ">
-                  {appointment}
-                  <FontAwesomeIcon
-                    icon={faCircleXmark}
-                    className=" ml-4 cursor-pointer"
-                    size="lg"
-                    onClick={() => setAppointment("null")}
-                  />
-                </span>
+              <div className="flex items-center gap-2 text-[#00ccbb] font-bold">
+                {/* {appointment} */} Select Date and Time
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className="ml-2 cursor-pointer text-gray-400 hover:text-red-500 hidden"
+                  size="lg"
+                  onClick={() => setAppointment("null")}
+                />
               </div>
             ) : (
               <>
                 <div
-                  className={
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full ${
                     data.type === "salon"
-                      ? `active scale-in-center space-x-2`
-                      : `space-x-2`
-                  }
+                      ? "bg-[#00ccbb]/20 text-[#00ccbb] font-bold"
+                      : "text-gray-600"
+                  }`}
                 >
                   <FontAwesomeIcon icon={faScissors} />
-                  <span className="text-xs md:text-lg font-bold ">
-                    {t("saloonShops")}
-                  </span>
+                  <span>{t("saloonShops")}</span>
                 </div>
                 <div
-                  className={
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full ${
                     data.type === "parlour"
-                      ? `active scale-in-center space-x-2`
-                      : `space-x-2`
-                  }
+                      ? "bg-[#00ccbb]/20 text-[#00ccbb] font-bold"
+                      : "text-gray-600"
+                  }`}
                 >
                   <FontAwesomeIcon icon={faSpa} />
-                  <span className="text-xs md:text-lg font-bold">
-                    {t("beautyParlours")}
-                  </span>
+                  <span>{t("beautyParlours")}</span>
                 </div>
               </>
             )}
           </div>
 
-          <div className="grid grid-cols-12 gap-5 pb-5">
-            <div className="md:col-span-4 col-span-12">
-              <div className="">
+          {/* Content Grid */}
+          <div className="grid grid-cols-12 gap-4 w-[80%] mx-auto -mt-2">
+            {/* Calendar */}
+            <div className="md:col-span-4 col-span-12 relative z-10">
+              <div ref={pickerRef}>
                 <DatePicker
                   onChange={handleChange}
                   tileClassName={tileClassName}
                   value={value}
                   minDate={new Date()}
                   maxDate={new Date(Date.now() + 6 * 24 * 60 * 60 * 1000)}
-                  className="bg-slate-100 text-blue-400 p-2.5 rounded w-full    "
+                  className="bg-white text-[#00ccbb] p-3 rounded-lg w-full shadow-sm border border-gray-300 drop-shadow-md focus:outline-none focus:ring-2 focus:ring-[#00ccbb] transition-all duration-200"
                 />
               </div>
             </div>
+
+            {/* Time Selection */}
             <div className="md:col-span-4 col-span-12">
               {loading || loadingg ? (
-                <p className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none ">
+                <div className="p-3 w-full bg-gray-100 text-gray-500 text-center rounded-lg shadow-sm">
                   {t("loading")}
-                </p>
+                </div>
               ) : appointment === "booking" ? (
                 <button
                   onClick={() => setShowTimings(true)}
-                  className="inline-flex heartbeat justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100  rounded-md shadow-sm hover:bg-gray-50 focus:outline-none "
+                  className="w-full  bg-white text-gray-800 p-3 rounded-lg flex items-center justify-between shadow-sm border border-gray-300 drop-shadow-md"
                 >
-                  <div className="w-full flex items-center justify-between">
-                    <span className="md:text-md">
-                      {timeReserve ? (
-                        <p
-                          className={
-                            lunch.includes(options[selectValue].id) &&
-                            ` text-red-500 `
-                          }
-                        >
-                          {timeReserve}
-                        </p>
-                      ) : (
-                        t("selectTime")
-                      )}
-                    </span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5 ml-2 -mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
+                  {timeReserve ? (
+                    <span
+                      className={
+                        lunch.includes(options[selectValue].id)
+                          ? "text-red-500"
+                          : ""
+                      }
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
+                      {timeReserve}
+                    </span>
+                  ) : (
+                    <span>{t("selectTime")}</span>
+                  )}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
                 </button>
               ) : appointment === "appointment" ? (
-                "Book an appointment!"
+                <div className="text-center text-[#00ccbb] font-semibold">
+                  Book an appointment!
+                </div>
               ) : (
                 <select
-                  className="inline-flex justify-start w-full p-[0.67rem] text-[1rem] bg-slate-100 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none"
+                  className="hidden w-full p-3 text-base bg-gray-100 border border-gray-300 rounded-lg shadow-sm"
                   onChange={(e) => setAppointment(e.target.value)}
                 >
                   <option value={"null"} disabled selected>
                     Select Booking Type
                   </option>
-                  <option value={"booking"}>Book Time And Services</option>
-                  <option value={"appointment"}>Book an appointment</option>
+                  <option value={"booking"}>Book an appointment</option>
                 </select>
               )}
             </div>
+
+            {/* Timings */}
             {showTimings && <ShowTheTimings />}
+
+            {/* Select Services */}
             <div className="md:col-span-4 col-span-12">
               <button
-                className="headerBtn w-full p-[0.71rem] jello-horizontal"
+                className="w-full bg-[#00ccbb] text-white p-3 rounded-lg font-semibold hover:bg-[#00b3a4] transition jello-horizontal"
                 onClick={handleClick}
               >
-                {t("checkServices")}
+                Select Services
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <h1 className="hotelTitle px-4 pt-4">Popular Packages</h1>
+      {/* <h1 className="hotelTitle px-4 pt-4">Popular Packages</h1>
       {services?.length > 0 ? (
         <Test
           services={services}
@@ -922,7 +1028,7 @@ const Hotel = ({ smallBanners }) => {
         />
       ) : (
         ""
-      )}
+      )} */}
       {loading ? (
         <div className="md:min-h-[65vh] min-h-[45vh] flex items-center justify-center">
           <span className="loader  "></span>
@@ -976,27 +1082,120 @@ const Hotel = ({ smallBanners }) => {
                     className="text-[#00ccbb]"
                     target="_blank"
                     rel="noreferrer"
-                    href={`https://www.google.com/maps/dir/Current+Location/${data?.latLong?.lat},${data?.latLong?.lng}`}
+                    href={`https://www.google.com/maps/dir/?api=1&origin=${
+                      lat && lng ? `${lat},${lng}` : "My+Location"
+                    }&destination=${data?.latLong?.coordinates[1]},${
+                      data?.latLong?.coordinates[0]
+                    }`}
                   >
                     {t("getDirectionsToShop")}
                   </a>
                 </div>
-                <span className="hotelDistance">
-                  {/* Excellent location – {data.distance}m from center */}
-                  {t("shopDistance", { distance: data.distance })}
-                </span>
+                <span className="hotelDistance">Excellent location</span>
+                {data?.individualOffer?.length > 0 && (
+                  <div className="grid gap-4 sm:grid-cols-2 mt-2">
+                    <span className="text-xl font-semibold text-center ">
+                      {" "}
+                      <FontAwesomeIcon icon={faTags} className="text-white" />
+                      Offers on Individual Services
+                    </span>
+                    {data.individualOffer?.map((item1, index) => (
+                      <div
+                        key={index}
+                        onClick={handleClick}
+                        className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]"
+                      >
+                        <div className="flex justify-between items-center ">
+                          <h3 className="text-md font-bold">
+                            {item1?.service}
+                          </h3>
+                          <span className="bg-white text-[#00ccbb] text-xs font-bold px-2 py-1 rounded-full">
+                            {item1?.offer}% OFF
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <>
+                  {data?.overallShopOffer > 0 && (
+                    <div className="my-3 space-y-6">
+                      {" "}
+                      <span className="text-xl font-semibold text-center ">
+                        Hurrayyyy! 🎉🎉🎉 Shop Provides :
+                      </span>
+                      <div
+                        onClick={handleClick}
+                        className="bg-gradient-to-br from-orange-500 to-yellow-400 text-white p-4 rounded-xl shadow-md transition-all hover:scale-[1.02]"
+                      >
+                        <div className="flex justify-between items-center ">
+                          <h3 className="text-md font-bold">
+                            Overall Shop Offer
+                          </h3>
+                          <span className="bg-white text-[#00ccbb] text-xs font-bold px-2 py-1 rounded-full">
+                            {data?.overallShopOffer}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <marquee className="text-sm text-gray-600 pt-1">
+                    <p
+                      onClick={() => {
+                        window.scrollTo({
+                          top: 0,
+                          left: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                      className="cursor-pointer text-xl font-semibold text-[#00ccbb]"
+                    >
+                      Click me to select services and book now...
+                    </p>
+                  </marquee>
+                </>
+                {data?.fullAddress && (
+                  <span className="hotelDistance">
+                    Full Address: {data?.fullAddress}
+                  </span>
+                )}
                 {/* <span className="hotelPriceHighlight"> */}
                 {/* Book over Rs.{data.cheapestPrice} at this shop and get a free Shaving. */}
                 {/* {t("shopAbovePrice", { price: data.cheapestPrice })} */}
                 {/* </span> */}
               </div>
-              <img
-                src="https://res.cloudinary.com/duk9xkcp5/image/upload/v1679746627/716z0eWdZjL._SL1500__t4foon.webp"
-                alt={data?.title}
-                className="opacity-70 sm:h-auto sm:w-auto md:h-36 md:w-36 "
-              ></img>
+              {fav ? (
+                <div className="flex  items-center md:space-y-2 space-y-0  space-x-2">
+                  <div>
+                    <span className="text-xs ">Remove from Favourites</span>
+                    <FontAwesomeIcon
+                      icon={faHeart1}
+                      size="lg"
+                      className="cursor-pointer"
+                      color="red"
+                      onClick={handleFavourites}
+                    />
+                    <ShareButton />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex  items-center md:space-y-2 space-y-0 space-x-2">
+                  {" "}
+                  <div className="flex flex-col items-center space-y-2">
+                    <span className="text-xs ">Add to Favourites</span>
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      size="lg"
+                      className="cursor-pointer"
+                      onClick={handleFavourites}
+                    />
+                  </div>
+                  <ShareButton />
+                </div>
+              )}
             </div>
-            <div className="hotelImages">
+            <div className="hotelImages mt-8">
               {data.images?.map((photo, i) => (
                 <div className="hotelImgWrapper" key={i}>
                   <img

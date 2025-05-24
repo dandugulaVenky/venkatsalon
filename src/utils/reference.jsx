@@ -5,7 +5,7 @@
 // import useFetch from "../../hooks/useFetch";
 // import { useContext, useState } from "react";
 // import { SearchContext } from "../../context/SearchContext";
-// import axios from "axios";
+// import axiosInstance from "axiosInstance";
 // import { AuthContext } from "../../context/AuthContext";
 // import { useNavigate } from "react-router-dom";
 // import { useEffect } from "react";
@@ -90,7 +90,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const { data } = await axios.get(`${baseUrl}/api/hotels/room/${shopId}`);
+//       const { data } = await axiosInstance.get(`${baseUrl}/api/hotels/room/${shopId}`);
 //       setPreviewServices(data[0]?.services);
 
 //       const totalTimeOfServices = data[0]?.services.reduce((acc, service) => {

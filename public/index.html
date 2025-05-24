@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, user-scalable=no"
     />
-
-    <meta httpEquiv="content-type" content="text/html; charset=UTF-8" />
     <meta
-      httpEquiv="Content-Security-Policy"
+      http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="icon"
       type="image/png"
@@ -26,26 +24,61 @@
     />
     <link rel="apple-touch-icon" href="./images/mainLogo.png" />
     <link rel="manifest" href="./manifest.json" />
+    <title>Saalons</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>
+
+    <script>
+      (function () {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isWebView =
+          /(Instagram|FBAV|Messenger|Twitter|Line|LinkedIn|Snapchat|WeChat|TikTok|Google)/i.test(
+            userAgent
+          );
+        var isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+        var isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+
+        if (isWebView || (!isSafari && isMobile && /Google/i.test(userAgent))) {
+          // Redirect to blocking page
+          window.location.replace("/webview-block.html");
+        }
+      })();
+    </script>
+
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
           navigator.serviceWorker
             .register("./serviceworker.js")
-            .then((reg) => console.log("Success: ", reg.scope))
-            .catch((err) => console.log("Failure: ", err));
+            .then((reg) => console.log("ServiceWorker registered: ", reg.scope))
+            .catch((err) =>
+              console.log("ServiceWorker registration failed: ", err)
+            );
         });
       }
     </script>
-  </body>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_API_KEY%&libraries=places"></script> -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
-    async
-    defer
-  ></script>
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- <script
+      src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&libraries=places&callback=Function.prototype"
+      async
+      defer
+    ></script> -->
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=%REACT_APP_PLACES_API%&loading=async&libraries=places&callback=initMap"
+    ></script>
+
+    <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
+    <!-- <script>
+      
+    </script> -->
+  </body>
 </html>

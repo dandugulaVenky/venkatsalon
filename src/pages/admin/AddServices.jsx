@@ -3,7 +3,6 @@ import { parlourCategories } from "../../utils/parlourServices";
 import { salonCategories } from "../../utils/salonServices";
 import { useTranslation } from "react-i18next";
 
-import axios from "axios";
 import { useState } from "react";
 
 import baseUrl from "../../utils/client";
@@ -13,6 +12,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { faDeleteLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { spaCategories } from "../../utils/spaServices";
+import axiosInstance from "../../components/axiosInterceptor";
 
 const AddServices = () => {
   const [categoriesOptions, setCategoriesOptions] = useState();
@@ -22,8 +22,8 @@ const AddServices = () => {
   const { user } = useContext(AuthContext);
   const [allServices, setAllServices] = useState({
     service: "",
-    price: 0,
-    duration: 0,
+    price: "",
+    duration: "",
   });
   const [shopServices, setShopServices] = useState([]);
   const [disabled, setIsDisabled] = useState(false);
@@ -32,9 +32,64 @@ const AddServices = () => {
   const [typeOfPerson, setTypeOfPerson] = useState(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState();
-  console.log(shopType?.type, "shopType?.type");
+
+  // useEffect(() => {
+  //   const categories =
+  //     shopType?.type === "parlour"
+  //       ? parlourCategories[typeOfPerson]
+  //       : shopType?.type === "salon"
+  //       ? salonCategories[typeOfPerson]
+  //       : spaCategories[typeOfPerson];
+
+  //   setSuperCategories(categories);
+
+  //   setSuperCategory("regular");
+  //   const result = categories?.filter((superCategory, i) =>
+  //     superCategory.superCategory === "regular" ? superCategory.services : null
+  //   );
+  //   setCategories(result);
+  // }, [shopType, typeOfPerson]);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axiosInstance.get(
+          `${baseUrl}/api/hotels/find/${user?.shopId}`
+        );
+        setShopType({
+          type: data?.type,
+          subType: data?.subType,
+        });
+
+        setTypeOfPerson(data?.subType === "unisex" ? "men" : data?.subType);
+        const categories =
+          shopType?.type === "parlour"
+            ? parlourCategories[typeOfPerson]
+            : shopType?.type === "salon"
+            ? salonCategories[typeOfPerson]
+            : spaCategories[typeOfPerson];
+
+        setSuperCategories(categories);
+
+        setSuperCategory("regular");
+        const result = categories?.filter((superCategory, i) =>
+          superCategory.superCategory === "regular"
+            ? superCategory.services
+            : null
+        );
+        setCategories(result);
+      } catch (err) {
+        toast("Something wrong!");
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [shopType?.type, user?.shopId]);
+
+  useEffect(() => {
+    console.log("hii");
     const categories =
       shopType?.type === "parlour"
         ? parlourCategories[typeOfPerson]
@@ -43,34 +98,18 @@ const AddServices = () => {
         : spaCategories[typeOfPerson];
 
     setSuperCategories(categories);
-  }, [shopType, typeOfPerson]);
 
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          `${baseUrl}/api/hotels/find/${user?.shopId}`
-        );
-        setShopType({
-          type: data?.type,
-          subType: data?.subType,
-        });
-
-        setTypeOfPerson(data?.subType);
-      } catch (err) {
-        toast("Something wrong!");
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, [user?.shopId]);
+    setSuperCategory("regular");
+    const result = categories?.filter((superCategory, i) =>
+      superCategory.superCategory === "regular" ? superCategory.services : null
+    );
+    setCategories(result);
+  }, [shopType?.type, typeOfPerson]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
+        const { data } = await axiosInstance.get(
           `${baseUrl}/api/hotels/room/${user?.shopId}`
         );
 
@@ -111,11 +150,15 @@ const AddServices = () => {
     setCategories(result);
   };
 
+  // const allHandleChange = (e, option) => {
+  //   let value = e.target.value;
+  //   if (option === "price" || option === "duration") {
+  //     value = Number(value);
+  //   }
+  //   setAllServices((prev) => ({ ...prev, [option]: value }));
+  // };
   const allHandleChange = (e, option) => {
     let value = e.target.value;
-    if (option === "price" || option === "duration") {
-      value = Number(value);
-    }
     setAllServices((prev) => ({ ...prev, [option]: value }));
   };
 
@@ -124,18 +167,22 @@ const AddServices = () => {
       !superCategory ||
       category === "" ||
       allServices.service === "" ||
-      allServices.price === 0 ||
-      allServices.duration === 0
+      Number(allServices.price) === 0 ||
+      Number(allServices.duration) === 0
     ) {
       toast("Please check all fields!");
 
       return;
     }
-
+    const payload = {
+      ...allServices,
+      price: Number(allServices.price),
+      duration: Number(allServices.duration),
+    };
     let result = {
       category: category,
       subCategory: typeOfPerson,
-      services: allServices,
+      services: payload,
       superCategory,
     };
 
@@ -159,7 +206,7 @@ const AddServices = () => {
           return 1;
         }
       });
-      console.log(res);
+
       if (res.includes(0)) {
         return null;
       }
@@ -168,8 +215,8 @@ const AddServices = () => {
 
     setAllServices({
       service: "",
-      price: 0,
-      duration: 0,
+      price: "",
+      duration: "",
     });
   };
 
@@ -186,7 +233,7 @@ const AddServices = () => {
           item.services.service === removeService.services.service
         )
     );
-    console.log(result);
+
     setShopServices(result);
   };
 
@@ -199,8 +246,6 @@ const AddServices = () => {
 
       return alert(t("pleaseIncludeAllFields"));
     }
-
-    console.log(shopServices);
 
     let a = shopServices;
 
@@ -219,6 +264,7 @@ const AddServices = () => {
       }
     });
 
+    // Convert the merged object back to an array
     const mergedArray = Object.values(mergedObj).map((item) => {
       item.services = item.services.flat(); // Flatten the services array
       return item;
@@ -243,10 +289,8 @@ const AddServices = () => {
       };
     });
 
-    console.log(finalMergedServices, "finalMergedServices");
-
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         `${baseUrl}/api/rooms/addRoomServices/${roomId}`,
         {
           services: finalMergedServices,
@@ -325,19 +369,20 @@ const AddServices = () => {
 
             <select
               onChange={handleSuperCategoryChange}
-              className="border-2 border-[#00ccbb]  md:w-auto w-full mx-1"
+              className="border-2 border-[#00ccbb] hidden md:w-auto w-full mx-1"
               value={superCategory}
             >
               <option selected value="">
                 Super category
               </option>
-              {superCategories?.map((superCategory, i) => {
+              {/* {superCategories?.map((superCategory, i) => {
                 return <option key={i}>{superCategory.superCategory}</option>;
-              })}
+              })} */}
+              <option>regular</option>;
             </select>
             <select
               onChange={handleCategoryChange}
-              className="border-2 border-[#00ccbb]  md:w-auto w-full"
+              className="border-2 border-[#00ccbb]  md:w-auto w-full md:mt-0 mt-3"
               value={category}
             >
               <option selected value="">
@@ -377,9 +422,16 @@ const AddServices = () => {
               </span>
             </div>
             <input
-              onChange={(e) => allHandleChange(e, "price")}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  allHandleChange(e, "price");
+                }
+              }}
               className="border-2 border-[#00ccbb] w-full md:w-auto"
-              value={allServices?.price}
+              value={allServices?.price || ""}
+              inputMode="numeric" // Suggests numeric keyboard on mobile
+              pattern="[0-9]*" // Helps with validation
             />
           </div>
 
@@ -492,9 +544,9 @@ const AddServices = () => {
         <button
           className="primary-button my-4"
           onClick={handleClick}
-          // disabled={disabled}
+          disabled={disabled}
         >
-          {t("confirm")}
+          {disabled ? <span className="buttonloader"></span> : t("confirm")}
         </button>
       </div>
     </div>

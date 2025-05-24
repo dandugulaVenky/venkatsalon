@@ -16,9 +16,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 import { useState } from "react";
-import axios from "axios";
+
 import { useEffect } from "react";
 import baseUrl from "../../utils/client";
+import axiosInstance from "../axiosInterceptor";
+import { t } from "i18next";
 
 const SIdebar = () => {
   const { open, dispatch } = useContext(SearchContext);
@@ -29,9 +31,12 @@ const SIdebar = () => {
 
   useEffect(() => {
     const getAdmin = async () => {
-      let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-        withCredentials: true,
-      });
+      let isAdmin = await axiosInstance.get(
+        `${baseUrl}/api/users/${user?._id}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setIsAdmin(isAdmin.data);
     };
@@ -43,8 +48,8 @@ const SIdebar = () => {
       <div className="min-h-screen p-3 space-y-2 w-60 bg-gray-200  fixed right-0 top-0 bottom-0 z-50 scale-in-center ">
         <div className="flex items-center p-2 space-x-4">
           <img
-            src="https://source.unsplash.com/100x100/?portrait"
-            alt=""
+            src="https://th.bing.com/th?id=OIP.4j4jNaPU3bIzDJHBj6HDSwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
+            alt="https://th.bing.com/th?id=OIP.4j4jNaPU3bIzDJHBj6HDSwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
             className="w-12 h-12 rounded-full dark:bg-gray-500"
           />
           <div>
@@ -98,6 +103,7 @@ const SIdebar = () => {
                 <span>Contact Us</span>
               </Link>
             </li>
+
             <li>
               <Link
                 to="/privacy-policy"
@@ -147,11 +153,25 @@ const SIdebar = () => {
               )}
             </li>
           </ul>
+
+          <span
+            className="flex items-start space-x-2 p-2  rounded-md cursor-pointer"
+            onClick={() => {
+              if (user) {
+                navigate("/shop-details");
+              } else {
+                alert("Please login to join with us!");
+              }
+            }}
+          >
+            {t("joinUs")}
+          </span>
+
           <p
-            className="pt-4 pb-2 space-y-1 text-sm fixed bottom-2 "
+            className="  text-sm fixed top-1 right-5 border border-gray-300 rounded-full px-1.5 py-0.5 cursor-pointer"
             onClick={() => dispatch({ type: "SIDEBAR_OPEN", payload: !open })}
           >
-            <FontAwesomeIcon icon={faClose} size="2x" />
+            <FontAwesomeIcon icon={faClose} size="1x" />
           </p>
         </div>
       </div>

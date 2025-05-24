@@ -4,26 +4,30 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Menu } from "@headlessui/react";
-
+import SaalonsLogo from "../../pages/images/saalonsT.png";
 import "./navbar.scss";
-import axios from "axios";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBagShopping,
   faChevronCircleDown,
   faLocation,
-  faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "../header/Header";
 import { SearchContext } from "../../context/SearchContext";
 import baseUrl from "../../utils/client";
-import { Store } from "../../pages/ironing/ironing-utils/Store";
+// import { Store } from "../../pages/ironing/ironing-utils/Store";
 // import { useLanguage } from "../../context/LanguageContext";
 import { useTranslation } from "react-i18next";
-import LanguageContext from "../../context/LanguageContext";
-import i18next from "../../i18n";
-import About from './../../pages/staticpages/About';
+// <<<<<<< HEAD
+// import LanguageContext from "../../context/LanguageContext";
+// import i18next from "../../i18n";
+// import About from './../../pages/staticpages/About';
+// =======
+// // import LanguageContext from "../../context/LanguageContext";
+// // import i18next from "../../i18n";
+import axiosInstance from "../axiosInterceptor";
+// >>>>>>> a73146fe2eab638721f6fff88d6a760251e68001
 
 const shortenString = (inputString) => {
   if (inputString.length > 30) {
@@ -39,24 +43,25 @@ const scrollNow = () => {
 const Layout = ({ bestRef }) => {
   const { user, dispatch } = useContext(AuthContext);
 
-  const { state } = useContext(Store);
-  const { cart } = state;
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+  // const { state } = useContext(Store);
+  // const { cart } = state;
+  // const [cartItemsCount, setCartItemsCount] = useState(0);
   const { pathname } = useLocation();
 
   let { dispatch: dispatch1, city, type } = useContext(SearchContext);
+
   const [address, setAddress] = useState("");
   const [header, setHeader] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const scrollTimeoutIdRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const { t } = useTranslation();
-  const { locale, setLocale } = useContext(LanguageContext);
-  const [ironing, setIroning] = useState(false);
-  i18next.on("languageChanged", (ing) => setLocale(i18next.language));
-  const handleChange = (event) => {
-    i18next.changeLanguage(event.target.value); //fr or
-  };
+  // const { locale, setLocale } = useContext(LanguageContext);
+  // const [ironing, setIroning] = useState(false);
+  // i18next.on("languageChanged", (ing) => setLocale(i18next.language));
+  // const handleChange = (event) => {
+  //   i18next.changeLanguage(event.target.value); //fr or
+  // };
 
   useEffect(() => {
     setIsScrolled(false);
@@ -80,23 +85,26 @@ const Layout = ({ bestRef }) => {
 
     scrollTimeoutIdRef.current = setTimeout(() => {
       window.addEventListener("scroll", handleScroll);
-      pathname.includes("/iron") && setIroning(true);
+      // pathname.includes("/iron") && setIroning(true);
     }, timeout);
 
     // Clean up the event listener and clear the timeout on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeoutIdRef.current);
-      setIroning(false);
+      // setIroning(false);
     };
   }, [pathname]);
 
   useEffect(() => {
     const getAdmin = async () => {
       try {
-        let isAdmin = await axios.get(`${baseUrl}/api/users/${user?._id}`, {
-          withCredentials: true,
-        });
+        let isAdmin = await axiosInstance.get(
+          `${baseUrl}/api/users/${user?._id}`,
+          {
+            withCredentials: true,
+          }
+        );
 
         setIsAdmin(isAdmin.data);
       } catch (err) {
@@ -113,9 +121,9 @@ const Layout = ({ bestRef }) => {
     setHeader(true);
   };
 
-  useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+  // useEffect(() => {
+  //   setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
+  // }, [cart.cartItems]);
 
   // const handleLanguageChange = () => {
   //   console.log("update");
@@ -154,22 +162,21 @@ const Layout = ({ bestRef }) => {
             <div className="flex items-center justify-center">
               <Link to="/" onClick={scrollNow}>
                 <img
-                  src="https://res.cloudinary.com/dqupmzcrb/image/upload/e_auto_contrast,q_100/v1685348916/EASY_TYM-removebg-preview_sab2ie.png"
+                  src={SaalonsLogo}
                   alt="logo"
                   className={`${isScrolled ? "imgs1" : "imgs2"}`}
                 />
               </Link>
-              <div className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4">
+              <div
+                className="pl-5 text-xl mt-1 font-semibold flex items-center justify-center space-x-4 cursor-pointer"
+                onClick={handleLocation}
+              >
                 <FontAwesomeIcon icon={faLocation} size="lg" />
                 <p className="text-sm">
-                  {city ? shortenString(city).toUpperCase() : "loading"}
+                  {city ? shortenString(city).toUpperCase() : "Enter Your City"}
                 </p>
                 {pathname === "/" && (
-                  <FontAwesomeIcon
-                    icon={faChevronCircleDown}
-                    size="lg"
-                    onClick={handleLocation}
-                  />
+                  <FontAwesomeIcon icon={faChevronCircleDown} size="lg" />
                 )}
               </div>
             </div>
@@ -210,10 +217,8 @@ const Layout = ({ bestRef }) => {
                   </h1>
                 </Link>
                 {/* <button onClick={handleLanguageChange}>Change Language</button> */}
-                <div>
-                  {/* <label className="mr-1">
-                      <FontAwesomeIcon icon={faGlobe} size="xl" color="black" />
-                    </label> */}
+                {/* <div>
+                
                   <select
                     value={locale}
                     onChange={handleChange}
@@ -224,8 +229,8 @@ const Layout = ({ bestRef }) => {
                     <option value="hi">हिंदी</option>
                     <option value="ka">ಕನ್ನಡ</option>
                   </select>
-                </div>
-                {ironing && (
+                </div> */}
+                {/* {ironing && (
                   <Link to="/iron/cart">
                     <label className="mr-1">
                       <FontAwesomeIcon
@@ -246,7 +251,7 @@ const Layout = ({ bestRef }) => {
                       )}
                     </a>
                   </Link>
-                )}
+                )} */}
 
                 {user ? (
                   <Menu as="div" className="relative inline-block  z-10 ">
@@ -274,13 +279,7 @@ const Layout = ({ bestRef }) => {
                         </Link>
                         {/* </DropdownLink> */}
                       </Menu.Item>
-                      <Menu.Item>
-                        {/* <DropdownLink className="dropdown-link p-1"> */}
-                        <Link className="dropdown-link p-1" to="/iron-orders">
-                          {t("ironOrders")}
-                        </Link>
-                        {/* </DropdownLink> */}
-                      </Menu.Item>
+
                       {isAdmin && (
                         <Menu.Item>
                           {/* <DropdownLink className="dropdown-link p-1"> */}
