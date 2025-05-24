@@ -13,7 +13,7 @@ const Footer = () => {
     <div className=" w-full footer ">
       <div className="flex items-center justify-center space-x-24 md:space-x-96  bg-[#00ccbb] text-white text-sm pt-10 ">
         <ul className="space-y-2">
-          <li className="">{t("best hair salon in shadnagar")}</li>
+          <li className="">{t("shadnagar")}</li>
           <li className="">{t("best hair salon in kothur")}</li>
           <li className="">{t("best hair salon in thimmapur")}</li>
           <li className="">{t("best hair salon in shamshabad")}</li>
